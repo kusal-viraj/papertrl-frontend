@@ -1,0 +1,81 @@
+{
+  "data": [
+    {
+      "data": {
+        "sectionId": 1,
+        "section": "Bill"
+      },
+      "children": [
+        {
+          "data": {
+            "id": 1,
+            "sectionId": 1,
+            "section": "Bill",
+            "event": "When a bill submitted for your approval",
+            "enableNotification": true,
+            "enableEmail": true
+          }
+        },
+        {
+          "data": {
+            "id": 2,
+            "sectionId": 1,
+            "section": "Bill",
+            "event": "When your submitted bill has been Approved",
+            "enableNotification": true,
+            "enableEmail": true
+          }
+        },
+        {
+          "data": {
+            "id": 3,
+            "sectionId": 1,
+            "section": "Bill",
+            "event": "When your submitted bill has been Rejected",
+            "enableNotification": true,
+            "enableEmail": true
+          }
+        }
+      ]
+    },
+    {
+      "data": {
+        "sectionId": 1,
+        "section": "Bill"
+      },
+      "children": [
+        {
+          "data": {
+            "id": 1,
+            "sectionId": 1,
+            "section": "Bill",
+            "event": "When a bill submitted for your approval",
+            "enableNotification": true,
+            "enableEmail": true
+          }
+        },
+        {
+          "data": {
+            "id": 2,
+            "sectionId": 1,
+            "section": "Bill",
+            "event": "When your submitted bill has been Approved",
+            "enableNotification": true,
+            "enableEmail": true
+          }
+        },
+        {
+          "data": {
+            "id": 3,
+            "sectionId": 1,
+            "section": "Bill",
+            "event": "When your submitted bill has been Rejected",
+            "enableNotification": true,
+            "enableEmail": true
+          }
+        }
+      ]
+    }
+  ],
+  "totalRecords": 3
+}

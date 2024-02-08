@@ -1,0 +1,4 @@
+export enum TimeOutEnum {
+  TOAST_HIDE_TIME_OUT  = 10000,
+  TABLE_REFRESH_TIME_OUT = 500
+}

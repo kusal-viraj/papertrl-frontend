@@ -1,0 +1,71 @@
+<p-blockUI class="boarder-hide" *ngIf="responsePercentage !== 0" [blocked]="responsePercentage > 0" [target]="pnl">
+  <div class="exception-body" *ngIf="responsePercentage">
+    <div class="exception-content">
+      <circle-progress
+        [percent]="[responsePercentage]"
+        [radius]="70"
+        [outerStrokeWidth]="10"
+        [innerStrokeWidth]="100"
+        [outerStrokeColor]="'#95fdff'"
+        [innerStrokeColor]="'transparent'"
+        [showUnits]=true
+        [titleFontWeight]="600"
+        [showSubtitle]=false
+        [backgroundGradient]=false
+        [animation]="false">
+      </circle-progress>
+    </div>
+  </div>
+</p-blockUI>
+
+<p-panel class="border-hide" #pnl>
+  <div class="boarder-hide text-left">
+    <p class="margin-top infoUpload"><b>Step 1: </b><span id="download_account_template" class="download-link" (click)="downloadAccountListTemplate()">Download</span>
+      the template.</p>
+    <p class="margin-top infoUpload"><b>Step 2: </b> Fill in all fields and save.</p>
+    <p class="margin-top infoUpload"><b>Step 3: </b> Upload the completed template.
+    </p>
+  </div>
+  <br>
+
+  <form [formGroup]="accountUploadForm">
+    <div class="grid margin-top-grid">
+      <div class="col-12 xl:col-4 md:col-8 lg:col-6 upload-field">
+        <div class="p-inputgroup">
+            <span class="p-float-label inner-text-position">
+            <input id="fileUpload" #accountList type="file" hidden formControlName="accountListController"
+                   (change)="changeAccountList($event)" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+            <input id="fileText" formControlName="accountListController"
+                   [value]="accountList.files[0] ? accountList.files[0].name : null" readonly class="input-max-width file-input-vendor"
+                   onClick="document.getElementById('fileUpload').click()" type="text" pInputText>
+              <label for="fileText">Browse a file to upload* </label>
+
+            <button pButton label="Browse" class="p-button file-browse  p-button-sm"
+                    onClick="document.getElementById('fileUpload').click()"></button>
+
+                         </span>
+        </div>
+               <button pButton class="p-button-sm upload-button ml-2" type="submit" icon="fa fa-cloud-upload"
+                       label="Upload"
+                       [disabled]="isDisabled" (click)="uploadAccountList()"></button>
+
+              <button pButton class="p-button-sm p-button-outlined upload-button ml-2" type="button"
+                      icon="fa-solid fa-rotate-right" label="Reset"
+                      [disabled]="isDisabled" (click)="accountUploadForm.reset()"></button>
+
+      </div>
+      <div class=" upload-button-mobile field col-12">
+        <button class="p-button-sm upload-button-wrapper" pButton type="submit" icon="fa fa-cloud-upload" label="Upload" id="upload_button"
+                [disabled]="isDisabled" (click)="uploadAccountList()"></button>
+      </div>
+      <div class=" upload-button-mobile field col-12">
+        <button pButton class="p-button-sm p-button-outlined" type="button" icon="fa-solid fa-rotate-right" label="Reset"
+                [disabled]="isDisabled" (click)="accountUploadForm.reset()"></button>
+      </div>
+    </div>
+    <div class="p-invalid text-align-left"
+         *ngIf="accountUploadForm.get('accountListController').dirty && accountUploadForm.get('accountListController').errors">
+      File is required
+    </div>
+  </form>
+</p-panel>

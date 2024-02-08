@@ -1,0 +1,28 @@
+<h5>Menu Types</h5>
+<div class="field-radiobutton">
+  <p-radioButton name="menuMode" value="static" (onClick)="changeMenuMode()" [(ngModel)]="app.menuMode"
+                 id="mode1"></p-radioButton>
+  <label for="mode1">Static</label>
+</div>
+<div class="field-radiobutton">
+  <p-radioButton name="menuMode" value="overlay" (onClick)="changeMenuMode()" [(ngModel)]="app.menuMode"
+                 id="mode2"></p-radioButton>
+  <label for="mode2">Overlay</label>
+</div>
+<div class="field-radiobutton">
+  <p-radioButton name="menuMode" value="slim" (onClick)="changeMenuMode()" [(ngModel)]="app.menuMode"
+                 id="mode3"></p-radioButton>
+  <label for="mode3">Slim</label>
+</div>
+<hr/>
+<h5>Menu Colors</h5>
+<div class="layout-themes" *ngIf="app.colorScheme === 'light'">
+  <div *ngFor="let theme of menuThemes">
+    <a style="cursor: pointer" (click)="changeMenuTheme(theme.name)"
+       [ngStyle]="{'background-color': theme.color}"></a>
+  </div>
+</div>
+<br>
+<br>
+<p>If Customizations didn't apply please refresh the page</p>
+<p class="subHeadingColour reset-theme-btn" (click)="resetTheme()">Reset To Default</p>

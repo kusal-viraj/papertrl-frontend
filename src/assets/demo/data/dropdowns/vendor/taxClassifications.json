@@ -1,0 +1,9 @@
+[
+  {"name": "Individual/sole proprietor or single-member LLC", "id": "I"},
+  {"name": "C Corporation", "id": "C"},
+  {"name": "S Corporation", "id": "S"},
+  {"name": "Partnership", "id": "P"},
+  {"name": "Trust/estate", "id": "T"},
+  {"name": "Other(See Instructions)", "id": "O"},
+  {"name": "Limited liability company", "id": "L"}
+]

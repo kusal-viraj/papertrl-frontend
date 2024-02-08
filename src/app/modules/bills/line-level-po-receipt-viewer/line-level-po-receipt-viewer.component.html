@@ -1,0 +1,31 @@
+<!--PO receipt attachment view modal-EXPENSE-->
+<div *ngIf="expensePoReceiptLineLevelAttachments.length > appConstant.ZERO">
+  <ng-container *ngFor="let poReceiptAttachment of expensePoReceiptLineLevelAttachments; let expenseLineIndex = index">
+    <p-dialog *ngIf="poReceiptAttachment.poReceiptUrl" header="PO Receipt #{{poReceiptAttachment.poReceiptNumber}}"
+              [draggable]="true" [resizable]="false"  [baseZIndex]="90000"
+              class="po-receipt-attachment-view-wrapper" [modal]="false"
+              [(visible)]="poReceiptAttachment.poReceiptUrl">
+      <iframe title="" [src]="poReceiptAttachment.poReceiptUrl" allowfullscreen
+              *ngIf="poReceiptAttachment.poReceiptUrl"
+              style="border: none" width="100%" height="100%">
+      </iframe>
+
+    </p-dialog>
+  </ng-container>
+</div>
+
+<!--PO receipt attachment view modal - ITEM-->
+<div *ngIf="itemPoReceiptLineLevelAttachments.length > appConstant.ZERO">
+  <ng-container *ngFor="let poReceiptAttachment of itemPoReceiptLineLevelAttachments; let itemLineIndex = index">
+    <p-dialog *ngIf="poReceiptAttachment.poReceiptUrl" header="PO Receipt #{{poReceiptAttachment.poReceiptNumber}}"
+              [draggable]="true" [resizable]="false"  [baseZIndex]="90000"
+              class="po-receipt-attachment-view-wrapper" [modal]="false"
+              [(visible)]="poReceiptAttachment.poReceiptUrl">
+      <iframe title="" [src]="poReceiptAttachment.poReceiptUrl" allowfullscreen
+              *ngIf="poReceiptAttachment.poReceiptUrl"
+              style="border: none" width="100%" height="100%">
+      </iframe>
+
+    </p-dialog>
+  </ng-container>
+</div>

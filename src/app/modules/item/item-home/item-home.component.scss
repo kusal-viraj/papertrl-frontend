@@ -1,0 +1,24 @@
+@import "../../../../scss/color.scss";
+
+.menu-label{
+  size: 16px;
+  color: $green;
+  cursor: pointer;
+  font-weight: 600;
+  padding-left: 13px;
+}
+
+
+.card-custom{
+  padding: 2rem;
+}
+
+@media only screen and (max-width: 600px) {
+  .menu-Item{
+    width: 100%;
+    text-align: center;
+  }
+  .screen-change-btn{
+    width: 100%;
+  }
+}

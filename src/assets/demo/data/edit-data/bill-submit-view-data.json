@@ -1,0 +1,15 @@
+{
+  "id": "2",
+  "vendor": "12354AD",
+  "template": "1",
+  "purchaseOrder": "Order 1",
+  "poReceipt": "1DSA800",
+  "billNo": "200DAAD0",
+  "dateFormat": "0.00",
+  "billDate": "2021-01-27T18:30:00.000Z",
+  "billAmount": "3000",
+  "paymentTerms": "Term",
+  "dueDate": "2021-01-27T18:30:00.000Z",
+  "comment": "Comment",
+  "pdfUrl": "../assets/sampleInvoice.pdf"
+}

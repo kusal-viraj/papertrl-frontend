@@ -1,0 +1,106 @@
+
+<div class="side-bar-drawer-content p-4">
+<form [formGroup]="configurationForm" (ngSubmit)="addSystem()">
+  <div class="grid p-fluid">
+
+    <div class="field col-12">
+      <label class="label-wrapper" for="tenantId">Customer*</label>
+      <span class="p-float-label">
+            <p-dropdown id="tenantId" formControlName="tenantId" [autoDisplayFirst]="false"
+                        [options]="integrationUiUtility.tenantList.data" [filter]="true"
+                        optionValue="id" optionLabel="name"></p-dropdown>
+      </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="configurationForm.get('tenantId').dirty && configurationForm.get('tenantId').errors">
+        Customer is required
+      </div>
+    </div>
+
+    <div class="field col-12">
+      <label class="label-wrapper" for="systemId">System*</label>
+      <span class="p-float-label">
+            <p-dropdown id="systemId" #dropdown formControlName="systemId" [autoDisplayFirst]="false"
+                        (onChange)="systemChanged(dropdown.selectedOption.otherData)"
+                        [options]="systemList.data" [filter]="true"
+                        optionValue="id" optionLabel="name"></p-dropdown>
+      </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="configurationForm.get('systemId').dirty && configurationForm.get('systemId').errors">
+        System is required
+      </div>
+    </div>
+
+    <div class="field col-12" *ngIf="showRedirectUrl">
+      <label class="label-wrapper" for="redirectUrl">Redirect Url*</label>
+          <span class="p-float-label">
+            <input formControlName="redirectUrl" (keyup)="removeSpace('redirectUrl')" id="redirectUrl"
+                   type="text" pInputText>
+          </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="configurationForm.get('redirectUrl').dirty && configurationForm.get('redirectUrl').errors">
+        Redirect Url is required
+      </div>
+    </div>
+
+    <div class="field col-12"
+         *ngIf="isViewBasicAuthDetails || configurationForm.get('systemId').value === SYSTEM_BUSINESS_CENTRAL_CLOUD">
+      <label class="label-wrapper" for="redirectUrl">Tenant Id</label>
+          <span class="p-float-label">
+            <input formControlName="tpTenantId" (keyup)="removeSpace('tpTenantId')" id="tpTenantId"
+                   type="text" pInputText>
+          </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="configurationForm.get('redirectUrl').dirty && configurationForm.get('tpTenantId').errors">
+        Tenant id is required
+      </div>
+    </div>
+
+    <div class="field col-12" *ngIf="isViewBasicAuthDetails">
+      <label class="label-wrapper" for="tenant">Base URL</label>
+          <span class="p-float-label">
+            <input formControlName="baseUrl" (keyup)="removeSpace('baseUrl')" id="tenant"
+                   type="text" pInputText>
+          </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="configurationForm.get('baseUrl').dirty && configurationForm.get('baseUrl').errors">
+        Base URL is required
+      </div>
+    </div>
+
+
+    <div class="field col-12">
+      <label class="label-wrapper" for="tenant">Number of previous months to be synced </label>
+          <span class="p-float-label">
+            <input formControlName="pullInitDataFrom" id="pullInitDataFrom"
+                   min="0" max="24"
+                   type="number" pInputText>
+          </span>
+    </div>
+
+
+    <div class="field col-12" *ngIf="configurationForm.get('systemId').value == SYSTEM_BUSINESS_CENTRAL_CLOUD">
+      <label class="label-wrapper" for="tenant">Environment*</label>
+          <span class="p-float-label">
+            <input formControlName="tpEnvironment" (keyup)="removeSpace('tpEnvironment')" id="tpEnvironment"
+                   type="text" pInputText>
+          </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="configurationForm.get('tpEnvironment').dirty && configurationForm.get('tpEnvironment').errors">
+        Environment is required
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" (click)="reset()" [disabled]="loading" class="p-button-sm p-button-outlined"
+              iconPos="left"
+              icon="fa-solid fa-rotate-right" label="Reset"></button>&nbsp;&nbsp;
+      <button pButton type="button" (click)="addSystem()" [disabled]="loading" class="p-button-sm" iconPos="left"
+              [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-save'" label="Save"></button>
+    </div>
+  </div>
+</div>

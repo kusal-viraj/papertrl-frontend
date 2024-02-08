@@ -1,0 +1,162 @@
+<form [formGroup]="formGroup" class="missing-receipt-wrapper m-3">
+  <div class="grid" *ngIf="!viewOnly">
+    <div class="col-12 text-right">
+      <button pButton type="button" class="p-button-outlined" icon="fa fa-paperclip" label="Attach Receipt" (click)="attachReceipt.emit()"></button>
+    </div>
+  </div>
+  <div class="grid p-fluid mt-1">
+
+    <div class="col-12 mb-2">
+      <label class="label-wrapper" for="description">Reason*</label>
+      <span class="p-float-label">
+            <textarea id="description" formControlName="reason" [rows]="2" pInputTextarea maxlength="300"
+                      (keyup)="removeSpaces.clearSpace(formGroup, 'reason')"></textarea>
+      </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="formGroup.get('reason').dirty && formGroup.get('reason').hasError('required')">
+        Reason is required
+      </div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Card Holder Name</label>
+      <div>{{commonUtil.detailViewIsDash(f.cardHolderName.value, false)}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Transaction Date</label>
+      <div>{{f.transactionDateStr.value}}</div>
+    </div>
+
+    <div class="col-12">
+      <div class="subHeadingColour mt-2 mb-3">Items</div>
+
+      <p-table responsiveLayout="scroll" [value]="itemListForm.controls"  scrollable="true"
+               scrollHeight="210px" [style]="{width:'auto'}" styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+        <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+            <col style="width:50px">
+            <col style="width:220px">
+            <col style="width:150px">
+            <col style="width:150px">
+            <col style="width:180px">
+            <col *ngIf="!viewOnly" style="width:50px">
+          </colgroup>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="thead-style detail-table-header-left" id="no">#</th>
+            <th class="thead-style detail-table-header-left" id="itemService">Item Number*</th>
+            <th class="thead-style detail-table-header-left" id="itemQty">Quantity*</th>
+            <th class="thead-style detail-table-header-left" id="itemRate">Cost*</th>
+            <th class="thead-style detail-table-header-right" id="amt">Line Amount</th>
+            <th *ngIf="!viewOnly" class="thead-style detail-table-header-left" id="empty3"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-i="rowIndex" let-item formArrayName="itemList">
+          <tr id="tr_{{i}}" [formGroupName]="i" (click)="onLItemClick(i)">
+            <td style="text-align: center"><label>{{i + 1}}</label></td>
+            <td>
+              <p-dropdown [virtualScroll]="itemList.data.length>20" virtualScrollItemSize="25" formControlName="itemId"
+                          [autoDisplayFirst]="false" id="{{'itemId' + i}}" optionDisabled="inactive"
+                          name="productId1" [options]="itemList.data" placeholder="Item Number"
+                          (onChange)="getItemName(dpNameProductId.selectedOption.id, i);
+                          changeItemList(dpNameProductId.selectedOption.id, i)"
+                          appendTo="body" optionValue="id" optionLabel="name" class="responsive-dropdown"
+                          [filter]="true" [showClear]="true" [style]="{'width':'100%'}" #dpNameProductId>
+
+                <ng-template pTemplate="selectedItem">
+                  <div>{{itemListForm.controls[i].get('itemNumber').value}}</div>
+                </ng-template>
+
+                <ng-template pTemplate="footer">
+                  <div class="grid dp-footer">
+                    <div class="col-12 button-wrapper">
+                      <button pButton class="p-button-sm" label="Add New"
+                              *ngIf="privilegeService.isAuthorized(appAuthorities.ITEMS_CREATE)"
+                              (click)="addNewItemOverlay = true;"></button>
+                    </div>
+                  </div>
+                </ng-template>
+
+              </p-dropdown>
+            </td>
+
+            <td>
+              <div class="p-inputgroup">
+                <input formControlName="qty" name="qty" placeholder="Qty" id="{{'qty_' + i}}" type="text" maxlength="10"
+                       class="qty-field-alignment" autocomplete="off" (keyup)="getTotalCostDistribution();"
+                       pInputText appDecimalNumber>
+              </div>
+            </td>
+
+            <td>
+              <div class="p-inputgroup">
+                <input pInputText type="text" name="rate" placeholder="Cost" autocomplete="off"
+                       id="{{'cost' + i}}" (keyup)="getTotalCostDistribution();" maxlength="19"
+                       currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                       formControlName="rate">
+              </div>
+            </td>
+
+            <td>
+              <div class="p-inputgroup">
+                <input pInputText type="text"
+                       name="amount" id="{{'amount' + i}}" currencyMask [autocomplete]="false"
+                       [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                       placeholder="Line Amount" class="amounts" [readOnly]="true"
+                       formControlName="amount">
+              </div>
+            </td>
+
+            <td *ngIf="!viewOnly" class="text-center">
+              <i class="fa fa-trash item-remove-button item-remove-icon" *ngIf="itemListForm.length > 1"
+                 (click)="removeItem(i); getTotalCostDistribution()"></i>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template *ngIf="!viewOnly" pTemplate="summary">
+          <div class="grid align-table-footer">
+            <div style="width: 44%"></div>
+            <div style="width: 55%; margin-top: 5px" class=" text-right">
+                    <span class="hyperlink text-right p-text-normal"
+                          (click)="itemListForm.reset(); getTotalCostDistribution()">Clear Lines
+                    </span> &nbsp;|&nbsp;
+              <span class="hyperlink text-right p-text-normal"
+                    (click)="addItemOnClick()">Add Line
+                    </span>
+            </div>
+          </div>
+        </ng-template>
+      </p-table>
+    </div>
+    <div class="col-12 amount-wrapper text-right">
+      <div class="subHeadingColour mr-2">Total Amount</div>
+        <input pInputText currencyMask placeholder="0.00"
+               [options]="{prefix: '', thousands: ',', decimal: '.'}" class="text-right amounts"
+               formControlName="totalAmount" id="totalAmount" readonly>
+    </div>
+  </div>
+</form>
+
+<div class="grid panel-footer footer"  *ngIf="!viewOnly">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" (click)="resetForm()" label="Reset" class="p-button-outlined p-button-sm"
+              [disabled]="isLoading" icon="fa-solid fa-rotate-right"></button>
+
+      <button pButton class="p-button-sm ml-2" [disabled]="isLoading"
+              (click)="submitForm()" type="button" [icon]="isLoading ? 'pi pi-spin pi-spinner':
+              'pi pi-save'" iconPos="left" label="Save"></button>
+    </div>
+  </div>
+</div>
+<!--Item Create-->
+<p-sidebar styleClass="p-sidebar-lg" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           class="overflow-side-bar" *ngIf="addNewItemOverlay" [(visible)]="addNewItemOverlay">
+  <ng-template pTemplate="header">Create Item</ng-template>
+  <app-add-item (emittedTabIndex)="getItems(); addNewItemOverlay = false " [editView]="false"
+                [detailView]="false" [panel]="true" *ngIf="addNewItemOverlay"></app-add-item>
+</p-sidebar>

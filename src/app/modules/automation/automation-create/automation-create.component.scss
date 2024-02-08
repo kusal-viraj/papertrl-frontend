@@ -1,0 +1,167 @@
+@import "../../../../scss/color.scss";
+
+.info-icon {
+  color: $green;
+  cursor: pointer;
+  font-size: 21px;
+  margin-left: 10px;
+  vertical-align: bottom;
+}
+
+.btn-trash {
+  background-color: #D0D5D8;
+  opacity: 1;
+}
+
+.automation-fields-information {
+  border-radius: 8px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+  background-color: #fff3cd !important;
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  color: #664d03;
+
+  span {
+    font-size: 22px;
+  }
+
+  .automation-result {
+    font-weight: 550;
+  }
+}
+
+.btn-trash:hover {
+  background-color: #8c8e91;
+  opacity: 1;
+}
+
+.condition-label {
+  font-family: 'Roboto-Regular';
+  font-size: 13px;
+  color: #959595;
+}
+
+.field-radiobutton {
+  margin: 0;
+}
+
+.adjoin-cond {
+  padding-bottom: 0;
+}
+
+.close-btn {
+  font-size: 14px;
+}
+
+.close-btn:hover {
+  cursor: pointer;
+}
+
+.close-btn-adjoin {
+  font-size: 14px;
+  margin-left: 20px;
+}
+
+.close-btn-adjoin:hover {
+  cursor: pointer;
+}
+
+.scroll-fields {
+  min-width: 220px;
+  display: inline-block;
+  padding-top: 25px;
+}
+
+.footer {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: #ffffff;
+}
+
+.footer-shadow {
+  -webkit-box-shadow: 0px -14px 17px 0px rgba(255, 255, 255, 0.85);
+  -moz-box-shadow: 0px -14px 17px 0px rgba(255, 255, 255, 0.85);
+  box-shadow: 0px -14px 17px 0px rgba(255, 255, 255, 0.85);
+}
+
+p-calendar {
+  width: 100%;
+}
+
+@media only screen and (min-width: 1200px) {
+  .labelIs {
+    text-align: center;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .condition-resize {
+    white-space: nowrap;
+    overflow: auto
+  }
+}
+
+.align-center {
+  align-items: center;
+}
+
+.config-rule-wrapper ::ng-deep .p-checkbox-label {
+  color: #73828A;
+}
+
+.create-automation-heading {
+  size: 24px;
+  color: $green;
+  font-weight: 600;
+}
+
+.index-number-wrapper {
+  width: 70px !important;
+  min-width: 75px;
+  color: #b2b2b2;
+}
+
+.amount-disabled-wrapper {
+  font-weight: 500;
+  background-color: #f8f9fa;
+  color: #b2b2b2
+}
+
+.form {
+
+  .loading-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    background-size: 50px;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 10000000;
+    text-align: center;
+
+    .progress {
+      top: 38%;
+      position: relative;
+    }
+  }
+}
+.topic {
+  color: $green;
+}
+
+.top-button-color{
+  color: #A3ACB0;
+  border-color: #A3ACB0;
+}
+
+.create-automation{
+  position: fixed;
+}
+

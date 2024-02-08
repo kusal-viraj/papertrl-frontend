@@ -1,0 +1,230 @@
+<div class="side-bar-drawer-content p-3">
+<form [formGroup]="subAccountCreationForm" (ngSubmit)="onSubmit(subAccountCreationForm.value)" autocomplete="off">
+
+  <div class="grid p-fluid">
+
+    <div [class.p-disabled]="detailVIew" [class]="!viewSubAccount ? 'grid img-wrapper-from-sub-account col-1' : 'grid img-col mb-2 col-12'">
+      <div class="field col-12">
+
+        <div class="square upload-img-wrapper" *ngIf="!imageUrl" (click)="fileInput.click()"
+             Style="background-color: #efefef">
+          <div class="pi pi-image upload-img"></div>
+          <span class="upload-text">Upload Logo</span>
+        </div>
+
+        <div class="avatar-upload">
+          <div class="avatar-edit">
+            <input formControlName="img" type='file' id="imageUpload" accept="image/*" #fileInput
+                   (change)="uploadFile($event)"/>
+          </div>
+          <div *ngIf="imageUrl" class="avatar-preview">
+            <div id="imagePreview" class="imagePreview" [style.backgroundImage]="'url('+ imageUrl +')'"></div>
+            <div *ngIf="imageUrl">
+            <span class="addImage" *ngIf="imageUrl && !detailVIew" (click)="deleteFile(); fileInput.value = null">
+              <strong>Delete</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid" [class]="viewSubAccount ? 'col-12' : 'col-11 ml-2'">
+
+      <div [ngClass]="viewSubAccount ? 'field col-12': 'field col-12 xl:col-3 lg:col-3 md:col-3'">
+        <label class="label-wrapper" for="companyName">Company Name* </label>
+        <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input formControlName="ownerName"
+                            (keyup)="removeSpaces.clearSpace(subAccountCreationForm, 'ownerName')" id="companyName"
+                            type="text" pInputText>
+            </span>
+        </div>
+        <div class="p-invalid text-align-left"
+             *ngIf="subAccountCreationForm.get('ownerName').dirty && subAccountCreationForm.get('ownerName').errors">
+          Company Name is required
+        </div>
+      </div>
+
+      <div [ngClass]="viewSubAccount ? 'field col-12': 'field col-12 xl:col-3 lg:col-3 md:col-3'">
+        <label class="label-wrapper" for="firstName">First Name* </label>
+        <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input formControlName="firstName" id="firstName"
+                            (keyup)="removeSpaces.clearSpace(subAccountCreationForm, 'firstName')" type="text"
+                            pInputText>
+            </span>
+        </div>
+        <div class="p-invalid text-align-left"
+             *ngIf="subAccountCreationForm.get('firstName').dirty && subAccountCreationForm.get('firstName').errors">
+          First Name is required
+        </div>
+      </div>
+
+      <div [ngClass]="viewSubAccount ? 'field col-12': 'field col-12 xl:col-3 lg:col-3 md:col-3'">
+        <label class="label-wrapper" for="companyName">Last Name*</label>
+        <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input formControlName="lastName" id="lastName"
+                            (keyup)="removeSpaces.clearSpace(subAccountCreationForm, 'lastName')" type="text"
+                            pInputText>
+            </span>
+        </div>
+        <div class="p-invalid text-align-left"
+             *ngIf="subAccountCreationForm.get('lastName').dirty && subAccountCreationForm.get('lastName').errors">
+          Last Name is required
+        </div>
+      </div>
+
+
+      <div [ngClass]="viewSubAccount ? 'field col-12': 'field col-12 lg:col-6 xl:col-3 md:col-6'">
+        <label class="label-wrapper" for="businessEmailAddress">Business Email Address*</label>
+        <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input formControlName="ownerEmail"
+                            (keyup)="removeSpaces.clearSpace(subAccountCreationForm, 'ownerEmail')"
+                            id="businessEmailAddress" type="text" pInputText>
+            </span>
+        </div>
+        <div class="p-invalid  text-align-left"
+             *ngIf="subAccountCreationForm.get('ownerEmail').dirty && subAccountCreationForm.get('ownerEmail').errors">
+          <div *ngIf="subAccountCreationForm.get('ownerEmail').errors.required">Business Email is required</div>
+          <div *ngIf="subAccountCreationForm.controls['ownerEmail'].hasError('emailValidate')">Email must be a valid
+            email address
+          </div>
+        </div>
+      </div>
+
+      <!--    <div [ngClass]="viewSubAccount ? 'field col-12': 'field col-12 xl:col-6 lg:col-3 md:col-3'">-->
+      <!--      <div class="p-inputgroup">-->
+      <!--            <span class="p-float-label">-->
+      <!--                     <input formControlName="businessAddress" id="businessAddress"-->
+      <!--                            (keyup)="removeSpaces.clearSpace(subAccountCreationForm, 'businessAddress')" type="text"-->
+      <!--                            pInputText>-->
+      <!--                     <label for="businessAddress">Business Address*</label>-->
+      <!--            </span>-->
+      <!--      </div>-->
+      <!--      <div class="p-invalid text-align-left"-->
+      <!--           *ngIf="subAccountCreationForm.get('businessAddress').dirty && subAccountCreationForm.get('businessAddress').errors">-->
+      <!--        Business Address is required-->
+      <!--      </div>-->
+      <!--    </div>-->
+
+
+      <ng-container formGroupName="masterTenantAddress">
+        <div [class]="viewSubAccount ? 'field col-12':  'field col-12 xl:col-6'">
+          <label  class="label-wrapper" for="addressLine1">Address Line1*</label>
+          <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input formControlName="addressLine1" maxlength="300" id="addressLine1"
+                     (keyup)="removeSpace( 'addressLine1')" type="text" pInputText>
+            </span>
+          </div>
+          <div class="p-invalid text-align-left"
+               *ngIf="addressLine1.dirty && addressLine1.errors">
+            Address Line1 is required
+          </div>
+        </div>
+
+        <div [class]="viewSubAccount ? 'field col-12': 'field col-12 xl:col-6'">
+          <label class="label-wrapper" for="addressLine2">Address Line2  </label>
+          <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input formControlName="addressLine2" maxlength="300"
+                     (keyup)="removeSpace('addressLine2')"
+                     id="addressLine2" type="text" pInputText>
+            </span>
+          </div>
+        </div>
+
+        <div [class]="viewSubAccount ? 'field col-12': 'field col-12 xl:col-3'">
+          <label class="label-wrapper" for="city">City</label>
+          <span class="p-float-label">
+          <p-autoComplete delay="100" [minLength]="1" maxlength="200"
+                          (keyup)="removeSpace('city')"
+                          [style]="{'width':'100%'}" formControlName="city"
+                          [suggestions]="filteredGroups" [autoHighlight]="true" id="city"
+                          (completeMethod)="filterCities($event)"
+                          [multiple]="false" [dropdown]="false">
+          </p-autoComplete>
+          </span>
+        </div>
+
+        <div [class]="viewSubAccount ? 'field col-12': 'field col-12 xl:col-3'">
+          <label class="label-wrapper" for="state">State</label>
+          <span class="p-float-label">
+          <p-autoComplete delay="100" [minLength]="1" maxlength="200"
+                          (keyup)="removeSpace('addressState')"
+                          [style]="{'width':'100%'}" formControlName="addressState"
+                          [suggestions]="filteredGroups" [autoHighlight]="true" id="state"
+                          (completeMethod)="filterStates($event)"
+                          [multiple]="false" [dropdown]="false">
+          </p-autoComplete>
+            </span>
+        </div>
+
+        <div [class]="viewSubAccount ? 'field col-12': 'field col-12 xl:col-3'">
+          <label class="label-wrapper" for="zipCode">Zip Code </label>
+          <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input formControlName="zipcode" (keyup)="removeSpace('zipcode')"
+                     id="zipCode" type="text" pInputText>
+            </span>
+          </div>
+          <div class="p-invalid text-align-left" *ngIf="zipcode.hasError('maxlength')">
+            Zip Code must be less than 30 characters
+          </div>
+        </div>
+
+        <div [class]="viewSubAccount ? 'field col-12':  'field col-12 xl:col-3'">
+          <label class="label-wrapper" for="country">Select Country*</label>
+           <span class="p-float-label">
+               <p-dropdown id="country" formControlName="country" showClear="true" [virtualScroll]="true" virtualScrollItemSize="25"
+                           [autoDisplayFirst]="false" [options]="countries.data" [filter]="true" appendTo="body"
+                           optionLabel="name" optionValue="id"></p-dropdown>
+           </span>
+          <div class="p-invalid text-align-left"
+               *ngIf="country.dirty && country.errors">
+            Country is required
+          </div>
+        </div>
+
+
+      </ng-container>
+
+      <div [class]="viewSubAccount ? 'field col-12':  'field col-12 lg:col-3'">
+        <label class="label-wrapper" for="timeZone">Select Time Zone*</label>
+               <span class="p-float-label">
+          <p-dropdown [virtualScroll]="timeZoneList.data.length > 20" virtualScrollItemSize="25" appendTo="body"
+                      [options]="timeZoneList.data" id="timeZone" class="timeZone-dropdown-list"
+                      formControlName="timeZone" optionValue="id" optionLabel="name" [showClear]="true"
+                      [autoDisplayFirst]="false" [filter]="true">
+           </p-dropdown>
+        </span>
+        <div class="p-invalid text-align-left"
+             *ngIf="subAccountCreationForm.get('timeZone').dirty && subAccountCreationForm.get('timeZone').errors">
+          Time Zone is required
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+
+<div class="grid panel-footer footer" [class]="viewSubAccount ? ' ' : 'fixed'" *ngIf="!detailVIew">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" label="Reset" (click)="resetForm()" [disabled]="loading"
+              class="p-button-outlined p-button-sm"
+              icon="fa-solid fa-rotate-right"></button>&nbsp;
+      <button *ngIf="editView" pButton type="button" (click)="onSubmit(subAccountCreationForm.value)" class="p-button-sm" iconPos="left" [disabled]="loading"
+              [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-save'"
+              label="Save"></button>
+      <button *ngIf="!viewSubAccount" [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-plus'" [disabled]="loading"
+              pButton type="button" (click)="onSubmit(subAccountCreationForm.value)" class="p-button-sm" iconPos="left"
+              label="Create Sub Account"></button>
+    </div>
+  </div>
+</div>
+
+<!--Notification Messages-->
+<p-toast position="top-right" key="bc"></p-toast>

@@ -1,0 +1,161 @@
+<div *ngIf="appFieldType.LABEL=== additionalFieldHeader[itemIndex].fieldTypeId">
+         <label class="label-wrapper" for="input_{{itemIndex}}">{{additionalFieldHeader[itemIndex].fieldName}}</label>
+            <input type="text" class="form-control" pInputText
+                   [readonly]="true" readonly [value]="additionalFieldHeader[itemIndex].value">
+</div>
+
+<div *ngIf="appFieldType.TEXT_BOX === additionalFieldHeader[itemIndex].fieldTypeId">
+
+              <label class="label-wrapper"
+                     for="input_{{itemIndex}}">{{additionalFieldHeader[itemIndex].fieldName}}
+                {{additionalFieldHeader[itemIndex].required ? '*' : ''}}</label>
+              <input [formControl]="fieldValueControl" type="text" pInputText id="input_{{itemIndex}}"
+                     maxlength="{{additionalFieldHeader[itemIndex].maxLength}}" blockSpace
+                     [pKeyFilter]="commonUtil.buildRegex(additionalFieldHeader[itemIndex].dataType)">
+</div>
+
+<div *ngIf="appFieldType.TEXT_AREA === additionalFieldHeader[itemIndex].fieldTypeId">
+  <label class="label-wrapper"
+         for="notes_{{itemIndex}}">{{additionalFieldHeader[itemIndex].fieldName}}{{additionalFieldHeader[itemIndex].required ? '*' : ''}}</label>
+  <div class="p-inputgroup">
+    <span class="p-float-label">
+      <textarea [formControl]="fieldValueControl" id="notes_{{itemIndex}}" pInputTextarea
+                maxlength="{{additionalFieldHeader[itemIndex].maxLength}}"
+                rows="{{additionalFieldHeader[itemIndex].rowCount}}" blockSpace></textarea>
+
+    </span>
+  </div>
+</div>
+
+
+<div
+  *ngIf="appFieldType.DROP_DOWN_FIELD === additionalFieldHeader[itemIndex].fieldTypeId && additionalFieldHeader[itemIndex].multiple === 'A'">
+          <label class="label-wrapper" for="multiselect_{{itemIndex}}">Select {{additionalFieldHeader[itemIndex].fieldName}}
+            {{additionalFieldHeader[itemIndex].required ? '*' : ''}}</label>
+           <p-multiSelect appMultiselectFocus [options]="additionalFieldHeader[itemIndex].optionsList.data"
+                          id="multiselect_{{itemIndex}}" optionDisabled="inactive"
+                          optionValue="id" inputId="multiselect_{{itemIndex}}" #multiSelect1
+                          [formControl]="fieldValueControl" optionLabel="name" [showToggleAll]="true" [filter]="true">
+
+             <ng-template pTemplate="footer" *ngIf="additionalFieldHeader[itemIndex].createNew === 'A'">
+               <div class="grid dp-footer">
+                 <div class="col-12 button-wrapper">
+                   <button pButton class="p-button-sm" label="Add New"
+                           (click)="addNewDropDown = true;
+                           setSelectedAdditionalField(additionalFieldHeader[itemIndex])"></button>
+                 </div>
+               </div>
+             </ng-template>
+           </p-multiSelect>
+</div>
+
+<div
+  *ngIf="appFieldType.DROP_DOWN_FIELD === additionalFieldHeader[itemIndex].fieldTypeId && additionalFieldHeader[itemIndex].multiple != 'A'">
+
+          <label class="label-wrapper" for="multiselect_{{itemIndex}}">Select {{additionalFieldHeader[itemIndex].fieldName}}
+            {{additionalFieldHeader[itemIndex].required ? '*' : ''}}</label>
+           <p-dropdown [virtualScroll]="additionalFieldHeader[itemIndex].optionsList.data.length>20"
+                       (onChange)="commonUtil.isPressEnterInsideDropdown(dropdown1)" optionDisabled="inactive"
+                       virtualScrollItemSize="25"
+                       [options]="additionalFieldHeader[itemIndex].optionsList.data" [showClear]="true" #dropdown1
+
+                       id="dropdown_{{itemIndex}}" optionValue="id" optionLabel="name" [autoDisplayFirst]="false"
+                       [formControl]="fieldValueControl" inputId="dropdown_{{itemIndex}}" [filter]="true">
+
+             <ng-template pTemplate="selectedItem">
+                <div>{{dropdown1.selectedOption.name}}</div>
+             </ng-template>
+
+             <ng-template pTemplate="footer" *ngIf="additionalFieldHeader[itemIndex].createNew === 'A'">
+               <div class="grid dp-footer">
+                 <div class="col-12 button-wrapper">
+                   <button pButton class="p-button-sm" label="Add New"
+                           (click)="addNewDropDown = true;
+                           setSelectedAdditionalField(additionalFieldHeader[itemIndex])"></button>
+                 </div>
+               </div>
+             </ng-template>
+           </p-dropdown>
+</div>
+
+<div *ngIf="appFieldType.FILE_INPUT === additionalFieldHeader[itemIndex].fieldTypeId">
+  <label class="label-wrapper" for="fileText">Upload {{additionalFieldHeader[itemIndex].fieldName}} Here
+    {{additionalFieldHeader[itemIndex].required ? '*' : ''}}</label>
+  <div class="p-inputgroup">
+              <input [id]="'fileUploadH'+ itemIndex" #fileInput type="file"
+                     (change)="commonUtil.changeFileInput($event,additionalField, additionalFieldHeader[itemIndex],false, fileInput)"
+                     accept="{{additionalFieldHeader[itemIndex].fileTypes}}" hidden>
+              <input id="fileText" [formControl]="fieldValueControlAttachment" readonly type="text" #addFileInput
+                     style="border-radius: 6px 0 0 6px !important;"
+                     (click)="commonUtil.fileUploadClick('fileUploadH'+ ''+ itemIndex)"
+                     (keydown.enter)="commonUtil.fileUploadClick('fileUploadH'+ ''+ itemIndex)"
+                     [value]="fileInput.files[0] ? fileInput.files[0].name : null" pInputText>
+
+              <button tabindex="-1"
+                      style="margin: 0 !important; height: 31px !important; border-radius: 0 4px 4px 0 !important;"
+                      type="button" pButton label="Browse" class="p-button browse-button-wrapper p-button-sm"
+                      (click)="commonUtil.fileUploadClick('fileUploadH'+ ''+ itemIndex)"></button>
+                  <button *ngIf="fileInput.files[0] != null" tabindex="-1" pButton type="button"
+                          class="p-button-borderless p-button-sm" icon="fa-solid fa-rotate-right"
+                          (click)="fileInput.value = null; commonUtil.changeFileInput(null,additionalField, null,true, fileInput)"></button>
+  </div>
+</div>
+
+<div *ngIf="appFieldType.DATE_FIELD=== additionalFieldHeader[itemIndex].fieldTypeId">
+                  <label class="label-wrapper" for="dateField_{{itemIndex}}">{{additionalFieldHeader[itemIndex].fieldName}}
+                    {{additionalFieldHeader[itemIndex].required ? '*' : ''}} </label>
+              <p-calendar appTabindexMinusOne [formControl]="fieldValueControl" id="dateField_{{itemIndex}}" [showButtonBar]="true"
+                          (onSelect)="formatDateHeadingSection($event, itemIndex)" [showIcon]="true"></p-calendar>
+</div>
+
+<div *ngIf="appFieldType.CHECK_BOX === additionalFieldHeader[itemIndex].fieldTypeId">
+  <label class="label-wrapper"
+         for="binaryA">{{additionalFieldHeader[itemIndex].fieldName}}{{additionalFieldHeader[itemIndex].required ? '*' : ''}}</label>
+  <div class="p-inputgroup additional-field-checkbox-wrapper">
+    <div class="field-checkbox">
+      <p-checkbox name="checkBox" [formControl]="fieldValueControl" id="binaryA" binary="true"></p-checkbox>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="appFieldType.RADIO_BUTTON === additionalFieldHeader[itemIndex].fieldTypeId ">
+  <div class="grid col-12" [style]="{'align-items': 'center'}">
+    <div class="p-inputgroup">
+      <span
+        class="label-wrapper">{{additionalFieldHeader[itemIndex].fieldName}}{{additionalFieldHeader[itemIndex].required ? '*' : ''}} </span>
+    </div>
+    <div class="radio-container" *ngFor="let option of additionalFieldHeader[itemIndex].options">
+      <label>
+        <input id="male1" type="radio" value="{{option.optionValue}}" [formControl]="fieldValueControl">
+        <span style="margin-left: 0.2rem" for="male1">{{' ' + option.optionValue}}</span>
+      </label>
+    </div>
+  </div>
+</div>
+
+<div class="p-invalid text-align-left" *ngIf="(additionalField.get('fieldValue').errors && additionalField.get('fieldValue').dirty) ||
+(additionalField.get('attachment').errors && additionalField.get('attachment').dirty)">
+
+  <div
+    *ngIf="additionalField.get('fieldValue').dirty && additionalField.get('fieldValue').hasError('required')"> {{additionalFieldHeader[itemIndex].fieldName}}
+    is required
+  </div>
+
+  <div
+    *ngIf="additionalField.get('attachment').dirty && additionalField.get('attachment').hasError('required')"> {{additionalFieldHeader[itemIndex].fieldName}}
+    is required
+  </div>
+
+  <div *ngIf="additionalField.get('fieldValue').hasError('isValidate')">Field require
+    ({{appConstant.DATA_TYPE_PATTERN_MAP.get(additionalFieldHeader[itemIndex].dataType)}}) type
+  </div>
+</div>
+
+
+<!--Create New DropDown-->
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" (onHide)="addNewDropDown = false" position="right" [modal]="true"
+           [dismissible]="true" *ngIf="addNewDropDown" [(visible)]="addNewDropDown">
+  <ng-template pTemplate="header">Create New DropDown Option</ng-template>
+  <app-additional-field-add-new [field]="selectedAdditionalField" *ngIf="addNewDropDown" [isCreate]= "isCreate"
+                                (closedComponent)="addNewDropDown = false; updateAdditionalFieldDropDowns.emit(selectedAdditionalField)"></app-additional-field-add-new>
+</p-sidebar>

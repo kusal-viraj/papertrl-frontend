@@ -1,0 +1,33 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "tenantId" : "949596665",
+      "companyName": "DNS Holding (Pvt) Ltd.",
+      "emailAddress": "dns@holding.com",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 2,
+      "tenantId" : "949596663",
+      "companyName": "DNS Holding (Pvt) Ltd.",
+      "emailAddress": "dns@holding.com",
+      "status": "I"
+    },
+    {
+      "id": 10079,
+      "tenantId" : "949596666",
+      "companyName": "DNS Holding (Pvt) Ltd.",
+      "emailAddress": "dns@holding.com",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 4,
+      "tenantId" : "949596667",
+      "companyName": "DNS Holding (Pvt) Ltd.",
+      "emailAddress": "dns@holding.com",
+      "status": "I"
+    }
+  ],
+  "totalRecords": 4
+}

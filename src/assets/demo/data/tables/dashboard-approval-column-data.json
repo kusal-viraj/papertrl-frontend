@@ -1,0 +1,103 @@
+
+{
+  "advancedFilters": [
+  ],
+  "columns": [
+    {
+      "field": "checkbox",
+      "header": null,
+      "columnShow": false,
+      "isSortable": false,
+      "isReOrderable": false,
+      "isReSizable": false,
+      "canHide": false,
+      "align": "center",
+      "searchType": "checkbox"
+    },
+    {
+      "field": "action",
+      "header": "Action",
+      "isSortable": false,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "actionButton",
+      "canHide": false
+    },
+    {
+      "field": "vendorName",
+      "header": "Vendor",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Vendor"
+    },
+    {
+      "field": "documentType",
+      "header": "Document Type",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Document Type"
+    },
+    {
+      "field": "documentNo",
+      "header": "Document No",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Document No"
+    },
+    {
+      "field": "date",
+      "header": "Applicable Date",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "date",
+      "canHide": true,
+      "placeholder": "Applicable Date"
+    },
+    {
+      "field": "totalAmount",
+      "header": "Total Amount",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "numeric",
+      "canHide": true,
+      "placeholder": "Total Amount"
+    }
+
+  ],
+  "state": {
+    "first": 0,
+    "rows": 10,
+    "columnWidths": "100,140,140,160,150, 130",
+    "columnOrder": [
+      "action",
+      "vendorName",
+      "documentType",
+      "documentNo",
+      "date",
+      "totalAmount"
+    ]
+  }
+}

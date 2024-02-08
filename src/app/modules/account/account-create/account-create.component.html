@@ -1,0 +1,133 @@
+<div class="drawer-content p-3">
+<form [formGroup]="createAccountForm"  autocomplete="off">
+
+  <div class="grid p-fluid">
+
+    <div [ngClass]="!panel ? 'field col-12 xl:col-2 lg:col-4': 'field col-12'" *ngIf="detailView ? createAccountForm.get('accountType').value : true">
+        <span>
+          <label for="accountType"  class="label-wrapper">Select Account Type</label>
+            <p-dropdown [virtualScroll]="accountUtility.accountTypes.data.length > 20" virtualScrollItemSize="25"
+                        inputId="dropdownAccountType" formControlName="accountType" id="accountType" [autoDisplayFirst]="false" [showClear]="true"
+                        [options]="accountUtility.accountTypes.data" optionLabel="name" optionValue="id" #selectedAccType
+                        (onChange)="loadAccountDetailTypes(true); getParentTypes();
+                        commonUtil.isPressEnterInsideDropdown(selectedAccType)" [filter]="true"></p-dropdown>
+
+        </span>
+    </div>
+
+    <div [ngClass]="!panel ?'field col-12 xl:col-3 lg:col-4' : 'field col-12'" *ngIf="detailView ? createAccountForm.get('accountDetailType').value : true">
+        <span>
+          <label class="label-wrapper" for="accountDetailType">Select Account Detail Type</label>
+            <p-dropdown [virtualScroll]="accountUtility.accountTypes.data.length > 20" virtualScrollItemSize="25"  inputId="dropdownAccountDetailType"
+                        formControlName="accountDetailType" id="accountDetailType" #accountDetType
+                        (onChange)="commonUtil.isPressEnterInsideDropdown(accountDetType)"
+                        [autoDisplayFirst]="false" [showClear]="true" [filter]="true"
+                        [options]="accountDetailTypes.data" optionLabel="name" optionValue="id"></p-dropdown>
+
+        </span>
+    </div>
+
+    <div [ngClass]="!panel ?'field col-12 xl:col-3 lg:col-4' : 'field col-12'" *ngIf="detailView ? createAccountForm.get('number').value : true">
+      <div>
+            <span>
+              <label class="label-wrapper" for="accountNumber">Account Number*</label>
+              <input formControlName="number" (keyup)="removeSpaces.clearSpace(createAccountForm, 'number')"
+                     id="accountNumber" maxlength="100" type="text" pInputText>
+
+            </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="createAccountForm.get('number').dirty && createAccountForm.get('number').errors">
+        Account Number is required
+      </div>
+    </div>
+
+    <div [ngClass]="!panel ?'field col-12 xl:col-2 lg:col-4' : 'field col-12'" *ngIf="detailView ? createAccountForm.get('name').value : true">
+      <div>
+            <span>
+              <label class="label-wrapper" for="accountName">Account Name</label>
+              <input formControlName="name" id="accountName" maxlength="200" (keyup)="removeSpaces.clearSpace(createAccountForm, 'name')" type="text" pInputText>
+            </span>
+      </div>
+    </div>
+
+    <div [ngClass]="!panel ?'field col-12 xl:col-2 lg:col-4' : 'field col-12'" *ngIf="detailView ? createAccountForm.get('parentAccount').value : true">
+        <span>
+          <label for="parentAccount" class="label-wrapper">Select Parent Account</label>
+            <p-dropdown [virtualScroll]="parentList.data.length > 20" virtualScrollItemSize="25" #parentAcc
+                        inputId="dropdownParentAccount" formControlName="parentAccount" id="parentAccount"
+                        [autoDisplayFirst]="false" (onChange)="commonUtil.isPressEnterInsideDropdown(parentAcc)"
+                     optionValue="id" class="account-responsive-dropdown" [options]="parentList.data" optionLabel="name" [showClear]="true" [filter]="true" #pAccount>
+                           <ng-template pTemplate="selectedItem">
+                <div>{{pAccount.selectedOption.name}}</div>
+              </ng-template>
+
+              <ng-template let-projectCodes pTemplate="item">
+                <div class="grid">
+                  <div class="dropdown-list"
+                       [ngClass]="projectCodes.id == 0 ? 'dropdown-add': null">{{projectCodes.name}}</div>
+                  <em *ngIf="projectCodes.name == 'Add New'" class="pi pi-plus dropdown-add dropdown-icon"></em>
+                </div>
+              </ng-template>
+            </p-dropdown>
+
+        </span>
+    </div>
+
+    <div [ngClass]="!panel ?'field col-12 xl:col-5 lg:col-4' : 'field col-12'" *ngIf="detailView ? createAccountForm.get('description').value : true">
+      <label  class="label-wrapper" for="description">Enter Description</label>
+           <div class="p-inputgroup">
+            <span class="p-float-label">
+              <textarea formControlName="description" (keyup)="removeSpaces.clearSpace(createAccountForm, 'description')" id="description" rows="1"
+                        pInputTextarea></textarea>
+
+            </span>
+      </div>
+    </div>
+
+    <div [ngClass]="!panel ?'field col-12 xl:col-2 sm:col-6 lg:col-4 purchasing-account-wrapper' : 'purchasing-account-edit-wrapper field col-6'"
+         *ngIf="detailView ? createAccountForm.get('isPurchaseAccount').value === true : true">
+      <label class="label-wrapper"
+        for="purchasingAccount">Purchasing Account</label>
+    <div class="p-inputgroup" style="position:relative">
+      <div class="field-checkbox">
+        <p-checkbox name="purchasingAccount"  formControlName="isPurchaseAccount" id="purchasingAccount" binary="true"></p-checkbox>
+
+      </div>
+    </div>
+    </div>
+
+
+    <div [ngClass]="!panel ?'field col-12 sm:col-6 xl:col-4 lg:col-4' : 'field col-6'"
+         *ngIf="detailView ? createAccountForm.get('isPurchaseAccount').value === true : true">
+      <label class="label-wrapper"
+        for="expenseAccount">Expense Account</label>
+      <div class="p-inputgroup" style="position:relative">
+        <div class="field-checkbox">
+          <p-checkbox name="expenseAccount" class="pl-2" formControlName="isExpenseAccount" id="expenseAccount" binary="true"></p-checkbox>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</form>
+</div>
+
+<div [class]="panel ? 'panel-footer' : 'footer fixed'" class="grid panel-footer footer">
+   <div class="col-12 button-set-wrapper form-footer-button" >
+    <div class="pull-right">
+      <button pButton type="button" (click)="resetAccountForm()" label="Reset"
+              class="p-button-outlined p-button-sm margin-right button-responsive-mobile" [disabled]="loading" *ngIf="!detailView" icon="fa-solid fa-rotate-right"></button>&nbsp;
+
+      <button pButton (click)="submitAccount(createAccountForm.value)" type="button" class="p-button-sm button-responsive-mobile" [disabled]="loading" [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-plus'"
+              iconPos="left" *ngIf="!editView && !detailView" label="Create Account"></button>
+
+      <button pButton  (click)="submitAccount(createAccountForm.value)" type="button" class="p-button-sm" [disabled]="loading" [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-save'"
+              iconPos="left" *ngIf="editView" label="Save"></button>
+    </div>
+  </div>
+</div>
+
+<!--Notification Messages-->
+<p-toast position="bottom-right" key="bc3"></p-toast>

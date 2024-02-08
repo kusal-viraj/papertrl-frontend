@@ -1,0 +1,73 @@
+<p-dialog position="top-right" appendTo="body" [(visible)]="isViewMatchingTable" [draggable]="false"
+          (onHide)="closeDrawer.emit()" (close)="closeDrawer.emit()" [ngClass]="'three-way-matching-popup-wrapper'"
+          [resizable]="false" [style]="{width: '60vw', minWidth: '600px', marginTop:'88px',  marginRight:'20px'}"
+          [baseZIndex]="90000">
+
+  <ng-template pTemplate="header">
+    <h5 class="popup-header-label">Three-Way Matching</h5>
+  </ng-template>
+
+  <p-table responsiveLayout="scroll" [value]="matchingTableValues" scrollable="true" scrollHeight="160px"
+           [style]="{width:'auto'}" class="table-scroll" scrollDirection="both"
+           styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="min-width:100px" class="thead-style" id="tableSku">Vendor Part Number</th>
+        <th style="min-width:150px" class="thead-style" id="tableDescription">Description</th>
+        <th style="min-width:125px" class="thead-style" id="accNo">Account Number</th>
+        <th style="min-width:150px" class="thead-style detail-table-header-right" id="poAmount">Amount In PO</th>
+        <th style="min-width:150px" class="thead-style detail-table-header-right" id="invoiceAmount">Amount In Bill</th>
+        <th style="min-width:75px;"  class="thead-style detail-table-header-right" id="poQty">Qty In PO</th>
+        <th style="min-width: 130px" class="thead-style detail-table-header-right" id="receiptQty">Qty In Receipt(s)</th>
+        <th style="min-width:75px;"  class="thead-style detail-table-header-right" id="billQty">Qty In Bill</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-i="rowIndex" let-item>
+
+      <tr id="trr_{{i}}">
+
+        <td style="width:100px">
+          <div app-read-more-text [fieldValue]="item.sku"
+               [maxCharacters]="15"></div>
+        </td>
+
+        <td style="width:150px">
+          <div app-read-more-text [fieldValue]="item.description"
+               [maxCharacters]="20"></div>
+        </td>
+
+        <td style="width:125px">
+          <div app-read-more-text [fieldValue]="item.accountNumber"
+               [maxCharacters]="20"></div>
+        </td>
+
+        <td style="width:150px" class="text-right">
+          <div>{{item.poLineAmount | number : '1.2-2'}}</div>
+        </td>
+
+
+        <td style="width:150px" class="text-right">
+          <div
+            [class]="(item.billLineAmount !== item.poLineAmount)? 'invalid-line-value':''">
+            {{item.billLineAmount | number : '1.2-2'}}</div>
+        </td>
+
+        <td style="width:75px" class="text-right">
+          <div>{{item.poLineQty}}</div>
+        </td>
+
+        <td style="min-width: 130px" class="text-right">
+          <div>{{item.poReceiptLineQty}}</div>
+        </td>
+
+        <td style="width:110px" class="text-right">
+          <div [class]="(item.billLineQty !== item.poLineQty)? 'invalid-line-value':''">{{item.billLineQty}}</div>
+        </td>
+
+      </tr>
+    </ng-template>
+
+  </p-table>
+
+</p-dialog>

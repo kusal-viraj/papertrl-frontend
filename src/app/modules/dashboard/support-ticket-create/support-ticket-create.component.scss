@@ -1,0 +1,73 @@
+@import "../../../../scss/color.scss";
+
+.support-form-wrapper {
+  p-dropdown {
+    width: 100%;
+  }
+
+  .category {
+    .icon {
+      align-self: center;
+      text-align: center;
+
+      i {
+        font-size: 24px;
+        color: $black-gray;
+      }
+    }
+
+    .info-wrapper {
+      align-self: center;
+      margin-top: 0;
+
+      .title {
+        font-weight: bold;
+        font-size: 14px;
+        color: $green;
+      }
+
+      .description {
+        color: $black-gray;
+        font-size: 12px;
+        white-space: initial;
+        word-break: break-word;
+      }
+    }
+  }
+
+  .drop-zone-style {
+    border-color: $green;
+    border-width: 1px;
+    height: 115px !important;
+    background-color: $secondary-light-green;
+
+    ngx-dropzone-preview {
+      height: 72px !important;
+      max-width: 160px !important;
+      min-height: 90px !important;
+      min-width: 160px !important;
+    }
+
+    .file-label {
+      width: 140px;
+      font-size: 11px
+    }
+    ngx-dropzone-label{
+      z-index: 0;
+    }
+  }
+}
+
+.footer {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: #ffffff;
+}
+
+
+.panel-footer{
+  left: 7px;
+}

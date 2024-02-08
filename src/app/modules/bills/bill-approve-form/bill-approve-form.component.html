@@ -1,0 +1,1466 @@
+<form [formGroup]="billApproveForm" autocomplete="off">
+    <input formControlName="focusListener" [hidden]="true">
+    <div class="form-wrapper ml-2 mr-2">
+        <div class="grid p-fluid">
+            <div [ngClass]="isSplitterSmall ? 'field col-6': 'field md:col-6 sm:col-12 xl:col-3  lg:col-4 col-12'">
+          <span>
+            <label class="label-wrapper" for="billNumber">Bill Number</label>
+            <input formControlName="billNo" id="billNumber" [readOnly]="true" type="text" pInputText>
+          </span>
+            </div>
+            <div [ngClass]="isSplitterSmall ? 'field col-6': 'field md:col-6 sm:col-12 lg:col-4 xl:col-3  col-12'">
+                <div>
+            <span>
+              <label class="label-wrapper" for="billDate">Bill Date</label>
+             <p-calendar formControlName="billDateStr" class="calendar-width" [showIcon]="true"
+                         id="billDate"></p-calendar>
+            </span>
+                </div>
+            </div>
+            <div [ngClass]="isSplitterSmall ? 'field col-6': 'field md:col-6 sm:col-12 xl:col-6  lg:col-4 col-12'">
+          <span>
+            <label class="label-wrapper" for="vendor">Vendor</label>
+            <input formControlName="vendorName" [readOnly]="true" id="vendor" type="text" pInputText>
+          </span>
+            </div>
+
+            <div [ngClass]="isSplitterSmall ? 'field col-6': 'field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12'">
+        <span>
+          <label class="label-wrapper" for="poNumber">Purchase Order</label>
+            <p-dropdown [virtualScroll]="poList.data.length > 20" virtualScrollItemSize="25" formControlName="poId"
+                        id="poNumber"
+                        (onChange)="billUtility.getMatchingTableData(billApproveForm, expenseFields, itemForm)"
+                        [autoDisplayFirst]="false" appendTo="body" optionValue="id" [showClear]="true"
+                        [options]="poList.data" optionLabel="name" [filter]="true"></p-dropdown>
+
+        </span>
+            </div>
+
+            <div [ngClass]="isSplitterSmall ? 'field col-6': 'field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12'">
+      <span>
+         <label class="label-wrapper" for="projectCodeId">Select Project/Task<span
+                 *ngIf="isAsteriskMarkShown(bill,appFormConstants.PROJECT_CODE_ID)">{{'*'}}</span>
+         </label>
+           <p-dropdown [virtualScroll]="projectCodeList.data.length>20" virtualScrollItemSize="25"
+                       [options]="projectCodeList.data" id="projectCodeId" optionDisabled="inactive"
+                       inputId="dropdown" appendTo="body" showClear="true" #dpNameProjectTask
+                       (onChange)=" changeList('headerProjectCodes', dpNameProjectTask.selectedOption.id, null);
+                        billUtility.patchProjectTaskToLine(expenseFields, itemFields, dpNameProjectTask.selectedOption.id);
+                       billUtility.loadAccountsAccordingToTheProjectTaskId(billApproveForm.get('projectCodeId').value,null, false,billId);
+                                   billUtility.clearAccountWhenClearHeaderProjectTask(expenseFields)"
+                       (onClear)="billUtility.clearAccountWhenClearHeaderProjectTask(expenseFields);dpNameProjectTask.focus()"
+                       formControlName="projectCodeId" optionLabel="name" optionValue="id"
+                       [autoDisplayFirst]="false" [filter]="true">
+
+             <ng-template pTemplate="selectedItem">
+               <div>{{dpNameProjectTask.selectedOption.name}}</div>
+             </ng-template>
+
+            <ng-template pTemplate="footer"
+                         *ngIf="privilegeService.isAuthorized(appAuthorities.PROJECT_CODES_CREATE)">
+              <div class="grid dp-footer">
+                <div class="col-12 button-wrapper">
+                  <button pButton class="p-button-sm" label="Add New"
+                          (click)="isAddNewProjectCodes = true"></button>
+                </div>
+              </div>
+            </ng-template>
+           </p-dropdown>
+        <div class="p-invalid text-align-left"
+             *ngIf="bill.projectCodeId.dirty && bill.projectCodeId.errors">
+         Project/Task is required
+      </div>
+        </span>
+            </div>
+
+            <div [ngClass]="isSplitterSmall ? 'field col-6': 'field md:col-6 sm:col-12 xl:col-3  lg:col-4 col-12'">
+          <span>
+            <label class="label-wrapper" for="totalAmount">Total Amount</label>
+            <input formControlName="billAmount"
+                   currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }" [readOnly]="true"
+                   id="totalAmount" type="text" pInputText>
+
+          </span>
+            </div>
+
+            <div *ngIf="billApproveForm.get('remainingPoCeiling').value !== null"
+                 [ngClass]="isSplitterSmall ? 'field col-6': 'field md:col-6 sm:col-12 xl:col-3  lg:col-6 col-12'">
+                <div>
+            <span>
+              <label class="label-wrapper" for="remainingCeiling">Remaining Ceiling</label>
+              <input formControlName="remainingPoCeiling" [readOnly]="true" id="remainingCeiling"
+                     currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                     type="text" pInputText>
+            </span>
+
+                </div>
+            </div>
+
+            <div *ngIf="(billApproveForm.get('receiptId').value) || (billApproveForm.get('poId').value)" [ngClass]="isSplitterSmall ?
+    'field col-6': 'field md:col-6 sm:col-12 xl:col-3 lg:col-6 col-12'">
+        <span>
+           <label class="label-wrapper" for="poNumber">Receipt Number</label>
+            <p-dropdown [virtualScroll]="receiptList.data.length > 20" virtualScrollItemSize="25"
+                        formControlName="receiptId"
+                        id="receiptNumber" #headerReceipt
+                        (onChange)="billUtility.getPoReceiptNumberById(billApproveForm.get('receiptId').value, null, false,
+                        expenseFields, itemForm);
+                         billUtility.ifClearHeaderLevelReceiptCLearLineLevelReceiptValue(billApproveForm.get('receiptId').value,
+                      expenseFields, itemForm); billUtility.getMatchingTableData(billApproveForm, expenseFields, itemForm)"
+                        [autoDisplayFirst]="false" appendTo="body" optionValue="id"
+                        class="po-receipt-dropbox-wrapper header-receipt-wrapper"
+                        [showClear]="true"
+                        [options]="receiptList.data" optionLabel="name" [filter]="true">
+              <ng-template pTemplate="selectedItem">
+                <div>{{headerReceipt.selectedOption.name}}</div>
+              </ng-template>
+
+              <ng-template let-dropDown pTemplate="item">
+                <div class="grid">
+                  <div class="dropdown-list"
+                       [ngClass]="dropDown.id == 0 ? ' dropdown-add': null">{{dropDown.name}}</div>
+                  <em *ngIf="dropDown.name == 'Add New'"
+                      class="pi pi-plus dropdown-icon dropdown-add"></em>
+                </div>
+                    </ng-template>
+            </p-dropdown>
+
+        </span>
+            </div>
+
+            <div *ngIf="(billApproveForm.get('additionalNotes').value) && (isApproveView)"
+                 [ngClass]="isSplitterSmall ? 'field col-6': 'field md:col-6 sm:col-12 xl:col-3  lg:col-4 col-12'">
+          <span>
+            <label class="label-wrapper" for="billNumber">Additional Notes</label>
+            <input formControlName="additionalNotes" id="additionalNotes" [readOnly]="true" type="text"
+                   pInputText (keyup)="removeSpace.clearSpace(billApproveForm, 'additionalNotes')">
+          </span>
+            </div>
+
+            <div *ngIf="(billApproveForm.get('term').value)" [ngClass]="isSplitterSmall ?
+    'field col-6': 'field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12'">
+        <span>
+          <label class="label-wrapper" for="poNumber">Payment Term</label>
+            <p-dropdown [virtualScroll]="termList.data.length > 20" virtualScrollItemSize="25" formControlName="term"
+                        id="term"
+                        [autoDisplayFirst]="false" [readonly]="true"
+                        appendTo="body" optionValue="id"
+                        [options]="termList.data" optionLabel="name" [filter]="true"></p-dropdown>
+        </span>
+            </div>
+
+
+            <div [ngClass]="isSplitterSmall ? 'field col-6': 'field md:col-6 sm:col-12 xl:col-3 lg:col-6 col-12'"
+                 *ngIf="billApproveForm.get(appFormConstants.TERM).value === 10 && billApproveForm.get('netDaysDue').value">
+                <div>
+            <span>
+              <label class="label-wrapper" for="dueDate">Net Days Due</label>
+              <input formControlName="netDaysDue" numbersOnly id="netDaysDue" type="text"
+                     pInputText [readOnly]="true">
+            </span>
+                </div>
+            </div>
+
+            <div [ngClass]="isSplitterSmall ?'field col-6': 'field md:col-6 sm:col-12 xl:col-3 lg:col-6 col-12'"
+                 *ngIf="billApproveForm.get(appFormConstants.TERM).value === 10 && billApproveForm.get('discountPercentage').value">
+                <div>
+            <span>
+              <label class="label-wrapper" for="discountPercentage">Discount Percentage</label>
+              <input formControlName="discountPercentage" id="discountPercentage" type="text"
+                     currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.'}" maxlength="6"
+                     pInputText [readOnly]="true">
+            </span>
+                </div>
+            </div>
+
+            <div [ngClass]="isSplitterSmall ? 'field col-6': 'field md:col-6 sm:col-12 xl:col-3 lg:col-6 col-12'"
+                 *ngIf="billApproveForm.get(appFormConstants.TERM).value === 10 && billApproveForm.get('discountDaysDue').value">
+                <div>
+            <span>
+              <label class="label-wrapper" class="p-float-label" for="dueDate">Discount Days Due</label>
+              <input formControlName="discountDaysDue" id="discountDaysDue" numbersOnly type="text" appDecimalNumber
+                     pInputText [readOnly]="true">
+            </span>
+                </div>
+            </div>
+
+
+            <div *ngIf="(billApproveForm.get('dueDateStr').value)"
+                 [ngClass]="isSplitterSmall ? 'field col-6': 'field md:col-6 sm:col-12 lg:col-4 xl:col-3  col-12'">
+                <div>
+            <span>
+              <label class="label-wrapper" for="billDate">Due Date</label>
+             <p-calendar formControlName="dueDateStr" class="disabled calendar-width" [showIcon]="true"
+                         id="dueDate"></p-calendar>
+            </span>
+                </div>
+            </div>
+
+
+            <div [ngClass]="isSplitterSmall ? 'field col-6': 'field md:col-6 sm:col-12 lg:col-4 xl:col-3  col-12'"
+                 *ngIf="((billApproveForm.get('departmentId').value) && !submittedByVendor) ||
+         (submittedByVendor && workflowLevel === 1 || billApproveForm.get('departmentId').value) || isAsteriskMarkShown(bill,appFormConstants.DEPARTMENT_ID)">
+      <span>
+        <label class="label-wrapper" for="departmentId">Department<span
+                *ngIf="isAsteriskMarkShown(bill,appFormConstants.DEPARTMENT_ID)">{{'*'}}</span>
+        </label>
+        <p-dropdown [virtualScroll]="department.data.length>20" virtualScrollItemSize="25"
+                    [disabled]="isDepartmentFieldRequired()"
+                    [options]="department.data" id="departmentId" optionDisabled="inactive" #departmentDp
+                    inputId="dropdown" appendTo="body" showClear="true" (onClear)="departmentDp.focus()"
+                    formControlName="departmentId" optionLabel="name" optionValue="id"
+                    [autoDisplayFirst]="false" [filter]="true">
+        </p-dropdown>
+<div class="p-invalid text-align-left"
+     *ngIf="bill.departmentId.dirty && bill.departmentId.errors">
+        Department is required
+      </div>
+      </span>
+            </div>
+
+            <div [ngClass]="isSplitterSmall ? 'field col-6': 'field md:col-6 sm:col-12 lg:col-4 xl:col-3  col-12'">
+                <div class="label-wrapper">Pay When Customer Pay</div>
+                <div class="p-inputgroup">
+                    <p-checkbox class="costume-checkbox checkbox-label-wrapper"
+                                (onChange)="billUtility.payWhenCustomerPay($event, billApproveForm)"
+                                formControlName="payWhenCustomerPay" [binary]="true">
+                    </p-checkbox>
+                </div>
+            </div>
+
+            <div [ngClass]="isSplitterSmall ? 'field col-6': 'field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12'">
+        <span>
+          <label class="label-wrapper" for="poNumber">Accounting Period – Month<span
+                  *ngIf="isAsteriskMarkShown(bill,appFormConstants.ACCOUNT_PERIOD_MONTH)">{{'*'}}</span></label>
+               <p-dropdown [options]="billUtility.periodMonth" optionValue="id" #accDp
+                           [autoDisplayFirst]="false" optionLabel="name" (onClear)="accDp.focus()"
+                           formControlName="accountPeriodMonth" [filter]="false"
+                           showClear="true" appendTo="body">
+            <ng-template let-item pTemplate="selectedItem">
+              {{ item.name }}
+            </ng-template>
+          </p-dropdown>
+            <div class="p-invalid text-align-left"
+                 *ngIf="bill.accountPeriodMonth.dirty && bill.accountPeriodMonth.errors">
+          Accounting Period – Month is required
+        </div>
+        </span>
+            </div>
+
+            <div [ngClass]="isSplitterSmall ? 'field col-6': 'field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12'">
+        <span>
+          <label class="label-wrapper" for="poNumber">Accounting Period – Year<span
+                  *ngIf="isAsteriskMarkShown(bill,appFormConstants.ACCOUNT_PERIOD_YEAR)">{{'*'}}</span></label>
+                <p-dropdown [options]="billUtility.periodYears" optionValue="value"
+                            [autoDisplayFirst]="false" optionLabel="value" #accYear
+                            formControlName="accountPeriodYear" [filter]="false"
+                            showClear="true" appendTo="body" (onClear)="accYear.focus()">
+            <ng-template let-item pTemplate="selectedItem">
+              {{ item.value }}
+            </ng-template>
+          </p-dropdown>
+           <div class="p-invalid text-align-left"
+                *ngIf="bill.accountPeriodYear.dirty && bill.accountPeriodYear.errors">
+          Accounting Period – Year is required
+        </div>
+        </span>
+            </div>
+
+            <div [ngClass]="isSplitterSmall ? 'field col-6': 'field md:col-6 sm:col-12 lg:col-4 xl:col-3  col-12'"
+                 *ngIf="billUtility.isCheckedPayWhenCustomerPay">
+        <span class="p-fluid">
+           <label class="label-wrapper" for="vendor">Select Invoice*</label>
+          <p-dropdown [virtualScroll]="customerInvoiceList.data.length>20" virtualScrollItemSize="25"
+                      [options]="customerInvoiceList.data" id="invoiceList"
+                      #selectedInvoice (onChange)="changeCustomerInvoice(selectedInvoice)"
+                      formControlName="customerInvoiceId" optionValue="id" optionLabel="name" [showClear]="true"
+                      [autoDisplayFirst]="false" [filter]="true">
+             <ng-template pTemplate="selectedItem">
+               <div>{{selectedInvoice.selectedOption.name}}</div>
+             </ng-template>
+
+             <ng-template let-invoice pTemplate="item">
+               <div class="grid">
+                 <div class="dropdown-list"
+                      [ngClass]="invoice.name == 'Add New' ? ' dropdown-add': null">{{invoice.name}}</div>
+                 <i *ngIf="invoice.name == 'Add New'" class="pi pi-plus dropdown-icon  dropdown-add"></i>
+               </div>
+             </ng-template>
+           </p-dropdown>
+
+        </span>
+                <div class="p-invalid text-align-left"
+                     *ngIf="billApproveForm.get('customerInvoiceId').dirty && billApproveForm.get('customerInvoiceId').errors">
+                    Customer Invoice is required
+                </div>
+            </div>
+
+            <div
+                    *ngIf="billApproveForm.get('poId').value && (poStatus !== appConstant.STATUS_CANCEL || (poStatus === appConstant.STATUS_CANCEL && billDetails.closePo === true))"
+                    [ngClass]="isSplitterSmall ? 'field col-6': 'field md:col-6 sm:col-12 xl:col-3  lg:col-6 col-12'">
+
+                <p-checkbox class="costume-checkbox checkbox-label-wrapper" formControlName="closePo" [binary]="true"
+                            label="Close PO">
+                </p-checkbox>
+
+            </div>
+
+            <div *ngIf="billDetails.remark"
+                 [ngClass]="isSplitterSmall ? 'field col-12': 'field md:col-12 sm:col-12 xl:col-9  lg:col-12 col-12'">
+                <label class="label-wrapper" for="comment">Previous User Comment</label>
+                <span class="p-inputgroup">
+            <textarea id="comment" formControlName="remark" [rows]="1"
+                      pInputTextarea></textarea>
+          </span>
+            </div>
+
+            <ng-container class="grid" formArrayName="additionalData" *ngIf="headerAdditionalFieldDetails.length > 0">
+                <ng-container *ngFor="let additionalField of headingSectionArray.controls; let itemIndex = index"
+                              [formGroupName]="itemIndex">
+                    <app-additional-field-header-items
+                            *ngIf="commonUtil.checkUndefinedValues(additionalField.get('fieldValue').value, headerAdditionalFieldDetails[itemIndex].docStatus, false)"
+                            [additionalField]="additionalField" [parentForm]="billApproveForm"
+                            class="field lg:col-4 xl:col-3 md:col-4 sm:col-6 col-12" [isCreate]="eBillEdit"
+                            (updateAdditionalFieldDropDowns)="updateAdditionalFieldDropDowns($event)"
+                            [itemIndex]="itemIndex" [additionalFieldHeader]="headerAdditionalFieldDetails">
+                    </app-additional-field-header-items>
+                </ng-container>
+            </ng-container>
+        </div>
+        <br>
+        <!--  <div class="grid notify-days-msg">-->
+        <!--    <p>You can view the items which don't have an item number in the item cost distribution table from expense cost-->
+        <!--      distribution section.</p>-->
+        <!--  </div>-->
+        <p-tabView styleClass="tabview-custom">
+            <p-tabPanel>
+                <ng-template pTemplate="header">
+                    <span class="custom-span">Expense Cost Distribution</span>
+                </ng-template>
+                <ng-template pTemplate="content">
+                    <div *ngIf="customLineItemGrid.expenseTableHeaders.headers.length">
+                        <p-table responsiveLayout="scroll" [value]="expenseFields.controls" scrollable="true"
+                                 scrollHeight="367px" [resizableColumns]="true" columnResizeMode="expand"
+                                 [columns]="customLineItemGrid.expenseTableHeaders.headers" #exptable
+                                 [style]="{width:'auto'}" scrollDirection="both" [scrollable]="true"
+                                 [reorderableColumns]="true"
+                                 [tableStyle]="{'min-width': customLineItemGrid.expenseTableHeaders.tableWidth+'px'}"
+                                 styleClass="p-datatable-sm p-datatable-striped detail-table"
+                                 stateStorage="session" stateKey="{{tableKeyEnum.BILL_EXP_TABLE}}"
+                                 (onColReorder)="customLineItemGrid.changedTableState(tableKeyEnum.BILL_EXP_TABLE, appConstant.GRID_BILL_EXPENSE_COST_LINE_ITEM_LIST)"
+                                 (onColResize)="customLineItemGrid.changedTableState(tableKeyEnum.BILL_EXP_TABLE, appConstant.GRID_BILL_EXPENSE_COST_LINE_ITEM_LIST)">
+
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th *ngFor="let header of columns" [style]="{'width': header.width+'px'}"
+                                        class="thead-style"
+                                        [class]="header.class" pResizableColumn
+                                        [pResizableColumnDisabled]="!header.resizable"
+                                        [pReorderableColumnDisabled]="!header.reorderable" pReorderableColumn
+                                        pFrozenColumn [frozen]="header.frozen" alignFrozen="right">{{header.label}}<span
+                                            *ngIf="isLineItemAsteriskMark(header.field, appModuleSection.EXPENSE_COST_DISTRIBUTION_SECTION_ID)">{{'*'}}</span>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-i="rowIndex" let-account
+                                         formArrayName="billExpenseCostDistributions"
+                                         let-columns="columns">
+                                <tr [formGroupName]="i"
+                                    (click)="expenseFields.controls.length-1 === i ? onExpenseClick(i) : null;
+                          billUtility.patchHeaderProjectCodeToLineLevel(account, billApproveForm, false, expenseFields, i);
+                          commonUtil.patchHeaderDepartmentToLineLevel(billApproveForm, i, false,'billExpenseCostDistributions', false)">
+                                    <td *ngFor="let col of columns" [class]="col.class" pFrozenColumn
+                                        alignFrozen="right" [frozen]="col.frozen">
+                                        <div class="text-center" *ngIf="col.field === appFormConstants.HASH_NUMBER">
+                                            <label>{{i + 1}}</label>
+                                        </div>
+
+                                        <div *ngIf="col.field === appFormConstants.PROJECT_CODE">
+                                            <p-dropdown [virtualScroll]="projectCodeList.data.length > 20"
+                                                        virtualScrollItemSize="25"
+                                                        [options]="projectCodeList.data" id="{{'projectTask' + i}}"
+                                                        inputId="code1"
+                                                        formControlName="projectId"
+                                                        class="expense-table-dropdown-project-code"
+                                                        optionDisabled="inactive"
+                                                        optionLabel="name" optionValue="id" placeholder="Project Task"
+                                                        [style]="{'width':'100%'}"
+                                                        [autoDisplayFirst]="false" #code appendTo="body"
+                                                        [showClear]="true"
+                                                        (onChange)="changeList('ProjectCodesAccount', code.selectedOption.id, i);
+                              billUtility.loadAccountsAccordingToTheProjectTaskId(code.selectedOption.id, i, false, billId);
+                              billUtility.clearLineLevelAccountWhenClearProjectTask(account)"
+                                                        (onClear)="billUtility.clearLineLevelAccountWhenClearProjectTask(account);
+                              billUtility.patchHeaderProjectCodeToLineLevel(account, billApproveForm, true, expenseFields, i)"
+                                                        (onClick)="billUtility.patchHeaderProjectCodeToLineLevel(account, billApproveForm, false, expenseFields, i)"
+                                                        [filter]="true">
+                                                <ng-template pTemplate="selectedItem">
+                                                    <div>{{code.selectedOption.name}}</div>
+                                                </ng-template>
+
+                                                <ng-template pTemplate="footer"
+                                                             *ngIf="privilegeService.isAuthorized(appAuthorities.PROJECT_CODES_CREATE)">
+                                                    <div class="grid dp-footer">
+                                                        <div class="col-12 button-wrapper">
+                                                            <button pButton class="p-button-sm" label="Add New"
+                                                                    (click)="isAddNewProjectCodes = true"></button>
+                                                        </div>
+                                                    </div>
+                                                </ng-template>
+                                            </p-dropdown>
+                                        </div>
+
+                                        <div *ngIf="col.field === appFormConstants.ACCOUNT_NUMBER">
+                                            <p-dropdown
+                                                    [virtualScroll]="billUtility.accountTableAccountListArray[i].data.length > 20"
+                                                    virtualScrollItemSize="25"
+                                                    *ngIf="account.get('hideAccountNumberInput').value ||
+                              (!account.get('hideAccountNumberInput').value && !account.get('accountNumber').value)"
+                                                    [options]="billUtility.accountTableAccountListArray[i].data"
+                                                    id="{{'account' + i}}" inputId="account" optionDisabled="inactive"
+                                                    formControlName="accountId" class="expense-table-dropdown"
+                                                    optionLabel="name" optionValue="id" placeholder="Account Number"
+                                                    [style]="{'width':'100%'}" [showClear]="true"
+                                                    (onChange)="changeList('Account', selectAccountLabel.selectedOption.id, i);
+                         getAccountName(selectAccountLabel.selectedOption.id, i); billUtility.getMatchingTableData(billApproveForm, expenseFields, itemForm)"
+                                                    [autoDisplayFirst]="false" #selectAccountLabel appendTo="body"
+                                                    (onClick)="billUtility.conditionallyLoadAccountList(account.get('projectId').value, i, billApproveForm.get('projectCodeId').value, billId)"
+                                                    [filter]="true">
+                                                <ng-template pTemplate="selectedItem">
+                                                    <div>{{expenseFields.controls[i].get('accountNumber').value}}</div>
+                                                </ng-template>
+
+                                                <ng-template pTemplate="footer"
+                                                             *ngIf="privilegeService.isAuthorized(appAuthorities.ACCOUNTS_CREATE)">
+                                                    <div class="grid dp-footer">
+                                                        <div class="col-12 button-wrapper">
+                                                            <button pButton class="p-button-sm" label="Add New"
+                                                                    (click)="isAddNewAccount = true"></button>
+                                                        </div>
+                                                    </div>
+                                                </ng-template>
+                                            </p-dropdown>
+                                            <div class="p-inputgroup"
+                                                 *ngIf="!account.get('hideAccountNumberInput').value && account.get('accountNumber').value">
+                                                <input formControlName="accountNumber"
+                                                       (mouseover)="billUtility.conditionallyLoadAccountList(account.get('projectId').value, i, billApproveForm.get('projectCodeId').value, billId);
+                           billUtility.animateAccountNumberField(account)"
+                                                       placeholder="Account Number"
+                                                       name="accountNumber" id="{{'accountNumber' + i}}"
+                                                       [readOnly]="true"
+                                                       type="text" pInputText>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="col.field === appFormConstants.ACCOUNT_NAME">
+                                            <div class="p-inputgroup">
+                                                <input formControlName="accountName"
+                                                       (keydown)="navigate($event,'accountName',  i)"
+                                                       placeholder="Account Name"
+                                                       name="description" id="{{'accountName' + i}}" [readOnly]="true"
+                                                       type="text" pInputText>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="col.field === appFormConstants.DESCRIPTION">
+                                            <div class="p-inputgroup">
+                    <textarea formControlName="description"
+                              (keydown)="navigate($event,'description_',  i)"
+                              (keyup)="removeSpace.clearSpace(expenseFields.controls[i], 'description');
+                             getRuleConfiguration(i, appConstant.EXPENSE_COST_DISTRIBUTION_STR);
+                         getDescriptionWiseAccItem(i,
+                                         appModuleSection.EXPENSE_COST_DISTRIBUTION_SECTION_ID)"
+                              placeholder="Description"
+                              name="description" id="{{'description_' + i}}"
+                              pInputTextarea
+                              type="text" pInputText></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="col.field === appFormConstants.DEPARTMENT_ID">
+                                            <p-dropdown [virtualScroll]="department.data.length>20"
+                                                        virtualScrollItemSize="25"
+                                                        placeholder="Select Department"
+                                                        [options]="department.data" id="departmentIdAccount"
+                                                        optionDisabled="inactive"
+                                                        (onChange)="changedDepartmentAccount($event, i)"
+                                                        [style]="{'width':'100%'}"
+                                                        inputId="dropdown" appendTo="body" #dpNameDepartmentItem
+                                                        formControlName="departmentId" optionLabel="name"
+                                                        optionValue="id"
+                                                        [autoDisplayFirst]="false" [filter]="true">
+
+                                                <ng-template pTemplate="selectedItem">
+                                                    <div>{{dpNameDepartmentItem.selectedOption.name}}</div>
+                                                </ng-template>
+
+                                                <ng-template let-code pTemplate="item">
+                                                    <div class="grid">
+                                                        <div class="dropdown-list"
+                                                             [ngClass]="code.id == 0 ? ' dropdown-add': null">{{code.name}}</div>
+                                                        <em *ngIf="code.id == 0"
+                                                            class="pi pi-plus dropdown-icon dropdown-add"></em>
+                                                    </div>
+                                                </ng-template>
+
+                                            </p-dropdown>
+                                        </div>
+
+                                        <div *ngIf="col.field === appFormConstants.BILL_LINE_PO_RECEIPT">
+                                            <div class="p-inputgroup">
+                                                <p-multiSelect [virtualScroll]="receiptList.data.length>20"
+                                                               virtualScrollItemSize="25"
+                                                               inputId="poReceiptId"
+                                                               formControlName="poReceiptIdList"
+                                                               id="poReceiptIdExpense_{{i}}"
+                                                               #expensePOReceipt [style]="{'width':'100%'}"
+                                                               [placeholder]="billApproveForm.get('receiptId').value ? 'PO Receipt' : 'Select PO Receipt'"
+                                                               [readonly]="billApproveForm.get('receiptId').value"
+                                                               [class]="billApproveForm.get('receiptId').value ?
+                                       'remove-dropdown-button' : ''"
+                                                               (onChange)="billUtility.getPoReceiptNumberById(expenseFields.controls[i].get('poReceiptIdList').value, i, true, expenseFields, itemForm);
+                              billUtility.getMatchingTableData(billApproveForm, expenseFields, itemForm)"
+                                                               optionValue="id"
+                                                               class="po-receipt-dropbox-wrapper receipt-wrapper"
+                                                               [options]="receiptList.data" optionLabel="name"
+                                                               appendTo="body"
+                                                               [filter]="true">
+                                                    <ng-template pTemplate="selectedItem">
+                                                        <div>{{expenseFields.controls[i].get('poReceiptIdList').value}}</div>
+                                                    </ng-template>
+
+                                                    <ng-template let-dropDown pTemplate="item">
+                                                        <div class="grid">
+                                                            <div class="dropdown-list"
+                                                                 [ngClass]="dropDown.id == 0 ? ' dropdown-add': null">{{dropDown.name}}</div>
+                                                            <em *ngIf="dropDown.name == 'Add New'"
+                                                                class="pi pi-plus dropdown-icon dropdown-add"></em>
+                                                        </div>
+                                                    </ng-template>
+                                                </p-multiSelect>
+                                                <button pButton type="button"
+                                                        class="p-button p-button-sm clear-button receipt-view-button"
+                                                        *ngIf="billUtility.isNotEmptyPOReceiptIdList(expenseFields.controls[i].get('poReceiptIdList').value)"
+                                                        [icon]="billUtility.expensePoReceiptLineLevelAttachments[i].isProgressViewReceipt ? 'pi pi-spin pi-spinner':'fa fa-expand'"
+                                                        (click)="viewPoReceiptAttachment(expenseFields.controls[i].get('poReceiptIdList').value)">
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="col.field === appFormConstants.BILLABLE">
+                                            <div class="p-inputgroup line-level-checkbox-wrapper">
+                                                <div class=" ml-6 checkbox-outer-wrapper">
+                                                    <p-checkbox name="checkBox" formControlName="billable"
+                                                                id="billableExpense_{{i}}"
+                                                                (onChange)="getTotalCostDistribution()"
+                                                                binary="true"></p-checkbox>
+                                                    <label class="label-wrapper" for="binaryC"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="col.field === appFormConstants.TAXABLE">
+                                            <div class="p-inputgroup line-level-checkbox-wrapper">
+                                                <div class=" ml-6 checkbox-outer-wrapper">
+                                                    <p-checkbox name="checkBox" formControlName="taxable"
+                                                                id="taxableExpense_{{i}}"
+                                                                (onChange)="getTotalCostDistribution()"
+                                                                binary="true"></p-checkbox>
+                                                    <label class="label-wrapper" for="binaryC"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div *ngIf="col.field === appFormConstants.AMOUNT">
+                                            <div class="p-inputgroup">
+                                                <input pInputText type="text"
+                                                       name="amount" id="{{'amount_' + i}}"
+                                                       (keydown)="navigate($event,'amount_',  i)"
+                                                       (keyup)="getTotalCostDistribution(); (expenseFields.controls.length === (i +1) && expenseFields.controls[i].dirty) && addExpense();
+                         billUtility.getPoReceiptNumberById(expenseFields.controls[i].get('poReceiptId').value, i, true, expenseFields, itemForm);
+                         billUtility.getMatchingTableData(billApproveForm, expenseFields, itemForm)"
+                                                       [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                                                       currencyMask
+                                                       value="{{expenseFields.controls[i].value.amount | currency: '':''}}"
+                                                       placeholder="Line Amount" class="amounts" appNoNegativeValues
+                                                       formControlName="amount">
+                                            </div>
+                                        </div>
+
+                                        <ng-container formArrayName="additionalData"
+                                                      *ngIf="col.addiField && additionalFieldForExpenseCostDistributions.length > 0">
+                                            <app-additional-field-line-items [col]="col"
+                                                                             [additionalLineItemField]="customLineItemGrid.getField(col, expenseAdditionalField(i))"
+                                                                             [parentForm]="billApproveForm.get('billExpenseCostDistributions')"
+                                                                             (updateAdditionalFieldDropDowns)="updateAdditionalFieldDropDowns($event)"
+                                                                             [i]="i" [isCreate]="eBillEdit"
+                                                                             [itemIndex]="customLineItemGrid.getFieldIndex(col, expenseAdditionalField(i))"
+                                                                             [additionalFieldForCostDistributions]="additionalFieldForExpenseCostDistributions"></app-additional-field-line-items>
+                                        </ng-container>
+                                        <div *ngIf="col.field === appFormConstants.TABLE_ACTION" class="text-center">
+                                            <i class="fa fa-trash item-remove-button" *ngIf="expenseFields.length > 1"
+                                               (click)="removeExpense(i); getTotalCostDistribution();
+                   billUtility.getMatchingTableData(billApproveForm, expenseFields, itemForm)"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+
+                            <ng-template pTemplate="summary">
+                                <div class="flex align-table-footer">
+
+                                    <div class="show-po-line-item-wrapper">
+                                        <p *ngIf="billApproveForm.get('poId').value"
+                                           class="subHeadingColour hyperlink show-po-line-item-inner-wrapper"
+                                           (click)="getPoDetails(true)">Show Purchase Order Line Items</p>
+                                    </div>
+                                    <div class="outer-po-comparison-button-wrapper">
+                                        <p
+                                                *ngIf="billUtility.matchingTableValues.length > appConstant.ZERO && billUtility.isViewMatchingTable"
+                                                class="subHeadingColour hyperlink po-comparison-label-wrapper-with-pane"
+                                                (click)="billUtility.isViewThreeWayMatchingTable = true"><span
+                                                class="divider-wrapper">{{'|'}}</span>
+                                            Show Three-Way Matching
+                                        </p>
+                                    </div>
+
+                                    <div class="add-remove-item-wrapper text-right">
+                <span class="hyperlink text-right p-text-normal"
+                      (click)="clearExpenseLines(); getTotalCostDistribution();
+                      billUtility.getMatchingTableData(billApproveForm, expenseFields, itemForm)">Clear Lines
+                </span> &nbsp;|&nbsp;
+                                        <span class="hyperlink text-right p-text-normal"
+                                              (click)="addExpenseFieldOnClick()">Add Line  </span>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                  <div class="custom-table-loader" *ngIf="!customLineItemGrid.expenseTableHeaders.headers.length">
+                    <img class="progress-gif" alt="card" src="../../../../assets/images/progress-gif.gif">
+                    <br>
+                    <span class="col-12 process-lg-label">Loading Content...</span>
+                    <span class="col-12 process-sm-label">Thanks for your patience, this shouldn't take long.</span>
+                  </div>
+                </ng-template>
+            </p-tabPanel>
+
+            <p-tabPanel>
+                <ng-template pTemplate="header">
+                    <span class="custom-span">Item Cost Distribution</span>
+                </ng-template>
+                <ng-template pTemplate="content">
+                    <div *ngIf="customLineItemGrid.itemTableHeaders.headers.length">
+                        <p-table responsiveLayout="scroll" [value]="itemForm.controls" scrollable="true"
+                                 scrollHeight="367px" [resizableColumns]="true" columnResizeMode="expand"
+                                 [columns]="customLineItemGrid.itemTableHeaders.headers" #exptable
+                                 [style]="{width:'auto'}" scrollDirection="both" [scrollable]="true"
+                                 [reorderableColumns]="true"
+                                 [tableStyle]="{'min-width': customLineItemGrid.itemTableHeaders.tableWidth+'px'}"
+                                 styleClass="p-datatable-sm p-datatable-striped detail-table"
+                                 stateStorage="session" stateKey="{{tableKeyEnum.BILL_ITM_TABLE}}"
+                                 (onColReorder)="customLineItemGrid.changedTableState(tableKeyEnum.BILL_ITM_TABLE, appConstant.GRID_BILL_ITEM_COST_LINE_ITEM_LIST)"
+                                 (onColResize)="customLineItemGrid.changedTableState(tableKeyEnum.BILL_ITM_TABLE, appConstant.GRID_BILL_ITEM_COST_LINE_ITEM_LIST)">
+
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th *ngFor="let header of columns" [style]="{'width': header.width+'px'}"
+                                        class="thead-style"
+                                        [class]="header.class" pResizableColumn
+                                        [pResizableColumnDisabled]="!header.resizable"
+                                        [pReorderableColumnDisabled]="!header.reorderable" pReorderableColumn
+                                        pFrozenColumn [frozen]="header.frozen" alignFrozen="right">{{header.label}}<span
+                                            *ngIf="isLineItemAsteriskMark(header.field, appModuleSection.ITEM_COST_DISTRIBUTION_SECTION_ID)">{{'*'}}</span>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-i="rowIndex" let-item
+                                         formArrayName="billItemCostDistributions" let-columns="columns">
+                                <tr [formGroupName]="i"
+                                    (click)="itemForm.controls.length-1 === i ? onLItemClick(i) : null;
+                   billUtility.patchHeaderProjectCodeToLineLevel(item, billApproveForm, false, itemForm, i);
+                   commonUtil.patchHeaderDepartmentToLineLevel(billApproveForm, i, false,'billItemCostDistributions', false)">
+                                    <td *ngFor="let col of columns" [class]="col.class" pFrozenColumn
+                                        alignFrozen="right" [frozen]="col.frozen">
+                                        <div class="text-center" *ngIf="col.field === appFormConstants.HASH_NUMBER">
+                                            <label>{{i + 1}}</label>
+                                        </div>
+
+                                        <div *ngIf="col.field === appFormConstants.ITEM_ID">
+                                            <p-dropdown [virtualScroll]="vendorRelevantItemList.data.length>20"
+                                                        virtualScrollItemSize="25"
+                                                        [options]="vendorRelevantItemList.data"
+                                                        optionDisabled="inactive"
+                                                        id="{{'itemService' + i}}" inputId="item"
+                                                        formControlName="itemId"
+                                                        class="item-table-dropdown"
+                                                        optionLabel="name" optionValue="id" placeholder="Item/ Service"
+                                                        [style]="{'width':'100%'}"
+                                                        [autoDisplayFirst]="false" #selectedItemLabel appendTo="body"
+                                                        (onChange)="changeList('Item', selectedItemLabel.selectedOption.id, i);
+                                this.accountNumPopulationLines.checkAccountNumber(item.get('projectId').value,item.get('itemId').value,i,itemForm,billApproveForm);
+                                getItemName(selectedItemLabel.selectedOption.id, i);
+                               commonUtil.patchSKU(itemForm.controls[i].get('vendorItemNumber'),
+                               itemForm.controls[i].get('rate'), selectedItemLabel.selectedOption.sku, selectedItemLabel.selectedOption.itemCost);
+                               billUtility.getMatchingTableData(billApproveForm, expenseFields, itemForm);"
+                                                        [filter]="true">
+
+
+                                                <ng-template pTemplate="selectedItem">
+                                                    <div>{{itemForm.controls[i].get('itemNumber').value}}</div>
+                                                </ng-template>
+
+                                                <ng-template pTemplate="footer"
+                                                             *ngIf="privilegeService.isAuthorized(appAuthorities.ITEMS_CREATE)">
+                                                    <div class="grid dp-footer">
+                                                        <div class="col-12 button-wrapper">
+                                                            <button pButton class="p-button-sm" label="Add New"
+                                                                    (click)="isAddNewItem = true"></button>
+                                                        </div>
+                                                    </div>
+                                                </ng-template>
+                                            </p-dropdown>
+                                        </div>
+
+                                        <div *ngIf="col.field === appFormConstants.ITEM_NAME">
+                                            <div class="p-inputgroup">
+                                                <input formControlName="itemName" placeholder="Item Name"
+                                                       name="description" [readOnly]="true"
+                                                       maxlength="500"
+                                                       id="{{'itemName' + i}}"
+                                                       (keydown)="navigateInItemTable($event,'itemName',  i)"
+                                                       type="text" pInputText>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="col.field === appFormConstants.VENDOR_ITEM_NUMBER">
+                                            <div class="p-inputgroup">
+                                                <input formControlName="vendorItemNumber"
+                                                       (keydown)="navigate($event,'sku',  i)"
+                                                       *ngIf="itemForm.controls[i].get('itemId').value === null"
+                                                       (keyup)="billUtility.getMatchingTableData(billApproveForm, expenseFields, itemForm);
+                         memoriseItemAcc.accountChanged(itemForm.controls[i]);"
+                                                       placeholder="Vendor Part Number" name="sku" id="{{'sku' + i}}"
+                                                       type="text" pInputText>
+                                            </div>
+
+                                            <p-dropdown
+                                                    [virtualScroll]="skuDropDownList[i] ? skuDropDownList[i].data.length > 20 : null"
+                                                    virtualScrollItemSize="25"
+                                                    *ngIf="itemForm.controls[i].get('itemId').value !== null"
+                                                    formControlName="vendorItemNumber" [autoDisplayFirst]="false"
+                                                    id="{{'sku1' + i}}"
+                                                    name="productId1" class="number-column-table-dropdown"
+                                                    (onChange)="commonUtil.onChangeSkuList(this.skuDropDownList[i].data[i].itemCost,
+                             this.itemForm.controls[i].get('rate'), this.itemForm.controls[i].get('vendorItemNumber').value);
+                             billUtility.getMatchingTableData(billApproveForm, expenseFields, itemForm);
+                             memoriseItemAcc.accountChanged(itemForm.controls[i])"
+                                                    appendTo="body" optionValue="name" optionLabel="name"
+                                                    placeholder="Select Vendor Part Number"
+                                                    [filter]="true"
+                                                    [options]="skuDropDownList[i] ? skuDropDownList[i].data: []"
+                                                    [showClear]="true" optionDisabled="inactive"
+                                                    [style]="{'width':'100%'}" #vendorItemNumber>
+
+                                                <ng-template pTemplate="selectedItem">
+                                                    <div>{{vendorItemNumber.selectedOption.name}}</div>
+                                                </ng-template>
+
+                                                <ng-template let-item pTemplate="item">
+                                                    <div class="grid">
+                                                        <div class="dropdown-list"
+                                                             [ngClass]="item.id == 0 ? ' dropdown-add': null">{{item.name}}</div>
+                                                    </div>
+                                                </ng-template>
+                                            </p-dropdown>
+
+                                        </div>
+
+                                        <div *ngIf="col.field === appFormConstants.DESCRIPTION">
+                                            <div class="p-inputgroup">
+                    <textarea formControlName="description" placeholder="Description" name="description"
+                              id="{{'itemDescription_' + i}}" type="text" pInputText pInputTextarea
+                              (keyup)="removeSpace.clearSpace(itemForm.controls[i], 'description');
+                         getDescriptionWiseAccItem(i, appModuleSection.ITEM_COST_DISTRIBUTION_SECTION_ID)"
+                              (keydown)="navigateInItemTable($event,'itemDescription_',  i)"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="col.field === appFormConstants.PROJECT_CODE">
+                                            <p-dropdown [virtualScroll]="projectCodeList.data.length>20"
+                                                        virtualScrollItemSize="25"
+                                                        [options]="projectCodeList.data" id="{{'projectTaskI' + i}}"
+                                                        inputId="code"
+                                                        formControlName="projectId"
+                                                        class="item-table-dropdown-project-task"
+                                                        optionDisabled="inactive"
+                                                        optionLabel="name" optionValue="id" placeholder="Project Task"
+                                                        [style]="{'width':'100%'}" [showClear]="true"
+                                                        [autoDisplayFirst]="false" #code appendTo="body"
+                                                        (onChange)="changeList('ProjectCodesItem', code.selectedOption.id, i);
+                                this.accountNumPopulationLines.checkAccountNumber(item.get('projectId').value,item.get('itemId').value,i,itemForm, billApproveForm)"
+                                                        (onClick)="billUtility.patchHeaderProjectCodeToLineLevel(item, billApproveForm, false, itemForm, i)"
+                                                        (onClear)="billUtility.patchHeaderProjectCodeToLineLevel(item, billApproveForm, true, itemForm, i)"
+                                                        [filter]="true">
+
+                                                    <ng-template pTemplate="selectedItem">
+                                                        <div>{{code.selectedOption.name}}</div>
+                                                    </ng-template>
+
+                                                    <ng-template pTemplate="footer"
+                                                                 *ngIf="privilegeService.isAuthorized(appAuthorities.PROJECT_CODES_CREATE)">
+                                                        <div class="grid dp-footer">
+                                                            <div class="col-12 button-wrapper">
+                                                                <button pButton class="p-button-sm" label="Add New"
+                                                                        (click)="isAddNewProjectCodes = true"></button>
+                                                            </div>
+                                                        </div>
+                                                    </ng-template>
+                                            </p-dropdown>
+                                        </div>
+
+                                        <div *ngIf="col.field === appFormConstants.ACCOUNT_ID">
+                                            <p-dropdown
+                                                    [virtualScroll]="billUtility.accountTableAccountListArray[i].data.length > 20"
+                                                    virtualScrollItemSize="25"
+                                                    *ngIf="item.get('hideAccountNumberInput').value ||
+                              (!item.get('hideAccountNumberInput').value && !item.get('accountNumber').value)"
+                                                    [options]="billUtility.accountTableAccountListArray[i].data"
+                                                    id="{{'account' + i}}" inputId="account" optionDisabled="inactive"
+                                                    formControlName="accountId" class="expense-table-dropdown"
+                                                    optionLabel="name" optionValue="id" placeholder="Account Number"
+                                                    [style]="{'width':'100%'}" [showClear]="true"
+                                                    [autoDisplayFirst]="false" #selectAccountLabel appendTo="body"
+                                                    (onChange)="changedAccountItm(selectAccountLabel, i)"
+                                                    (onClick)="billUtility.conditionallyLoadAccountList(item.get('projectId').value, i, billApproveForm.get('projectCodeId').value, billId)"
+                                                    [filter]="true">
+                                                <ng-template pTemplate="selectedItem">
+                                                    <div>{{itemForm.controls[i].get('accountNumber').value}}</div>
+                                                </ng-template>
+
+                                                <ng-template let-accounts pTemplate="item">
+                                                    <div class="grid">
+                                                        <div class="dropdown-list"
+                                                             [ngClass]="accounts.id == 0 ? 'dropdown-add': null">{{accounts.name}}</div>
+                                                        <em *ngIf="accounts.name == 'Add New'"
+                                                            class="pi pi-plus dropdown-add dropdown-icon"></em>
+                                                    </div>
+                                                </ng-template>
+                                            </p-dropdown>
+                                            <div class="p-inputgroup"
+                                                 *ngIf="!item.get('hideAccountNumberInput').value && item.get('accountNumber').value">
+                                                <input formControlName="accountNumber"
+                                                       (mouseover)="billUtility.conditionallyLoadAccountList(item.get('projectId').value, i, billApproveForm.get('projectCodeId').value, billId);
+                           billUtility.animateAccountNumberField(item)"
+                                                       placeholder="Account Number"
+                                                       name="accountNumber" id="{{'accountNumber' + i}}"
+                                                       [readOnly]="true"
+                                                       type="text" pInputText>
+                                            </div>
+                                        </div>
+
+
+                                        <div *ngIf="col.field === appFormConstants.DEPARTMENT_ID">
+                                            <p-dropdown [virtualScroll]="department.data.length>20"
+                                                        virtualScrollItemSize="25"
+                                                        placeholder="Select Department"
+                                                        [options]="department.data" id="departmentIdItem"
+                                                        optionDisabled="inactive"
+                                                        (onChange)="changedDepartmentItem($event, i)"
+                                                        [style]="{'width':'100%'}"
+                                                        inputId="dropdown" appendTo="body" #dpNameDepartmentItem
+                                                        formControlName="departmentId" optionLabel="name"
+                                                        optionValue="id"
+                                                        [autoDisplayFirst]="false" [filter]="true">
+
+                                                <ng-template pTemplate="selectedItem">
+                                                    <div>{{dpNameDepartmentItem.selectedOption.name}}</div>
+                                                </ng-template>
+
+                                                <ng-template let-code pTemplate="item">
+                                                    <div class="grid">
+                                                        <div class="dropdown-list"
+                                                             [ngClass]="code.id == 0 ? ' dropdown-add': null">{{code.name}}</div>
+                                                        <em *ngIf="code.id == 0"
+                                                            class="pi pi-plus dropdown-icon dropdown-add"></em>
+                                                    </div>
+                                                </ng-template>
+
+                                            </p-dropdown>
+                                        </div>
+
+                                        <div *ngIf="col.field === appFormConstants.PO_RECEIPT_ID">
+                                            <div class="p-inputgroup">
+                                                <p-multiSelect [virtualScroll]="receiptList.data.length>20"
+                                                               virtualScrollItemSize="25"
+                                                               inputId="poReceiptId"
+                                                               [readonly]="billApproveForm.get('receiptId').value"
+                                                               #itemPOReceipt
+                                                               formControlName="poReceiptIdList" id="poReceiptId_{{i}}"
+                                                               (onChange)="billUtility.
+                              getPoReceiptNumberById(itemForm.controls[i].get('poReceiptIdList').value, i, true, expenseFields, itemForm);
+                              billUtility.getMatchingTableData(billApproveForm, expenseFields, itemForm)"
+                                                               [class]="billApproveForm.get('receiptId').value ?
+                                       'remove-dropdown-button' : ''"
+                                                               [placeholder]="billApproveForm.get('receiptId').value ? 'PO Receipt' : 'Select PO Receipt'"
+                                                               optionValue="id"
+                                                               class="po-receipt-dropbox-wrapper receipt-wrapper"
+                                                               [options]="receiptList.data" optionLabel="name"
+                                                               appendTo="body"
+                                                               [filter]="true">
+                                                </p-multiSelect>
+                                                <ng-template pTemplate="selectedItem">
+                                                    <div>{{itemForm.controls[i].get('poReceiptIdList').value}}</div>
+                                                </ng-template>
+
+                                                <ng-template let-dropDown pTemplate="item">
+                                                    <div class="grid">
+                                                        <div class="dropdown-list"
+                                                             [ngClass]="dropDown.id == 0 ? ' dropdown-add': null">{{dropDown.name}}</div>
+                                                        <em *ngIf="dropDown.name == 'Add New'"
+                                                            class="pi pi-plus dropdown-icon dropdown-add"></em>
+                                                    </div>
+                                                </ng-template>
+                                                <button pButton type="button"
+                                                        class="p-button p-button-sm clear-button receipt-view-button"
+                                                        [icon]="billUtility.itemPoReceiptLineLevelAttachments[i].isProgressViewReceipt ? 'pi pi-spin pi-spinner':'fa fa-expand'"
+                                                        *ngIf="billUtility.isNotEmptyPOReceiptIdList(itemForm.controls[i].get('poReceiptIdList').value)"
+                                                        (click)="viewPoReceiptAttachment(itemForm.controls[i].get('poReceiptIdList').value)">
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="col.field === appFormConstants.BILLABLE">
+                                            <div class="p-inputgroup line-level-checkbox-wrapper">
+                                                <div class="field-checkbox ml-6 checkbox-outer-wrapper">
+                                                    <p-checkbox name="checkBox" formControlName="billable"
+                                                                id="billable_{{i}}"
+                                                                (onChange)="getTotalCostDistribution()"
+                                                                binary="true"></p-checkbox>
+                                                    <label class="label-wrapper" for="binaryC"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="col.field === appFormConstants.TAXABLE">
+                                            <div class="p-inputgroup line-level-checkbox-wrapper">
+                                                <div class="field-checkbox ml-6 checkbox-outer-wrapper">
+                                                    <label class="label-wrapper" for="binaryC"></label>
+                                                    <p-checkbox name="checkBox" formControlName="taxable"
+                                                                id="taxable_{{i}}"
+                                                                (onChange)="getTotalCostDistribution()"
+                                                                binary="true"></p-checkbox>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="col.field === appFormConstants.QTY">
+                                            <div class="p-inputgroup">
+                                                <input formControlName="qty" placeholder="0.00" name="qty"
+                                                       id="{{'qty_' + i}}" class="text-right"
+                                                       (keydown)="navigateInItemTable($event,'qty_',  i)" (keyup)="getTotalCostDistribution();
+                         billUtility.getPoReceiptNumberById(itemForm.controls[i].get('poReceiptId').value, i, false, expenseFields, itemForm);
+                         billUtility.getMatchingTableData(billApproveForm, expenseFields, itemForm)" appNoNegativeValues
+                                                       type="text" pInputText>
+                                            </div>
+                                            <div class="p-invalid text-align-left"
+                                                 *ngIf="itemForm.controls[i].get('qty').dirty && itemForm.controls[i].get('qty').errors">
+                                                Quantity is required
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="col.field === appFormConstants.RATE">
+                                            <div class="p-inputgroup">
+                                                <input formControlName="rate" currencyMask
+                                                       [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                                                       placeholder="0.00" name="rate" id="{{'rate_' + i}}"
+                                                       appNoNegativeValues
+                                                       (keydown)="navigateInItemTable($event,'rate_',  i)"
+                                                       (keyup)="getTotalCostDistribution(); itemForm.controls.length === (i +1) && itemForm.controls[i].dirty ?  addItem(): null;
+                         billUtility.getPoReceiptNumberById(itemForm.controls[i].get('poReceiptId').value, i, false, expenseFields, itemForm);
+                         billUtility.getMatchingTableData(billApproveForm, expenseFields, itemForm)"
+                                                       type="text" pInputText>
+                                            </div>
+                                            <div class="p-invalid text-align-left"
+                                                 *ngIf="itemForm.controls[i].get('rate').dirty && itemForm.controls[i].get('rate').errors">
+                                                Rate is required
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="col.field === appFormConstants.AMOUNT">
+                                            <div class="p-inputgroup">
+                                                <input pInputText type="text"
+                                                       name="amount" id="{{'itemAmount_' + i}}" currencyMask
+                                                       [readOnly]="true"
+                                                       (keydown)="navigateInItemTable($event,'itemAmount_',  i)"
+                                                       [options]="{prefix: '', thousands: ',', decimal: '.'}"
+                                                       value="{{calculateItemLineAmount(i) | currency: '':''}}"
+                                                       placeholder="Line Amount" class="amounts"
+                                                       formControlName="amount">
+                                            </div>
+                                        </div>
+
+                                        <ng-container formArrayName="additionalData"
+                                                      *ngIf="col.addiField && additionalFieldForItemCostDistributions.length > 0">
+                                            <app-additional-field-line-items [col]="col"
+                                                                             [additionalLineItemField]="customLineItemGrid.getField(col, itemAdditionalField(i))"
+                                                                             [parentForm]="billApproveForm.get('billItemCostDistributions')"
+                                                                             (updateAdditionalFieldDropDowns)="updateAdditionalFieldDropDowns($event)"
+                                                                             [i]="i" [isCreate]="eBillEdit"
+                                                                             [itemIndex]="customLineItemGrid.getFieldIndex(col, itemAdditionalField(i))"
+                                                                             [additionalFieldForCostDistributions]="additionalFieldForItemCostDistributions"></app-additional-field-line-items>
+
+                                        </ng-container>
+                                        <div *ngIf="col.field === appFormConstants.TABLE_ACTION" class="text-center">
+                                            <i class="fa fa-trash item-remove-button" *ngIf="itemForm.length > 1"
+                                               (click)="removeItem(i); getTotalCostDistribution();
+                   billUtility.getMatchingTableData(billApproveForm, expenseFields, itemForm)"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="summary">
+                                <div class="flex align-table-footer">
+
+                                    <div class="show-po-line-item-wrapper">
+                                        <p *ngIf="billApproveForm.get('poId').value"
+                                           class="show-po-line-item-inner-wrapper subHeadingGreen hyperlink"
+                                           (click)="getPoDetails(true)">Show Purchase Order Line Items</p>
+                                    </div>
+
+                                    <div class="outer-po-comparison-button-wrapper">
+                                        <p
+                                                *ngIf="billUtility.matchingTableValues.length > appConstant.ZERO && billUtility.isViewMatchingTable"
+                                                class="subHeadingGreen hyperlink po-comparison-label-wrapper-with-pane"
+                                                (click)="billUtility.isViewThreeWayMatchingTable = true">
+                                            <span class="divider-wrapper">{{'|'}}</span>
+                                            Show Three-Way Matching
+                                        </p>
+                                    </div>
+
+                                    <div class="add-remove-item-wrapper text-right">
+                <span class="hyperlink text-right p-text-normal"
+                      (click)="clearItemLines(); getTotalCostDistribution();
+                      billUtility.getMatchingTableData(billApproveForm, expenseFields, itemForm)">Clear Lines
+                </span> &nbsp;|&nbsp;
+                                        <span class="hyperlink text-right p-text-normal"
+                                              (click)="addItemFieldOnClick()">Add Line  </span>
+                                    </div>
+
+                                </div>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                  <div class="custom-table-loader" *ngIf="!customLineItemGrid.itemTableHeaders.headers.length">
+                    <img class="progress-gif" alt="card" src="../../../../assets/images/progress-gif.gif">
+                    <br>
+                    <span class="col-12 process-lg-label">Loading Content...</span>
+                    <span class="col-12 process-sm-label">Thanks for your patience, this shouldn't take long.</span>
+                  </div>
+                </ng-template>
+            </p-tabPanel>
+
+            <p-tabPanel *ngIf="adHocWorkflowDetails.length">
+                <ng-template pTemplate="header">
+                    <span class="custom-span">Approvers ({{ adHocWorkflowDetails.length }})</span>
+                </ng-template>
+                <div class="grid" style="padding-top: 25px">
+                    <div class="col-12 pb-0 mb-0 pt-0 mt-0 approve-alignment"
+                         *ngFor="let adHoc of adHocWorkflowDetails; let adHocIndex = index">
+                        <div class="col-5 bold-text text pb-0 mb-0 pt-0 mt-0"
+                             [ngClass]="{ 'approve-text': adHoc.completed }">
+                            <span>{{ adHocIndex + 1 }}. </span>
+                            {{ adHoc.approvalUserName || adHoc.pendingUserName || adHoc.approvalGroupName }}
+                            <span *ngIf="adHoc.approvalGroupName && adHoc.approvalUserName">
+              ({{adHoc.approvalGroupName}})
+            </span>
+                            <span *ngIf="adHoc.previousApprovalUserName && adHoc.previousApprovalUserName != adHoc.approvalUserName">
+              ({{adHoc.previousApprovalUserName}})
+            </span>
+                            <span class="approve-icon" style="padding-left: 16px;"
+                                  [ngClass]="commonUtil.getStatusIcon(adHoc)"></span>
+                        </div>
+                        <div [ngClass]="{ 'approve-text': adHoc.completed }"
+                             class="col-2 text text-right pb-0 mb-0 pt-0 mt-0">
+                            {{ adHoc.actionDate | date:'MM/dd/yyyy' }}
+                        </div>
+                    </div>
+                </div>
+            </p-tabPanel>
+
+            <p-tabPanel *ngIf="billDetails.additionalFieldAttachments.length>0">
+                <ng-template pTemplate="header">
+                    <span class="custom-span">Files Attached</span>
+                </ng-template>
+                <div>
+                    <p-table responsiveLayout="scroll" [value]="billDetails.additionalFieldAttachments"
+                             scrollable="true"
+                             scrollHeight="150px"
+                             styleClass="p-datatable-gridlines p-datatable-md" scrollDirection="both">
+
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="min-width:250px" class="thead-style" id="rName">File Name</th>
+                                <th style="min-width:200px" class="thead-style" id="fieldName">Field Name</th>
+                                <th style="min-width:50px" class="thead-style" id="action">Action</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-i="rowIndex" let-item>
+                            <tr>
+
+                                <td [style]="'height : 30px; width:150px'" class="break-word">
+                                    <label> {{item.fileName}}</label>
+                                </td>
+
+                                <td [style]="'height : 30px; width:150px'">
+                                    <label> {{item.fieldName}}</label>
+                                </td>
+
+                                <td style="width:50px" class="text-center">
+                                    <i (click)="downloadAttachments(item)" class="fa fa-download download-icon"></i>
+                                    &nbsp;
+                                    <i (click)="deleteAttachments(item, i)" class="fa fa-trash download-icon"></i>
+                                </td>
+
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </p-tabPanel>
+
+        </p-tabView>
+
+
+        <div class="grid pt-4">
+            <div class="field col-offset-6 col-3" [style]="'text-align: right; align-self: flex-end;'">
+                <label class="subHeadingColour" for="costDistributionTotal"><b>Cost Distribution Total</b></label>
+            </div>
+            <div class="field col-3">
+                <input formControlName="distributionCostTotal" id="costDistributionTotal" type="text"
+                       value="{{distributionCostTotal}}" currencyMask [readOnly]="true" pInputText
+                       [options]="{ prefix: '', thousands: ',', decimal: '.' }">
+            </div>
+        </div>
+
+
+        <br *ngIf="billDetails.additionalFieldAttachments.length>0">
+
+        <br>
+        <div class="grid ml-2 mr-2 p-fluid">
+          <div class="field col-12">
+            <div>
+              <div class="p-inputgroup">
+                <p-checkbox class="costume-checkbox checkbox-label-wrapper"
+                            [binary]="true" (onChange)="isInsertApprover($event)">
+                </p-checkbox>
+                <span
+                  class="col-10">Insert additional approver. (Add another approver before me).</span>
+              </div>
+            </div>
+          </div>
+            <div [ngClass]="extraSmallHorSplitter ? 'field xl:col-3 lg:col-4 md:col-12 sm:col-12 col-12': 'field col-12'">
+       <span [ngStyle]="{'opacity': !(billMasterDto.noOfLevels === billMasterDto.workflowLevel && !matchingAutomation || isInsertApproverChecked) ? '0.5' : '1'}">
+              <label class="label-wrapper" for="approvers">Select Approver</label>
+           <p-dropdown
+                   [readonly]="!(billMasterDto.noOfLevels === billMasterDto.workflowLevel && !matchingAutomation || isInsertApproverChecked)"
+                   [virtualScroll]="approvalUserList.data.length>20" virtualScrollItemSize="25" id="approvers"
+                   appendTo="body"
+                   #dpApprovalUser
+                   [options]="approvalUserList.data" optionDisabled="inactive" [autoDisplayFirst]="false"
+                   (onChange)="changeList('User', dpApprovalUser.selectedOption.id, null); "
+                   formControlName="approvalUser" optionLabel="name" optionValue="id"
+                   [showClear]="true" [filter]="true">
+             <ng-template pTemplate="selectedItem">
+               <div>{{dpApprovalUser.selectedOption.name}}</div>
+             </ng-template>
+             <ng-template let-approvalGroups pTemplate="item">
+                 <div class="grid">
+                     <div class="dropdown-list"
+                          [ngClass]="approvalGroups.id == 0 ? ' dropdown-add': null">{{approvalGroups.name}}</div>
+                     <em *ngIf="approvalGroups.id == 0" class="pi pi-plus dropdown-icon dropdown-add"></em>
+                 </div>
+             </ng-template>
+           </p-dropdown>
+
+        </span>
+                <div class="p-invalid text-align-left"
+                     *ngIf="billApproveForm.get('approvalUser').dirty && billApproveForm.get('approvalUser').errors">
+                    It is mandatory to select an approver when the checkbox is enabled
+                </div>
+            </div>
+            <div
+                    [ngClass]="extraSmallHorSplitter ? 'field md:col-8 sm:col-12 xl:col-9 lg:col-8 col-2' :'field col-12'">
+                <label class="label-wrapper" for="approveComment">Comment</label>
+                <div class="p-inputgroup">
+                     <span class="p-float-label">
+            <textarea id="approveComment" formControlName="remark" (keyup)="removeSpace.clearSpace(billApproveForm, 'remark')" [rows]="1"
+                      pInputTextarea maxlength="300"></textarea>
+          </span>
+                </div>
+                <div class="p-invalid text-align-left" *ngIf="rejectComment">
+                    Comments are required to reject this document
+                </div>
+            </div>
+
+            <div *ngIf="matchingAutomation && isWorkflowConfigAvailable" class="field col-12">
+                <div class="mt-2">
+                    <h6 class="subHeadingColour">Automated Workflow</h6>
+                    <app-automated-workflow-preview *ngIf="matchingAutomation"
+                                                    [matchingAutomation]="matchingAutomation"></app-automated-workflow-preview>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="grid p-fluid sticky-btn">
+        <div class="button-set-wrapper form-footer-button">
+            <div class="col-12">
+                <p-messages *ngIf="showPopUp() && isVisibleNotificationContent"
+                            class="amountExceeded-warn-content-wrapper col-12" severity="warn">
+                    <ng-template pTemplate>
+                        <div>{{appConstant.EXCEED_BIlL_AMOUNT}}</div>
+                        <em (click)="isVisibleNotificationContent = false"
+                            class="fa fa-times alert-close-btn-wrapper pull-right approval"></em><br>
+                    </ng-template>
+                </p-messages>
+
+            </div>
+            <div
+                    [ngClass]=" !isSplitterSmall ? 'xl:col-3 lg:col-3 md:col-12 sm:col-12' : extraSmallHorSplitter ? 'col-12 xl:col-6 lg:col-6 md:col-12 sm:col-12': 'col-12'">
+                <button pButton class="audit-btn p-block p-button-outlined p-p-0 p-button-sm approval" type="button"
+                        (click)="downloadAttachment()"
+                        [disabled]="isLoading || isRejectLoading"
+                        label=" ">
+                    <div style="width: 112%">
+                        <span style="position: relative; left: -6px;" class="fa fa-download"></span>
+                        <span>Download Attachment</span>
+                    </div>
+                </button>
+            </div>
+
+            <div
+                    [ngClass]=" !isSplitterSmall ? 'xl:col-3 lg:col-3 md:col-12 sm:col-12' : extraSmallHorSplitter ? 'col-12 xl:col-6 lg:col-6 md:col-12 sm:col-12': 'col-12'">
+                <button pButton (click)="viewAuditTrial()"
+                        class="audit-btn p-block p-p-0 p-button-outlined p-button-sm approval" type="button"
+                        [disabled]="isLoading || isRejectLoading"
+                        *ngIf="privilegeService.isAuthorized(appAuthorities.BILL_VIEW_AUDIT_TRAIL)"
+                        label=" ">
+                    <div style="width: 100%"><span class="{{appIcons.ICON_AUDIT_TRAIL}}"></span> &nbsp;
+                        View Audit Trail
+                    </div>
+                </button>
+            </div>
+            <div
+                    [ngClass]=" !isSplitterSmall ? 'xl:col-2 lg:col-2  md:col-12 sm:col-12' : extraSmallHorSplitter ? 'col-12 xl:col-6 lg:col-6 md:col-12 sm:col-12': 'col-12'">
+
+                <button pButton (click)="isRejectLoading = true; rejectBill();"
+                        [disabled]="isLoading || isRejectLoading"
+                        *ngIf="isValidApproveAccess(appAuthorities.BILL_REJECT)"
+                        class="conf-reject-btn p-block  p-p-0 p-button-sm approval" type="button" label=" ">
+
+                    <div style="width: 100%">
+                        <span [class]="isRejectLoading ? 'pi pi-spin pi-spinner' : 'fa fa-minus-circle'"></span>
+                        Reject
+                    </div>
+                </button>
+            </div>
+
+            <div
+                    [ngClass]=" !isSplitterSmall ? 'xl:col-4 lg:col-4 md:col-12 sm:col-12' : extraSmallHorSplitter ? 'col-12 xl:col-6 lg:col-6 md:col-12 sm:col-12': 'col-12'">
+
+                <button pButton class="p-button p-block  p-p-0 p-button-sm approval" type="submit" label=" "
+                        [disabled]="isLoading || isRejectLoading"
+                        (click)="isLoading = true; approveAndReassignBill(false)"
+                        *ngIf="(billDetails.noOfLevels === billDetails.workflowLevel) && billApproveForm.get('approvalUser').value
+                && !isInsertApproverChecked && isValidApproveAccess(appAuthorities.BILL_APPROVE)
+                && !(isInsertApproverChecked && billApproveForm.get('approvalUser').value)">
+
+                    <div style="width: 100%">
+                        <span [class]="isLoading ? 'pi pi-spin pi-spinner' : 'fa fa-check'"></span>
+                        &nbsp;<span>Approve & Reassign</span>
+                    </div>
+
+                </button>
+
+                <button pButton class="p-button p-p-0 p-block p-button-sm" type="submit" label=" "
+                        [disabled]="isLoading || isRejectLoading"
+                        (click)="approveAndReassignBill(false)"
+                        *ngIf="(billMasterDto.noOfLevels !== billMasterDto.workflowLevel) &&
+               isValidApproveAccess(appAuthorities.BILL_APPROVE) && !(isInsertApproverChecked && billApproveForm.get('approvalUser').value)">
+
+                    <div style="width: 100%">
+                        <span [class]="isLoading ? 'pi pi-spin pi-spinner' : 'fa fa-check'"></span> &nbsp;
+                        <span>Approve</span>
+                    </div>
+                </button>
+
+                <button pButton class="p-button p-p-0 p-block p-button-sm" type="submit" label=" "
+                        [disabled]="isLoading || isRejectLoading"
+                        (click)="approveAndFinalize()"
+                        *ngIf="((billMasterDto.noOfLevels === billMasterDto.workflowLevel) && !(billApproveForm.get('approvalUser').value)) &&
+               isValidApproveAccess(appAuthorities.BILL_APPROVE) && !(isInsertApproverChecked && billApproveForm.get('approvalUser').value)">
+
+                    <div style="width: 100%">
+                        <span [class]="isLoading ? 'pi pi-spin pi-spinner' : 'fa fa-check'"></span> &nbsp;
+                        <span>{{matchingAutomation && !isSaveAsApprovedWorkFlow ? 'Approve' : 'Approve & Finalize'}}</span>
+                    </div>
+                </button>
+
+                <button pButton class="p-button p-p-0 p-block p-button-sm" type="submit" label=" "
+                        [disabled]="isLoading || isRejectLoading"
+                        (click)="isLoading = true; approveAndReassignBill(true)"
+                        *ngIf="(isInsertApproverChecked && billApproveForm.get('approvalUser').value) &&
+                isValidApproveAccess(appAuthorities.BILL_APPROVE)">
+
+                    <div style="width: 100%">
+                        <span [class]="isLoading ? 'pi pi-spin pi-spinner' : 'fa fa-paper-plane'"></span> &nbsp;
+                        <span>Submit For Approval</span>
+                    </div>
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+
+</form>
+
+<app-audit-trial *ngIf="auditTrialPanel" [auditTrial]="auditTrial" [heading]="'Bill# ' + billNo"
+                 (closeDrawer)="auditTrialPanel = false" [panelShow]="auditTrialPanel"></app-audit-trial>
+
+<!--Add New Account-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" appendTo="body" [modal]="true" position="right"
+           class="overflow-side-bar" *ngIf="isAddNewAccount" [(visible)]="isAddNewAccount">
+    <ng-template pTemplate="header">Account Information</ng-template>
+    <app-add-account (updatedAccountList)="getAccounts(accountList)"
+                     [detailView]="false" [editView]="false" [panel]="true" *ngIf="isAddNewAccount"></app-add-account>
+</p-sidebar>
+
+<!--Add New Item-->
+<p-sidebar styleClass="p-sidebar-lg" [dismissible]="true" appendTo="body" [modal]="true" position="right"
+           class="overflow-side-bar" *ngIf="isAddNewItem" [(visible)]="isAddNewItem">
+    <ng-template pTemplate="header">Create Item</ng-template>
+    <app-add-item (emittedTabIndex)="getVendorItemList(selectedVendorId)" [editView]="false" [detailView]="false"
+                  [panel]="true"
+                  *ngIf="isAddNewItem" [vendorId]="selectedVendorId"></app-add-item>
+</p-sidebar>
+
+<!--Add New New Project Code-->
+<p-sidebar styleClass="p-sidebar-sm" *ngIf="isAddNewProjectCodes" [dismissible]="true" appendTo="body" [modal]="true"
+           position="right" class="overflow-side-bar"
+           [(visible)]="isAddNewProjectCodes">
+    <ng-template pTemplate="header">Create Project</ng-template>
+
+    <app-create-new-project-code (updatedParentCodeList)="getProjectTaskList(projectCodeList)"
+                                 *ngIf="isAddNewProjectCodes">
+    </app-create-new-project-code>
+</p-sidebar>
+
+
+<!--Add New User-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" appendTo="body" [modal]="true" position="right"
+           class="overflow-side-bar" *ngIf="isAddNewUser" [(visible)]="isAddNewUser">
+    <ng-template pTemplate="header">Create User</ng-template>
+    <app-add-user (refreshTable)="getExtendedApprovalUserList(approvalUserList, this.billDetails.vendorId)"
+                  [panel]="true"
+                  [detailView]="false"
+                  [editView]="false" *ngIf="isAddNewUser"></app-add-user>
+</p-sidebar>
+
+
+<p-confirmDialog #cd key="bills" appendTo="body" header="Are you sure?"
+                 icon="conf-delete-icon pi pi-exclamation-triangle">
+    <p-footer>
+        <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+                (click)="cd.reject()"></button>
+        <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, Delete it!"
+                (click)="cd.accept()"></button>
+    </p-footer>
+</p-confirmDialog>
+
+<!--Create New DropDown-->
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" (onHide)="addNewDropDown = false" position="right" [modal]="true"
+           [dismissible]="true"
+           *ngIf="addNewDropDown"
+           [(visible)]="addNewDropDown">
+    <ng-template pTemplate="header">Create New DropDown Option</ng-template>
+    <app-additional-field-add-new [field]="selectedAdditionalField" *ngIf="addNewDropDown"
+                                  (closedComponent)="addNewDropDown = false; updateAdditionalFieldDropDowns()"></app-additional-field-add-new>
+</p-sidebar>
+
+
+<!--Po Details Drawer-->
+<app-po-details [poDetail]="poDetail" [showPoLineItems]="showPoLineItems" *ngIf="showPoLineItems"
+                [selectedPoLineItems]="selectedPoLineItems" (changeDefaultBehaviour)="defaultBehaviourChanged()"
+                [showPoLineItemsByDefault]="showPoLineItemsByDefault" (closeDrawer)="closePoDetailsDrawer()"
+                (processData)="addToItems($event)" [fromBillProcess]="true"
+                [selectedPoAccountDetails]="selectedPoAccountDetails"></app-po-details>
+
+<!--add configured rule-->
+<p-overlayPanel #overlayPanel [dismissable]="true" [showCloseIcon]="false" appendTo="body"
+                styleClass="add-rule-overlay">
+    <ng-template pTemplate>
+
+        <div class="grid col-12 pr-0">
+
+            <div class="col-8 pt-0 pb-0">
+                <label (click)="addNewRule()" class="add-new-label">Add Rule</label>
+            </div>
+        </div>
+
+        <div *ngFor="let rule of ruleDetails; let i=index">
+            <div class="grid col-12 pr-0 pt-0 pb-0 add-rule-content-wrapper">
+                <div class="col-8 p-as-center">
+                    <label> {{rule.name}}</label>
+                </div>
+                <div class="col-4">
+                    <button class="apply-button pull-right" pButton label="Apply" (click)="applyRule(rule)"></button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</p-overlayPanel>
+
+<p-sidebar [showCloseIcon]="false" [fullScreen]="true" [modal]="false" *ngIf="isAddRue"
+           [(visible)]="isAddRue" appendTo="body">
+    <app-workflow-create *ngIf="isAddRue" (isClickCloseButton)="isAddRue = false"
+                         [isFromBill]="true"></app-workflow-create>
+</p-sidebar>
+
+<!--3-way matching table details-->
+<app-three-way-matching-table [matchingTableValues]="billUtility.matchingTableValues"
+                              *ngIf="billUtility.isViewThreeWayMatchingTable"
+                              (closeDrawer)="billUtility.isViewThreeWayMatchingTable = false"
+                              [isViewMatchingTable]="billUtility.isViewMatchingTable" [poNumber]="poDetail.poNumber">
+</app-three-way-matching-table>
+
+<!--View PO Receipt-->
+<p-sidebar styleClass="p-sidebar-lg pSideBarCustom" appendTo="body" position="right" [modal]="false"
+           [dismissible]="true"
+           *ngIf="isViewReceiptView"
+           [(visible)]="isViewReceiptView">
+    <app-po-receipts-view *ngIf="isViewReceiptView" [receiptIds]="receiptAttachments"></app-po-receipts-view>
+</p-sidebar>
+
+
+<!--Add New Project Code-->
+<p-sidebar styleClass="p-sidebar-sm" *ngIf="isAddNewProjectCodes" [dismissible]="true" appendTo="body" [modal]="true"
+           position="right" class="overflow-side-bar"
+           [(visible)]="isAddNewProjectCodes">
+    <ng-template pTemplate="header">Create Project</ng-template>
+    <app-create-new-project-code (updatedParentCodeList)="getProjectTaskList(projectCodeList)"
+                                 *ngIf="isAddNewProjectCodes">
+    </app-create-new-project-code>
+</p-sidebar>
+
+<!--Create Invoice-->
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           (onHide)="isCreateInvoice= false" [fullScreen]="false" [(visible)]="isCreateInvoice"
+           transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)">
+    <ng-template pTemplate="header">Create Invoice</ng-template>
+    <app-create-customer-invoice *ngIf="isCreateInvoice"
+                                 (emitAfterSuccess)="getCustomerInvoiceList(); isCreateInvoice= false">
+    </app-create-customer-invoice>
+</p-sidebar>

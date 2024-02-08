@@ -1,0 +1,43 @@
+@import "../../../../scss/color.scss";
+
+.syncFieldSet ::ng-deep .p-fieldset-legend {
+  padding: 0px 10px 0px 10px;
+  background-color: transparent;
+  border: none;
+}
+
+.button-width ::ng-deep .p-button {
+  width: 100%;
+}
+
+.edit {
+  color: $green;
+  font-size: 12px;
+}
+
+.edit:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.width-max{
+  width: 100% !important;
+}
+.qb-btn{
+  padding: 0;
+  border: none;
+  margin: 0;
+  cursor: pointer;
+  &:hover{
+    img{
+      content: url('../../../../assets/images/C2QB_green_btn_med_hover.png');
+    }
+  }
+}
+
+.text-bold{
+  font-weight: bold;
+}
+
+.text-gray{
+  color: $grey;
+}

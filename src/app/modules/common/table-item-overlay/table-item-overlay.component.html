@@ -1,0 +1,38 @@
+<div class="overlay-panel" *ngIf="itemDto">
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Item Name</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(itemDto.itemName, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Item Type</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(itemDto.itemType, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>UOM</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(itemDto.uomName, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Parent Item</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(itemDto.parentItem, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Category</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(itemDto.category, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Asset Account</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(itemDto.assetAccount, false)}}</div>
+  </div>
+
+</div>
+<div class="overlay-panel" *ngIf="!itemDto">
+  <div *ngIf="!itemDto" class="loading-wrapper">
+    <em class="fa fa-spinner fa-pulse"></em>
+  </div>
+</div>

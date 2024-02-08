@@ -1,0 +1,197 @@
+
+<div class="field grid mb-0">
+  <div class="col-6">
+    <h5 class="subHeadingColour">Credit Note Details</h5>
+  </div>
+  <div class="col-6 text-right">
+    <div class="fa fa-close side-drawer-icon"
+         (click)="closeEditView.emit()"></div>
+  </div>
+</div>
+
+<form [formGroup]="creditNoteDetailForm" autocomplete="off">
+  <div class="detail-form" [class]="'grid col-12 pl-0'">
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Customer</label>
+      <div>{{commonUtil.detailViewIsDash(f.customerName.value, false)}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Customer Contact Email</label>
+      <div>{{commonUtil.detailViewIsDash(f.customerEmail.value, false)}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>PO Number</label>
+      <div>{{commonUtil.detailViewIsDash(f.poNumber.value, false)}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Credit Note No</label>
+      <div>{{commonUtil.detailViewIsDash(f.creditNoteNo.value, false)}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Credit Note Date</label>
+      <div>{{f.creditNoteDateStr.value}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Credit Balance</label>
+      <div>{{f.creditBalance.value | number : '1.2-2'}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Comment</label>
+      <div>{{commonUtil.detailViewIsDash(f.comment.value, false)}}</div>
+    </div>
+
+  </div>
+
+
+  <br><br>
+
+  <div class="grid p-fluid" *ngIf="lineItemMainTable.controls.length > 0">
+    <div class="col-12">
+      <div>
+        <p-table responsiveLayout="scroll" [value]="lineItemMainTable.controls" scrollable="true" scrollHeight="210px"
+                 [style]="{width:'auto'}"
+                 styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col style="width:20px">
+              <col style="width:200px">
+              <col style="width:200px">
+              <col style="width:100px">
+              <col style="width:200px">
+              <col style="width:200px">
+            </colgroup>
+          </ng-template>
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="thead-style detail-table-header-left" id="no">#</th>
+              <th class="thead-style detail-table-header-left" id="itemNumber1">Item Number</th>
+              <th class="thead-style detail-table-header-left" id="description">Description</th>
+              <th class="thead-style detail-table-header-right" id="qty1">Return Qty</th>
+              <th class="thead-style detail-table-header-right" id="price1">Cost</th>
+              <th class="thead-style detail-table-header-right" id="amount1">Line Amount</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-i="rowIndex" let-item formArrayName="creditNoteItemDetails">
+
+            <tr id="tr_{{i}}" [formGroupName]="i">
+
+              <td style="text-align: center"><label>{{i + 1}}</label></td>
+
+              <td>
+                <div>{{f.creditNoteItemDetails.value[i].itemNumber}}</div>
+              </td>
+
+              <td>
+                <div>{{f.creditNoteItemDetails.value[i].description}}</div>
+              </td>
+
+              <td class="text-right">
+                <div>{{f.creditNoteItemDetails.value[i].qty}}</div>
+              </td>
+
+              <td class="text-right">
+                <div>{{f.creditNoteItemDetails.value[i].unitPrice | number : '1.2-2'}}</div>
+              </td>
+
+              <td class="text-right">
+                <div>{{f.creditNoteItemDetails.value[i].amount | number : '1.2-2'}}</div>
+              </td>
+
+            </tr>
+          </ng-template>
+
+        </p-table>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="grid" *ngIf="creditNoteDetailForm.get('taxAmount').value">
+
+    <div class="col-12 text-right amount-content pull-right">
+    <span class="subHeadingColour col-6">
+     <b>Tax Amount</b>
+    </span>&nbsp;
+
+      <span class="font-style-amount col-6">
+     {{creditNoteDetailForm.get('taxAmount').value | number : '1.2-2'}}
+    </span>
+
+    </div>
+
+  </div>
+
+  <div class="grid" *ngIf="creditNoteDetailForm.get('creditTotal').value">
+
+    <div class="col-12 text-right pull-right amount-content">
+
+    <span class="subHeadingColour col-6">
+      <b>Total Credit</b>
+    </span>&nbsp;
+
+      <span class="font-style-amount col-6">
+      {{creditNoteDetailForm.get('creditTotal').value | number : '1.2-2'}}
+    </span>
+
+    </div>
+
+  </div>
+
+  <br><br>
+  <div class="grid">
+    <div class="col-8" *ngIf="creditNoteAttachments.length>0">
+      <h6 class="subHeadingColour">Files Attached</h6>
+      <div>
+        <p-table responsiveLayout="scroll" [value]="creditNoteAttachments" scrollable="true" scrollHeight="160px"
+                 styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col style="width:150px">
+              <col style="width:100px">
+              <col style="width:20px">
+            </colgroup>
+          </ng-template>
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="thead-style detail-table-header-left" id="rName">File Name</th>
+              <th class="thead-style detail-table-header-left" id="fieldName">Field Name</th>
+              <th class="thead-style detail-table-header-left" id="action">Action</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-i="rowIndex" let-item>
+            <tr>
+
+              <td [style]="'height : 30px'" class="file-name-wrapper">
+                <label> {{item.fileName}}</label>
+              </td>
+
+              <td [style]="'height : 30px'">
+                <label> {{item.fieldName}}</label>
+              </td>
+
+              <td class="text-center">
+                <em (click)="downloadCreditNoteAttachment(item)"
+                    [class]="item.loading ? 'pi pi-spin pi-spinner':'fa fa-download download-icon'"></em>
+              </td>
+
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+
+  </div>
+
+</form>

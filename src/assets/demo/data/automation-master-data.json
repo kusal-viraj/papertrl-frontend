@@ -1,0 +1,32 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Workflow 1",
+      "documentType": "Bill",
+      "event": "Submission",
+      "createdDate": "17/12/2020",
+      "createdBy": "Admin",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 2,
+      "name": "Workflow 2",
+      "documentType": "Purchase Order",
+      "event": "Submission",
+      "createdDate": "15/10/2020",
+      "createdBy": "Admin",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 3,
+      "name": "Workflow 3",
+      "documentType": "Expense",
+      "event": "Rejection",
+      "createdDate": "11/09/2020",
+      "createdBy": "Admin",
+      "status": "I"
+    }
+  ],
+  "totalRecords": 3
+}

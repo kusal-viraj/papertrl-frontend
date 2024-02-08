@@ -1,0 +1,22 @@
+@import "../../../../scss/color.scss";
+@import '../../../../scss/table-responsive';
+@import '../../../../scss/common-styles';
+
+.online {
+  color: $tertiary-blue;
+}
+
+.offline {
+  color: $offline-gray;
+}
+
+.table-wrapper {
+  height: calc(100vh - 118px);
+}
+
+.overlay-panel {
+  width: 350px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}

@@ -1,0 +1,82 @@
+<div class="grid col-12">
+
+  <div class="col-6">
+    <app-table-header-action-buttons [tableSupportBase]="projectCodeListComponent?.tableSupportBase"
+                                     [componentInstance]="projectCodeListComponent"
+                                     *ngIf="projectCodeListComponent?.isProjectCodeTableVisible()"
+                                     (refresh)="projectCodeListComponent?.loadData(projectCodeListComponent?.tableSupportBase.searchFilterDto)"
+                                     (showFilters)="projectCodeListComponent.showFilter = !projectCodeListComponent?.showFilter;
+                                         projectCodeListComponent?.gridService.dropDownSubject.next(true); projectCodeListComponent.showFilterColumns = false"
+                                     (showColumns)="projectCodeListComponent.showFilterColumns = !projectCodeListComponent?.showFilterColumns;
+                                          projectCodeListComponent.showFilter = false"
+                                     (delete)="projectCodeListComponent?.deleteProjectCodesList()"
+                                     (inactive)="projectCodeListComponent?.inactiveProjectCodesList()"
+                                     (active)="projectCodeListComponent?.activeProjectCodesList()"
+                                     [visibleActions]="projectCodeListComponent?.availableHeaderActions"
+                                     [moduleName]="AppAnalyticsConstants.MODULE_NAME_PROJECT_CODE"
+    >
+    </app-table-header-action-buttons>
+  </div>
+
+  <div class="col-6 text-right">
+
+    <button pButton icon="pi pi-check-circle" type="button" label="Select All"
+            class="p-button-outlined mr-2 p-button-sm" *ngIf="!uploadProjectCode"
+            (click)="projectCodeListComponent.selectAllData()">
+    </button>
+
+    <button pButton icon="pi pi-circle-off" type="button" label="Unselect All"
+            class="p-button-outlined mr-2 p-button-sm"
+            *ngIf="!uploadProjectCode"
+            (click)="projectCodeListComponent.unSelectAllData()">
+    </button>
+
+    <button pButton class="p-button-outlined mr-2" *ngIf="uploadProjectCode && privilegeService.isAuthorizedMultiple(
+    [appAuthorities.PROJECT_CODES_EDIT, appAuthorities.PROJECT_CODES_DELETE, appAuthorities.PROJECT_CODES_INACTIVATE,
+    appAuthorities.PROJECT_CODES_ACTIVATE, appAuthorities.PROJECT_CODES_DETAIL_VIEW,
+    appAuthorities.PROJECT_CODES_CREATE, appAuthorities.PROJECT_CODES_CSV_EXPORT])"
+            label="View Projects" (click)="uploadProjectCode = false">
+    </button>
+
+    <button pButton class="p-button-outlined mr-2"
+            *ngIf="!uploadProjectCode && privilegeService.isAuthorized(appAuthorities.PROJECT_CODES_UPLOAD)"
+            label="Upload Projects" (click)="toggleProjectCode('pu')">
+    </button>
+
+    <button pButton class="p-button p-button-sm mr-2"
+            *ngIf="!uploadProjectCode && privilegeService.isAuthorized(appAuthorities.PROJECT_CODES_CREATE)"
+            label="Create Project" (click)="toggleProjectCode('pc')">
+    </button>
+
+  </div>
+
+</div>
+
+<div class="col-12 pt-0">
+
+  <app-project-code-list *ngIf="privilegeService.isAuthorizedMultiple(
+    [appAuthorities.PROJECT_CODES_EDIT, appAuthorities.PROJECT_CODES_DELETE,
+    appAuthorities.PROJECT_CODES_INACTIVATE, appAuthorities.PROJECT_CODES_ACTIVATE,
+    appAuthorities.PROJECT_CODES_DETAIL_VIEW, appAuthorities.PROJECT_CODES_CSV_EXPORT,
+    appAuthorities.PROJECT_CODES_CREATE])" #projectCodeListComponent>
+  </app-project-code-list>
+
+</div>
+
+
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" [modal]="true" position="right" class="overflow-side-bar"
+           *ngIf="createProjectCode" [(visible)]="createProjectCode">
+  <ng-template pTemplate="header">Create Project Code</ng-template>
+  <app-create-project-code [panel]="true" [isEdit]="false" [isDetailVIew]="false"
+                           (isRefresh)="projectCodeListComponent?.loadData(projectCodeListComponent?.tableSupportBase.searchFilterDto)"
+                           *ngIf="createProjectCode">
+  </app-create-project-code>
+</p-sidebar>
+
+
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" [modal]="true" position="right" class="overflow-side-bar"
+           *ngIf="uploadProjectCode" [(visible)]="uploadProjectCode">
+  <ng-template pTemplate="header">Upload Projects</ng-template>
+  <app-upload-project-code *ngIf="uploadProjectCode">
+  </app-upload-project-code>
+</p-sidebar>

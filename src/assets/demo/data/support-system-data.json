@@ -1,0 +1,17 @@
+{
+  "data": [
+    {
+      "id": "",
+      "grantType": "Grant",
+      "systemName": "System",
+      "authType": "Auth"
+    },
+    {
+      "id": "",
+      "grantType": "Grant1",
+      "systemName": "System1",
+      "authType": "Auth1"
+    }
+  ],
+  "totalRecords": 2
+}

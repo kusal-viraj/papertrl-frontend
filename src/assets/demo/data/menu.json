@@ -1,0 +1,310 @@
+{
+  "menu": [
+    {
+      "label": "Home",
+      "icon": "fa fa-home",
+      "routerLink": [
+        "/home/dashboard"
+      ],
+      "items": [
+        {
+          "label": "Dashboard",
+          "icon": "fa fa-th-large",
+          "routerLink": [
+            "/home/dashboard"
+          ]
+        },
+        {
+          "label": "Vendors",
+          "icon": "fa fa-users",
+          "routerLink": [
+            "/home/vendor"
+          ]
+        },
+        {
+          "label": "Accounts",
+          "icon": "fa fa-industry",
+          "routerLink": [
+            "/home/account"
+          ]
+        },
+        {
+          "label": "Automations",
+          "icon": "fa fa-tasks",
+          "routerLink": [
+            "/home/workflow"
+          ]
+        },
+        {
+          "label": "Code",
+          "icon": "fa fa-code",
+          "routerLink": [
+            "/home/project-code"
+          ]
+        },
+        {
+          "label": "Admin",
+          "icon": "fa fa-key",
+          "routerLink": [
+            "/home/admin"
+          ],
+          "items": [
+            {
+              "routerLink": ["/home/admin", {"tab": 0}],
+              "label": "User",
+              "icon": "fa fa-user"
+            },
+            {
+              "routerLink":["/home/admin", {"tab": 1}],
+              "label": "Role",
+              "icon": "fa fa-lock"
+            },
+            {
+              "routerLink": ["/home/admin", {"tab": 2}],
+              "label": "Approval Group",
+              "icon": "fa fa-users"
+            }
+          ]
+        },
+        {
+          "label": "Settings",
+          "icon": "fa fa-cog",
+          "routerLink": [
+            "/home/settings"
+          ],
+          "items": [
+            {
+              "routerLink": ["/home/settings", {"tab": 0}],
+              "label": "Company Profile",
+              "icon": "fa fa-building"
+            },
+            {
+              "routerLink":["/home/settings", {"tab": 1}],
+              "label": "Additional Fields",
+              "icon": "fa fa-pencil-square-o"
+            }
+          ]
+        },
+        {
+          "label": "Sync Dashboard",
+          "icon": "fa fa-refresh",
+          "routerLink": [
+            "/home/sync-dashboard"
+          ]
+        },
+        {
+          "label": "Reports",
+          "icon": "fa fa-file",
+          "routerLink": [
+            "/home/report"
+          ]
+        }
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Payable",
+      "icon": "fa fa-industry",
+      "items": [
+        {
+          "label": "Items",
+          "icon": "fa fa-cube",
+          "routerLink": [
+            "/home/item"
+          ]
+        },
+        {
+          "label": "Expenses",
+          "icon": "fa fa-credit-card",
+          "routerLink": [
+            "/home/expense"
+          ]
+        }
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Receivable",
+      "icon": "fa fa-cube",
+      "items": [
+        {
+          "label": "Bills",
+          "icon": "fa fa-file-text-o",
+          "routerLink": [
+            "/home/bills"
+          ],
+          "items": [
+            {
+              "routerLink": ["/home/bills", {"tab": 0}],
+              "label": "Bills",
+              "icon": "fa fa-file-text-o"
+            },
+            {
+              "routerLink":["/home/bills", {"tab": 1}],
+              "label": "Bill Payments",
+              "icon": "fa fa-list-alt"
+            }
+          ]
+        },
+        {
+          "label": "Purchase Order",
+          "icon": "fa fa-money",
+          "routerLink": [
+            "/home/purchase-order"
+          ],
+          "items": [
+            {
+              "routerLink": ["/home/purchase-order", {"tab": 0}],
+              "label": "Purchase Orders",
+              "icon": "fa fa-money"
+            },
+            {
+              "routerLink":["/home/purchase-order", {"tab": 1}],
+              "label": "PO Receipts",
+              "icon": "fa fa-usd"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "slimMenu": [
+    {
+      "label": "Dashboard",
+      "icon": "fa fa-th-large",
+      "routerLink": [
+        "/home/dashboard"
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Vendors",
+      "icon": "fa fa-user",
+      "routerLink": [
+        "/home/vendor"
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Bills",
+      "icon": "fa fa-file-text-o",
+      "routerLink": [
+        "/home/bills"
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Purchase Order",
+      "icon": "fa fa-money",
+      "routerLink": [
+        "/home/purchase-order"
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Expenses",
+      "icon": "fa fa-credit-card",
+      "routerLink": [
+        "/home/expense"
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Items",
+      "icon": "fa fa-cube",
+      "routerLink": [
+        "/home/item"
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Accounts",
+      "icon": "fa fa-industry",
+      "routerLink": [
+        "/home/account"
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Project Codes",
+      "icon": "fa fa-code",
+      "routerLink": [
+        "/home/project-code"
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Automations",
+      "icon": "fa fa-tasks",
+      "routerLink": [
+        "/home/workflow"
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Settings",
+      "icon": "fa fa-cog",
+      "routerLink": [
+        "/home/settings"
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Admin",
+      "icon": "fa fa-key",
+      "routerLink": [
+        "/home/admin/"
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Sync Dashboard",
+      "icon": "fa fa-refresh",
+      "routerLink": [
+        "/home/sync-dashboard"
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Reports",
+      "icon": "fa fa-file",
+      "routerLink": [
+        "/home/report"
+      ]
+    },
+    {
+      "separator": true
+    }
+  ]
+}

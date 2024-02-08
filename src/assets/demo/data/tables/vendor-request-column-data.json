@@ -1,0 +1,168 @@
+{
+  "advancedFilters": [
+    {
+      "field": "vendorName",
+      "header": "Vendor Name",
+      "searchType": "input"
+    },
+    {
+      "field": "contactName",
+      "header": "Contact Name",
+      "searchType": "input"
+    },
+    {
+      "field": "contactNo",
+      "header": "Contact No",
+      "searchType": "input"
+    },
+    {
+      "field": "emailAddress",
+      "header": "email Address",
+      "searchType": "input"
+    },
+    {
+      "field": "status",
+      "header": "Status",
+      "searchType": "dropdown",
+      "dropdownValues": [
+        {
+          "label": "APPROVED",
+          "value": "A"
+        },
+        {
+          "label": "PENDING",
+          "value": "P"
+        },
+        {
+          "label": "REJECTED",
+          "value": "R"
+        }
+      ]
+    }
+  ],
+  "columns": [
+    {
+      "field": "checkbox",
+      "header": null,
+      "columnShow": true,
+      "isSortable": false,
+      "isReOrderable": false,
+      "isReSizable": false,
+      "canHide": false,
+      "align": "center",
+      "searchType": "checkbox"
+    },
+    {
+      "field": "action",
+      "header": "Action",
+      "isSortable": false,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "actionButton",
+      "canHide": false
+    },
+    {
+      "field": "vendorName",
+      "header": "Vendor Name",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "left",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Vendor Name"
+    },
+    {
+      "field": "contactName",
+      "header": "Contact Name",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "left",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Contact Name"
+    },
+    {
+      "field": "contactNo",
+      "header": "Contact No",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Contact No"
+    },
+    {
+      "field": "emailAddress",
+      "header": "Email Address",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "left",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Email Address"
+    },
+    {
+      "field": "requestedDate",
+      "header": "Requested Date",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "date",
+      "canHide": true,
+      "placeholder": "Requested Date"
+    },
+    {
+      "field": "status",
+      "header": "Status",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "dropdown",
+      "canHide": true,
+      "placeholder": "All",
+      "dropdownValues": [
+        {
+          "label": "APPROVED",
+          "value": "A"
+        },
+        {
+          "label": "PENDING",
+          "value": "P"
+        },
+        {
+          "label": "REJECTED",
+          "value": "R"
+        }
+      ]
+    }
+  ],
+  "state": {
+    "first": 0,
+    "rows": 10,
+    "columnWidths": "50,100,180,180,180,181,181,181",
+    "columnOrder": [
+      "checkbox",
+      "action",
+      "vendorName",
+      "contactName",
+      "contactNo",
+      "emailAddress",
+      "requestedDate",
+      "status"
+    ]
+  }
+}

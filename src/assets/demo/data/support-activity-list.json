@@ -1,0 +1,103 @@
+{
+  "advancedFilters": [],
+  "columns": [
+    {
+      "field": "url",
+      "header": "URL",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "URL"
+    },
+    {
+      "field": "ipAddress",
+      "header": "IP Address",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "IP Address"
+    },
+    {
+      "field": "tenantId",
+      "header": "Tenant Id",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Tenant Id"
+    },
+    {
+      "field": "userName",
+      "header": "User Name",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "User Name"
+    },
+    {
+      "field": "statusCode",
+      "header": "Status Code",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Status Code"
+    },
+    {
+      "field": "responseMessage",
+      "header": "Response Message",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Response Message"
+    },
+    {
+      "field": "logTimeStamp",
+      "header": "Log Time Stamp",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Log Time Stamp"
+    }
+  ],
+  "state": {
+    "first": 0,
+    "rows": 10,
+    "columnWidths": "450,210,210,210,210,250,210",
+    "columnOrder": [
+      "url",
+      "ipAddress",
+      "tenantId",
+      "userName",
+      "statusCode",
+      "responseMessage",
+      "logTimeStamp"
+    ]
+  }
+}

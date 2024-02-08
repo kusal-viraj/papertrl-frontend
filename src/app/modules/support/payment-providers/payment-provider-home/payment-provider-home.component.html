@@ -1,0 +1,32 @@
+
+      <div class="grid mt-2">
+        <div class="col-6">
+          <app-table-header-action-buttons
+            [componentInstance]="paymentProviderListComponent" *ngIf="paymentProviderListComponent"
+            [tableSupportBase]="paymentProviderListComponent?.tableSupportBase"
+            (refresh)="paymentProviderListComponent?.loadData(paymentProviderListComponent.tableSupportBase.searchFilterDto)"
+            (showFilters)="paymentProviderListComponent.showFilter = !paymentProviderListComponent?.showFilter;
+                                         paymentProviderListComponent.showFilterColumns = false"
+            (showColumns)="paymentProviderListComponent.showFilterColumns = !paymentProviderListComponent?.showFilterColumns; paymentProviderListComponent.showFilter = false"
+            [visibleActions]="paymentProviderListComponent?.availableHeaderActions">
+
+          </app-table-header-action-buttons>
+        </div>
+        <div class="col-6">
+          <div [ngClass]="'col-12'" style="text-align: right" *ngIf="!createPayProvider " class="screen-change-btn">
+            <button pButton class="mr-2 p-button"  iconPos="left"
+                    label="Create Payment Provider" (click)="toggle('pc')"></button>
+          </div>
+          <div [ngClass]="'col-12'" style="text-align: right" *ngIf="!listPayProvider " class="screen-change-btn">
+            <button pButton class="mr-2 p-button-outlined" *ngIf="!listPayProvider"
+                    label="View Payment Provider List" (click)="toggle('pl')"></button>
+          </div>
+        </div>
+      </div>
+
+
+    <div class="col-12">
+      <app-payment-provider-list #paymentProviderListComponent *ngIf="listPayProvider"></app-payment-provider-list>
+      <app-payment-provider-create  (refreshTable)="refreshTable();" *ngIf="createPayProvider"></app-payment-provider-create>
+    </div>
+

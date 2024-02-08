@@ -1,0 +1,76 @@
+<div class="total-record-wrapper" *ngIf="processDataListLength === appConstant.ZERO">No Data Found.</div>
+<p-virtualScroller [value]="processesList" [itemSize]="65" [lazy]="true" #processedList
+                   scrollHeight="{{screenHeight}}px"
+                   [class]="processDataListLength === appConstant.ZERO ? 'p-virtualScroller-hide' : 'p-virtualScroller-wrap'"
+                   (onLazyLoad)="loadProcessedData($event)">
+
+  <ng-template let-processData pTemplate="item" let-scrollOptions="options">
+    <div class="grid p-vertual-wrap list-data-wrap" *ngIf="processesList.length > appConstant.ZERO"
+         [ngClass]="scrollOptions.index == clickIndexInProcess ? 'background-color': 'background-color-wrap'" [class.p-disabled]="isProgressOtherFileDownload">
+
+      <div class="inner-wrapper" [class.p-disabled]="isProgressViewInProcessTab">
+
+        <div (click)="listDataClick(scrollOptions.index, processData)" class="col-10 mail-item">
+
+          <div class="email-body" (mouseenter)="showFullText($event)">
+          <span *ngIf="processData.attachmentList.length > appConstant.ZERO"
+                (click)="processData.isExpanded = !processData.isExpanded"
+                [class]="!processData.isExpanded ? 'pi pi-chevron-right expand-icon-wrap':
+                 'pi pi-chevron-down expand-icon-wrap'"></span>
+            {{processData.title}}
+          </div>
+
+          <div class="p-vertual-wrap" *ngIf="processData.isUpload">
+            <div class="emailed-by">Uploaded
+              by {{processData.emailUserName}} {{processData.createdOn}}
+            </div>
+          </div>
+
+          <div class="p-vertual-wrap" *ngIf="!processData.isUpload">
+            <div class="emailed-by">Emailed
+              by {{processData.emailAddress}} {{processData.createdOn}}
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-1 ellipsis-icon-wrap"
+             [class.p-disabled]="!processData.emailBody"
+             [class]="processData.emailBody === null ? 'inactive-email-box' : 'active-email-box'">
+          <div (click)="emailBodyDetailInProcessList.emit(processData.emailBody)"
+               [pTooltip]="'Click To View Email Body'"
+               [tooltipDisabled]="processData.emailBody == null || isProgressViewInProcessTab">
+            <em [class.p-disabled]="isProgressViewInProcessTab" class="fa fa-envelope-open-o"></em>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="outer-wrapper" [class.p-disabled]="isProgressViewInProcessTab">
+        <div class="attachment-chips-wrap pt-2 pl-1 col-12" *ngIf="processData.isExpanded">
+          <div *ngFor="let att of processData.attachmentList; let attIndex=index">
+            <span class="attachments-style attachments-style-default"
+                  [class]="(clickProcessedListAttachmentId === att.id) ? 'attachments-style-click': ''">
+              <span (click)="attachmentOnClick(att, attIndex, processesList)">
+              {{att.fileName}}
+              </span>
+              <span [pTooltip]="'Move to “To Process”'" (click)="moveToProcess(att.id)"
+                    [class.p-disabled]="clickProcessedListAttachmentId !== att.id"
+                    class="pl-2 fa-solid fa-arrow-rotate-left">
+            </span>
+                </span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </ng-template>
+
+</p-virtualScroller>
+<div class="total-record-wrapper" *ngIf="processDataListLength !== appConstant.ZERO">Total Records: {{totalRecords}}</div>
+
+
+
+
+

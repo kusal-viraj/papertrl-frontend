@@ -1,0 +1,64 @@
+@import '../../../../scss/color';
+
+.ticket-manage-wrapper {
+  width: 1000px;
+  height: calc(100vh - 319px);
+  .comment {
+    width: 100% !important;
+  }
+
+  .time-line {
+    max-height: 350px;
+    overflow: auto;
+
+    .date {
+      font-size: 12px;
+    }
+
+    .custom-marker {
+      display: flex;
+      width: 2rem;
+      height: 2rem;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      border-radius: 50%;
+      z-index: 1;
+      background-color: $green;
+    }
+  }
+
+  .drop-zone-style {
+    border-color: $green;
+    border-width: 1px;
+    height: 115px !important;
+    background-color: $secondary-light-green;
+
+    ngx-dropzone-preview {
+      height: 72px !important;
+      max-width: 160px !important;
+      min-height: 90px !important;
+      min-width: 160px !important;
+    }
+
+    .file-label {
+      width: 140px;
+      font-size: 11px
+    }
+
+    ngx-dropzone-label {
+      z-index: 0;
+    }
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .ticket-manage-wrapper {
+    width: 100%;
+  }
+}
+
+
+.panel-footer{
+  left: 7px;
+}

@@ -1,0 +1,92 @@
+.reminder-wrapper {
+  height: calc(100vh - 221px);
+  overflow: auto;
+  .header-section .col-12 {
+    display: inline;
+
+    .p-invalid {
+      display: table;
+    }
+
+    label {
+      display: inline-block;
+      margin-right: 5px;
+    }
+
+    span {
+      display: inline-block;
+      margin-right: 5px;
+
+      .document-type ::ng-deep .p-dropdown {
+        min-width: 110px !important;
+      }
+
+      .number ::ng-deep .p-inputnumber {
+        width: 60px !important;
+      }
+    }
+  }
+
+  .conditions {
+    overflow-x: auto;
+
+    .scroll-fields {
+      min-width: 220px;
+      display: inline-block;
+    }
+  }
+
+  .time-interval {
+    label {
+      display: inline-block;
+      margin-right: 5px;
+    }
+
+    span {
+      display: inline-block;
+      margin-right: 5px;
+
+      .number ::ng-deep .p-inputnumber {
+        width: 60px !important;
+      }
+    }
+  }
+
+  .escalate {
+    overflow-x: auto;
+
+    .p-invalid {
+      display: table;
+    }
+
+    .col-12:nth-child(1) {
+      display: inline;
+
+      label {
+        margin-left: 5px;
+        vertical-align: super;
+      }
+    }
+
+    .col-12:nth-child(2) {
+      display: inline;
+      width: 760px;
+
+      label {
+        display: inline-block;
+        margin-left: 5px;
+        margin-right: 5px;
+      }
+
+      span {
+        display: inline-block;
+        width: 300px;
+      }
+
+      p-inputNumber {
+        display: inline-block;
+        width: 60px !important;
+      }
+    }
+  }
+}

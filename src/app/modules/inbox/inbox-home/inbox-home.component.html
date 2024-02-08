@@ -1,0 +1,361 @@
+<div class="grid p-fluid main-card-grid" style="background-color: #f4f6f9">
+  <div class="col-4 pr-0 emails-viewer-wrap child-card-outer-div">
+    <div class="col-12">
+      <div class="popup-header-label">
+        <h5 class="inbox-heading-label">Inbox</h5>
+      </div>
+
+      <span *ngIf="!isAllowedToEditCustomerEmail" [ngClass]="'email-text-default'">
+              <span *ngIf="customerEmailAddress != appConstant.NOT_CONFIG_EMAIL"
+                    (cbOnSuccess)="isCopied = true" [cbContent]="customerEmailAddress"
+                    (click)="copyEmailAddress($event); overlayPanel.toggle($event)"ngxClipboard
+                    class="drop-text">{{customerEmailAddress}}</span>
+              <span *ngIf="customerEmailAddress === appConstant.NOT_CONFIG_EMAIL"
+                    class="drop-text">{{customerEmailAddress}}</span>
+            </span>
+      <span
+        (click)="editOverlay.toggle($event)"
+        *ngIf="!isAllowedToEditCustomerEmail && privilegeService.isAuthorized(appAuthorities.INBOX_EMAIL_EDIT) &&
+              customerEmailAddress != appConstant.NOT_CONFIG_EMAIL" [class.p-disabled]="isVisibleProgressBar || splitEventIsInProgress ||
+              isProgressSendToBillSegregated || isProgressSendToBillNotSegregated || isProgressRecoverAction ||
+              isProgressPermanentDeleteAction || isProgressToProcessDeleteAction"
+        class="pl-2  edit-text fa fa-pencil">
+  </span>
+      <div class="col-12" style="padding-top: 20px">
+        <div *ngIf="privilegeService.isAuthorized(appAuthorities.INBOX_SEARCH)" class="search-field-wrap">
+          <div class="p-inputgroup pl-1">
+                        <span class="p-input-icon-left" style="width:100%">
+                        <i class="pi pi-search"></i>
+                     <input #inputValue (keyup)="searchData(inputValue.value)" [class.p-disabled]="isVisibleProgressBar || splitEventIsInProgress ||
+                      isProgressSendToBillSegregated || isProgressSendToBillNotSegregated || isProgressToProcessDeleteAction || isDisabledDownloadLink"
+                           pInputText placeholder="Search by document or email" style="height: 36px"
+                            type="text">
+                      </span>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="action-btn-top text-right">
+          <button (click)="refreshTabCurrentData()" [disabled]="isVisibleProgressBar || splitEventIsInProgress
+                ||isProgressSendToBillSegregated || isProgressSendToBillNotSegregated ||
+                 isProgressRecoverAction || isProgressPermanentDeleteAction || isProgressToProcessDeleteAction ||
+                 isDisabledDownloadLink"
+                  class="fa-solid fa-rotate-right" pTooltip="Refresh"
+                  style="background: none; border: none; cursor: pointer"
+                  tooltipPosition="bottom"
+          ></button>
+          <span (click)="sendAttachmentToBill(false, null)" *ngIf="tabIndex === 0 && privilegeService.isAuthorized(appAuthorities.INBOX_REVIEW)" [class.p-disabled]="isVisibleProgressBar || splitEventIsInProgress || !isEnabledToProcessTabButton ||
+                    isProgressSendToBillNotSegregated || isProgressSendToBillSegregated||
+                    isProgressToProcessDeleteAction || !isAllowedToSendToBillOption"
+                class="fa-solid fa-paper-plane"
+                pTooltip="Send to Process Bill"
+                tooltipPosition="bottom"></span>
+          <!--              <span class="pi pi-paperclip" pTooltip="Attach to" tooltipPosition="bottom"></span>-->
+          <span (click)="loadingToUploadScreen('upload')" class="fa-solid fa-upload"
+                pTooltip="Upload" tooltipPosition="bottom"></span>
+          <span (click)="recoverEmail()"
+                *ngIf="tabIndex === 2 && privilegeService.isAuthorized(appAuthorities.INBOX_REVIEW)"
+                [class.p-disabled]="isVisibleProgressBar || splitEventIsInProgress || isProgressRecoverAction ||
+                    isProgressPermanentDeleteAction || !isButtonEnabledOnload"
+                class="pi pi-history"
+                pTooltip="Recover" tooltipPosition="bottom"></span>
+          <span (click)="deleteSelectedMail()"
+                *ngIf="tabIndex === 0 && privilegeService.isAuthorized(appAuthorities.INBOX_DELETE)"
+                [class.p-disabled]="isVisibleProgressBar || splitEventIsInProgress || !isEnabledToProcessTabButton
+                    || isProgressSendToBillSegregated || isProgressSendToBillNotSegregated || isProgressToProcessDeleteAction"
+                class="fa fa-trash" pTooltip="Delete"
+                tooltipPosition="bottom"></span>
+          <span (click)="deleteSelectedMail()"
+                *ngIf="tabIndex === 2 && privilegeService.isAuthorized(appAuthorities.INBOX_DELETE)"
+                [class.p-disabled]="isVisibleProgressBar || splitEventIsInProgress
+                    || isProgressRecoverAction || isProgressPermanentDeleteAction || !isButtonEnabledOnload || isProgressSendToBillNotSegregated
+                    || isProgressSendToBillSegregated"
+                class="fa fa-trash" pTooltip="Delete"
+                tooltipPosition="bottom"></span>
+          <span (click)="sortOrderAction.toggle($event)"
+                style="position: relative;top: 6px;"
+                pTooltip="" tooltipPosition="bottom">
+          <img src="assets/images/filter_icon.png">
+            </span>
+          <p-menu #sortOrderAction [model]="searchValues"
+                  [popup]="true" [style]="{'width': '10rem'}"
+                  class="p-action-menu"
+                  appendTo="body">
+          </p-menu>
+        </div>
+      </div>
+
+
+    </div>
+
+    <div class=" child-card child-card-email">
+      <div class="col-12 pl-0  card-padding">
+        <p-tabView #tabSet (onChange)="onTabChange(tabIndex)"
+                   [(activeIndex)]="tabIndex"
+                   styleClass="tabview-custom-wrap inbox-panels">
+          <p-tabPanel [disabled]="!privilegeService.isAuthorizedMultiple([appAuthorities.INBOX_REVIEW,
+          appAuthorities.INBOX_DELETE, appAuthorities.INBOX_ATTACH_TO])">
+            <ng-template pTemplate="header">
+                  <span class="custom-span">
+                    To Process
+                  </span>
+            </ng-template>
+            <ng-template pTemplate="content">
+              <app-to-process-list #toProcessListComponent (attachmentListToHomeScreenFromToProcessTab)="getClickEmailAttachment($event)" (emailBOdyDetail)="getEmailBodyDetailToProcess($event)"
+                                   (emitAttachmentIndexInToProcess)="getAttachmentIndex($event)"
+                                   (emitToProcesslistLength)="getToProcessListLength($event)"
+                                   (isButtonEnabledFromToProcessTab)="getButtonStatusFromToProcessTab($event)"
+                                   (isPdfFile)="isPdfFile($event)"
+                                   (isProgressToProcessAction)="getToProcessDeleteActionStatus($event)"
+                                   (toProcessListObject)="getListObject($event)"
+                                   [attIdFromToProcess]="attId"
+                                   [attachmentIdFromToProcess]="attId" [fileFromToProcess]="file"
+                                   [isDisabledWhenProgressSplitEvent]="splitEventIsInProgress"
+                                   [isProgressOtherFileDownload]="isDisabledDownloadLink"
+                                   [searchValue]="searchValue"
+                                   [selectedEmailIdList]="emailIdList"
+                                   id="toProcess">
+              </app-to-process-list>
+            </ng-template>
+          </p-tabPanel>
+
+          <p-tabPanel
+            [disabled]="!privilegeService.isAuthorizedMultiple([appAuthorities.INBOX_MOVE_TO_TO_PROCESS])">
+            <ng-template pTemplate="header">
+              <span class="custom-span">Processed</span>
+            </ng-template>
+            <ng-template pTemplate="content">
+              <app-processed-list #processedListComponent (attachmentListToHomeScreenFromProcessTab)="getClickEmailAttachment($event)"
+                                  (emailBodyDetailInProcessList)="getEmailBodyDetailProcessList($event)"
+                                  (emitAttachmentIndexInProcess)="getAttachmentIndex($event)"
+                                  (emitProcesslistLength)="getProcessListLength($event)"
+                                  [isProgressOtherFileDownload]="isDisabledDownloadLink"
+                                  [searchValue]="searchValue"
+                                  id="processed"></app-processed-list>
+            </ng-template>
+          </p-tabPanel>
+
+          <p-tabPanel [disabled]="!privilegeService.isAuthorizedMultiple([appAuthorities.INBOX_DELETE,
+          appAuthorities.INBOX_RECOVER])">
+            <ng-template pTemplate="header">
+              <span class="custom-span">Deleted</span>
+            </ng-template>
+            <ng-template pTemplate="content">
+
+              <app-deleted-list #deletedListComponent (attachmentListToHomeScreenFromDeleteTab)="getClickEmailAttachment($event)"
+                                (emailBOdyDetailDeletedList)="getEmailBodyDeletedList($event)"
+                                (emitAttachmentIndexInDeletedTab)="getAttachmentIndex($event)"
+                                (emitDeletedListLength)="getDeletedListLength($event)"
+                                (isButtonEnabledFromDeletedTabOnload)="getTempEmailLengthOnLoad($event)"
+                                (isProgressPermanentDelete)="getPermanentDeleteStatus($event)"
+                                (isProgressRecover)="getRecoverStatus($event)"
+                                [isDisabledWhenProgressSplitEvent]="splitEventIsInProgress"
+                                [isProgressOtherFileDownload]="isDisabledDownloadLink"
+                                [searchValue]="searchValue"
+                                id="deleted"></app-deleted-list>
+
+            </ng-template>
+          </p-tabPanel>
+
+        </p-tabView>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-8 child-card-outer-div pdf-viewer-wrap pl-0 p-0">
+    <div *ngIf="isPdfFileType" [class]="isVisibleProgressBar &&
+        !(isViewEmailBodyInToProcessList || isViewEmailBodyInProcessList || isViewEmailBodyInDeletedList) && !hideAttachmentView ?
+         'card child-card child-card-progress' : 'card child-card'">
+
+      <app-attachment-view (fileFromAttachmentView)="getSplitAttachment($event)" (isAttachmentMarkAsSegregated)="isSegregateAttachment($event)"
+                           (isConvertToBillFromAttachmentView)="isOpenReviewPage = true"
+                           (isProgressSplitClickEventToHome)="getSplitEventStatus($event)"
+                           (servePageRange)="getPageRange($event)"
+                           (triggerSendToBillFromAttachmentView)="sendToBillFromAttachmentView($event)"
+                           *ngIf="(attachmentUrl && !isOpenReviewPage) && !isVisibleProgressBar &&
+                               !(isViewEmailBodyInToProcessList || isViewEmailBodyInProcessList
+                               || isViewEmailBodyInDeletedList) && !hideAttachmentView"
+                           [actionBtnList]="actionBtnList"
+                           [attachmentId]="attachmentIdFromInboxHome"
+                           [attachmentUrl]="attachmentUrl"
+                           [isSendToBillButtonStatusIsDisabled]="isProgressSendToBillNotSegregated
+                               || isProgressSendToBillSegregated || isProgressRecoverAction || isProgressPermanentDeleteAction || isProgressToProcessDeleteAction"
+                           [tabIndex]="tabIndex"
+                           #attachmentViewComponent
+                           [templateRef]="upload_fields">
+
+      </app-attachment-view>
+
+      <p-progressSpinner *ngIf="isVisibleProgressBar && !(isViewEmailBodyInToProcessList
+          || isViewEmailBodyInProcessList || isViewEmailBodyInDeletedList || isSendToProcessBill) && !hideAttachmentView"
+                         [style]="{width: '70px', height: '70px'}"
+                         animationDuration=".8s" fill="transparent"
+                         strokeWidth="4"
+                         styleClass="custom-spinner"></p-progressSpinner>
+      <div
+        *ngIf="(isViewEmailBodyInToProcessList || isViewEmailBodyInProcessList
+            || isViewEmailBodyInDeletedList) && !hideAttachmentView"
+        class="view-email-body-wrapper">
+        <div [innerHTML]="emailBodyDetail" class="email-body">
+        </div>
+      </div>
+
+      <div *ngIf="hideAttachmentView" class="view-email-body-wrapper">
+
+      </div>
+
+    </div>
+
+
+    <div *ngIf="!isPdfFileType" [class]="'card child-card'">
+      <div
+        *ngIf="(isViewEmailBodyInToProcessList || isViewEmailBodyInProcessList
+            || isViewEmailBodyInDeletedList) && !hideAttachmentView"
+        class="view-email-body-wrapper">
+        <div [innerHTML]="emailBodyDetail" class="email-body">
+        </div>
+      </div>
+
+      <div *ngIf="!(isViewEmailBodyInToProcessList || isViewEmailBodyInProcessList
+            || isViewEmailBodyInDeletedList) && ((toProcessListLength > appConstant.ZERO && tabIndex === appConstant.TAB_INDEX_TO_PROCESS) ||
+            (processListLength > appConstant.ZERO && tabIndex === appConstant.TAB_INDEX_PROCESSED) ||
+             deletedListLength > appConstant.ZERO && tabIndex === appConstant.TAB_INDEX_DELETED)" class="not-pdf-type-wrapper pt-2">
+        <span class="document-type-wrapper">The document type cannot be opened.</span>
+        <span (click)="downloadNotVisibleAttachment()" [class.p-disabled]="isDisabledDownloadLink"
+              class="download-attachment-link"> Please click here to download  <span
+          [class]="isDisabledDownloadLink ? 'pi pi-spin pi-spinner' : 'fa fa-download'"></span>
+            </span>
+      </div>
+
+    </div>
+
+  </div>
+
+
+</div>
+
+<ng-template #upload_fields>
+  <button (click)="attachmentPrevious()"
+          [disabled]="isPreviousDisable()
+          || attachmentListFromTab.length === 1 || isVisibleProgressBar || splitEventIsInProgress ||
+          currentInboxAttachmentIndexHome === 0 || isProgressSendToBillSegregated || isProgressSendToBillNotSegregated
+          || isProgressRecoverAction || isProgressPermanentDeleteAction || isProgressToProcessDeleteAction ||
+          isDisabledDownloadLink" class="fa fa-chevron-left side-drawer-icon"
+          pTooltip="Previous"
+          style="background: none; border: none;"
+          tooltipPosition="bottom"
+  ></button>
+  <button (click)="attachmentNext()"
+          [disabled]="isNextDisable()|| attachmentListFromTab.length === 1 || isVisibleProgressBar
+          || splitEventIsInProgress|| isProgressSendToBillSegregated ||
+          isProgressSendToBillNotSegregated ||isProgressRecoverAction ||
+          isProgressPermanentDeleteAction || isProgressToProcessDeleteAction || isDisabledDownloadLink" class="fa fa-chevron-right side-drawer-icon" pTooltip="Next"
+          style="background: none; border: none;"
+          tooltipPosition="bottom"
+  ></button>
+</ng-template>
+
+
+<ng-template #actionBtnList>
+  <span class="fa-solid fa-paper-plane" pTooltip="Send to Process Bill" tooltipPosition="bottom"
+        [class.p-disabled]="isProgressSendToBillNotSegregated|| isProgressSendToBillSegregated
+        || isProgressRecoverAction || isProgressPermanentDeleteAction || isProgressToProcessDeleteAction"
+        *ngIf="tabIndex === 0 && privilegeService.isAuthorized(appAuthorities.INBOX_REVIEW)"
+        (click)="this.attachmentViewComponent.sendToBill()"></span>
+  <span class="pi pi-history"
+        [class.p-disabled]="isVisibleProgressBar || splitEventIsInProgress || isProgressRecoverAction ||
+                    isProgressPermanentDeleteAction || !isButtonEnabledOnload"
+        (click)="recoverEmail()"
+        *ngIf="tabIndex === 2 && privilegeService.isAuthorized(appAuthorities.INBOX_REVIEW)"
+        pTooltip="Recover" tooltipPosition="bottom"></span>
+  <span class="fa fa-trash"
+        [class.p-disabled]="isVisibleProgressBar || splitEventIsInProgress || !isEnabledToProcessTabButton
+                    || isProgressSendToBillSegregated || isProgressSendToBillNotSegregated || isProgressToProcessDeleteAction"
+        (click)="deleteSelectedMail()"
+        pTooltip="Delete" tooltipPosition="bottom"
+        *ngIf="tabIndex === 0 && privilegeService.isAuthorized(appAuthorities.INBOX_DELETE)"></span>
+  <span class="fa fa-trash"
+        [class.p-disabled]="isVisibleProgressBar || splitEventIsInProgress
+                    || isProgressRecoverAction || isProgressPermanentDeleteAction || !isButtonEnabledOnload || isProgressSendToBillNotSegregated
+                    || isProgressSendToBillSegregated"
+        (click)="deleteSelectedMail()"
+        pTooltip="Delete" tooltipPosition="bottom"
+        *ngIf="tabIndex === 2 && privilegeService.isAuthorized(appAuthorities.INBOX_DELETE)"></span>
+</ng-template>
+
+<!--Copied Success overlay-->
+<p-overlayPanel #overlayPanel class="custom-p-overlaypanel">
+  <ng-template pTemplate>
+    Copied to clipboard!
+  </ng-template>
+</p-overlayPanel>
+
+<!--Edi email overlay-->
+<p-overlayPanel #editOverlay (onHide)="editOverlay.hide(); customerEmailAddressSplit = originalValue" [showCloseIcon]="false"
+                class="custom-p-editOverlay">
+  <ng-template pTemplate>
+    <div class="grid custom-grid">
+              <span>
+                <input (keyup)="removeSpace(customerEmailAddressSplit); isValidEmailAddress(customerEmailAddressSplit)" [(ngModel)]="customerEmailAddressSplit"
+                       [style.width.ch]="customerEmailAddressSplit.length"
+                       class="
+                     editable-email-wrapper text-right text-right pr-0"
+                       maxlength="88" pInputText type="text">
+              </span>
+      <span>@papertrl.com</span>
+    </div>
+    <div *ngIf="customerEmailAddressSplit.length > 87" class="p-invalid text-align-left invalid-userNameLength">User
+      Name must be less than
+      80 characters
+    </div>
+    <div *ngIf="!isValidEmail" class="p-invalid text-align-left invalid-userNameLength">
+      Email must be a valid email address
+    </div>
+
+
+    <div class="grid custom-request-button">
+      <div class="col-12 pr-0">
+        <div class="pull-right">
+          <button (click)="sendRequestToEditEmail(customerEmailAddressSplit)" [disabled]="isProgressSendRequest || customerEmailAddressSplit.length > 87 || !isValidEmail"
+                  [icon]="isProgressSendRequest ? 'pi pi-spin pi-spinner': 'fa-solid fa-paper-plane'"
+                  class="p-button-sm"
+                  iconPos="left"
+                  label="Send Request" pButton type="submit"></button>
+        </div>
+      </div>
+    </div>
+
+  </ng-template>
+
+
+</p-overlayPanel>
+
+
+<!--Upload Panel-->
+
+<p-sidebar [showCloseIcon]="true" [fullScreen]="true" [modal]="true"
+           [(visible)]="isUploadScreen" appendTo="body" transitionOptions="600ms cubic-bezier(0, 0, 0.2, 1)">
+  <app-inbox-upload-drawer [files]="attachmentFile"  [fromProcess]="false"
+                           [tempAttachmentIDs]="tempAttachmentIDs"
+                           [uploadedFilesId]="uploadedFilesId"
+                           [uploadingStatus]="uploadingStatus"
+                           (isUploadSuccess)="loadBillSubmitDrawer()"></app-inbox-upload-drawer>
+</p-sidebar>
+
+
+<p-sidebar [showCloseIcon]="false" [fullScreen]="true" [modal]="true"
+           [(visible)]="isUploadingScreen" appendTo="body">
+  <app-inbox-uploading-drawer [files]="attachmentFile"
+                              [tempAttachmentIDs]="tempAttachmentIDs"
+                              [uploadingStatus]="uploadingStatus"
+                              [uploadedFilesId]="uploadedFilesId"
+                              (loadToProcessingQueue)="refreshTabCurrentData()"
+                              (isClickBackButton)="isUploadingScreen = false; isUploadScreen = false">
+  </app-inbox-uploading-drawer>
+</p-sidebar>
+
+

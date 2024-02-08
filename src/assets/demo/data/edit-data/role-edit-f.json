@@ -1,0 +1,214 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "fieldList": [
+        {
+          "key": 4,
+          "expanded": false,
+          "label": "Template",
+          "selectable": true,
+          "id": 0
+        },
+        {
+          "key": 52,
+          "expanded": false,
+          "label": "Report Name",
+          "selectable": true,
+          "id": 0
+        },
+        {
+          "key": 53,
+          "expanded": false,
+          "label": "Business Purpose",
+          "selectable": true,
+          "id": 0
+        },
+        {
+          "key": 61,
+          "expanded": false,
+          "label": "Notes",
+          "selectable": true,
+          "id": 0
+        },
+        {
+          "key": 62,
+          "expanded": false,
+          "label": "Description",
+          "selectable": true,
+          "id": 0
+        }
+      ],
+      "privilageList": [
+            {
+              "key": 69,
+              "expanded": false,
+              "label": "",
+              "selectable": true,
+              "id": 0
+            },
+            {
+              "key": 63,
+              "expanded": false,
+              "label": "",
+              "selectable": true,
+              "id": 0
+            },
+            {
+              "key": 327,
+              "expanded": false,
+              "label": "",
+              "selectable": true,
+              "id": 0
+            },
+            {
+              "key": 328,
+              "expanded": false,
+              "label": "",
+              "selectable": true,
+              "id": 0
+            },
+            {
+              "key": 329,
+              "expanded": false,
+              "label": "",
+              "selectable": true,
+              "id": 0
+            },
+            {
+              "key": 330,
+              "expanded": false,
+              "label": "",
+              "selectable": true,
+              "id": 0
+            },
+            {
+              "key": 331,
+              "expanded": false,
+              "label": "",
+              "selectable": true,
+              "id": 0
+            },
+            {
+              "key": 333,
+              "expanded": false,
+              "label": "",
+              "selectable": true,
+              "id": 0
+            },
+            {
+              "key": 334,
+              "expanded": false,
+              "label": "",
+              "selectable": true,
+              "id": 0
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "fieldList": [
+        {
+          "key": 4,
+          "expanded": false,
+          "label": "Template",
+          "selectable": true,
+          "id": 0
+        },
+        {
+          "key": 52,
+          "expanded": false,
+          "label": "Report Name",
+          "selectable": true,
+          "id": 0
+        },
+        {
+          "key": 53,
+          "expanded": false,
+          "label": "Business Purpose",
+          "selectable": true,
+          "id": 0
+        },
+        {
+          "key": 61,
+          "expanded": false,
+          "label": "Notes",
+          "selectable": true,
+          "id": 0
+        },
+        {
+          "key": 62,
+          "expanded": false,
+          "label": "Description",
+          "selectable": true,
+          "id": 0
+        }
+      ],
+      "privilageList": [
+            {
+              "key": 69,
+              "expanded": false,
+              "label": "",
+              "selectable": true,
+              "id": 0
+            },
+            {
+              "key": 63,
+              "expanded": false,
+              "label": "",
+              "selectable": true,
+              "id": 0
+            },
+            {
+              "key": 327,
+              "expanded": false,
+              "label": "",
+              "selectable": true,
+              "id": 0
+            },
+            {
+              "key": 328,
+              "expanded": false,
+              "label": "",
+              "selectable": true,
+              "id": 0
+            },
+            {
+              "key": 329,
+              "expanded": false,
+              "label": "",
+              "selectable": true,
+              "id": 0
+            },
+            {
+              "key": 330,
+              "expanded": false,
+              "label": "",
+              "selectable": true,
+              "id": 0
+            },
+            {
+              "key": 331,
+              "expanded": false,
+              "label": "",
+              "selectable": true,
+              "id": 0
+            },
+            {
+              "key": 333,
+              "expanded": false,
+              "label": "",
+              "selectable": true,
+              "id": 0
+            },
+            {
+              "key": 334,
+              "expanded": false,
+              "label": "",
+              "selectable": true,
+              "id": 0
+            }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+<div class="layout-dashboard">
+  <div class="grid">
+
+<!--    <div class="col-12 md:col-6 xl:col-4" *ngIf="privilegeService.isAuthorized(appAuthorities.DASHBOARD_SHOW_PENDING_PO_CARD)">-->
+<!--      <div class="card no-gutter widget-overview-box widget-overview-box-1">-->
+<!--                            <span class="overview-icon" style="cursor: pointer" (click)="router.navigateByUrl('home/vendor')">-->
+<!--                                <i class="fa fa-user"></i>-->
+<!--                            </span>-->
+<!--        <span class="overview-title">Purchase Orders</span>-->
+<!--        <div class="grid overview-detail">-->
+<!--          <div class="col-12">-->
+<!--            <div class="overview-number">{{infoCards.vendorRequest}}</div>-->
+<!--            <div class="overview-subtext">Pending</div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="col-12 md:col-6 xl:col-4" *ngIf="privilegeService.isAuthorized(appAuthorities.DASHBOARD_SHOW_PENDING_INVOICES_CARD)">-->
+<!--      <div class="card no-gutter widget-overview-box widget-overview-box-2">-->
+<!--                            <span class="overview-icon" style="cursor: pointer" (click)="router.navigateByUrl('home/bills')">-->
+<!--                                <i class="fa fa-file-text-o"></i>-->
+<!--                            </span>-->
+<!--        <span class="overview-title">Invoices</span>-->
+<!--        <div class="grid overview-detail">-->
+<!--          <div class="col-12">-->
+<!--            <div class="overview-number">{{infoCards.billsPending}}</div>-->
+<!--            <div class="overview-subtext">Pending</div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="col-12 md:col-6 xl:col-4" *ngIf="privilegeService.isAuthorized(appAuthorities.DASHBOARD_SHOW_RECEIVED_PAYMENTS_CARD)">-->
+<!--      <div class="card no-gutter widget-overview-box widget-overview-box-4">-->
+<!--                            <span class="overview-icon" style="cursor: pointer" (click)="router.navigateByUrl('home/expense')">-->
+<!--                                <i class="fa fa-credit-card"></i>-->
+<!--                            </span>-->
+<!--        <span class="overview-title">Payments</span>-->
+<!--        <div class="grid overview-detail">-->
+<!--          <div class="col-6">-->
+<!--            <div class="overview-number">$ {{infoCards.expensesPending}}</div>-->
+<!--            <div class="overview-subtext">Pending</div>-->
+<!--          </div>-->
+<!--          <div class="col-6">-->
+<!--            <div class="overview-number">$ {{infoCards.expensesRejected}}</div>-->
+<!--            <div class="overview-subtext">Received</div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+
+    <div *ngIf="privilegeService.isAuthorized(appAuthorities.DASHBOARD_SHOW_INVOICE_STATUS_TABLE)" class="col-12 xl:col-12 md:col-12 lg:col-12">
+      <div class="card ">
+        <h4 class="subHeadingColour">Invoices</h4>
+        <app-vendor-bills-table></app-vendor-bills-table>
+      </div>
+    </div>
+
+    <div *ngIf="privilegeService.isAuthorized(appAuthorities.DASHBOARD_SHOW_RECEIVED_PAYMENTS_TABLE)" class="col-12 xl:col-12 md:col-12 lg:col-12">
+      <div class="card ">
+        <h4 class="subHeadingColour">Received Payments</h4>
+        <app-payments [fromDashboard]="true"></app-payments>
+      </div>
+    </div>
+
+    <div *ngIf="privilegeService.isAuthorized(appAuthorities.DASHBOARD_SHOW_PO_STATUS_TABLE)" class="col-12 xl:col-12 md:col-12 lg:col-12">
+      <div class="card ">
+        <h4 class="subHeadingColour">Purchase Orders</h4>
+        <app-dashboard-po-table></app-dashboard-po-table>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,80 @@
+@import "../../../../scss/color.scss";
+
+.upload-bill-content {
+  width: 70%;
+  min-height: 450px;
+
+  .drop-zone-style {
+    margin-top: 30px;
+    height: 234px;
+  }
+
+  .drop-zone-style1 {
+    margin-top: 30px;
+    height: 234px;
+  }
+}
+
+.back-btn:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.drop-zone-style {
+  margin-top: 2px;
+  height: 120px;
+  border-color: $green;
+  background-color: #f4fbfa;
+}
+
+.drop-zone-style1 {
+  margin-top: 2px;
+  height: 120px;
+  border-color: #ededed;
+}
+
+:host ::ng-deep .custom-spinner .p-progress-spinner-circle {
+  animation: custom-progress-spinner-dash 1.5s ease-in-out infinite, custom-progress-spinner-color 6s ease-in-out infinite;
+}
+
+@keyframes custom-progress-spinner-color {
+  100%,
+  0% {
+    stroke: #3bb2ac;
+  }
+  40% {
+    stroke: #3bb2ac;
+  }
+  66% {
+    stroke: #3bb2ac;
+  }
+  80%,
+  90% {
+    stroke: #3bb2ac;
+  }
+}
+
+.preview-file{
+  align-items: center;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+  max-width: -48px;
+  min-height: 99px !important;
+  min-width: 139px !important;
+  position: relative;
+  max-height: 78px !important;
+}
+
+.uploaded-file-name{
+  width: 100px;
+  height: auto;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: pre-line;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+

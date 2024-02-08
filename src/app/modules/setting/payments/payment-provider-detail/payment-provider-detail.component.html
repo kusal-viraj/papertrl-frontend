@@ -1,0 +1,152 @@
+<div class="col-12 grid provider-main-content p-0">
+
+  <div class="col-6 provider-none-editable-data provider-desc">
+
+    <div class="col-4 provider-image-outer" *ngIf="providerMaster.logoUrl">
+      <div class="avatar-upload">
+        <div class="avatar-preview">
+          <div id="imagePreview" [style.backgroundImage]="'url('+ providerMaster.logoUrl +')'"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-gap-default">
+      <span>{{providerMaster.description}}</span>
+    </div>
+
+    <div
+      *ngIf="providerMaster.supportedTypeList?.length > appConstant.ZERO">
+      <h6>Supported Payment Type(s)</h6>
+      <span *ngFor="let type of providerMaster.supportedTypeList" class="option-gap"><i
+        class="fa fa-check-square check-box-wrapper"></i>&nbsp;{{type.name}}&nbsp;&nbsp;&nbsp;&nbsp;
+       </span>
+    </div>
+
+    <div class="section-gap-default mt-4">
+      <h6>Configure {{providerMaster?.name}}</h6>
+      <span>Please contact your Customer Success Manager to set up {{providerMaster?.name}}
+        as a Payment Provider.</span>
+    </div>
+  </div>
+
+  <div class="col-6 provider-configuration-wrapper">
+
+    <div class="col-12 pl-0">
+
+      <h6>Configure Cancellation Time </h6>
+
+      <div class="grid p-fluid col-12">
+
+        <div class="grid col-12 time-config">
+
+          <div class="col-4">
+            <span class="custom-label">Days</span>
+            <input pInputText appDecimalNumber placeholder="00" value="10"
+                   min="0" class="payment-time-config" [(ngModel)]="providerMaster.daysForCancel"
+                   type="text"
+                   maxlength="4">
+          </div>
+
+          <div class="col-3">
+            <span class="custom-label">Hours</span>
+            <input placeholder="00" pInputText appDecimalNumber
+                   min="0" class="payment-time-config" [(ngModel)]="providerMaster.hoursForCancel"
+                   type="text" maxlength="2">
+          </div>
+
+          <div class="col-2">
+            <span class="custom-label">:</span>
+          </div>
+
+          <div class="col-3">
+            <span class="custom-label">Minutes</span>
+            <input placeholder="00" pInputText min="0" appDecimalNumber
+                   [(ngModel)]="providerMaster.minutesForCancel"
+                   type="text" class="payment-time-config"
+                   maxlength="2">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div
+      *ngIf="providerMaster.supportedTypeList?.length > appConstant.ZERO" class="section-gap">
+      <h6>Supported Payment Type(s)</h6>
+      <span *ngFor="let type of providerMaster.supportedTypeList; let i = index" class="option-gap">
+            <p-checkbox name="checkBox" label="{{type.name}}" #checkbox id="binary1"
+                        [(ngModel)]="type.enabled"
+                        (onChange)="updateVisibleConfigurationField(checkbox.checked(), type.id)"
+                        binary="true"></p-checkbox><br><br>
+      </span>
+    </div>
+
+    <div class="payment-type-field-config section-gap" *ngIf="checkIfAvailableConfigurationForPaymentType()">
+
+      <h6>Configuration</h6>
+
+      <ng-container *ngFor="let singlePaymentType of filterArray() let m = index">
+
+        <div class="col-12" *ngIf="isShowField(singlePaymentType?.id)">
+
+          <ng-container *ngFor="let fieldConfig of singlePaymentType.configurations let x = index">
+
+            <div class="field col-12">
+
+              <div class="p-inputgroup">
+                      <span class="full-width">
+                      <label class="label-wrapper" for="{{fieldConfig.fieldName}}">{{fieldConfig.fieldCaption}}{{fieldConfig.required ? '*' : ''}}</label>
+                        <input pInputText [ngModelOptions]="{standalone: true}" blockSpace
+                               (input)="validateField(singlePaymentType, fieldConfig)"
+                               [(ngModel)]="singlePaymentType.configurationValue[fieldConfig.fieldName]"
+                               id="{{fieldConfig.fieldName}}">
+                      </span>
+              </div>
+              <div class="p-invalid" *ngIf="!singlePaymentType.configurationValue[fieldConfig.fieldName]
+                   && singlePaymentType.configurationValue[fieldConfig.fieldName] !== undefined">
+                {{fieldConfig.fieldCaption}} is required
+              </div>
+              <div class="p-invalid"
+                   *ngIf="singlePaymentType.configurationValue[fieldConfig.fieldName]?.length >
+                                fieldConfig.maxLength && singlePaymentType.configurationValue[fieldConfig.fieldName] !== undefined">
+                {{fieldConfig.fieldCaption}} field cannot
+                exceed {{fieldConfig.maxLength}} characters
+              </div>
+              <div class="p-invalid"
+                   *ngIf="!fieldConfig.pattern.test(singlePaymentType.configurationValue[fieldConfig.fieldName])
+                           && singlePaymentType.configurationValue[fieldConfig.fieldName]">
+                Field require ({{appConstant.DATA_TYPE_PATTERN_MAP.get(fieldConfig.dataType)}}) type
+              </div>
+
+            </div>
+
+          </ng-container>
+
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="col-12 field default-selection">
+      <p-checkbox name="checkBox" label="Select as default payment provider" id="binary"
+                  [(ngModel)]="providerMaster.defaultProvider"
+                  binary="true"></p-checkbox>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="grid footer form-footer-button">
+  <div class="col-12  button-set-wrapper">
+    <div class="pull-right">
+      <button pButton type="button" [disabled]="btnLoading" (click)="resetProviderData()"
+              label="Reset"
+              class="p-button-outlined p-button-sm"></button>&nbsp;&nbsp;
+      <button pButton type="submit" [disabled]="btnLoading" (click)="btnLoading = true; saveProviderConfigurations()"
+              class="p-button-sm" label="Save"></button>
+    </div>
+  </div>
+</div>
+
+
+

@@ -1,0 +1,37 @@
+[
+  {
+    "action": "DELETE",
+    "label": "Delete",
+    "icon": "fa fa-trash",
+    "active": false,
+    "authCode": "BILL_DELETE"
+  },
+  {
+    "action": "REJECT",
+    "label": "Reject",
+    "icon": "fa fa-minus-circle",
+    "active": false,
+    "authCode": "BILL_REJECT"
+  },
+  {
+    "action": "QUICK_APPROVE",
+    "label": "Quick Approve",
+    "icon": "pi pi-check",
+    "active": false,
+    "authCode": "BILL_QUICK_APPROVE"
+  },
+  {
+    "action": "APPLY_CREDIT_NOTE",
+    "label": "Apply Credit Note",
+    "icon": "fa fa-share",
+    "active": false,
+    "authCode": "BILL_APPLY_CREDIT_NOTE"
+  },
+  {
+    "action": "PAYMENT_PROCESS",
+    "label": "Unhold Payment processing",
+    "icon": "fa fa-credit-card",
+    "active": false,
+    "authCode": "BILL_OFFLINE_PAYMENT_PROCESSING"
+  }
+]

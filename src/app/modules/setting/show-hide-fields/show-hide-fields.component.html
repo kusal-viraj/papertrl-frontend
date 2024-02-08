@@ -1,0 +1,93 @@
+<br>
+<form [formGroup]="fieldForm">
+  <div class="p-fluid">
+    <div class="grid p-fluid">
+
+      <div class="field col-12 xl:col-4 lg:col-4 md:col-4 sm:col-12">
+        <label class="label-wrapper" for="vendorIdList">Vendors*</label>
+      <span class="p-float-label">
+       <p-multiSelect [options]="vendors" optionValue="id" display="chip" optionDisabled="inactive"
+                      appendTo="body" id="vendorIdList" #vendorsList
+                      [virtualScroll]="vendors.length > 20" virtualScrollItemSize="25"
+                      formControlName="vendorIdList" optionLabel="name" [showToggleAll]="true"
+                      (onChange)="changeVendorList($event)" [filter]="true">
+       </p-multiSelect>
+      </span>
+      </div>
+
+      <div class="field col-12 xl:col-4 lg:col-4 md:col-4 sm:col-12">
+        <label class="label-wrapper" for="group">Document*</label>
+      <span class="p-float-label">
+        <p-dropdown inputId="dropdown" id="group" filter="true" [options]="documents" appendTo="body"
+                    formControlName="document" (onChange)="changeDocuments($event)"
+                    [autoDisplayFirst]="false" optionLabel="name" optionValue="id"></p-dropdown>
+      </span>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="grid p-fluid">
+
+  <div class="field col-8">
+    <h6 *ngIf="fieldForm.get('vendorIdList').value.length === vendors.length && fieldForm.get('document').value " class="subHeadingColour">Field
+      Configurations for all Vendors</h6>
+
+    <h6 *ngIf="fieldForm.get('vendorIdList').value.length < vendors.length &&
+      fieldForm.get('vendorIdList').value.length >= 2 && fieldForm.get('document').value" class="subHeadingColour">Field Configurations for selected
+      Vendors</h6>
+
+    <h6 *ngIf="fieldForm.get('vendorIdList').value.length === 1 && fieldForm.get('document').value" class="subHeadingColour">Field Configurations for
+      {{vendorsList.valuesAsString}}</h6>
+
+
+    <p-table responsiveLayout="scroll" *ngIf="fieldForm.get('vendorIdList').value.length !== 0 && fieldForm.get('document').value"
+             [value]="configurations" scrollable="true"
+             styleClass="p-datatable-sm p-datatable-striped detail-table-configurations"
+             scrollHeight="350px">
+
+      <ng-template pTemplate="colgroup">
+        <colgroup>
+          <col style="width:200px">
+          <col style="width:100px">
+        </colgroup>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="text-center" id="package">Field</th>
+          <th style="text-align: revert !important;" class="text-center" id="invoiceCount">Hide &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Show
+          </th>
+
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item let-i="rowIndex">
+        <tr>
+          <td>
+            {{item.fieldName}}
+          </td>
+          <td class="text-center" >
+            <p-inputSwitch  (onChange)="configChanged(item)" [(ngModel)]="item.showEnable"></p-inputSwitch>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <!--    <p-messages *ngIf="fieldForm.get('vendorIdList').value.length <= vendors.length" severity="warn">-->
+    <!--      <ng-template pTemplate>-->
+    <!--        <div class="ml-2">To Override Single Field Configuration, Click Save Button</div>-->
+    <!--      </ng-template>-->
+    <!--    </p-messages>-->
+
+<!--    <p-messages [closable]="false" *ngIf="fieldForm.get('vendorIdList').value.length < vendors.length &&-->
+<!--      fieldForm.get('vendorIdList').value.length >= 2 || fieldForm.get('vendorIdList').value.length === vendors.length"-->
+<!--                [(value)]="message" [enableService]="false"></p-messages>-->
+
+<!--    <button *ngIf="fieldForm.get('vendorIdList').value.length < vendors.length &&-->
+<!--      fieldForm.get('vendorIdList').value.length >= 2 || fieldForm.get('vendorIdList').value.length === vendors.length"-->
+<!--            pButton [style]="'width : auto'" icon="pi pi-save" class="pull-right mt-2" (click)="updateConfigs()"-->
+<!--            label="Save"></button>-->
+  </div>
+</div>
+

@@ -1,0 +1,9 @@
+[
+  {
+    "action": "BUTTON_PROCESS",
+    "label": "Process Transactions",
+    "icon": "pi pi-check",
+    "active": false,
+    "authCode": ["CREDIT_CARD_PROCESS_TRANSACTIONS_SUBMIT", "CREDIT_CARD_PROCESS_TRANSACTIONS_SAVE_AS_APPROVED"]
+  }
+]

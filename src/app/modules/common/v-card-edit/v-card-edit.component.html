@@ -1,0 +1,232 @@
+<p-sidebar styleClass="p-sidebar-md" [modal]="true" [dismissible]="true" position="right" [(visible)]="detailView"
+           [showCloseIcon]="false" (onHide)="onHide()"
+           appendTo="body" [draggable]="false" [baseZIndex]="1000">
+  <ng-template pTemplate="header">
+    <div class="p-fluid grid w-full">
+      <div class="col-6">
+        Card Details
+      </div>
+
+      <div class="col-6 pr-0 text-right">
+        <div pTooltip="Edit" tooltipPosition="bottom" class=" fa fa-pencil side-drawer-icon"
+             (click)="close(true)"
+             *ngIf="!editFromAction && statusActive && !privilegeService.isVendor() && !hideEditAction"></div>
+        <div class="fa fa-close side-drawer-icon" (click)="close(false)"></div>
+      </div>
+    </div>
+  </ng-template>
+
+  <div class="pl-4 side-bar-drawer-content mb-3 pr-4">
+
+    <form [formGroup]="formGroup">
+      <div class="grid">
+        <div class="mb-3 col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6"><b>Nick Name</b></div>
+        <div class="mb-3 text-right col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6"
+             [hidden]="editView">{{vCard.nickName}}</div>
+        <div class="col-6 xl:col-6 p-fluid lg:col-6 md:col-6 sm:col-6" *ngIf="editView">
+          <input pInputText blockSpace (keyup)="fieldChanged = true" formControlName="nickName" #nickName>
+          <div class="p-invalid text-right"
+               *ngIf="formGroup.get('nickName').dirty && formGroup.get('nickName').hasError('required')">
+            Nick Name is required
+          </div>
+        </div>
+
+        <div class="mb-3 col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6"><b>Card Number</b></div>
+        <div class="mb-3 text-right col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6">{{vCard.cardNumber}}</div>
+
+        <div class="mb-3 col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6"><b>Card Owner</b></div>
+        <div class="mb-3 text-right col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6">{{vCard.cardOwner}}</div>
+
+        <div class="mb-3 col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6"><b>Created Date</b></div>
+        <div class="mb-3 text-right col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6">{{vCard.createdOnStr}}</div>
+
+        <div class="mb-3 col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6">
+          <b>Valid Thru <i
+            pTooltip="On this date, the virtual card payment will expire and prohibit further use."
+            class="pi pi-info-circle"></i></b>
+        </div>
+        <div class="mb-3 text-right col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6"
+             [hidden]="editView">{{cal.inputFieldValue}}</div>
+        <div class="col-6 xl:col-6 p-fluid lg:col-6 md:col-6 sm:col-6" [hidden]="!editView">
+          <p-calendar appTabindexMinusOne [(ngModel)]="vCard.effectiveUntilStr" appendTo="body" dateFormat="mm/dd/yy" #cal [minDate]="today"
+                      [readonlyInput]="true" inputId="monthpicker" [maxDate]="vCard.maxDate" [showIcon]="true"
+                      (onSelect)="fieldChanged = true" [ngModelOptions]="{standalone: true}"></p-calendar>
+        </div>
+
+        <div class="mb-3 col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6"><b>Card Limit</b></div>
+        <div class="mb-3 text-right col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6"
+             *ngIf="!editView || vCard.cardType === appEnumConstants.CARD_TYPE_VIRTUAL">{{vCard.amountStr}}</div>
+
+        <div class="mb-3 text-right col-6 xl:col-6 p-fluid lg:col-6 md:col-6 sm:col-6" *ngIf="editView && vCard.cardType === appEnumConstants.CARD_TYPE_DIGITAL">
+
+          <input [options]="{ prefix: '', thousands: ',', decimal: '.', allowNegative: false}" currencyMask
+                 formControlName="amount" id="amount" pInputText type="text" maxlength="19" autocomplete="off">
+          <div class="p-invalid"
+               *ngIf="formGroup.get('amount').dirty && formGroup.get('amount').hasError('required')">
+            Card Limit is required
+          </div>
+          <div class="p-invalid" *ngIf="formGroup.get('amount').errors && formGroup.get('amount').dirty">
+            <div *ngIf="formGroup.controls['amount'].hasError('max')">Card Limit cannot exceed the PO Amount</div>
+          </div>
+          <div class="p-invalid" *ngIf="formGroup.get('amount').errors && formGroup.get('amount').dirty &&
+              f.amount.value !== '' && f.amount.value !== null">
+            <div *ngIf="formGroup.controls['amount'].hasError('min')">
+              <span *ngIf="f.amount.value !== 0">Card Limit must be greater than Amount Spent</span>
+              <span *ngIf="f.amount.value == 0">Card Limit must be greater than 0</span>
+              </div>
+          </div>
+        </div>
+        <div class="mb-3 col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6"><b>Amount Spent</b></div>
+        <div class="mb-3 text-right col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6">{{vCard.utilizedAmountStr}}</div>
+
+        <div class="mb-3 col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6"><b>Remaining Balance</b></div>
+        <div class="mb-3 text-right col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6">{{vCard.balanceAmountStr}}</div>
+
+        <div *ngIf="vCard.poId" class="mb-3 col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6"><b>PO Amount</b></div>
+        <div *ngIf="vCard.poId"
+             class="mb-3 text-right col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6">{{vCard.poAmount | number : '1.2-2'}}</div>
+
+        <div class="mb-3 col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6"><b>Card Type</b></div>
+        <div
+          class="mb-3 text-right col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6">{{ vCard.cardType === appEnumConstants.CARD_TYPE_VIRTUAL ? 'Virtual' : 'Digital' }}</div>
+
+        <div class="mb-3 col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6"><b>Card Expiration Date</b></div>
+        <div
+          class="mb-3 text-right col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6">{{commonUtil.detailViewIsDash(vCard.expireOnStr, false)}}</div>
+
+        <div class="mb-3 col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6"><b>Created By</b></div>
+        <div
+          class="mb-3 text-right col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6">{{commonUtil.detailViewIsDash(vCard.createdByName, false)}}</div>
+
+        <div class="mb-3 col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6"><b>Mobile Number</b></div>
+        <div
+          class="mb-3 text-right col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6">{{commonUtil.detailViewIsDash(vCard.contactNumber, false)}}</div>
+
+        <div class="mb-3 col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6"><b>Card Status</b></div>
+        <div class="mb-3 text-right col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6">
+          <li [class]="'mr-2 status-style status-'  + getStatus(vCard.status)"></li>
+          {{getStatus(vCard.status) | titlecase}}
+        </div>
+
+        <ng-container *ngIf="vCard.poNo">
+          <div class="mb-3 col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6"><b>PO No.</b></div>
+          <div class="mb-3 text-right col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6">
+            <div>
+          <span (click)="tdClick(vCard.poId , appDocumentType.PURCHASE_ORDER)" #poNo
+                [ngClass]="isClassHover(appDocumentType.PURCHASE_ORDER) ? 'selectedHover': null"
+                (mouseover)="tdHover(vCard.poId,appDocumentType.PURCHASE_ORDER, $event, poNo)" (scroll)="hideOverlays()"
+                (mouseout)="hideOverlays()">
+            {{vCard.poNo}}
+        </span>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="vCard.accountId">
+          <div class="mb-3 col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6"><b>Account</b></div>
+          <div class="mb-3 text-right col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6">
+            <div>
+          <span (click)="tdClick(vCard.accountId , appDocumentType.ACCOUNT)" #acc
+                [ngClass]="isClassHover(appDocumentType.ACCOUNT) ? 'selectedHover': null"
+                (mouseover)="tdHover(vCard.accountId,appDocumentType.ACCOUNT, $event, acc)" (scroll)="hideOverlays()"
+                (mouseout)="hideOverlays()">
+            {{vCard.accountName}}
+        </span>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="vCard.projectId">
+          <div class="mb-3 col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6"><b>Project/ Task</b></div>
+          <div class="mb-3 text-right col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6">
+            <div>
+          <span (click)="tdClick(vCard.projectId , appDocumentType.PROJECT)" #prj
+                [ngClass]="isClassHover(appDocumentType.PROJECT) ? 'selectedHover': null"
+                (mouseover)="tdHover(vCard.projectId,appDocumentType.PROJECT, $event, prj)" (scroll)="hideOverlays()"
+                (mouseout)="hideOverlays()">
+            {{vCard.projectName}}
+        </span>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="vCard.documentNos && vCard.documentNos.length != 0">
+          <div class="mb-3 col-6 xl:col-6 lg:col-6 md:col-6 sm:col-6"><b>Documents :</b></div>
+          <div class="mb-3 col-12">
+            <div class="grid">
+              <div *ngFor="let doc of vCard.documentNos" class="col-4">
+                <div class="document" #document (scroll)="hideOverlays()" (mouseleave)="hideOverlays()"
+                     (mouseenter)="tdHover(doc.id, doc.documentType, $event, document)"
+                     [ngClass]="isClassHover(doc.documentType) ? 'hoverable': null"
+                     (click)="tdClick(doc.id, doc.documentType)">
+                  <div class="content">
+                    <div class="icon">
+                      <i class="fa fa-file"></i>
+                    </div>
+                  </div>
+                  <div class="name">
+                    {{doc.name}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </form>
+  </div>
+
+  <div class="grid panel-footer footer" *ngIf="editView">
+    <div class="col-12 button-set-wrapper form-footer-button">
+      <div class="pull-right">
+        <button pButton type="button" (click)="reset()" label="Reset" [disabled]="loading"
+                class="p-button-outlined p-button-sm margin-right button-responsive-mobile"
+                icon="fa-solid fa-rotate-right"></button>&nbsp;
+        <button pButton type="button" (click)="submit()" class="p-button-sm" [disabled]="loading"
+                [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-save'"
+                iconPos="left" label="Save"></button>
+      </div>
+    </div>
+  </div>
+
+</p-sidebar>
+
+<p-overlayPanel appendTo="body" #billOverlay>
+  <ng-template pTemplate>
+    <app-table-bill-no-overlay [billId]="overlayId"></app-table-bill-no-overlay>
+  </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel appendTo="body" #expenseOverlay>
+  <ng-template pTemplate>
+    <app-table-expense-overlay [expenseId]="overlayId"></app-table-expense-overlay>
+  </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel appendTo="body" #poOverlay>
+  <ng-template pTemplate>
+    <app-table-po-overlay [poId]="overlayId"></app-table-po-overlay>
+  </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel appendTo="body" #accountOverlay>
+  <ng-template pTemplate>
+    <app-table-account-overlay [accountId]="overlayId"></app-table-account-overlay>
+  </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel appendTo="body" #projectOverlay>
+  <ng-template pTemplate>
+    <app-table-project-task-overlay [id]="overlayId"></app-table-project-task-overlay>
+  </ng-template>
+</p-overlayPanel>
+
+<p-confirmDialog #fieldChange key="fieldChange" appendTo="body" header="Are you sure?" *ngIf="!hideEditAction"
+                 icon="subHeadingGreen pi pi-check">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="fieldChange.reject()"></button>
+    <button type="button" pButton icon="pi pi-check" label="Yes, Discard it"
+            (click)="fieldChange.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

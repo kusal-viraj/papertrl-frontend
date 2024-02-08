@@ -1,0 +1,92 @@
+<div class="layout-topbar top-bar-custom">
+  <div class="topbar-left">
+    <img id="logo-mobile" class="logo-desktop" src="../../../../assets/images/header-white-logo.png" alt="PaperTrl"/>
+  </div>
+</div>
+
+<div class="exception-body">
+  <div class="exception-content">
+    <div class="grid">
+      <p-card class="card-custom" styleClass="p-card-shadow-remove" *ngIf="isVisibleProgressContent">
+        <ng-template pTemplate="header">
+          <img alt="Card" class="email-verification-logo" src="../../../../assets/images/logo.png">
+        </ng-template>
+        <div class="card-custom-padding">
+          <circle-progress
+            [percent]="[verificationPercentage]"
+            [radius]="70"
+            [outerStrokeWidth]="10"
+            [innerStrokeWidth]="100"
+            [outerStrokeColor]="'#3bb2ac'"
+            [innerStrokeColor]="'transparent'"
+            [animation]="true">
+          </circle-progress>
+          <h5 class="card-header-custom">Hold on few seconds!</h5>
+          <p class="card-subheader-custom">We are setting up a few things in your new <br>PaperTrl account.</p>
+        </div>
+      </p-card>
+
+      <p-card class="card-custom-welcome-template" styleClass="p-card-shadow-remove" *ngIf="isVisibleCongratulationContent">
+        <ng-template pTemplate="header">
+          <img alt="Card" class="email-verification-logo" src="../../../../assets/images/logo.png">
+        </ng-template>
+        <div class="card-custom-padding">
+          <img alt="Card" class="email-verification-logo" src="../../../../assets/images/congratulations.png">
+          <h5 class="card-header-custom-congratulations">Congratulations!</h5>
+          <p class="card-subheader-custom-congratulations">Your email address verified successfully <br> and your
+            PaperTrl account is ready to use. <br> You will receive a separate email with login <br> instructions.</p>
+          <ng-template pTemplate="header">
+            <img alt="Card" class="email-verification-logo" src="../../../../assets/images/logo.png">
+          </ng-template>
+          <div class="p-fluid">
+            <div class="col-12 md:col-12">
+              <a pButton class="p-button-lg" label="Setup a Password" [href]="passwordResetUrl"></a>
+            </div>
+          </div>
+        </div>
+      </p-card>
+
+      <p-card class="card-costume-error-template" styleClass="p-card-shadow-remove" *ngIf="isVisibleErrorContent">
+        <ng-template pTemplate="header">
+          <img alt="Card" class="email-verification-logo" src="../../../../assets/images/logo.png">
+        </ng-template>
+        <div class="card-custom-padding">
+
+          <img alt="Card" class="error-image" src="../../../../assets/images/sad-mood.png">
+
+          <h4 class="card-header-custom-congratulations"> Oops!</h4>
+          <p>Your email address has been verified. <br> If you did not receive an email with login <br>
+            instructions,
+            please contact</p>
+          <p style="text-align: center"><a class="supportLink"
+                                           href="mailto:https://support.papertrl.com">support@papertrl.com</a></p>
+
+          <ng-template pTemplate="header">
+            <img alt="Card" class="email-verification-logo" src="../../../../assets/images/logo.png">
+          </ng-template>
+        </div>
+      </p-card>
+
+      <p-card class="card-costume-error-template" styleClass="p-card-shadow-remove" *ngIf="somethingWentWrong">
+        <ng-template pTemplate="header">
+          <img alt="Card" class="email-verification-logo" src="../../../../assets/images/logo.png">
+        </ng-template>
+        <div class="card-custom-padding">
+
+          <img alt="Card" class="error-image" src="../../../../assets/images/sad-mood.png">
+
+          <h4 class="card-header-custom-congratulations"> Oops!</h4>
+          <p>Something went wrong<br>
+            please contact</p>
+          <p style="text-align: center"><a class="supportLink"
+                                           href="mailto:https://support.papertrl.com">support@papertrl.com</a></p>
+
+          <ng-template pTemplate="header">
+            <img alt="Card" class="email-verification-logo" src="../../../../assets/images/logo.png">
+          </ng-template>
+        </div>
+      </p-card>
+
+    </div>
+  </div>
+</div>

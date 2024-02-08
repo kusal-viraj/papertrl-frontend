@@ -1,0 +1,90 @@
+@import "../../../../scss/color.scss";
+
+.sub-topic{
+  color: $offline-gray;
+}
+.payment-info {
+  margin-bottom: 90px;
+
+  .transaction-wrapper {
+    overflow: auto;
+    height: calc(100vh - 350px);
+  }
+
+  .transaction-info {
+    background-color: $drop-zone-background;
+    border-radius: 12px;
+    min-height: 150px;
+
+    .header {
+      padding: 6px;
+    }
+
+    .p-type {
+      color: $green;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .payee {
+      color: $secondary-black-grey;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .transactions {
+      color: $tertiary-dark-grey;
+      font-size: 14px;
+
+      .amount {
+        color: $secondary-black-grey;
+
+        hr {
+          border-width: 2px 0 0 0;
+        }
+      }
+    }
+    .switch-description{
+      font-size: 14px;
+      color: $secondary-black-grey;
+    }
+  }
+
+  .approvers-info {
+    @extend .transaction-info;
+    height: auto;
+  }
+  .info-icon{
+    cursor: pointer;
+    &:hover{
+      font-weight: bold;
+    }
+  }
+}
+
+.footer {
+  color: $white;
+  align-self: center;
+  text-align: center;
+
+  background-color: $footer-color-dark-gray;
+
+  img {
+    width: 80px;
+  }
+
+  .topic p {
+    font-size: 14px;
+    text-align: left;
+  }
+
+  .data {
+    font-size: 24px;
+    text-align: left;
+    font-weight: bold;
+  }
+
+  .btn {
+    align-self: center;
+  }
+}

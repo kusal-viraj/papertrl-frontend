@@ -1,0 +1,94 @@
+<form [class.side-bar-drawer-content]="panel" [formGroup]="form"
+      [hidden]="tableSupportBase.isVisibleTable">
+
+  <div class="grid p-fluid mt-2" [class.p-3]="panel">
+
+    <div class="field" [class]="panel? 'col-12' : 'col-12 xl:col-3'">
+      <label  class="label-wrapper" for="name">Name*</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input autocomplete="off" blockSpace formControlName="name" id="name" type="text"
+                            maxlength="100" pInputText>
+
+                   </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="form.get('name').dirty && form.get('name').errors">
+        Name is required
+      </div>
+    </div>
+
+    <div class="field" [class]="panel? 'col-12' : 'col-12 xl:col-3'">
+      <label class="label-wrapper" for="approvalGroup">Select Vendor</label>
+        <span class="p-float-label">
+           <p-multiSelect [virtualScroll]="vendorsList.data.length > 20" virtualScrollItemSize="25"
+                          [options]="vendorsList.data" id="approvalGroup" optionValue="id"
+                          optionDisabled="inactive" class="responsive-multiselect"
+                          inputId="approvalGroup" formControlName="vendorIdList" optionLabel="name"
+                          [showToggleAll]="true"
+                          (onChange)="changeVendorList($event)" [filter]="true">
+
+             <ng-template let-approvalGroups pTemplate="item">
+                 <div class="grid">
+                     <div class="dropdown-list">{{approvalGroups.name}}</div>
+                 </div>
+             </ng-template>
+
+             <ng-template pTemplate="footer">
+                    <div class="grid dp-footer">
+                      <div class="col-12 button-wrapper">
+                        <button pButton class="p-button-sm" label="Add New"
+                                (click)="isAddVendor = true"></button>
+                      </div>
+                    </div>
+                  </ng-template>
+
+           </p-multiSelect>
+        </span>
+
+      <div class="p-invalid text-align-left"
+           *ngIf="form.get('vendorIdList').dirty && form.get('vendorIdList').errors">
+        Vendor is required
+      </div>
+    </div>
+
+    <div class="field" *ngIf="editView" [class]="editView? 'col-12 group-name-list' : 'col-12 xl:col-3'">
+      <p-chips disabled="true" [ngModelOptions]="{standalone: true}" [ngModel]="vendorNameList"></p-chips>
+    </div>
+
+    <ng-container *ngIf="!panel">
+      <div class="formButton" [class]="panel? 'col-6' : 'col-12  xl:col-1'" style="padding-top: 26px;">
+        <button pButton type="button" label="Reset" (click)="restForm()" class="p-button-outlined p-button-sm ">
+        </button>
+      </div>
+      <div class="formButton" [class]="panel? 'col-6' : 'col-12  xl:col-2'"  style="padding-top: 24px;">
+        <button pButton type="submit" class="p-button-sm p-fluid" [label]="editView? 'Save': 'Create Group'"
+               (click)="onSubmit(form)" [disabled]="buttonLoading" [loading]="buttonLoading">
+        </button>
+      </div>
+    </ng-container>
+  </div>
+</form>
+
+
+<div *ngIf="panel" class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" label="Reset" (click)="restForm()" class="p-button-outlined mr-1 p-button-sm ">
+      </button>
+
+      <button pButton type="submit" class="p-button-sm p-fluid" [label]="editView? 'Save': 'Create Group'"
+              [disabled]="buttonLoading" [loading]="buttonLoading" (click)="onSubmit(form)">
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!--Create New Vendor-->
+<p-sidebar styleClass="p-sidebar-sm" position="right" [modal]="true" [dismissible]="true" appendTo="body"
+           *ngIf="isAddVendor" [(visible)]="isAddVendor">
+  <ng-template pTemplate="header">Create Vendor</ng-template>
+  <app-add-vendor (refreshVendorList)="getVendorList(); vendorHome.refreshVendorList()"
+                  *ngIf="isAddVendor"></app-add-vendor>
+</p-sidebar>

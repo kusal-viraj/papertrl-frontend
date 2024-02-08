@@ -1,0 +1,309 @@
+{
+  "advancedFilters": [
+    {
+      "field": "name",
+      "header": "Name",
+      "searchType": "input"
+    },
+    {
+      "field": "documentType",
+      "header": "Document Type",
+      "searchType": "dropdown",
+      "dropdownValues": [
+        {
+          "value": "1",
+          "label": "Bill"
+        },
+        {
+          "value": "2",
+          "label": "Purchase Order"
+        },
+        {
+          "value": "3",
+          "label": "Expense"
+        }
+      ]
+    },
+    {
+      "field": "event",
+      "header": "Event",
+      "searchType": "dropdown",
+      "dropdownValues": [
+        {
+          "value": "1",
+          "label": "Submitted"
+        },
+        {
+          "value": "2",
+          "label": "Edited & Resubmitted"
+        },
+        {
+          "value": "3",
+          "label": "Approved"
+        },
+        {
+          "value": "4",
+          "label": "Rejected"
+        },
+        {
+          "value": "5",
+          "label": "Approval Skipped"
+        },
+        {
+          "value": "6",
+          "label": "Deleted"
+        },
+        {
+          "value": "7",
+          "label": "Sent to Vendor"
+        },
+        {
+          "value": "8",
+          "label": "Created"
+        },
+        {
+          "value": "9",
+          "label": "Uploaded"
+        },
+        {
+          "value": "10",
+          "label": "Reassigned"
+        },
+        {
+          "value": "10",
+          "label": "Unapproved"
+        },
+        {
+          "value": "11",
+          "label": "Voided"
+        },
+        {
+          "value": "12",
+          "label": "Marked as Mailed"
+        },
+        {
+          "value": "13",
+          "label": "Applied to Different Invoice"
+        }
+      ]
+    },
+    {
+      "field": "createdDate",
+      "header": "Created Date",
+      "searchType": "date"
+    },
+    {
+      "field": "createdBy",
+      "header": "Created By",
+      "searchType": "input"
+    },
+    {
+      "field": "status",
+      "header": "Status",
+      "searchType": "dropdown",
+      "dropdownValues": [
+        {
+          "label": "Active",
+          "value": "A"
+        },
+        {
+          "label": "Inactive",
+          "value": "I"
+        }
+      ]
+    }
+  ],
+  "columns": [
+    {
+      "field": "checkbox",
+      "header": null,
+      "columnShow": true,
+      "isSortable": false,
+      "isReOrderable": false,
+      "isReSizable": false,
+      "canHide": false,
+      "align": "center",
+      "searchType": "checkbox"
+    },
+    {
+      "field": "action",
+      "header": "Action",
+      "isSortable": false,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "actionButton",
+      "canHide": false
+    },
+    {
+      "field": "name",
+      "header": "Name",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Name"
+    },
+    {
+      "field": "documentType",
+      "header": "Document Type",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "left",
+      "searchType": "dropdown",
+      "canHide": true,
+      "placeholder": "All",
+      "dropdownValues": [
+        {
+          "value": "1",
+          "label": "Bill"
+        },
+        {
+          "value": "2",
+          "label": "Purchase Order"
+        },
+        {
+          "value": "3",
+          "label": "Expense"
+        }
+      ]
+    },
+    {
+      "field": "event",
+      "header": "Event",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "dropdown",
+      "canHide": true,
+      "placeholder": "All",
+      "dropdownValues": [
+        {
+          "value": "1",
+          "label": "Submitted"
+        },
+        {
+          "value": "2",
+          "label": "Edited & Resubmitted"
+        },
+        {
+          "value": "3",
+          "label": "Approved"
+        },
+        {
+          "value": "4",
+          "label": "Rejected"
+        },
+        {
+          "value": "5",
+          "label": "Approval Skipped"
+        },
+        {
+          "value": "6",
+          "label": "Deleted"
+        },
+        {
+          "value": "7",
+          "label": "Sent to Vendor"
+        },
+        {
+          "value": "8",
+          "label": "Created"
+        },
+        {
+          "value": "9",
+          "label": "Uploaded"
+        },
+        {
+          "value": "10",
+          "label": "Reassigned"
+        },
+        {
+          "value": "10",
+          "label": "Unapproved"
+        },
+        {
+          "value": "11",
+          "label": "Voided"
+        },
+        {
+          "value": "12",
+          "label": "Marked as Mailed"
+        },
+        {
+          "value": "13",
+          "label": "Applied to Different Invoice"
+        }
+      ]
+    },
+    {
+      "field": "createdDate",
+      "header": "Created Date",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": false,
+      "align": "center",
+      "searchType": "date",
+      "canHide": true,
+      "placeholder": "Created Date"
+    },
+    {
+      "field": "createdBy",
+      "header": "Created By",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Created By"
+    },
+    {
+      "field": "status",
+      "header": "Status",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "dropdown",
+      "canHide": true,
+      "placeholder": "All",
+      "dropdownValues": [
+        {
+          "label": "ACTIVE",
+          "value": "A"
+        },
+        {
+          "label": "INACTIVE",
+          "value": "I"
+        }
+      ]
+    }
+  ],
+  "state": {
+    "first": 0,
+    "rows": 10,
+    "columnWidths": "58,147",
+    "columnOrder": [
+      "checkbox",
+      "action",
+      "name",
+      "documentType",
+      "event",
+      "createdDate",
+      "createdBy",
+      "status"
+    ]
+  }
+}

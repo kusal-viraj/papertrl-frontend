@@ -1,0 +1,36 @@
+<p-tabView (onChange)="tabChanged(tabIndex)" [(activeIndex)]="tabIndex" class="p-0"
+           styleClass="tabview-custom p-0-tabview">
+  <p-tabPanel *ngIf="isPoModule()">
+    <ng-template pTemplate="header">
+      <span class="custom-span">Purchase Orders</span>
+    </ng-template>
+    <ng-template pTemplate="content">
+      <app-po-list (updatePReceiptSearchTable)="updatePOReceiptSearchTable()"></app-po-list>
+    </ng-template>
+  </p-tabPanel>
+
+  <p-tabPanel *ngIf="isPoReceiptModule()" class="p-0">
+    <ng-template pTemplate="header">
+      <span class="custom-span">PO Receipts</span>
+    </ng-template>
+
+    <ng-template pTemplate="content">
+      <app-po-receipt-list #poReceiptListComponent></app-po-receipt-list>
+    </ng-template>
+  </p-tabPanel>
+
+</p-tabView>
+
+
+<!--Approve Purchase Order-->
+<p-sidebar [showCloseIcon]="false" [fullScreen]="true" [modal]="false" [(visible)]="showPoApproveDetailViewDrawer">
+  <app-po-approve [isDetailView]="false" [fromNotification]="true" *ngIf="showPoApproveDetailViewDrawer"
+                  (closePOApprove)="showPoApproveDetailViewDrawer = false; detailViewClosed()"
+                  [poId]="poId"></app-po-approve>
+</p-sidebar>
+
+<!--Po Detail view-->
+<p-sidebar [showCloseIcon]="false" [fullScreen]="true" [modal]="false" [(visible)]="poDetailView">
+  <app-po-detail-view [fromNotification]="true" (closePOApprove)="poDetailView = false"
+                      *ngIf="poDetailView" [poId]="poId"></app-po-detail-view>
+</p-sidebar>

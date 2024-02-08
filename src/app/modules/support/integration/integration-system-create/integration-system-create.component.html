@@ -1,0 +1,117 @@
+
+<div class="side-bar-drawer-content p-4">
+<form [formGroup]="systemForm" (ngSubmit)="addSystem()">
+  <div class="grid p-fluid">
+
+    <div class="field col-12">
+      <label class="label-wrapper" for="name">System Name*</label>
+          <span class="p-float-label">
+            <input formControlName="name" (keyup)="removeSpace('name')" id="name"
+                   type="text" pInputText>
+          </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="systemForm.get('name').dirty && systemForm.get('name').errors">
+        System Name is required
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="systemNameExists">
+        System Name already Exists
+      </div>
+    </div>
+
+    <div class="field col-12">
+      <label class="label-wrapper" for="authType">Type*</label>
+      <span class="p-float-label">
+            <p-dropdown id="type" formControlName="typeId" [autoDisplayFirst]="false"
+                        [options]="integrationUiUtility.types.data"
+                        optionValue="id" optionLabel="name"></p-dropdown>
+      </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="systemForm.get('typeId').dirty && systemForm.get('typeId').errors">
+        Type is required
+      </div>
+    </div>
+
+    <div class="field col-12">
+      <label class="label-wrapper" for="authType">Auth Type*</label>
+      <span class="p-float-label">
+            <p-dropdown id="authType" formControlName="authTypeId" [autoDisplayFirst]="false"
+                        [options]="integrationUiUtility.authTypeList.data" (onChange)="authTypeChanged($event)"
+                        optionValue="id" optionLabel="name"></p-dropdown>
+      </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="systemForm.get('authTypeId').dirty && systemForm.get('authTypeId').errors">
+        Auth Type is required
+      </div>
+    </div>
+
+    <div class="field col-12" *ngIf="isOAuth">
+      <label class="label-wrapper" for="clientId">Client ID*</label>
+          <span class="p-float-label">
+            <input formControlName="clientId" (keyup)="removeSpace('clientId')" id="clientId"
+                   type="text" pInputText>
+          </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="systemForm.get('clientId').dirty && systemForm.get('clientId').errors">
+        Client ID is required
+      </div>
+    </div>
+
+    <div class="field col-12" *ngIf="isOAuth">
+      <label class="label-wrapper" for="clientSecret">Client Secret*</label>
+          <span class="p-float-label">
+            <input formControlName="clientSecret" (keyup)="removeSpace('clientSecret')" id="clientSecret"
+                   type="text" pInputText>
+          </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="systemForm.get('clientSecret').dirty && systemForm.get('clientSecret').errors">
+        Client Secret is required
+      </div>
+    </div>
+
+    <div class="field col-12" *ngIf="isOAuth">
+      <label  class="label-wrapper" for="grantType">Grant Type*</label>
+      <span class="p-float-label">
+            <p-dropdown id="grantType" formControlName="grantTypeId" [autoDisplayFirst]="false"
+                        [options]="integrationUiUtility.grantTypes.data"
+                        optionValue="id" optionLabel="name"></p-dropdown>
+      </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="systemForm.get('grantTypeId').dirty && systemForm.get('grantTypeId').errors">
+        Grant Type is required
+      </div>
+    </div>
+
+    <div class="field col-12" *ngIf="isOAuth">
+      <label class="label-wrapper" for="scope">Scopes*</label>
+        <span class="p-float-label">
+            <p-multiSelect id="scope" formControlName="scope" [options]="integrationUiUtility.scopes.data"
+                           optionValue="name" optionLabel="name" [filter]="true"></p-multiSelect>
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="systemForm.get('scope').dirty && systemForm.get('scope').errors">
+        Scope is required
+      </div>
+    </div>
+
+
+    <div class="field col-12" *ngIf="isOAuth">
+      <label class="label-wrapper" for="clientSecret">Subscription Key</label>
+          <span class="p-float-label">
+            <input formControlName="apiSubscriptionKey" (keyup)="removeSpace('apiSubscriptionKey')" id="apiSubscriptionKey"
+                   type="text" pInputText>
+          </span>
+    </div>
+  </div>
+</form>
+</div>
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" (click)="reset();" [disabled]="loading" class="p-button-sm p-button-outlined" iconPos="left"
+              icon="fa-solid fa-rotate-right" label="Reset"></button>&nbsp;&nbsp;
+      <button pButton type="button" (click)="addSystem()" [disabled]="loading" class="p-button-sm" iconPos="left"
+              [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-save'" label="Save"></button>
+    </div>
+  </div>
+</div>

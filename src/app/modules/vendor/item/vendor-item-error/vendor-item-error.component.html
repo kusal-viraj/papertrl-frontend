@@ -1,0 +1,14 @@
+<div class="col-12" *ngIf="!fromMappingScreen">
+  <ul>
+    <li *ngFor="let error of responseData.errors; let i=index"  class="subHeadingColour text-left font-bold mb-2">
+      {{getErrors(error)}}
+    </li>
+  </ul>
+</div>
+<div class="col-12" *ngIf="fromMappingScreen">
+  <ul>
+    <li *ngFor="let error of responseData.errors; let i=index"  class="subHeadingColour text-left font-bold mb-2">
+      {{error}}
+    </li>
+  </ul>
+</div>

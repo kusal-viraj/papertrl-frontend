@@ -1,0 +1,50 @@
+<div class="side-bar-drawer-content p-3">
+<form [formGroup]="payTypeForm" (ngSubmit)="onSubmitForm(payTypeForm.value)">
+
+  <h6 *ngIf="!isEditView" style="margin-bottom: 25px" class="subHeadingColour">Payment Type Information</h6>
+
+  <div class="grid p-fluid">
+
+    <div [ngClass]="isEditView ? 'field col-12' : 'field col-12 sm:col-12 md:col-3 xl:col-3 lg:col-3'">
+      <label class="label-wrapper" for="name">Name* </label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input id="name" maxlength="100" (keyup)="removeSpace('name')"
+                            type="text" pInputText formControlName="name">
+                   </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="payTypeForm.get('name').dirty && payTypeForm.get('name').errors">
+        Payment Type Name is required
+      </div>
+    </div>
+
+    <div [ngClass]="isEditView ? 'field col-12':'field col-12 sm:col-12 md:col-6 xl:col-6 lg:col-6'">
+      <label class="label-wrapper" for="descriptionId">Description </label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <textarea id="descriptionId" maxlength="250" rows="1" (keyup)="removeSpace('description')"
+                               type="text" pInputText formControlName="description"></textarea>
+                   </span>
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+
+<div class="grid  panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" (click)="resetForm()" label="Reset"
+              [disabled]="isLoadingCreateAction || isLoadingEditAction"
+              class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+      <button *ngIf="!isEditView" pButton type="button" (click)="onSubmitForm(payTypeForm.value)" class="p-button-sm" [disabled]="isLoadingCreateAction"
+              iconPos="left" [icon]="isLoadingEditAction ? 'pi pi-spin pi-spinner': 'pi pi-save'"
+              label="Create"></button>
+      <button *ngIf="isEditView" pButton type="button" class="p-button-sm" [disabled]="isLoadingEditAction"
+              (click)="updatePaymentType()"
+              iconPos="left" [icon]="isLoadingEditAction ? 'pi pi-spin pi-spinner': 'pi pi-save'"
+              label="Save"></button>
+    </div>
+  </div>
+</div>

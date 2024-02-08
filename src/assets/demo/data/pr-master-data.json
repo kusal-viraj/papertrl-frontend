@@ -1,0 +1,257 @@
+[
+  {
+    "id": 1,
+    "featureName": "Sample Feature1",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "featureName": "Sample Feature2",
+    "isActive": false
+  },
+  {
+    "id": 3,
+    "featureName": "Sample Feature3",
+    "isActive": true
+  },
+  {
+    "id": 1,
+    "featureName": "Sample Feature1",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "featureName": "Sample Feature2",
+    "isActive": false
+  },
+  {
+    "id": 3,
+    "featureName": "Sample Feature3",
+    "isActive": true
+  },
+  {
+    "id": 1,
+    "featureName": "Sample Feature1",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "featureName": "Sample Feature2",
+    "isActive": false
+  },
+  {
+    "id": 3,
+    "featureName": "Sample Feature3",
+    "isActive": true
+  },
+  {
+    "id": 1,
+    "featureName": "Sample Feature1",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "featureName": "Sample Feature2",
+    "isActive": false
+  },
+  {
+    "id": 3,
+    "featureName": "Sample Feature3",
+    "isActive": true
+  },
+  {
+    "id": 1,
+    "featureName": "Sample Feature1",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "featureName": "Sample Feature2",
+    "isActive": false
+  },
+  {
+    "id": 3,
+    "featureName": "Sample Feature3",
+    "isActive": true
+  },
+  {
+    "id": 1,
+    "featureName": "Sample Feature1",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "featureName": "Sample Feature2",
+    "isActive": false
+  },
+  {
+    "id": 3,
+    "featureName": "Sample Feature3",
+    "isActive": true
+  },
+  {
+    "id": 1,
+    "featureName": "Sample Feature1",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "featureName": "Sample Feature2",
+    "isActive": false
+  },
+  {
+    "id": 3,
+    "featureName": "Sample Feature3",
+    "isActive": true
+  },
+  {
+    "id": 1,
+    "featureName": "Sample Feature1",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "featureName": "Sample Feature2",
+    "isActive": false
+  },
+  {
+    "id": 3,
+    "featureName": "Sample Feature3",
+    "isActive": true
+  },
+  {
+    "id": 1,
+    "featureName": "Sample Feature1",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "featureName": "Sample Feature2",
+    "isActive": false
+  },
+  {
+    "id": 3,
+    "featureName": "Sample Feature3",
+    "isActive": true
+  },
+  {
+    "id": 1,
+    "featureName": "Sample Feature1",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "featureName": "Sample Feature2",
+    "isActive": false
+  },
+  {
+    "id": 3,
+    "featureName": "Sample Feature3",
+    "isActive": true
+  },
+  {
+    "id": 1,
+    "featureName": "Sample Feature1",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "featureName": "Sample Feature2",
+    "isActive": false
+  },
+  {
+    "id": 3,
+    "featureName": "Sample Feature3",
+    "isActive": true
+  },
+  {
+    "id": 1,
+    "featureName": "Sample Feature1",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "featureName": "Sample Feature2",
+    "isActive": false
+  },
+  {
+    "id": 3,
+    "featureName": "Sample Feature3",
+    "isActive": true
+  },
+  {
+    "id": 1,
+    "featureName": "Sample Feature1",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "featureName": "Sample Feature2",
+    "isActive": false
+  },
+  {
+    "id": 3,
+    "featureName": "Sample Feature3",
+    "isActive": true
+  },
+  {
+    "id": 1,
+    "featureName": "Sample Feature1",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "featureName": "Sample Feature2",
+    "isActive": false
+  },
+  {
+    "id": 3,
+    "featureName": "Sample Feature3",
+    "isActive": true
+  },
+  {
+    "id": 1,
+    "featureName": "Sample Feature1",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "featureName": "Sample Feature2",
+    "isActive": false
+  },
+  {
+    "id": 3,
+    "featureName": "Sample Feature3",
+    "isActive": true
+  },
+  {
+    "id": 1,
+    "featureName": "Sample Feature1",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "featureName": "Sample Feature2",
+    "isActive": false
+  },
+  {
+    "id": 3,
+    "featureName": "Sample Feature3",
+    "isActive": true
+  },
+  {
+    "id": 1,
+    "featureName": "Sample Feature1",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "featureName": "Sample Feature2",
+    "isActive": false
+  },
+  {
+    "id": 3,
+    "featureName": "Sample Feature3",
+    "isActive": true
+  }
+]

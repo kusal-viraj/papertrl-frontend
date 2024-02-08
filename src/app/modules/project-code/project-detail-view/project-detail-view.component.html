@@ -1,0 +1,212 @@
+<div class="field   grid ">
+  <div class="col-6">
+    <h5>Project Code Details</h5>
+  </div>
+  <div class="col-6 text-right">
+    <div pTooltip="Delete" tooltipPosition="bottom" *ngIf="privilegeService.isAuthorized(appAuthorities.PROJECT_CODES_DELETE)"
+         class="fa fa-trash side-drawer-icon"
+         (click)="deleteProjectCode()" ></div>
+    <div  pTooltip="Edit" tooltipPosition="bottom" *ngIf="privilegeService.isAuthorized(appAuthorities.PROJECT_CODES_EDIT) && projectCodeStatus === 'Active'"
+          class=" fa fa-pencil side-drawer-icon"
+          (click)="editProjectCode()"></div>
+    <div class="fa fa-close side-drawer-icon"
+         (click)="closeDrawer()"></div>
+  </div>
+</div>
+
+<form [formGroup]="projectCodeForm" autocomplete="off">
+  <div class="grid project-form detail-form">
+
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Project Code</label>
+      <div>{{f.name.value}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Parent Project</label>
+      <div>{{commonUtil.detailViewIsDash(f.parentProjectName.value, false)}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Contract Value</label>
+      <div>{{f.contractValue.value | number : '1.2-2'}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Budget</label>
+      <div>{{f.projectBudget.value | number : '1.2-2'}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Amount Invoiced</label>
+      <div>{{f.amountInvoiced.value | number : '1.2-2'}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Remaining Amount</label>
+      <div>{{f.remainingAmount.value | number : '1.2-2'}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Start Date</label>
+      <div>{{commonUtil.detailViewIsDash(f.startDateStr.value, false)}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>User(s)</label>
+      <div>{{commonUtil.detailViewIsDash(f.userNamesStr.value, false)}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Accounts(s)</label>
+      <div>{{commonUtil.detailViewIsDash(f.accountNosStr.value, false)}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>End Date</label>
+      <div>{{commonUtil.detailViewIsDash(f.endDateStr.value, false)}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Created By</label>
+      <div>{{commonUtil.detailViewIsDash(f.createdUsername.value, false)}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Created Date</label>
+      <div>{{commonUtil.detailViewIsDash(f.createdDateStr.value, false)}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-6 lg:col-4 col-12">
+      <label>Description</label>
+      <div>{{commonUtil.detailViewIsDash(f.description.value, false)}}</div>
+    </div>
+
+    <div *ngIf="privilegeService.isExusPartner()" class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Company</label>
+      <div>{{commonUtil.detailViewIsDash(f.tpCompanyName.value, false)}}</div>
+    </div>
+
+  </div>
+</form>
+
+<div class="subHeadingColour mb-4 mt-5">Project Expenses</div>
+<div class="table-margin">
+  <div class="grid">
+    <div class="col-12">
+      <app-table-header-action-buttons [tableSupportBase]="tableSupportBase" [componentInstance]="this"
+                                       (refresh)="loadData(tableSupportBase.searchFilterDto)"
+                                       (showFilters)="showFilter = !showFilter; showFilterColumns = false"
+                                       (showColumns)="showFilterColumns = !showFilterColumns; showFilter = false"
+                                       [visibleActions]="availableHeaderActions"></app-table-header-action-buttons>
+    </div>
+  </div>
+  <div class="table-wrapper">
+  <p-table responsiveLayout="scroll" id="columnSelect" #dt [columns]="selectedColumns" (onColResize)="onTableChanged()"
+           [paginator]="true"
+           [hidden]="tableSupportBase.isVisibleTable" (onFilter)="tableSupportBase.onFilter(dt)" [filterDelay]="0"
+           (onSort)="tableSupportBase.onSort(dt)" [(selection)]="tableSupportBase.rows" columnResizeMode="expand"
+           (onRowSelect)="tableSupportBase.rowSelected(dt,null)" (onRowUnselect)="tableSupportBase.rowSelected(dt,null)"
+           (onColReorder)="onTableChanged()" [value]="tableSupportBase.dataSource" [scrollable]="true"
+           dataKey="id" [reorderableColumns]="true" [rowHover]="true" [lazy]="true" (onLazyLoad)="loadData($event)"
+           [responsive]="false" selectionMode="multiple" scrollHeight="flex" [showCurrentPageReport]="true"
+           stateStorage="session" stateKey="{{tableKeyEnum.PROJECT_BILL}}" [rows]="25" [resizableColumns]="false" [tableStyle]="{'min-width': tableSupportBase.minWidth}"
+           [rowsPerPageOptions]="[25, 50, 75]" [loading]="tableSupportBase.loading"
+           styleClass="p-datatable-sm p-datatable-striped no-grid-lines" [totalRecords]="tableSupportBase.totalRecords"
+           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns" pResizableColumn [pResizableColumnDisabled]="!col.isReSizable"
+            [ngStyle]="{'text-align': 'left'}" [class.text-center]="col.searchType == enums.CHECKBOX"
+            [pReorderableColumnDisabled]="!col.isReOrderable" pReorderableColumn
+            [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn
+            [style]="'min-width:' + col.columnWidth  + 'px'"
+            [pSortableColumnDisabled]="!col.isSortable" pSortableColumn="{{col.sortableField}}" class="sort-icon-wrapper">
+          <div *ngIf="col.searchType == enums.CHECKBOX">
+            <p-tableHeaderCheckbox (click)="tableSupportBase.rowSelected(dt,null)"></p-tableHeaderCheckbox>
+          </div>
+          <span *ngIf="col.searchType !== enums.CHECKBOX">{{col.header}}</span>
+          <p-sortIcon class="grid-sort-icon" *ngIf="col.isSortable" field="{{col.sortableField}}"></p-sortIcon>
+        </th>
+      </tr>
+      <tr>
+        <th *ngFor="let col of columns" [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn>
+          <span app-table-inline-column-filters [tableSupportBase]="tableSupportBase" [dt]="dt"
+                [columns]="columns" [col]="col"></span>
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-customer let-columns="columns">
+      <tr>
+        <td *ngFor="let col of columns; let i=index" [ngStyle]="{'text-align': col.align}"
+            [class.freeze-right]="col.frozenDirection == 'right'" [ngClass]="col.searchType == enums.ACTION_BUTTON ? 'vendor-table-action-btn' : null"
+            [class.td-border]="i === 0" [class.td-border-selected]="customer.selected && i === 0" [style]="'width:' + col.columnWidth  + 'px'"
+            pFrozenColumn [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection">
+
+          <span class="p-column-title">{{col.header}}</span>
+
+          <span [ngClass]="col.field == 'bill.billNo' ? 'selectedHover' : null"
+                (click)="tdClick(col.field, customer)" [pTooltip]="col.field == 'bill.billNo'? 'View Details' : null"
+                tooltipPosition="bottom"
+                tooltipZIndex="2300">
+          <span class="table-data">{{customer[col.field]}}</span>
+        </span>
+
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <div class="text-center grid table-empty-data">
+          <div class="col-12">
+            <i class="fa-solid fa-magnifying-glass"></i><br>
+            <p>There are no records found</p>
+          </div>
+      </div>
+    </ng-template>
+  </p-table>
+  </div>
+</div>
+
+<!--Edit Project Code-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" [modal]="true" position="right" class="overflow-side-bar"
+           *ngIf="isEditView" [(visible)]="isEditView" appendTo="body">
+  <ng-template pTemplate="header">Edit Project Code</ng-template>
+  <app-create-project-code #editProjectCodeComponent (isRefresh)="getProjectCodeData(); isEditView = false"
+                           [panel]="true" [isEdit]="true" [isDetailVIew]="false"
+                           [projectCodeID]="projectCodeID" *ngIf="isEditView"></app-create-project-code>
+</p-sidebar>
+
+<!--Delete Project Code-->
+<p-confirmDialog key="projectCodeDelete" #cd header="Are you sure?" appendTo="body"
+                 icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cd.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, delete"
+            (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+
+<p-sidebar styleClass="p-sidebar-sm" [modal]="true" [dismissible]="true" position="right" (onHide)="showFilter= false"
+           [fullScreen]="false" appendTo="body" [(visible)]="showFilter" transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)">
+  <ng-template pTemplate="header">Advance Filter</ng-template>
+  <app-table-column-filters [dt]="table" [columns]="tableSupportBase.filterEnabledColumns" (closeDrawer)="showFilter = false"
+                            [tableSupportBase]="tableSupportBase"></app-table-column-filters>
+</p-sidebar>
+
+<p-sidebar styleClass="p-sidebar-sm table-column-sidebar" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           (onHide)="showFilterColumns= false" transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)"
+           [fullScreen]="false" [(visible)]="showFilterColumns" appendTo="body">
+    <ng-template pTemplate="header">Columns</ng-template>
+  <app-table-column-toggle [cols]="selectedColumns" (selectionsUpdated)="selectedColumns = $event"
+                           [tableInstance]="table" (restoreTable)="loadTableData()"
+                           [tableKey]="tableKeyEnum.PROJECT_BILL"
+                           [gridName]="appConstant.GRID_PROJECT_CODE_BILLS"
+                           [hiddenOptions]="tableSupportBase.hiddenInOptions"
+                           (updateColOrder)="onTableChanged($event)"></app-table-column-toggle>
+</p-sidebar>

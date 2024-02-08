@@ -1,0 +1,71 @@
+<div class="grid mt-4">
+
+  <div>
+    <p-table responsiveLayout="scroll" [value]="availableDraftList" scrollable="true" scrollHeight="300px"
+             [style]="{width:'auto'}" scrollDirection="both"
+             styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width:30px"  class="thead-style detail-table-header-left" id="no">#</th>
+          <th style="min-width:175px" class="thead-style detail-table-header-left" id="receiptNumber">Receipt Number</th>
+          <th style="min-width:175px" class="thead-style detail-table-header-left" id="businessPurpose">Receipt Date</th>
+          <th style="min-width:175px" class="thead-style detail-table-header-left" id="fromDate">Vendor</th>
+          <th style="min-width:175px" class="thead-style detail-table-header-left" id="toDate">PO Number</th>
+          <th style="min-width:175px" class="thead-style detail-table-header-right" id="vendor">PO Receipt Amount</th>
+          <th style="min-width:80px"  class="thead-style detail-table-header-center" id="edit">Action</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-i="rowIndex" let-draft>
+
+        <tr class="draft-list-table-row">
+
+          <td style="text-align: center; width:30px"><label>{{i + 1}}</label></td>
+
+          <td style="width:100px">
+            <div app-read-more-text [fieldValue]="draft.poReceiptNo"
+                 [maxCharacters]="20"></div>
+          </td>
+
+          <td style="width:100px" class="text-left">
+            <div>{{draft.receiptDate}}</div>
+          </td>
+
+
+          <td style="width:100px">
+            <div app-read-more-text [fieldValue]="draft.vendor"
+                 [maxCharacters]="20"></div>
+          </td>
+
+          <td style="width:100px">
+            <div>{{draft.poNo}}</div>
+          </td>
+
+          <td style="width:100px" class="text-right">
+            <div>{{draft.amount | number : '1.2-2'}}</div>
+          </td>
+
+          <td style="width:40px" class="text-center button-table-data">
+            <em id="removeButton" [class]="draft.isProgress ? 'pi pi-spin pi-spinner' : 'fa fa-pencil'"
+                [class.disabled]="isProgressDataPatching" class="item-remove-button"
+                (click)="emitClickEvent.emit(draft);
+                poReceiptService.isProcessingPatchingDataFromPoReceiptDraft.next({isProgress: true, index: i})">
+            </em>
+          </td>
+
+        </tr>
+
+      </ng-template>
+
+    </p-table>
+  </div>
+
+  <div class="grid col-12 mb-1 mt-5">
+    <div class="pull-right">
+      <p-checkbox (onChange)="changeStateOfExpenseDraftList()" [(ngModel)]="isChecked"
+                  [binary]="true"></p-checkbox>&nbsp;<span class="subHeadingColour">Don't show again</span>
+    </div>
+  </div>
+
+</div>

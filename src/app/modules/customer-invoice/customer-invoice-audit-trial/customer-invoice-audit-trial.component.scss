@@ -1,0 +1,80 @@
+@import "../../../../scss/color.scss";
+
+.custom-marker {
+  display: flex;
+  width: 2rem;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+::ng-deep {
+  .p-timeline-event-content,
+  .p-timeline-event-opposite {
+    line-height: 1;
+  }
+}
+.heading{
+  font-size: 15px;
+  font-style: italic;
+}
+@media screen and (max-width: 960px) {
+  ::ng-deep {
+    .customized-timeline {
+      .p-timeline-event:nth-child(even) {
+        flex-direction: row !important;
+
+        .p-timeline-event-content {
+          text-align: left !important;
+        }
+      }
+
+      .p-timeline-event-opposite {
+        flex: 0;
+      }
+
+      .p-card {
+        margin-top: 1rem;
+      }
+    }
+  }
+}
+
+.audit-topic {
+  font-size: 15px;
+}
+.audit-auto-topic {
+  font-size: 14px;
+}
+
+.audit-date {
+  font-size: 12px;
+  color: $dark-grey;
+}
+
+.audit-cmt {
+  color: $grey;
+  word-break: break-word;
+}
+
+.cost-topic {
+  font-size: 12px;
+  color: $grey;
+}
+
+.table-scroll {
+  opacity: 0.8;
+  max-width: 320px;
+}
+
+.table-row-highlight {
+  background: #C8E6C9 !important;
+  color: #256029 !important;
+}
+
+.table-width{
+  width: calc(100vw - 83vw);
+}

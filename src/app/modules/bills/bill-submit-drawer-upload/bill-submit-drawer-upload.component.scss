@@ -1,0 +1,112 @@
+@import "../../../../scss/color.scss";
+
+.outer-content-wrapper{
+  text-align: -webkit-center;
+  padding-top: 100px;
+}
+
+.inner-content-wrapper{
+  padding-top: 40px;
+}
+
+.upload-bill-content {
+  width: 1134px !important;
+  height: 690px !important;
+  border-radius:20px;
+
+  .drop-zone-style {
+    margin-top: 30px;
+    //height: 234px;
+    width: 1045px;
+    height: 517px;
+  }
+
+  .drop-zone-progress-style {
+    margin-top: 30px;
+    height: 517px;
+    border-radius:20px;
+  }
+}
+
+.back-btn:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.drop-zone-style {
+  margin-top: 2px;
+  height: 120px;
+  padding: 40px 43px 36px 46px !important;
+}
+
+.drop-zone-progress-style {
+  margin-top: 2px;
+  height: 120px;
+}
+
+.vendor-field-wrapper{
+   padding-left: 235px;
+}
+
+.template-field-wrapper{
+  padding-right: 235px;
+}
+
+.upload-image-wrapper{
+  justify-content: space-evenly;
+}
+
+
+.loading-content-inner{
+  padding: 366px;
+  text-align: center;
+}
+
+.progress-gif{
+  height: 45px;
+}
+
+.process-lg-label{
+  font-size: 20px;
+  display: inline-table;
+  color: $secondary-black-grey;
+}
+
+.process-sm-label{
+  padding-top: 5px !important;
+  font-size: 14px;
+  color: #bcbcbc;
+}
+
+:host ::ng-deep .custom-spinner .p-progress-spinner-circle {
+  animation: custom-progress-spinner-dash 1.5s ease-in-out infinite, custom-progress-spinner-color 6s ease-in-out infinite;
+}
+
+@keyframes custom-progress-spinner-color {
+  100%,
+  0% {
+    stroke: #3bb2ac;
+  }
+  40% {
+    stroke: #3bb2ac;
+  }
+  66% {
+    stroke: #3bb2ac;
+  }
+  80%,
+  90% {
+    stroke: #3bb2ac;
+  }
+}
+
+.form-header {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  width: calc(100vw - 36px);
+  background: white;
+}
+
+.label-wrapper{
+  display: block !important;
+}

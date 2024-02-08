@@ -1,0 +1,75 @@
+<br *ngIf="panel">
+<form [formGroup]="createRoleForm" (ngSubmit)="onSubmit()" class="p-3">
+  <h5 *ngIf="!isClone && !editView && !detailView" class="subHeadingColour p-pb-4 p-m-0">Create Role</h5>
+  <h5 *ngIf="!isClone && editView" class="subHeadingColour p-pb-4 p-m-0">Edit Role</h5>
+  <h5 *ngIf="!isClone && detailView" class="detail-view-heading-wrapper p-pb-4 p-m-0">Role Details</h5>
+  <h5 *ngIf="isClone" class="subHeadingColour">Clone Role</h5><br>
+
+  <div class="grid p-fluid">
+    <div [ngClass]="!panel ? 'field col-12 lg:col-3' : 'field col-12'">
+      <label class="label-wrapper" for="roleName">Role Name*</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input formControlName="roleName"
+                            (keyup)="removeSpaces.clearSpace(createRoleForm, 'roleName');" [readOnly]="detailView"
+                            id="roleName" type="text"
+                            pInputText>
+                   </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="createRoleForm.get('roleName').dirty && createRoleForm.get('roleName').hasError('required')">
+        Role Name is required
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="createRoleForm.get('roleName').hasError('maxlength')">
+        Role Name must be less than 50 characters
+      </div>
+    </div>
+  </div>
+  <div class="grid">
+
+    <div [ngClass]="panel? 'col-12': 'col-12 xl:col-3 lg:col-4 md:col-6 sm:col-12'">
+      <p-fieldset
+        [style]="(editView ||detailView )?{'height': 'calc(100vh - 217px)', 'overflow-y': 'auto'}:{'height': 'calc(100vh - 357px)', 'overflow-y': 'auto'}"
+        class="overflowCustom" legend="Portal Privileges">
+        <p-tree [value]="rolePrivilegeNode" [filter]="true" selectionMode="{{detailView ? false :'checkbox'}}"
+                [(selection)]="portalRolePrivilegeDto.previlageList"></p-tree>
+      </p-fieldset>
+    </div>
+
+    <div [ngClass]="panel? 'col-12':'col-12 xl:col-9 lg:col-8 md:col-6 sm:col-12'">
+      <p-fieldset
+        [style]="(editView ||detailView )?{'height': 'calc(100vh - 217px)', 'overflow-y': 'auto'}:{'height': 'calc(100vh - 357px)', 'overflow-y': 'auto'}"
+        class="overflowCustom"
+        legend="Sub Accounts Privileges">
+
+        <p-accordion *ngFor=" let subAccount of portalRolePrivilegeDto.subAccountPrivilegeList;" (onOpen)="loadSubAccountPrivileges(subAccount)">
+          <div *ngIf="detailView ? subAccount.subAccountPrivilegeList : true">
+            <p-accordionTab [ngClass]="isPrivilegeAvailable(subAccount)" header="{{subAccount.subAccountName}}">
+              <div class="grid">
+                <div [ngClass]=" 'col-12 xl:col-12 lg:col-12 md:col-12 sm:col-12'">
+                  <p-tree [value]="subAccount.rolePrivilegeList" [filter]="true"
+                          selectionMode="{{detailView ? false :'checkbox'}}"
+                          [(selection)]="subAccount.subAccountPrivilegeList"></p-tree>
+                </div>
+              </div>
+            </p-accordionTab>
+          </div>
+        </p-accordion>
+      </p-fieldset>
+    </div>
+  </div>
+</form>
+
+<div class="grid portal-create-role footer" [ngClass]="panel? 'button-alignment': null">
+  <div class="col-12 button-set-wrapper">
+  <div class="pull-right">
+    <button pButton type="button" *ngIf="!detailView" icon="fa-solid fa-rotate-right" (click)="resetRoleCreation()" label="Reset"
+            class="p-button-outlined p-button-sm" [disabled]="loading"></button>&nbsp;&nbsp;
+    <button pButton type="submit" *ngIf="!editView && !detailView" [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-plus'"
+            class="p-button-sm" label="Create Role" [disabled]="loading" (click)="onSubmit()"></button>
+    <button pButton type="submit" *ngIf="editView" [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-save'"
+            (click)="onSubmit()" [disabled]="loading" class="p-button-sm" label="Save"></button>
+  </div>
+  </div>
+</div>

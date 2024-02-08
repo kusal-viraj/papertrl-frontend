@@ -1,0 +1,257 @@
+<div class="total-record-wrapper" *ngIf="toProcessDataLength === appConstant.ZERO">No Data Found.</div>
+
+<p-virtualScroller [value]="toProcessedList" [itemSize]="65" [lazy]="true" #toProcessed
+                   scrollHeight="{{screenHeight}}px" (onLazyLoad)="loadToProcessList($event,
+                   '','','','','',true)"
+                   [class]="toProcessDataLength === appConstant.ZERO ? 'p-virtualScroller-hide' : 'p-virtualScroller-wrap'">
+
+  <ng-template let-toProcessData pTemplate="item" let-scrollOptions="options">
+
+    <div class="grid p-vertual-wrap list-data-wrap" *ngIf="toProcessedList.length > appConstant.ZERO"
+         [ngClass]="scrollOptions.index == clickIndexInToProcess ? 'background-color': !toProcessData.isRead ? 'unread-background' :'read-background'" [class.p-disabled]="isProgressOtherFileDownload">
+      <div class="inner-wrapper">
+        <div class="costume-checkbox-wrap" [class.p-disabled]="isProgressView || isDisabledWhenProgressSplitEvent">
+          <p-checkbox [binary]="true" inputId="binary" [(ngModel)]="toProcessData.isChecked"
+                      (onChange)="checkUncheckAll(toProcessData.isChecked, toProcessData)">
+          </p-checkbox>
+        </div>
+
+        <div (click)="toProcessedDataClick(scrollOptions.index, toProcessData)" class="col-10 mail-item p-0 pt-3 pl-3"
+             [class.p-disabled]="isProgressView">
+
+          <div [class]="toProcessData.isRead ? 'email-body': 'email-body-unread-text-wrapper'">
+          <span *ngIf="toProcessData.attachmentList.length > appConstant.ZERO"
+                (click)="toProcessData.isExpanded = !toProcessData.isExpanded"
+                [class]="!toProcessData.isExpanded ? 'pi pi-chevron-right expand-icon-wrap':
+                 'pi pi-chevron-down expand-icon-wrap'"></span>
+            {{toProcessData.title}}
+          </div>
+
+          <div class="p-vertual-wrap" *ngIf="toProcessData.isUpload">
+
+            <div [class]="toProcessData.isRead ? 'emailed-by': 'emailed-by-unread-text-wrapper'">Uploaded
+              by {{toProcessData.emailUserName}} {{toProcessData.createdOn}}
+            </div>
+
+          </div>
+
+          <div class="p-vertual-wrap" *ngIf="!toProcessData.isUpload">
+            <div [class]="toProcessData.isRead ? 'emailed-by': 'emailed-by-unread-text-wrapper'">Emailed
+              by {{toProcessData.emailUserName}} {{toProcessData.receivedDateTime}}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-1 ellipsis-icon-wrap"
+             [class.p-disabled]="!toProcessData.emailBody"
+             [class]="toProcessData.emailBody === null ? 'inactive-email-box' : 'active-email-box'">
+          <div (click)="emailBOdyDetail.emit(toProcessData.emailBody)" [pTooltip]="'Click To View Email Body'"
+               [class.p-disabled]="isProgressView || isDisabledWhenProgressSplitEvent"
+               [tooltipDisabled]="toProcessData.emailBody == null">
+            <span [class.p-disabled]="isProgressView" class="fa fa-envelope-open-o"></span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="outer-wrapper">
+        <div class="attachment-chips-wrap pt-2 pl-5 col-12" *ngIf="toProcessData.isExpanded"
+             [class.p-disabled]="isProgressView || isDisabledWhenProgressSplitEvent">
+          <div *ngFor="let att of toProcessData.attachmentList; let attIndex=index">
+            <span class="attachments-style attachments-style-default"
+                  [class]="(clickToProcessedListAttachmentId === att.id) ? 'attachments-style-click': ''">
+              <ng-container *ngIf="att.status !== 'PI'">
+              <span>
+                 <p-checkbox [binary]="true" inputId="binary"
+                             [class]="clickToProcessedListAttachmentId === att.id ? 'selected-attachment-checkBox check-mark-font' :'attachment-checkBox check-mark-font'"
+                             (onChange)="addAttachmentToList(toProcessData, att.id,att.fileType, att.isChecked); checkAttachment(toProcessData)"
+                             [(ngModel)]="att.isChecked">
+                 </p-checkbox>
+              </span>
+                </ng-container>
+              <span (click)="attachmentOnClick(att, attIndex, toProcessData)">
+              {{att.fileName}}
+              </span>
+              <ng-container  *ngIf="att.status ==='PI'">
+              <span [pTooltip]="'Move to “To Process”'" (click)="moveToProcess(att.id)"
+                    [class.p-disabled]="clickToProcessedListAttachmentId !== att.id"
+
+                    class="pl-2 fa-solid fa-arrow-rotate-left">
+              </span>
+              </ng-container>
+
+              <ng-container  *ngIf="att.status === 'UI'">
+              <span class="pi pi-ellipsis-v" [class.p-disabled]="isProgressView || clickToProcessedListAttachmentId !== att.id"
+                    [hidden]="!privilegeService.isAuthorizedMultiple([appAuthorities.INBOX_DELETE, appAuthorities.INBOX_ATTACH_TO])"
+                    *ngIf="privilegeService.isAuthorizedMultiple([appAuthorities.INBOX_DELETE, appAuthorities.INBOX_ATTACH_TO])"
+                    (click)="tpProcessedAction.toggle($event)">
+              </span>
+              </ng-container>
+
+                <p-menu  #tpProcessedAction [popup]="true"
+                        [model]="actionButtonList()"
+                        appendTo="body">
+                </p-menu>
+
+            </span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </ng-template>
+
+</p-virtualScroller>
+
+<!--Attached to dialog box-------------------------------------------------------------------------------------------->
+
+<p-dialog class="attached-to-dialog-wrapper p-dialog-wrapper" [(visible)]="isVisibleAttachedToModal"
+          (onHide)="resetAttachedToForm()" [style]="{width: '30vw'}"
+          position="center" [draggable]="true"  [closable]="true" [modal]="true">
+  <ng-template pTemplate="header">
+    Attach to
+  </ng-template>
+  <form [formGroup]="attachedToForm" class="p-pt-3" [class.p-disabled]="isSaveButtonEventInProgress">
+
+    <div class="field col-12 pl-0">
+      <label class="label-wrapper" for="documentType">Select Document Type *</label>
+      <span class="p-float-label">
+          <p-dropdown [virtualScroll]="inboxUtility.sectionList.data.length > 20" virtualScrollItemSize="25" inputId="documentType"
+                      appendTo="body"
+                      formControlName="documentType" id="documentType" [autoDisplayFirst]="false"
+                      (onChange)="getModuleRelatedDocument(dpNameInSection.selectedOption.id, 0); validateFieldOnChangeDocumentType()"
+                      [showClear]="true" optionValue="id" #dpNameInSection
+                      [options]="inboxUtility.sectionList.data" [filter]="true"
+                      optionLabel="name">
+             <ng-template pTemplate="selectedItem">
+               <div>{{dpNameInSection.selectedOption.name}}</div>
+             </ng-template>
+           </p-dropdown>
+        </span>
+
+      <div class="p-invalid text-align-left"
+           *ngIf="attachedToForm.get('documentType').dirty && attachedToForm.get('documentType').errors">
+        Section is required
+      </div>
+    </div>
+
+    <div class="field col-12 pl-0"
+         *ngIf="attachedToForm.get('documentType').value !== appConstant.EXPENSE_SECTION_ID && attachedToForm.get('documentType').value != null">
+      <label class="label-wrapper" for="vendor">Select Vendor *</label>
+      <span class="p-float-label">
+           <p-dropdown [virtualScroll]="vendors.data.length>20" virtualScrollItemSize="25"
+                       [options]="vendors.data" id="vendor" optionDisabled="inactive"
+                       inputId="dropdown" appendTo="body" #vendorDropDown
+                       formControlName="vendorId" optionLabel="name" optionValue="id"
+                       [showClear]="true"
+                       [autoDisplayFirst]="false"
+                       (onChange)="getModuleRelatedDocument(dpNameInSection.selectedOption.id, vendorDropDown.selectedOption.id);validateFieldOnChangeVendor(vendorDropDown.selectedOption.id)"
+                       [filter]="true">
+
+             <ng-template pTemplate="selectedItem">
+               <div>{{vendorDropDown.selectedOption.name}}</div>
+             </ng-template>
+
+             <ng-template let-vendor pTemplate="item">
+                 <div class="grid">
+                     <div class="dropdown-list"
+                          [ngClass]="vendor.label == 'Add New' ? ' dropdown-add': null">{{vendor.name}}</div>
+                     <em *ngIf="vendor.label == 'Add New'" class="pi pi-plus dropdown-icon dropdown-add"></em>
+                 </div>
+             </ng-template>
+
+           </p-dropdown>
+        </span>
+
+      <div class="p-invalid text-align-left"
+           *ngIf="attachedToForm.get('vendorId').dirty && attachedToForm.get('vendorId').errors">
+        Vendor is required
+      </div>
+    </div>
+
+    <div class="field col-12 pl-0"
+         *ngIf="attachedToForm.get('documentType').value !== appConstant.EXPENSE_SECTION_ID &&
+         attachedToForm.get('documentType').value === appConstant.VENDOR_SECTION_ID &&
+          attachedToForm.get('documentType').value != null && attachedToForm.get('vendorId').value != null">
+
+      <span class="p-float-label">
+         <label class="label-wrapper" for="vendor">Select Attachment Type *</label>
+           <p-dropdown [virtualScroll]="inboxUtility.documentIdList.data.length>20" virtualScrollItemSize="25"
+                       [options]="inboxUtility.documentIdList.data" id="vendorAttachmentTypeId"
+                       optionDisabled="inactive"
+                       inputId="dropdown" appendTo="body" #vendorAttachmentType
+                       formControlName="vendorAttachmentTypeId" optionLabel="name" optionValue="id"
+                       [showClear]="true"
+                       [autoDisplayFirst]="false"
+                       [filter]="true">
+             <ng-template pTemplate="selectedItem">
+               <div>{{vendorAttachmentType.selectedOption.name}}</div>
+             </ng-template>
+
+             <ng-template let-vendorAttachmentType pTemplate="item">
+                 <div class="grid">
+                     <div class="dropdown-list"
+                          [ngClass]="vendorAttachmentType.label == 'Add New' ? ' dropdown-add': null">{{vendorAttachmentType.name}}</div>
+                     <em *ngIf="vendorAttachmentType.label == 'Add New'"
+                         class="pi pi-plus dropdown-icon dropdown-add"></em>
+                 </div>
+             </ng-template>
+
+           </p-dropdown>
+        </span>
+
+      <div class="p-invalid text-align-left"
+           *ngIf="attachedToForm.get('vendorAttachmentTypeId').dirty && attachedToForm.get('vendorAttachmentTypeId').errors">
+        Attachment Type is required
+      </div>
+    </div>
+
+    <div class="field col-12 pl-0" *ngIf="attachedToForm.get('documentType').value &&
+    (attachedToForm.get('documentType').value === appConstant.EXPENSE_SECTION_ID || attachedToForm.get('vendorId').value) &&
+attachedToForm.get('documentType').value !== appConstant.VENDOR_SECTION_ID">
+      <label for="documentType" class="label-wrapper"
+             *ngIf="attachedToForm.get('documentType').value">Select
+        {{getSectionRelatedDocumentType(attachedToForm.get('documentType').value)}} *</label>
+      <span class="p-float-label">
+          <p-dropdown [virtualScroll]="inboxUtility.documentIdList.data.length > 20" virtualScrollItemSize="25" inputId="documentId"
+                      formControlName="documentId" id="documentId" [autoDisplayFirst]="false"
+                      appendTo="body"
+                      [showClear]="true" optionValue="id" #dpNameInDocumentType
+                      [options]="inboxUtility.documentIdList.data" [filter]="true"
+                      optionLabel="name">
+             <ng-template pTemplate="selectedItem">
+               <div>{{dpNameInDocumentType.selectedOption.name}}</div>
+             </ng-template>
+           </p-dropdown>
+        </span>
+
+      <div class="p-invalid text-align-left"
+           *ngIf="attachedToForm.get('documentId').dirty && attachedToForm.get('documentId').errors">
+        Document is required
+      </div>
+    </div>
+
+  </form>
+
+  <ng-template pTemplate="footer">
+
+    <div class="grid">
+      <div class="col-12">
+        <div class="pull-right">
+          <button pButton type="button" label="Reset" (click)="resetAttachedToForm()" class="p-button-outlined
+         p-button-sm"
+                  [disabled]="isSaveButtonEventInProgress"
+                  icon="fa-solid fa-rotate-right"></button>&nbsp;
+          <button pButton type="submit" [disabled]="isSaveButtonEventInProgress" (click)="saveAttachedToFormData()"
+                  [icon]="isSaveButtonEventInProgress ? 'pi pi-spin pi-spinner': 'pi pi-save'"
+                  class="p-button-sm" iconPos="left" label="Save"></button>
+        </div>
+      </div>
+    </div>
+
+  </ng-template>
+
+</p-dialog>
+
+

@@ -1,0 +1,44 @@
+{
+  "itemInformation": [
+    {
+      "itemNumber": "item-1",
+      "itemName": "sample item-1",
+      "uom": 1,
+      "remainingQty": 8,
+      "description": "description",
+      "unitPrice": 40
+    },
+    {
+      "itemNumber": "item-1",
+      "itemName": "sample item-1",
+      "uom": 1,
+      "remainingQty": 8,
+      "description": "description",
+      "unitPrice": 40
+    },
+    {
+      "itemNumber": "item-1",
+      "itemName": "sample item-1",
+      "uom": 1,
+      "remainingQty": 8,
+      "description": "description",
+      "unitPrice": 30
+    },
+    {
+      "itemNumber": "item-1",
+      "itemName": "sample item-1",
+      "uom": 2,
+      "remainingQty": 8,
+      "description": "description",
+      "unitPrice": 20
+    },
+    {
+      "itemNumber": "item-1",
+      "itemName": "sample item-1",
+      "uom": 2,
+      "remainingQty": 8,
+      "description": "description",
+      "unitPrice": 10
+    }
+  ]
+}

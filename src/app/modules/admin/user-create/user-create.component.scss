@@ -1,0 +1,68 @@
+@import "../../../../scss/color.scss";
+
+.role-dropdown-list {
+  padding-top: 10px;
+  margin-right: 25px;
+  padding-left: 5px;
+}
+
+.role-dropdown-icon {
+  right: 10px;
+  padding-top: 10px;
+  position: absolute;
+  z-index: 1;
+}
+
+.role-dropdown-icon:hover {
+  color: $green;
+  z-index: 1;
+}
+
+.role-dropdown-add {
+  color: $green;
+}
+
+.more-info {
+  color: $green;
+  font-weight: normal;
+  text-align: left;
+}
+
+.more-info:hover {
+  cursor: pointer;
+}
+
+.password-text {
+  width: 100% !important;
+}
+
+.add-new-option {
+  z-index: auto;
+}
+
+.approval-group-names{
+  font-size: 14px;
+  color: #495057;
+}
+
+.ul-font{
+  color: #b8b8b8;
+}
+
+
+.icon-custom {
+  font-size: 13px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.height{
+  min-height: calc(100vh - 182px);
+}
+
+
+//.height-wrapper{
+//  height: calc(100vh - 212px);
+//  overflow-y: auto;
+//}
+

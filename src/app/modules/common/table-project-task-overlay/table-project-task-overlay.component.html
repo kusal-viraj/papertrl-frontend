@@ -1,0 +1,44 @@
+<div class="overlay-panel" *ngIf="projectDto">
+  <div class="grid">
+    <div class="col-5 font-bold"><label >Parent Project</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(projectDto.parentProjectName, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label >Start Date</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(projectDto.startDateStr, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label >End Date</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(projectDto.endDateStr, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label >Contract Value</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(projectDto.contractValue, true) | number : '1.2-2'}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label >Budget</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(projectDto.projectBudget, true) | number : '1.2-2'}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label >Remaining Amount</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(projectDto.remainingAmount, true) | number : '1.2-2'}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label >Status</label></div>
+    <div class="col-6 ml-2 capitalize">
+      <li [class]="'mr-2 status-style status-'  + getStatus(projectDto.status)"></li>
+      {{getStatus(projectDto.status) | titlecase}}
+    </div>
+  </div>
+</div>
+<div class="overlay-panel" *ngIf="!projectDto">
+  <div *ngIf="!projectDto" class="loading-wrapper">
+    <em class="fa fa-spinner fa-pulse"></em>
+  </div>
+</div>

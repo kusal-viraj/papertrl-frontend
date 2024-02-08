@@ -1,0 +1,29 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "documentType": "Bill",
+      "fieldName": "Sample DropDown",
+      "fieldType": "Dropdown",
+      "requiredStatus": "REQUIRED",
+      "activeStatus": "A"
+    },
+    {
+      "id": 1,
+      "documentType": "Bill",
+      "fieldName": "Sample DropDown",
+      "fieldType": "Dropdown",
+      "requiredStatus": "REQUIRED",
+      "activeStatus": "A"
+    },
+    {
+      "id": 1,
+      "documentType": "Bill",
+      "fieldName": "Sample DropDown",
+      "fieldType": "Dropdown",
+      "requiredStatus": "OPTIONAL",
+      "activeStatus": "A"
+    }
+  ],
+  "totalRecords": 3
+}

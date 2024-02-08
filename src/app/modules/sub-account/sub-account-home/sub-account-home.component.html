@@ -1,0 +1,41 @@
+<div class="grid mt-1">
+  <div class="col-6">
+    <app-table-header-action-buttons [hidden]="!listSubAccount"
+                                     [componentInstance]="subAccountComponent" *ngIf="isTableAccess() && subAccountComponent"
+                                     [tableSupportBase]="subAccountComponent?.tableSupportBase"
+                                     (refresh)="subAccountComponent?.loadData(subAccountComponent.tableSupportBase.searchFilterDto)"
+                                     (showFilters)="subAccountComponent.showFilter = !subAccountComponent?.showFilter;
+                                     subAccountComponent.showFilterColumns = false"
+                                     (showColumns)="subAccountComponent.showFilterColumns = !subAccountComponent?.showFilterColumns; subAccountComponent.showFilter = false"
+                                     [visibleActions]="subAccountComponent?.availableHeaderActions">
+
+    </app-table-header-action-buttons>
+
+  </div>
+  <div class="col-6 pr-2 text-right">
+
+    <button pButton class="p-button-sm" *ngIf="!createSubAccount &&
+      privilegeService.isAuthorized(appAuthorities.SUB_ACCOUNTS_CREATE)"
+            label="Create Sub Account" (click)="toggleSubAccount('cs')"></button>
+
+    <button pButton class="p-button-outlined" *ngIf="!listSubAccount && isTableAccess()"
+            label="View Sub Account List" (click)="toggleSubAccount('cl')"></button>
+  </div>
+
+
+  <div class="col-12 p-0">
+    <app-sub-account-list [hidden]="!listSubAccount" #subAccountListComponent *ngIf="isTableAccess()"></app-sub-account-list>
+  </div>
+
+  <div class="col-12 card-height"  style="background-color: white" *ngIf="createSubAccount">
+    <div class="grid">
+      <div class="col-12 p-5 mt-5">
+        <h6 class="subHeading">Create Sub Account</h6>
+        <app-create-sub-account #createSubAccountComponent
+                                (refreshTableAfterCreate)="subAccountCreated()"
+                                *ngIf="createSubAccount && privilegeService.isAuthorized(appAuthorities.SUB_ACCOUNTS_CREATE)"></app-create-sub-account>
+      </div>
+    </div>
+  </div>
+</div>
+

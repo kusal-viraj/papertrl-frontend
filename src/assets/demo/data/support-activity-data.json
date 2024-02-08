@@ -1,0 +1,50 @@
+{
+  "data": [
+    {
+      "url": "/approval_level_management/sec_check_approval_level_availability",
+      "ipAddress": "10.44.21.181",
+      "tenantId": "demo-app114",
+      "userName": "admin",
+      "statusCode": "200",
+      "responseMessage": "Ok",
+      "logTimeStamp": "10/07/2020 4:14:15"
+    },
+    {
+      "url": "/approval_level_management/sec_check_approval_level_availability",
+      "ipAddress": "10.44.21.181",
+      "tenantId": "demo-app114",
+      "userName": "admin",
+      "statusCode": "200",
+      "responseMessage": "Ok",
+      "logTimeStamp": "10/07/2020 4:14:15"
+    },
+    {
+      "url": "/approval_level_management/sec_check_approval_level_availability",
+      "ipAddress": "10.44.21.181",
+      "tenantId": "demo-app114",
+      "userName": "admin",
+      "statusCode": "200",
+      "responseMessage": "Ok",
+      "logTimeStamp": "10/07/2020 4:14:15"
+    },
+    {
+      "url": "/approval_level_management/sec_check_approval_level_availability",
+      "ipAddress": "10.44.21.181",
+      "tenantId": "demo-app114",
+      "userName": "admin",
+      "statusCode": "200",
+      "responseMessage": "Ok",
+      "logTimeStamp": "10/07/2020 4:14:15"
+    },
+    {
+      "url": "/approval_level_management/sec_check_approval_level_availability",
+      "ipAddress": "10.44.21.181",
+      "tenantId": "demo-app114",
+      "userName": "admin",
+      "statusCode": "200",
+      "responseMessage": "Ok",
+      "logTimeStamp": "10/07/2020 4:14:15"
+    }
+  ],
+  "totalRecords": 5
+}

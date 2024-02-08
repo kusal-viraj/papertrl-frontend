@@ -1,0 +1,16 @@
+[
+  {
+    "action": "APPROVE",
+    "label": "Quick Approve",
+    "icon": "pi pi-check",
+    "active": false,
+    "authCode": "CREDIT_CARD_SUBMITTED_TRANSACTIONS_QUICK_APPROVE"
+  },
+  {
+    "action": "REJECT",
+    "label": "Reject",
+    "icon": "fa fa-minus-circle",
+    "active": false,
+    "authCode": "CREDIT_CARD_SUBMITTED_TRANSACTIONS_REJECT"
+  }
+]

@@ -1,0 +1,70 @@
+<div class="side-bar-drawer-content p-3">
+<form [formGroup]="changeAssigneeForm" (submit)="changeBillAssignee()">
+
+  <h5 class="subHeadingColour">Bill# {{heading}}</h5>
+  <br>
+
+  <div class="grid p-fluid">
+    <div [ngClass]="'field col-12'">
+      <span>
+           <label  class="label-wrapper" for="approvalUser">Select Approval User</label>
+           <p-dropdown id="approvalUser" appendTo="body" optionDisabled="inactive"
+                       [virtualScroll]="approvalUsers.data.length > 20" virtualScrollItemSize="25"
+                       [options]="approvalUsers.data" [autoDisplayFirst]="false"
+                       formControlName="approvalUser" optionLabel="name" optionValue="id"
+                       [showClear]="true" [filter]="true" (onChange)="validateApprovalUserAndGroup(); changeAssignee.approvalGroup.reset()">
+           </p-dropdown>
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="changeAssignee.approvalUser.dirty && changeAssignee.approvalUser.errors">
+        Approval User is required
+      </div>
+    </div>
+  </div>
+
+  <div class="field p-fluid col-12 text-center p-0 m-0 label-wrapper">or</div>
+
+
+  <div class="grid p-fluid">
+    <div [ngClass]="'field col-12'">
+      <span>
+         <label class="label-wrapper" for="approvalUser">Select Approval Group</label>
+           <p-dropdown id="approvalGroup" appendTo="body"
+                       [virtualScroll]="approvalGroup.data.length > 20" virtualScrollItemSize="25"
+                       [options]="approvalGroup.data" [autoDisplayFirst]="false" optionDisabled="inactive"
+                       formControlName="approvalGroup" optionLabel="name" optionValue="id"
+                       [showClear]="true" [filter]="true" (onChange)="validateApprovalUserAndGroup(); changeAssignee.approvalUser.reset()">
+           </p-dropdown>
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="changeAssignee.approvalGroup.dirty && changeAssignee.approvalGroup.errors">
+        Approval Group is required
+      </div>
+    </div>
+  </div>
+
+  <div class="grid p-fluid">
+    <div [ngClass]="'field col-12'">
+      <label class="label-wrapper" for="remark">Comment</label>
+      <span class="p-inputgroup">
+            <textarea id="remark" formControlName="remark" [rows]="4" pInputTextarea maxlength="300"
+                      (keyup)="removeSpaces.clearSpace(changeAssigneeForm,'remark')"></textarea>
+          </span>
+      <div class="p-invalid text-align-left" *ngIf="changeAssignee.remark.dirty && changeAssignee.remark.errors">
+        Comment is required
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" (click)="changeBillAssignee()" class="p-button-sm" [disabled]="isProcessingAction"
+              [icon]="isProcessingAction ? 'pi pi-spin pi-spinner' : 'fa fa-share-alt'"
+              iconPos="left" label="Change Assignee">
+      </button>
+    </div>
+  </div>
+</div>

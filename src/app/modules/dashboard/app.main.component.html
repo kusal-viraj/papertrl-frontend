@@ -1,0 +1,30 @@
+<div class="layout-wrapper" [ngClass]="{
+    'layout-overlay': menuMode === 'overlay',
+    'layout-static': menuMode === 'static',
+    'layout-slim': menuMode === 'slim',
+    'layout-sidebar-dim': colorScheme === 'dim',
+    'layout-sidebar-dark': colorScheme === 'dark',
+    'layout-overlay-active': overlayMenuActive,
+    'layout-mobile-active': staticMenuMobileActive,
+    'layout-static-inactive': staticMenuDesktopInactive && menuMode === 'static',
+    'p-input-filled': inputStyle === 'filled', 'p-ripple-disabled': !ripple}" [class]="colorScheme === 'light' ? menuTheme : ''"
+     [attr.data-theme]="colorScheme" (click)="onLayoutClick()">
+
+    <div class="layout-content-wrapper">
+        <app-top-bar></app-top-bar>
+
+        <div class="layout-content">
+            <router-outlet></router-outlet>
+        </div>
+
+<!--        <app-footer></app-footer>-->
+    </div>
+
+<!--    <app-config></app-config>-->
+
+    <app-menu></app-menu>
+
+
+
+    <div class="layout-mask modal-in"></div>
+</div>

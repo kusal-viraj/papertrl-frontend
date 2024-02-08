@@ -1,0 +1,97 @@
+@import '../../../../scss/color';
+@import '../../../../scss/table-responsive';
+
+.bill-detail-form {
+  .audit-trail {
+    border: 1px solid $tertiary-light-grey;
+    margin-bottom: 8px;
+    border-radius: 8px;
+
+    .audit-topic {
+      font-size: 12px;
+    }
+
+    .audit-auto-topic {
+      font-size: 12px;
+    }
+
+    .audit-date {
+      font-size: 11px;
+      color: $grey;
+      position: absolute;
+      right: 18px;
+      margin-top: 5px;
+    }
+
+    .audit-cmt {
+      font-size: 12px;
+      color: $black-gray;
+    }
+  }
+
+  .audit-read-more {
+    color: $secondary-blue;
+    font-size: 12px;
+
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+
+  .current-flow {
+    color: $green;
+    font-weight: bold;
+  }
+
+}
+
+
+.add-note-popup {
+  min-width: 300px;
+
+  textarea {
+    min-width: 300px;
+    min-height: 50px;
+    width: 100%;
+  }
+}
+
+// line table receipt field
+.line-table-icon-wrapper {
+  margin-left: 7px;
+  font-size: 9px;
+  align-self: center;
+  font-weight: 100;
+  cursor: pointer;
+
+  &:hover {
+    margin-left: 7px;
+    font-size: 9px;
+    align-self: center;
+    font-weight: bold;
+    cursor: pointer;
+  }
+}
+.receipt-view-wrapper{
+  padding: 0 !important;
+}
+.align-table-footer {
+  align-items: flex-end;
+}
+.table-add-btn:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.po-comparison-label{
+  margin-left: 3px;
+  margin-top: 5px;
+}
+.receipt-number-wrapper{
+  width: 100%;
+  align-self: center;
+  margin-left: 6px;
+}
+
+
+

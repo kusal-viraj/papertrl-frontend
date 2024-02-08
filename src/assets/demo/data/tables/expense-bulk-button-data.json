@@ -1,0 +1,23 @@
+[
+  {
+    "action": "DELETE",
+    "label": "Delete",
+    "icon": "fa fa-trash",
+    "active": false,
+    "authCode": "EXPENSES_DELETE"
+  },
+  {
+    "action": "REJECT",
+    "label": "Reject",
+    "icon": "fa fa-minus-circle",
+    "active": false,
+    "authCode": "EXPENSES_REJECT"
+  },
+  {
+    "action": "QUICK_APPROVE",
+    "label": "Quick Approve",
+    "icon": "pi pi-check",
+    "active": false,
+    "authCode": "EXPENSES_QUICK_APPROVE"
+  }
+]

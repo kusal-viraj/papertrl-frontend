@@ -1,0 +1,4 @@
+<div *ngFor="let role of allRoles; let i=index" >
+  <h6 class="subHeadingColour">{{role.roleName}}</h6>
+  <p-tree selectionMode="false" id="i" [(selection)]="role.data" [value]="role.structure"></p-tree>
+</div>

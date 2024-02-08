@@ -1,0 +1,129 @@
+{
+  "approverFormArray": [
+    {
+      "approver": {
+        "label": "Approver-1",
+        "id": "NY"
+      }
+    },
+    {
+      "approver": {
+        "label": "Approver-2",
+        "id": "RM"
+      }
+    },
+    {
+      "approver": {
+        "label": "Approver-3",
+        "id": "LDN"
+      }
+    },
+    {
+      "approver": {
+        "label": "Approver-1",
+        "id": "NY"
+      }
+    }
+  ],
+  "workflow": {
+    "label": "Workflow-1",
+    "id": "wf1"
+  },
+  "billingAddress": "Address-2",
+  "contactNumber": "34343434545454545",
+  "contactPerson": "Smith",
+  "dateOfDelivery": "Wed Jan 27 2021 00:00:00 GMT+0530 (India Standard Time)",
+  "discountAmount": 1000,
+  "grossAmount": 19000,
+  "itemInformation": [
+    {
+      "discount": 200,
+      "itemName": "item name-1",
+      "itemNumber": {
+        "label": "P59563",
+        "id": "i1"
+      },
+      "purchasingPrice": 1000,
+      "qty": 4,
+      "amount": 3800,
+      "selectUOM": {
+        "label": "UOM-2",
+        "id": "RM"
+      }
+    },
+    {
+      "discount": 200,
+      "itemName": "item name-2",
+      "itemNumber": {
+        "label": "P59563",
+        "id": "i1"
+      },
+      "purchasingPrice": 1000,
+      "qty": 4,
+      "amount": 3800,
+      "selectUOM": {
+        "label": "UOM-2",
+        "id": "RM"
+      }
+    },
+    {
+      "discount": 200,
+      "itemName": "item name-3",
+      "itemNumber": {
+        "label": "P59563",
+        "id": "i1"
+      },
+      "purchasingPrice": 1000,
+      "qty": 4,
+      "amount": 3800,
+      "selectUOM": {
+        "label": "UOM-2",
+        "id": "RM"
+      }
+    },
+    {
+      "discount": 200,
+      "itemName": "item name-4",
+      "itemNumber": {
+        "label": "P59563",
+        "id": "i1"
+      },
+      "purchasingPrice": 1000,
+      "amount": 3800,
+      "qty": 4,
+      "selectUOM": {
+        "label": "UOM-2",
+        "id": "RM"
+      }
+    },
+    {
+      "discount": 200,
+      "itemName": "item name-5",
+      "itemNumber": {
+        "label": "P59563",
+        "id": "i1"
+      },
+      "purchasingPrice": 1000,
+      "qty": 4,
+      "amount": 3800,
+      "selectUOM": {
+        "label": "UOM-2",
+        "id": "RM"
+      }
+    }
+  ],
+  "netAmount": 18500,
+  "notes": "sample note",
+  "poNumber": "PO-7",
+  "projectTask":{
+    "id": "NM",
+    "label": "Project-5"
+  },
+  "shippingAddress": "Address-1",
+  "submitDate": "Thu Jan 14 2021 00:00:00 GMT+0530 (India Standard Time)",
+  "taxAmount": 500,
+  "vendor": {
+    "id": "5",
+    "label": "I-Tech"
+  }
+}

@@ -1,0 +1,22 @@
+<div class="drawer-content p-3">
+  <p-orderList [value]="hiddenOptions" [metaKeySelection]="false" (onSelectionChange)="markTick()"
+               controlsPosition="false" styleClass="table-column-order" [(selection)]="cols" [dragdrop]="false">
+    <ng-template let-col let-scrollOptions="index" pTemplate="item">
+      <div class="column-item">
+        <p-checkbox [(ngModel)]="col.ticked" [binary]="true"></p-checkbox>
+        <div class="column-name">{{col.header}}</div>
+<!--        <span class="drag-icon fa-solid fa-grip-vertical"></span>-->
+      </div>
+    </ng-template>
+  </p-orderList>
+</div>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" (click)="resetState()" label="Reset to default"
+              class="p-button-borderless mr-1 p-button-sm"></button>
+      <button pButton type="submit" (click)="applyState()" class="p-button-sm" label="Apply"></button>
+    </div>
+  </div>
+</div>

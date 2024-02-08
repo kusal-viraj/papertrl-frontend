@@ -1,0 +1,214 @@
+[
+  {
+    "required": true,
+    "fieldName": "Input-1",
+    "fieldId": 1,
+    "sectionId": 1,
+    "maxLength": 50,
+    "displayOrder": 1,
+    "status": "A"
+  },
+  {
+    "required": false,
+    "fieldName": "Calender-1",
+    "fieldId": 2,
+    "sectionId": 1,
+    "displayOrder": 2,
+    "status": "A"
+  },
+  {
+    "required": false,
+    "fieldName": "Calender-1",
+    "fieldId": 2,
+    "sectionId": 2,
+    "displayOrder": 2,
+    "status": "A"
+  },
+  {
+    "required": false,
+    "fieldName": "Radio button-1",
+    "fieldId": 7,
+    "sectionId": 1,
+    "displayOrder": 2,
+    "status": "A",
+    "options": [
+      {
+        "id": 12,
+        "fieldId": 11,
+        "optionValue": "Op1"
+      },
+      {
+        "id": 13,
+        "fieldId": 2,
+        "optionValue": "OP2"
+      },
+      {
+        "id": 14,
+        "fieldId": 11,
+        "optionValue": "OP3"
+      },
+      {
+        "id": 15,
+        "fieldId": 11,
+        "optionValue": "OP4"
+      }
+    ]
+  },
+  {
+    "required": false,
+    "fieldName": "Radio button-2",
+    "fieldId": 7,
+    "sectionId": 1,
+    "displayOrder": 2,
+    "status": "A",
+    "options": [
+      {
+        "id": 12,
+        "fieldId": 11,
+        "optionValue": "OP5"
+      },
+      {
+        "id": 13,
+        "fieldId": 2,
+        "optionValue": "OP2"
+      },
+      {
+        "id": 14,
+        "fieldId": 11,
+        "optionValue": "OP6"
+      },
+      {
+        "id": 15,
+        "fieldId": 11,
+        "optionValue": "OP7"
+      }
+    ]
+  },
+  {
+    "required": false,
+    "fieldName": "Input2",
+    "fieldId": 1,
+    "sectionId": 1,
+    "maxLength": 50,
+    "dataType": "[a-zA-Z0-9s]*",
+    "displayOrder": 3,
+    "status": "A"
+  },
+  {
+    "required": false,
+    "fieldName": "Text Area-1",
+    "fieldId": 4,
+    "sectionId": 1,
+    "displayOrder": 4,
+    "status": "A"
+  },
+  {
+    "required": false,
+    "fieldName": "Text Area-2",
+    "fieldId": 4,
+    "sectionId": 1,
+    "displayOrder": 5,
+    "status": "A"
+  },
+  {
+    "required": false,
+    "fieldName": "File Input-1",
+    "fieldId": 6,
+    "sectionId": 1,
+    "status": "A"
+  },
+  {
+    "required": true,
+    "fieldName": "Input-1",
+    "fieldId": 1,
+    "sectionId": 1,
+    "status": "A"
+  },
+  {
+    "required": false,
+    "fieldName": "Calender-1",
+    "fieldId": 2,
+    "sectionId": 1,
+    "status": "A"
+  },
+  {
+    "required": false,
+    "fieldName": "Drop Down-1",
+    "fieldId": 3,
+    "sectionId": 1,
+    "status": "A",
+    "options": [
+      {
+        "id": 12,
+        "fieldId": 2,
+        "optionValue": "Op1"
+      },
+      {
+        "id": 13,
+        "fieldId": 2,
+        "optionValue": "OP2"
+      },
+      {
+        "id": 14,
+        "fieldId": 2,
+        "optionValue": "OP3"
+      },
+      {
+        "id": 15,
+        "fieldId": 2,
+        "optionValue": "OP4"
+      }
+    ]
+  },
+  {
+    "required": false,
+    "fieldName": "Text Area-1",
+    "fieldId": 4,
+    "sectionId": 1,
+    "status": "A"
+  },
+  {
+    "required": false,
+    "fieldName": "Text Area-1",
+    "fieldId": 4,
+    "sectionId": 2,
+    "status": "A"
+  },
+  {
+    "required": false,
+    "fieldName": "File Input-1",
+    "fieldId": 6,
+    "sectionId": 2,
+    "status": "A"
+  },
+  {
+    "required": false,
+    "fieldName": "Drop Down-1",
+    "fieldId": 3,
+    "sectionId": 2,
+    "status": "A",
+    "options": [
+      {
+        "id": 12,
+        "fieldId": 2,
+        "optionValue": "Op1"
+      },
+      {
+        "id": 13,
+        "fieldId": 2,
+        "optionValue": "OP2"
+      },
+      {
+        "id": 14,
+        "fieldId": 2,
+        "optionValue": "OP3"
+      },
+      {
+        "id": 15,
+        "fieldId": 2,
+        "optionValue": "OP4"
+      }
+    ]
+  }
+]
+

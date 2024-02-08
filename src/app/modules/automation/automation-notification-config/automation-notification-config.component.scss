@@ -1,0 +1,44 @@
+@import "../../../../scss/color.scss";
+
+.btn-trash {
+  background-color: #D0D5D8;
+  opacity: 1;
+}
+
+.btn-trash:hover {
+  background-color: #8c8e91;
+  opacity: 1;
+}
+
+.more-info {
+  color: $green;
+  font-weight: normal;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dropdown-add {
+  color: $green;
+}
+
+.dropdown-list {
+  padding-top: 10px;
+  margin-right: 25px;
+  padding-left: 5px;
+}
+
+.dropdown-icon {
+  right: 10px;
+  padding-top: 10px;
+  position: absolute;
+  z-index: 1;
+}
+
+.dropdown-icon:hover {
+  color: $green;
+  z-index: 1;
+}
+
+.dropdown-add {
+  color: $green;
+}

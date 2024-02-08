@@ -1,0 +1,14 @@
+<div class="grid">
+  <div class="col-12" style="text-align: center">
+    <span [style]="{'vertical-align': 'super'}"
+          class="subHeadingColour"><strong>This Action cannot be reverted,</strong> Change your subscription to an Agency Portal only
+      if required. </span> &nbsp;
+  </div>
+  <div class="col-12" style="text-align: center">
+    <button type="button" pButton class="p-button-sm" icon="fa fa-exchange"
+            [disabled]="loader" [icon]="loader ? 'pi pi-spin pi-spinner': 'fa fa-exchange'"
+            label="Convert to Agency Portal" (click)="tenantConversion()"></button>
+  </div>
+</div>
+
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>

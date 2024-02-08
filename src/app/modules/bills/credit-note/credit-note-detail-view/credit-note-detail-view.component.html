@@ -1,0 +1,420 @@
+<div class="field grid mb-2">
+  <div class="col-6">
+    <h5 class="module-header-label ">Credit Note Details</h5>
+  </div>
+  <div class="col-6 text-right">
+    <div *ngIf="privilegeService.isAuthorized(appAuthorities.CREDIT_NOTE_DELETE) && !fromVendor"
+         pTooltip="Delete" tooltipPosition="bottom" class=" fa fa-trash side-drawer-icon"
+         (click)="deleteCreditNote()"></div>
+    <div *ngIf="privilegeService.isAuthorized(appAuthorities.CREDIT_NOTE_EDIT) && !fromVendor"
+         pTooltip="Edit" tooltipPosition="bottom" class=" fa fa-pencil side-drawer-icon"
+         (click)="editCreditNote()"></div>
+    <div class="  fa fa-close side-drawer-icon"
+         (click)="closeModal()"></div>
+  </div>
+
+</div>
+
+<form [formGroup]="creditNoteDetailForm" autocomplete="off">
+  <div class="detail-form" [class]="'grid col-12 pl-0'">
+
+    <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+      <label>Vendor</label>
+      <div app-read-more-text [fieldValue]="commonUtil.detailViewIsDash(f.vendorName.value,false)"
+           [maxCharacters]="20"></div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+      <label>Vendor Contact Email</label>
+      <div app-read-more-text [fieldValue]="commonUtil.detailViewIsDash(f.vendorEmail.value,false)"
+           [maxCharacters]="20"></div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+      <label>PO Number</label>
+      <div app-read-more-text [fieldValue]="commonUtil.detailViewIsDash(f.poNumber.value,false)"
+           [maxCharacters]="20">{{f.poNumber.value}}</div>
+    </div>
+
+
+    <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+      <label>Credit Note No</label>
+      <div app-read-more-text [fieldValue]="commonUtil.detailViewIsDash(f.creditNoteNo.value,false)"
+           [maxCharacters]="20"></div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+      <label>Credit Note Date</label>
+      <div>{{f.creditNoteDateStr.value}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+      <label>Credit Balance</label>
+      <div>{{f.creditBalance.value | number : '1.2-2'}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+      <label>Comment</label>
+      <div app-read-more-text [fieldValue]="commonUtil.detailViewIsDash(f.comment.value,false)"
+           [maxCharacters]="20"></div>
+    </div>
+
+    <ng-container formArrayName="additionalData" *ngIf="headerAdditionalFieldDetails.length > 0">
+      <ng-container *ngFor="let additionalField of headingSectionArray.controls; let i=index" [formGroupName]="i">
+
+      <span class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12"
+            *ngIf="commonUtil.checkUndefinedValues(additionalField.get('fieldValue').value, headerAdditionalFieldDetails[i].docStatus, true)">
+          <label>{{headerAdditionalFieldDetails[i].fieldName}}</label>
+
+            <div app-read-more-text [fieldValue]="additionalField.get('fieldValue').value" [maxCharacters]="25"></div>
+
+      </span>
+      </ng-container>
+    </ng-container>
+
+  </div>
+
+
+  <br><br>
+
+  <p-tabView styleClass="tabview-custom">
+    <!-- if the credit note create from vendor not visible this section-->
+    <p-tabPanel *ngIf="accountDetails.controls.length > 0 && !fromVendor">
+
+      <ng-template pTemplate="header">
+        <span class="custom-span">Account Information</span>
+      </ng-template>
+
+      <div class="col-12">
+          <p-table responsiveLayout="scroll" [value]="accountDetails.controls" scrollable="true" scrollHeight="210px"
+                   [style]="{width:'auto'}" scrollDirection="both"
+                   styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+            <ng-template pTemplate="header">
+
+              <tr>
+
+                <th style="min-width:50px " class="thead-style detail-table-header-center" id="noA">#</th>
+                <th style="min-width:190px" class="thead-style detail-table-header-left" id="account">Account
+                  Number
+                </th>
+                <th style="min-width:220px" class="thead-style detail-table-header-left" id="accountName">Account
+                  Name
+                </th>
+                <th style="min-width:220px" class="thead-style detail-table-header-left" id="accountDescription">
+                  Description
+                </th>
+
+                <th style="min-width:250px" class="thead-style detail-table-header-left" *ngFor="let additionalField of
+                accountAdditionalFieldDetails; let i=index">{{additionalField.fieldName}}</th>
+
+
+                <th style="min-width:170px" class="thead-style detail-table-header-right" *ngIf="poId"
+                    id="creditNoteBalance">Outstanding Amount
+                </th>
+
+                <th style="min-width:170px" class="thead-style detail-table-header-right" id="amount">Line Amount
+                </th>
+
+              </tr>
+
+            </ng-template>
+
+            <ng-template pTemplate="body" let-i="rowIndex" let-account
+                         formArrayName="creditNoteAccountDetails">
+
+              <tr [formGroupName]="i">
+
+                <td style="text-align: center; width:50px "><label>{{i + 1}}</label></td>
+
+                <td style="width:190px">
+                  <div>{{f.creditNoteAccountDetails.value[i].accountNumber}}</div>
+                </td>
+
+                <td style="width:220px">
+                  <div>{{f.creditNoteAccountDetails.value[i].accountName}}</div>
+                </td>
+
+                <td style="width:220px">
+                  <div>{{f.creditNoteAccountDetails.value[i].description}}</div>
+                </td>
+
+                <ng-container formArrayName="additionalData"
+                              *ngIf="accountAdditionalFieldDetails.length > 0">
+                  <td style="width:200px" *ngFor="let additionalLineItemField of accountAdditionalField(i).controls;
+                let accountIndex = index"
+                      [formGroupName]="accountIndex"
+                      [class]="additionalLineItemField.get('fieldTypeId').value ===2 ? 'text-center':''">
+
+                    <div app-read-more-text [fieldValue]="additionalLineItemField.get('fieldValue')?.value"
+                         [maxCharacters]="25"></div>
+
+                  </td>
+                </ng-container>
+
+
+                <td style="width:220px" class="text-right" *ngIf="poId">
+                  <div>{{f.creditNoteAccountDetails.value[i].outstandingAmount | number : '1.2-2'}}</div>
+                </td>
+
+                <td style="width:220px" class="text-right">
+                  <div>{{f.creditNoteAccountDetails.value[i].amount | number : '1.2-2'}}</div>
+                </td>
+
+
+              </tr>
+
+            </ng-template>
+
+          </p-table>
+      </div>
+
+    </p-tabPanel>
+
+    <p-tabPanel *ngIf="lineItemMainTable.controls.length > 0">
+
+      <ng-template pTemplate="header">
+        <span class="custom-span">Item Information</span>
+      </ng-template>
+
+      <div class="col-12">
+          <p-table responsiveLayout="scroll" [value]="lineItemMainTable.controls" scrollable="true" scrollHeight="210px"
+                   [style]="{width:'auto'}" scrollDirection="both"
+                   styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="min-width:50px" class="thead-style detail-table-header-left" id="no">#</th>
+                <th style="min-width:200px" class="thead-style detail-table-header-left" id="itemNumber1"
+                    *ngIf="!fromVendor">Item
+                  Number
+                </th>
+                <th style="min-width:200px" class="thead-style detail-table-header-left" id="itemName1"
+                    *ngIf="!fromVendor">Item
+                  Name
+                </th>
+                <th style="min-width:200px" class="thead-style detail-table-header-left" id="sku">Vendor Part Number
+                </th>
+                <th style="min-width:200px" class="thead-style detail-table-header-left" id="account">Account Number
+                </th>
+                <th style="min-width:200px" class="thead-style detail-table-header-left" id="description">Description
+                </th>
+                <th style="min-width:200px" class="thead-style detail-table-header-left" id="uom1" *ngIf="!fromVendor">
+                  UOM
+                </th>
+                <th style="min-width:100px" class="thead-style detail-table-header-right" id="qty1">Return Qty</th>
+                <th style="min-width:200px" class="thead-style detail-table-header-right" id="price1">Cost</th>
+                <th style="min-width:200px" class="thead-style detail-table-header-left" id="additionalField" *ngFor="let
+              additionalField of
+              lineItemAdditionalDetails; let i=index">{{additionalField.fieldName}}</th>
+                <th style="min-width:150px" class="thead-style detail-table-header-right" id="amount1">Line Amount</th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-i="rowIndex" let-item formArrayName="creditNoteItemDetails">
+
+              <tr id="tr_{{i}}" [formGroupName]="i">
+
+                <td style="text-align: center; width:50px"><label>{{i + 1}}</label></td>
+
+                <!-- if the credit note create from vendor not visible this column -->
+
+                <td style="width:200px" *ngIf="!fromVendor">
+                  <div>{{f.creditNoteItemDetails.value[i].itemNumber}}</div>
+                </td>
+
+                <td style="width:200px" *ngIf="!fromVendor">
+                  <div>{{f.creditNoteItemDetails.value[i].itemName}}</div>
+                </td>
+
+                <td style="width:200px">
+                  <div>{{f.creditNoteItemDetails.value[i].vendorItemNumber}}</div>
+                </td>
+
+                <td style="width:200px">
+                  <div>{{f.creditNoteItemDetails.value[i].accountName}}</div>
+                </td>
+
+                <td style="width:200px">
+                  <div>{{f.creditNoteItemDetails.value[i].description}}</div>
+                </td>
+
+                <td style="width:200px" *ngIf="!fromVendor">
+                  <div>{{billPaymentUtility.uomMap.get(f.creditNoteItemDetails.value[i].uomId)}}</div>
+                </td>
+
+                <td style="width:100px" class="text-right">
+                  <div>{{f.creditNoteItemDetails.value[i].qty}}</div>
+                </td>
+
+                <td style="width:200px" class="text-right">
+                  <div>{{f.creditNoteItemDetails.value[i].unitPrice | number : '1.2-2'}}</div>
+                </td>
+
+                <ng-container formArrayName="additionalData"
+                              *ngIf="lineItemAdditionalDetails.length > 0">
+                  <td style="width:200px" *ngFor="let additionalLineItemField of lineItemAdditionalField(i).controls;
+                    let itemIndex = index"
+                      [formGroupName]="itemIndex"
+                      [class]="additionalLineItemField.get('fieldTypeId').value ===2 ? 'text-center':''">
+
+                    <div app-read-more-text [fieldValue]="additionalLineItemField.get('fieldValue')?.value"
+                         [maxCharacters]="25"></div>
+                  </td>
+                </ng-container>
+
+                <td style="width:150px" class="text-right">
+                  <div>{{f.creditNoteItemDetails.value[i].amount | number : '1.2-2'}}</div>
+                </td>
+
+              </tr>
+            </ng-template>
+
+          </p-table>
+      </div>
+
+    </p-tabPanel>
+
+    <p-tabPanel *ngIf="billDetail.controls.length>0">
+      <ng-template pTemplate="header">
+        <span class="custom-span">Bill Details</span>
+      </ng-template>
+      <div class="col-12">
+        <p-table responsiveLayout="scroll" [value]="billDetail.controls" scrollable="true" scrollHeight="210px"
+                 [style]="{width:'auto'}" scrollDirection="both"
+                 styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="min-width:150px" class="thead-style detail-table-header-left" id="billNumber01">Bill Number
+              </th>
+              <th style="min-width:150px" class="thead-style detail-table-header-right" id="remaningBlance01">Remaining
+                Balance
+              </th>
+              <th style="min-width:150px" class="thead-style detail-table-header-right" id="sku01">Applied Amount</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-i="rowIndex" let-item formArrayName="creditNoteRelations">
+            <tr id="tr1_{{i}}" [formGroupName]="i" [pEditableRow]="item">
+
+              <td style="width:150px">
+                <div>{{f.creditNoteRelations.value[i].billNo}}</div>
+              </td>
+
+              <td style="width:150px" class="text-right">
+                <div>{{f.creditNoteRelations.value[i].billRemainingBalance | number : '1.2-2'}}</div>
+              </td>
+
+              <td style="width:150px" class="text-right">
+                <div>{{f.creditNoteRelations.value[i].appliedCreditAmount | number : '1.2-2'}}</div>
+              </td>
+
+            </tr>
+
+          </ng-template>
+        </p-table>
+      </div>
+    </p-tabPanel>
+
+    <p-tabPanel *ngIf="creditNoteAttachments.length>0">
+
+      <ng-template pTemplate="header">
+        <span class="custom-span">Files Attached</span>
+      </ng-template>
+
+      <div class="col-12">
+          <p-table responsiveLayout="scroll" [value]="creditNoteAttachments" scrollable="true" scrollHeight="210px"
+                   [style]="{width:'auto'}" scrollDirection="both"
+                   styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="min-width:150px" class="thead-style detail-table-header-left" id="rName">File Name</th>
+                <th style="min-width:100px" class="thead-style detail-table-header-left" id="fieldName">Field Name</th>
+                <th style="min-width:20px" class="thead-style detail-table-header-center" id="action">Action</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-i="rowIndex" let-item>
+              <tr>
+
+                <td [style]="'height : 30px; width:150px'" class="file-name-wrapper">
+                  <label> {{item.fileName}}</label>
+                </td>
+
+                <td [style]="'height : 30px; width:100px'">
+                  <label> {{item.fieldName}}</label>
+                </td>
+
+                <td style="width:20px" class="text-center">
+                  <i (click)="downloadAttachment(item)"
+                     [class]="item.loading ? 'pi pi-spin pi-spinner':'fa fa-download download-icon'"></i>
+                </td>
+
+              </tr>
+            </ng-template>
+          </p-table>
+      </div>
+
+    </p-tabPanel>
+
+
+  </p-tabView>
+
+
+  <div class="mt-5 mr-2">
+
+    <div class="grid" *ngIf="creditNoteDetailForm.get('taxAmount').value">
+
+      <div class="col-12 text-right amount-content pull-right">
+    <span class="subHeadingColour col-6">
+     <b>Tax Amount</b>
+    </span>&nbsp;
+
+        <span class="font-style-amount col-6">
+     {{creditNoteDetailForm.get('taxAmount').value | number : '1.2-2'}}
+    </span>
+
+      </div>
+
+    </div>
+
+    <div class="grid" *ngIf="creditNoteDetailForm.get('creditTotal').value">
+
+      <div class="col-12 text-right pull-right amount-content">
+
+    <span class="subHeadingColour col-6">
+      <b>Total Credit</b>
+    </span>&nbsp;
+
+        <span class="font-style-amount col-6">
+      {{creditNoteDetailForm.get('creditTotal').value | number : '1.2-2'}}
+    </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</form>
+
+<!--Credit Note Edit View-->
+<p-sidebar [fullScreen]="true" [modal]="false"
+           [showCloseIcon]="false" appendTo="body"
+           *ngIf="isEditView" [(visible)]="isEditView">
+  <app-credit-note-create [isEdit]="true" [isCreate]="false"
+                          (emitUpdateSuccess)="getCreditNoteData(creditNoteId)"
+                          (closeEditView)="isEditView = false"
+                          [creditNoteId]="creditNoteId" *ngIf="isEditView" [creditNoteStatus]="creditNoteStatus">
+  </app-credit-note-create>
+</p-sidebar>
+
+<p-confirmDialog #draft key="creditNoteDeleteKeyFromDetailView" header="Are you sure?"
+                 icon="conf-delete-icon pi pi-exclamation-triangle" appendTo="body">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="draft.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, delete it"
+            (click)="draft.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

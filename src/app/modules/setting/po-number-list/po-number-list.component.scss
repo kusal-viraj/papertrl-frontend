@@ -1,0 +1,19 @@
+@import '../../../../scss/table-responsive';
+
+.table-wrapper {
+  height: calc(100vh - 480px);
+}
+
+@media screen and (max-width: 1366px) {
+  .table-wrapper {
+    height: calc(100vh - 425px);
+    position: relative;
+    bottom: 47px;
+  }
+
+  .action-buttons{
+    position: relative;
+    bottom: 50px;
+  }
+
+}

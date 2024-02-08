@@ -1,0 +1,97 @@
+{
+  "workflowName": "Bill Workflow ",
+  "documentType": 1,
+  "eventType": "1",
+  "workflowConditions": [
+    {
+      "isDropDownValue": false,
+      "fieldId": 1,
+      "conditionId": "4",
+      "value": "INV002312",
+      "adjoinCondition": "OR"
+    }
+  ],
+  "workflowActions": [
+    {
+      "actionType": "1"
+    },
+    {
+      "actionType": "2"
+    },
+    {
+      "actionType": "3"
+    },
+    {
+      "actionType": "4"
+    },
+    {
+      "actionType": "5"
+    },
+    {
+      "actionType": "6"
+    }
+  ],
+  "workflowApprovalSequences": [
+    {
+      "sequenceIndex": "",
+      "approvalGroupId": "1",
+      "userId": [
+        "1"
+      ]
+    },
+    {
+      "sequenceIndex": "",
+      "approvalGroupId": "2",
+      "userId": [
+        "2"
+      ]
+    }
+  ],
+  "workflowEmailNotification": {
+    "emailAddress": "brian@gmail.com",
+    "emailSubject": "Bill Submit",
+    "emailContent": "Bill Submission Content"
+  },
+  "workflowUserNotification": {
+    "users": [
+      "1",
+      "2",
+      "3"
+    ],
+    "message": "Notification Message"
+  },
+  "workflowFieldValues": [
+    {
+      "isDropDownValue": false,
+      "isExpenseTableVisible": false,
+      "documentType": 1,
+      "fieldName": 2,
+      "value": "PO001"
+    },
+    {
+      "isDropDownValue": false,
+      "isExpenseTableVisible": false,
+      "documentType": 2,
+      "fieldName": 2,
+      "value": "PO002"
+    }
+  ],
+  "executeAutomations": [
+    {
+      "workflow": "1"
+    },
+    {
+      "workflow": "2"
+    }
+  ],
+  "thirdPartyApplications": [
+    {
+      "application": "2",
+      "documentType": "1"
+    },
+    {
+      "application": "4",
+      "documentType": "2"
+    }
+  ]
+}

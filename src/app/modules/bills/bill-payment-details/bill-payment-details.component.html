@@ -1,0 +1,277 @@
+<p-dialog position="center" (onHide)="whenCloseDrawer()" [(visible)]="isVisible" closeOnEscape="false" [modal]="true"
+          [resizable]="false" [closable]="false" *ngIf="isVisible" [style]="{width: '50vw', minWidth: '400px'}"
+          [draggable]="false"
+          [baseZIndex]="1000">
+
+  <div class="grid">
+
+    <h5 class="module-header-label  col-6">Payment Details</h5>
+    <div class="col-6 pull-right text-right">
+      <div class="fa fa-close side-drawer-icon"
+           (click)="whenCloseDrawer()"></div>
+    </div>
+  </div>
+
+
+  <form class="payment-form detail-form" [formGroup]="paymentDetailForm">
+
+    <div class="grid p-fluid mb-2">
+
+      <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Created Date</label>
+        <div>{{f.createdDateStr.value}}</div>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Created By</label>
+        <div>{{f.createdByName.value}}</div>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Document No.</label>
+        <div> <span (click)="tdClick(f.documentType.value)"
+                    [ngClass]="isClassHover(f.documentType.value) ? 'selectedHover': null"
+                    (mouseover)="tdHover( f.documentType.value)" (scroll)="hideOverlays()"
+                    (mouseout)="hideOverlays()">
+          {{f.documentNo.value}}
+        </span>
+        </div>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Payee</label>
+        <div app-read-more-text maxCharacters="20" [fieldValue]="commonUtil.detailViewIsDash(f.payeeName.value, false)"></div>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Payment Type</label>
+        <div>
+          {{f.txnTypeName.value}}
+        </div>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Payment Method</label>
+        <div>{{commonUtil.detailViewIsDash(f.isOnline.value ? 'Online' : 'Offline', false)}}</div>
+      </div>
+
+      <div *ngIf="f.vcardNumber.value" class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Virtual Card Number</label>
+        <div> <span (click)="tdClick(f.txnType.value)"
+                    [ngClass]="isClassHover(f.txnType.value) ? 'selectedHover': null"
+                    (mouseover)="tdHover( f.txnType.value)" (scroll)="hideOverlays()"
+                    (mouseout)="hideOverlays()">
+          {{f.vcardNumber.value}}
+        </span>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <hr>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Balance To Be Paid</label>
+        <div>{{commonUtil.detailViewIsDash(f.balanceAmount.value, true) | number : '1.2-2'}}</div>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Reference No.</label>
+        <div app-read-more-text maxCharacters="20" [fieldValue]="commonUtil.detailViewIsDash(f.txnRef.value, false)"></div>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Payment Amount</label>
+        <div>{{f.txnAmount.value | number : '1.2-2'}}</div>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Applied Discount</label>
+        <div>{{f.txnDiscount.value | number : '1.2-2'}}</div>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Comment</label>
+        <div>{{commonUtil.detailViewIsDash(f.comment.value, false)}}</div>
+      </div>
+
+      <div class="col-12">
+        <hr>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Transaction Number</label>
+        <div>{{commonUtil.detailViewIsDash(f.tpTxnId.value, false)}}</div>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Transaction Status</label>
+        <div class="md:col-7 col-6 p-0 pt-2">
+          <li [class]="'mr-2 status-style status-'  + getStatus(f.paymentStatus.value)"></li>
+          {{getStatus(f.paymentStatus.value) | titlecase}}
+        </div>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Approval Status</label>
+        <div class="col-6 p-0 pt-2">
+          <li [class]="'mr-2 status-style status-'  + tableSupportBase.getStatus(f.status.value)"></li>
+          {{tableSupportBase.getStatus(f.status.value) | titlecase}}
+        </div>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Payment Date</label>
+        <div>{{f.txnDate.value | date:'MM/dd/yyyy'}}</div>
+        <ng-container *ngIf="f.txnDate.value === undefined || f.txnDate.value === null">
+          {{'-'}}
+        </ng-container>
+      </div>
+
+      <div *ngIf="f.scheduledPayment.value" class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Scheduled Date</label>
+        <div>{{commonUtil.detailViewIsDash(f.scheduledDateStr.value, false)}}</div>
+      </div>
+
+      <div *ngIf="f.scheduledPayment.value" class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Scheduled Time</label>
+        <div>{{commonUtil.detailViewIsDash(f.scheduledTime.value, false)}}</div>
+      </div>
+
+      <div class="field md:col-12 sm:col-12 xl:col-12 lg:col-12 col-12">
+        <label>Failure Reason (if applicable)</label>
+        <div>{{commonUtil.detailViewIsDash(f.reason.value, false)}}</div>
+      </div>
+
+    </div>
+
+    <p-tabView styleClass="tabview-custom">
+
+      <p-tabPanel *ngIf="receipt.length>0">
+        <ng-template pTemplate="header">
+          <span class="custom-span">Files Attached</span>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <p-table responsiveLayout="scroll" [value]="receipt" scrollable="true" scrollHeight="150px"
+                   styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+            <ng-template pTemplate="colgroup">
+              <colgroup>
+                <col style="width:170px">
+                <col style="width:150px">
+                <col style="width:50px">
+              </colgroup>
+            </ng-template>
+
+            <ng-template pTemplate="header">
+              <tr>
+                <th class="thead-style detail-table-header-left" id="fileName">File Name</th>
+                <th class="thead-style detail-table-header-left" id="fieldName">Field Name</th>
+                <th class="thead-style detail-table-header-left" id="action1">Action</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-i="rowIndex" let-item>
+              <tr>
+                <td class="break-word">
+                  <label> {{item.fileName}}</label>
+                </td>
+                <td class="break-word">
+                  <label> {{item.fieldName}}</label>
+                </td>
+                <td class="text-center">
+                  <i (click)="downloadAttachment(item)" class="fa fa-download download-icon"></i> &nbsp;
+                </td>
+
+              </tr>
+            </ng-template>
+          </p-table>
+        </ng-template>
+      </p-tabPanel>
+
+      <p-tabPanel *ngIf="adHocWorkflowDetails.length">
+        <ng-template pTemplate="header">
+          <span class="custom-span">Approvers ({{ adHocWorkflowDetails.length }})</span>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <div class="grid" style="padding-top: 25px">
+            <div class="col-12 pb-0 mb-0 pt-0 mt-0 approve-alignment"
+                 *ngFor="let adHoc of adHocWorkflowDetails; let adHocIndex = index">
+              <div class="col-5 bold-text text pb-0 mb-0 pt-0 mt-0" [ngClass]="{ 'approve-text': adHoc.completed }">
+                <span>{{ adHocIndex + 1 }}. </span>
+                {{ adHoc.approvalUserName || adHoc.pendingUserName || adHoc.approvalGroupName }}
+                <span *ngIf="adHoc.approvalGroupName && adHoc.approvalUserName">
+              ({{adHoc.approvalGroupName}})
+            </span>
+                <span *ngIf="adHoc.previousApprovalUserName && adHoc.previousApprovalUserName != adHoc.approvalUserName">
+              ({{adHoc.previousApprovalUserName}})
+            </span>
+                <span class="approve-icon" style="padding-left: 16px;" [ngClass]="commonUtil.getStatusIcon(adHoc)"></span>
+              </div>
+              <div [ngClass]="{ 'approve-text': adHoc.completed }" class="col-3 text text-right pb-0 mb-0 pt-0 mt-0">
+                {{ adHoc.actionDate | date:'MM/dd/yyyy' }}
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </p-tabPanel>
+
+      <p-tabPanel *ngIf="auditTrial.length">
+        <ng-template pTemplate="header">
+          <span class="custom-span">Audit Trail</span>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <div class="grid audit-trail-content">
+            <div *ngFor="let event of auditTrial" class="col-12 audit-trail">
+              <div class="grid">
+
+                <div *ngIf="event.undoAction && event.header" class="col-8 pb-0 audit-topic">
+                  {{event.statusId.name}} <b> {{event.header}} </b> by <b> {{event.userName}} </b></div>
+
+                <div *ngIf="event.undoAction && !event.header" class="col-8 pb-0 audit-topic">
+                  {{event.statusId.name}} <b> {{tableSupportBase.getStatus(event.undoStatus) | titlecase}} Status </b>
+                  by
+                  <b> {{event.userName}} </b></div>
+
+                <div *ngIf="!event.undoAction" class="col-6 pb-0 audit-topic">
+                  {{event.statusId.name}} <b> {{event.userName}} </b></div>
+
+                <div *ngIf="event.automationName" class="col-6 pb-0 p-text-italic audit-auto-topic">
+                  Following the automation<b> {{event.automationName}} </b></div>
+                <div
+                  class="p-text-italic text-right audit-date">{{event.actionDate | date:dateFormatter.DATE_TIME_FORMAT}}</div>
+              </div>
+
+              <ng-container *ngIf="event.comment">
+                <div class="audit-cmt mt-2" *ngFor="let singleComment of event?.comment.split('</br>'); let i = index">
+                  <p app-read-more-text [fieldValue]="singleComment" [maxCharacters]="100"></p>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="!event.comment">
+                <p class="p-text-italic audit-cmt">No Information</p>
+              </ng-container>
+            </div>
+          </div>
+        </ng-template>
+      </p-tabPanel>
+    </p-tabView>
+  </form>
+
+  <p-overlayPanel appendTo="body" #billOverlay>
+    <ng-template pTemplate>
+      <app-table-bill-no-overlay [billId]="overlayId"></app-table-bill-no-overlay>
+    </ng-template>
+  </p-overlayPanel>
+
+  <p-overlayPanel appendTo="body" #expenseOverlay>
+    <ng-template pTemplate>
+      <app-table-expense-overlay [expenseId]="overlayId"></app-table-expense-overlay>
+    </ng-template>
+  </p-overlayPanel>
+
+  <p-overlayPanel appendTo="body" #cardsOverlay>
+    <ng-template pTemplate>
+      <app-table-cards-overlay [cardId]="overlayId"></app-table-cards-overlay>
+    </ng-template>
+  </p-overlayPanel>
+
+</p-dialog>

@@ -1,0 +1,111 @@
+@import "../../../../scss/color.scss";
+
+
+.generate-bill-wrapper {
+  ::ng-deep .p-dialog-header {
+    padding-bottom: 0 !important;
+  }
+
+  .max-width {
+    width: 100% !important;
+  }
+
+  .receipt-select {
+    .col-1 {
+      align-self: center;
+    }
+  }
+
+  .pop-up-header {
+    width: 100%;
+  }
+
+  ::ng-deep .p-dialog-content {
+    overflow: hidden;
+  }
+
+  ::ng-deep .p-tabview .p-tabview-nav li {
+    margin-top: 2px;
+  }
+
+  .left-btn {
+    position: absolute;
+    left: 2%;
+    top: 90px;
+  }
+
+  .right-btn {
+    position: absolute;
+    right: 2%;
+    top: 90px;
+  }
+
+}
+
+::ng-deep .bill-tabs {
+  text-align: center;
+
+  .headers {
+    width: 100%;
+
+    div:nth-child(2) {
+      font-size: 25px;
+      color: $green;
+    }
+
+    div:nth-child(3) {
+      span:nth-child(1) {
+        font-size: 16px;
+      }
+
+      span:nth-child(2) {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .p-tabview-panels {
+    text-align: initial !important;
+
+  }
+
+  .p-tabview-nav {
+    height: auto;
+    width: 90% !important;
+    overflow-x: scroll !important;
+    display: -webkit-inline-box !important;
+    flex-wrap: inherit;
+    scrollbar-color: $green white;
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+
+    .p-highlight {
+      .p-tabview-nav-link {
+        border: solid;
+        border-width: 2px;
+      }
+    }
+
+    li {
+      height: 100px;
+      width: auto;
+      border-style: solid;
+      border-color: #00c5c5;
+      border-width: 1px;
+      border-radius: 5px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+
+      .p-tabview-nav-link {
+        border-radius: 5px;
+        border-style: solid;
+        border-color: transparent;
+      }
+
+      a {
+        height: 100%;
+        width: 250px;
+      }
+    }
+  }
+}

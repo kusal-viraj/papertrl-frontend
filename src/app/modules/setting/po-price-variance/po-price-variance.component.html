@@ -1,0 +1,143 @@
+<div  class="pt-3" [ngClass]="!isEditPoNumberPriceConfiguration ? '': 'drawer-content p-3'">
+  <form [formGroup]="poPriceConfigurationForm">
+    <div class="grid col-12 pl-0 pr-0 mt-3" id="main-container">
+      <div class="vendor-wrapper" [ngClass]="!isEditPoNumberPriceConfiguration ? 'field p-fluid col-12 xl:col-3 lg:col-3': 'field p-fluid col-12'">
+        <label  class="label-wrapper" for="vendorId">Select Vendor*</label>
+                  <span class="p-float-label">
+                      <p-dropdown id="vendorId" formControlName="vendorId" [showClear]="true"
+                                  [autoDisplayFirst]="false" [options]="vendorList.data" [filter]="true"
+                                  optionDisabled="inactive" #dpNameVendorList (onChange)="vendorChange($event)"
+                                  appendTo="body" [virtualScroll]="vendorList.data.length > 20" virtualScrollItemSize="25"
+                                  optionLabel="name" optionValue="id">
+             <ng-template pTemplate="selectedItem">
+               <div>{{dpNameVendorList.selectedOption.name}}</div>
+             </ng-template>
+
+             <ng-template let-code pTemplate="item">
+                 <div class="grid">
+                     <div class="dropdown-list"
+                          [ngClass]="code.id == -1 ? ' dropdown-add': null">{{code.name}}</div>
+                     <em *ngIf="code.id == -1" class="pi pi-plus dropdown-icon dropdown-add"></em>
+                 </div>
+             </ng-template>
+                      </p-dropdown>
+                  </span>
+        <div class="p-invalid text-align-left"
+             *ngIf="poPriceConfigurationForm.get('vendorId').dirty && poPriceConfigurationForm.get('vendorId').errors">
+          Vendor is required
+        </div>
+      </div>
+
+      <div class="type-wrapper"  [ngClass]="!isEditPoNumberPriceConfiguration ? 'field col-12 p-fluid xl:col-3 lg:col-3': 'field p-fluid col-12'">
+        <label class="label-wrapper" for="separatorSymbol">Select Type*</label>
+        <span class="p-float-label">
+           <p-dropdown [options]="criteriaList.data" id="separatorSymbol" inputId="template" #criteriaReference
+                       formControlName="percentage" optionValue="percentage" optionLabel="name" [showClear]="true"
+                       (onChange)="validateField()"
+                       [autoDisplayFirst]="false" [filter]="true">
+             <ng-template pTemplate="selectedItem">
+               <div>{{criteriaReference.selectedOption.name}}</div>
+             </ng-template>
+
+             <ng-template let-separates pTemplate="item">
+               <div class="grid">
+                 <div class="dropdown-list "
+                      [ngClass]="separates.name == 'Add New' ? ' dropdown-add': null">{{separates.name}}</div>
+                 <i *ngIf="separates.name == 'Add New'" class="pi pi-plus dropdown-icon  dropdown-add"></i>
+               </div>
+             </ng-template>
+           </p-dropdown>
+
+           </span>
+        <div class="p-invalid text-align-left"
+             *ngIf="poPriceConfigurationForm.get('percentage').dirty && poPriceConfigurationForm.get('percentage').errors">
+          Type is required
+        </div>
+      </div>
+
+      <div class="percentage-wrapper" [ngClass]="!isEditPoNumberPriceConfiguration ? 'field col-12 p-fluid xl:col-1 lg:col-1': 'field p-fluid col-12'"
+           *ngIf="poPriceConfigurationForm.get('percentage').value === true">
+        <label class="label-wrapper" for="priceVariancePercentage">Percentage*</label>
+        <span class="p-float-label">
+          <input formControlName="priceVariance" id="priceVariancePercentage"
+                 pInputText currencyMask [options]="{prefix: '', allowNegative: false, suffix: '%'}"
+                 class="percentage-wrapper">
+        </span>
+        <div class="p-invalid text-align-left"
+             *ngIf="poPriceConfigurationForm.get('priceVariance').dirty && poPriceConfigurationForm.get('priceVariance').errors">
+          Percentage is required
+        </div>
+      </div>
+
+      <div class="amount-wrapper"  [ngClass]="!isEditPoNumberPriceConfiguration ? 'field p-fluid col-12 xl:col-3 lg:col-3': 'field p-fluid col-12'"
+           *ngIf="poPriceConfigurationForm.get('percentage').value === false">
+        <label class="label-wrapper" for="priceVarianceAmount">Amount*</label>
+        <span class="p-float-label">
+         <input formControlName="priceVariance" id="priceVarianceAmount" type="text"
+                [options]="{ prefix: '', thousands: ',', decimal: '.',allowNegative: false}"  currencyMask
+                pInputText>
+        </span>
+        <div class="p-invalid text-align-left"
+             *ngIf="poPriceConfigurationForm.get('priceVariance').dirty && poPriceConfigurationForm.get('priceVariance').errors">
+          Amount is required
+        </div>
+
+      </div>
+
+    <ng-container *ngIf="!isEditPoNumberPriceConfiguration">
+      <ng-template [ngTemplateOutlet]="poPriceVarianceBtn"></ng-template>
+    </ng-container>
+
+    </div>
+
+
+  </form>
+</div>
+
+<ng-container *ngIf="isEditPoNumberPriceConfiguration">
+<ng-template [ngTemplateOutlet]="poPriceVarianceBtn"></ng-template>
+</ng-container>
+
+
+
+<!--Override Exist PO Price Configuration-->
+
+<p-confirmDialog key="{{appConstant.PO_PRICE_VARIANCE_KEY_FOR_CHECK_EXIST}}" #cd header="Are you sure?"
+                 icon="confirmation-msg-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cd.reject()"></button>
+    <button type="button"  pButton icon="pi pi-check" label="Create and Override"
+            (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<!--Create New Vendor-->
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" position="right" [modal]="true" [dismissible]="true"
+           *ngIf="addVendorPanel"
+           [(visible)]="addVendorPanel">
+  <ng-template pTemplate="header">Create Vendor</ng-template>
+
+  <app-add-vendor *ngIf="addVendorPanel"
+                  (refreshVendorList)="getVendorList()"></app-add-vendor>
+</p-sidebar>
+
+
+<!--    Template of that can be used any where-->
+
+<ng-template   #poPriceVarianceBtn>
+  <div [ngClass]="!isEditPoNumberPriceConfiguration ? 'button_content': 'text-right col-12 button-set-wrapper'">
+    <button pButton type="button" label="Reset" class="p-button-outlined p-button-sm"
+            (click)="resetPoPriceVarianceForm()"
+            icon="fa-solid fa-rotate-right"></button>&nbsp;
+
+    <button pButton type="button"
+            class="p-button-sm" *ngIf="!isEditPoNumberPriceConfiguration" [disabled]="isLoading" (click)="checkWhetherVendorHasConfiguration()"
+            iconPos="left" [icon]="isLoading ? 'pi pi-spin pi-spinner':'pi pi-plus'" label="Create Allowance"></button>
+
+    <button pButton type="button" class="p-button-sm" (click)="updatePoPriceVariance()"
+            [disabled]="isUpdating" *ngIf="isEditPoNumberPriceConfiguration" id="saveBtn"
+            iconPos="left" [icon]="isUpdating ? 'pi pi-spin pi-spinner':'pi pi-save'" label="Save"></button>
+  </div>
+</ng-template>
+

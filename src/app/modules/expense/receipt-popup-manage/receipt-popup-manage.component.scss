@@ -1,0 +1,44 @@
+@import "../../../../scss/color.scss";
+
+.max-width {
+  width: 100% !important;
+}
+
+.receipt-select {
+  .col-1 {
+    align-self: center;
+  }
+  margin-bottom: -0.5rem;
+}
+
+:host ::ng-deep .selected-receipt-row {
+  background-color: $light-green !important;
+}
+
+.link {
+  color: $green;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.pop-up-header {
+  width: 100%;
+}
+
+::ng-deep .receipt-popup {
+  .p-dialog-header {
+    padding-bottom: 0;
+  }
+
+  .p-dialog-content {
+    overflow-y: initial;
+  }
+}
+
+.merchant{
+  overflow-wrap: anywhere;
+  white-space: initial;
+}

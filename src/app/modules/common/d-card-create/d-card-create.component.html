@@ -1,0 +1,271 @@
+<form [formGroup]="formGroup" class="form ml-3 mr-3 side-bar-drawer-content">
+
+  <div class="grid">
+    <div class="col-12 field p-fluid">
+      <label class="label" for="employeeDp">Card Creation For?</label>
+      <div class="grid">
+        <div class="col-12 flex align-items-center">
+          <div class="radio-container flex align-items-center">
+            <input #radioEmp name="payeeType" id="employee"  [value]="userTypeEmployee" type="radio" class="mr-2" formControlName="payeeType">
+            <label class="mr-5" for="employee">Employee</label>
+          </div>
+          <div class="radio-container flex align-items-center">
+            <input name="payeeType" id="vendor"  [value]="userTypeVendor" type="radio" class="mr-2" formControlName="payeeType">
+            <label class="mr-5" for="vendor">Vendor</label>
+          </div>
+          <div class="radio-container flex align-items-center">
+            <input name="payeeType" id="nvendor"  [value]="userTypeNewVendor" type="radio" class="mr-2" formControlName="payeeType">
+            <label for="nvendor">New Vendor</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 field p-fluid" *ngIf="f.payeeType.value == userTypeVendor">
+      <label class="label" for="vendorId">Select Vendor<span
+        *ngIf="isAsteriskMarkShown(f,'vendorId')">{{'*'}}</span></label>
+      <p-dropdown [virtualScroll]="vendorsList.data.length >20" virtualScrollItemSize="25" inputId="dropdown"
+                  id="vendorId" [autoDisplayFirst]="true" optionDisabled="inactive"
+                  [options]="vendorsList.data" [filter]="true" optionLabel="name" optionValue="id"
+                  formControlName="vendorId" placeholder="Select Vendor"
+                  (onChange)="changeVendor($event); commonUtil.isPressEnterInsideDropdown(selectedVendor)" #selectedVendor>
+      </p-dropdown>
+      <div class="p-invalid text-align-left"
+           *ngIf="formGroup.get('vendorId').dirty && formGroup.get('vendorId').errors">
+        Vendor is required
+      </div>
+    </div>
+
+
+    <div class="col-6 field p-fluid" *ngIf="f.payeeType.value == userTypeNewVendor">
+      <label class="label" for="vendorName">Vendor Name<span
+        *ngIf="isAsteriskMarkShown(f,'vendorName')">{{'*'}}</span></label>
+      <input pInputText id="vendorName" formControlName="vendorName" #vendorName blockSpace>
+      <div class="p-invalid text-align-left"
+           *ngIf="formGroup.get('vendorName').dirty && formGroup.get('vendorName').errors">
+        Vendor Name is required
+      </div>
+    </div>
+
+    <div class="col-6 field p-fluid" *ngIf="f.payeeType.value == userTypeNewVendor">
+      <label class="label" for="contactPerson">Contact Name<span
+        *ngIf="isAsteriskMarkShown(f,'contactPerson')">{{'*'}}</span></label>
+      <input pInputText id="contactPerson" formControlName="contactPerson" blockSpace>
+      <div class="p-invalid text-align-left"
+           *ngIf="formGroup.get('contactPerson').dirty && formGroup.get('contactPerson').errors">
+        Contact Name is required
+      </div>
+    </div>
+
+
+    <div class="col-12 field p-fluid" *ngIf="f.payeeType.value == userTypeNewVendor">
+      <label class="label" for="email">Email<span
+        *ngIf="isAsteriskMarkShown(f,'email')">{{'*'}}</span></label>
+      <input blockSpace formControlName="email" id="email" maxlength="150" pInputText>
+
+      <div class="p-invalid  text-align-left"
+           *ngIf="formGroup.get('email').dirty && formGroup.get('email').errors">
+        <div *ngIf="formGroup.get('email').errors.required">Email Address is required</div>
+        <div *ngIf="formGroup.controls['email'].hasError('emailValidate')">Email must be a valid
+          email address
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-12 field p-fluid" *ngIf="f.payeeType.value == userTypeEmployee">
+      <label class="label" for="employeeDp">Select Employee<span
+        *ngIf="isAsteriskMarkShown(f,'employeeId')">{{'*'}}</span></label>
+      <p-dropdown [virtualScroll]="employeeList.data.length >20" virtualScrollItemSize="25" inputId="dropdown"
+                  id="employeeDp" [autoDisplayFirst]="true" optionDisabled="inactive" appendTo="body"
+                  [options]="employeeList.data" [filter]="true" optionLabel="name" optionValue="id"
+                  formControlName="employeeId" placeholder="Select Employee"
+                  #selectEmployee
+                  (onChange)="changeEmployee($event); commonUtil.isPressEnterInsideDropdown(selectEmployee)">
+        <ng-template let-item pTemplate="item">
+          <div class="grid">
+            <div class="dropdown-list">{{item.name}}</div>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="footer" *ngIf="privilegeService.isAuthorized(AppAuthorities.USERS_CREATE)">
+          <div class="grid dp-footer">
+            <div class="col-12 button-wrapper">
+              <button pButton class="p-button-sm" label="Add New"
+                      (click)="userPanel = true"></button>
+            </div>
+          </div>
+        </ng-template>
+      </p-dropdown>
+      <div class="p-invalid text-align-left"
+           *ngIf="formGroup.get('employeeId').dirty && formGroup.get('employeeId').errors">
+        Employee is required
+      </div>
+    </div>
+
+
+    <div class="col-12 field p-fluid" *ngIf="f.payeeType.value == userTypeVendor">
+      <label class="label" for="vendorUserId">Select Vendor User<span
+        *ngIf="isAsteriskMarkShown(f,'vendorUserId')">{{'*'}}</span></label>
+      <p-dropdown [virtualScroll]="vendorRelatedUsersList.data.length >20" virtualScrollItemSize="25" inputId="dropdown"
+                  id="vendorUserId" [autoDisplayFirst]="true"
+                  [options]="vendorRelatedUsersList.data" [filter]="true" optionLabel="name" optionValue="id"
+                  formControlName="vendorUserId" placeholder="Select Vendor User" #vendorUser
+                  (onChange)="changeVendorUser($event); commonUtil.isPressEnterInsideDropdown(vendorUser)">
+        <ng-template let-item pTemplate="item">
+          <div class="grid">
+            <div class="dropdown-list">{{item.name}}</div>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+          <div class="grid dp-footer">
+            <div class="col-12 button-wrapper">
+              <button pButton class="p-button-sm" label="Add New"
+                      (click)="vendorUserPanel = true"></button>
+            </div>
+          </div>
+        </ng-template>
+
+      </p-dropdown>
+      <div class="p-invalid text-align-left"
+           *ngIf="formGroup.get('vendorUserId').dirty && formGroup.get('vendorUserId').errors">
+        Vendor User is required
+      </div>
+    </div>
+
+    <div class="col-6 field p-fluid">
+      <label class="label" for="firstName">First Name<span
+        *ngIf="isAsteriskMarkShown(f,'firstName')">{{'*'}}</span></label>
+      <input pInputText id="firstName" maxlength="100" formControlName="firstName" blockSpace>
+      <div class="p-invalid text-align-left"
+           *ngIf="formGroup.get('firstName').dirty && formGroup.get('firstName').errors">
+        First Name is required
+      </div>
+    </div>
+
+    <div class="col-6 field p-fluid">
+      <label class="label" for="lastName">Last Name<span
+        *ngIf="isAsteriskMarkShown(f,'lastName')">{{'*'}}</span></label>
+      <input pInputText id="lastName" maxlength="100" formControlName="lastName" blockSpace>
+      <div class="p-invalid text-align-left"
+           *ngIf="formGroup.get('lastName').dirty && formGroup.get('lastName').errors">
+        Last Name is required
+      </div>
+    </div>
+
+    <div class="col-6 field p-fluid">
+      <label class="label" for="mobileNumber">Mobile No.<span
+        *ngIf="isAsteriskMarkShown(f,'mobileNumber')">{{'*'}}</span></label>
+      <app-country-code-validation formControlName="mobileNumber" id="mobileNumber"
+        [telephoneFormControl]="formGroup.get('mobileNumber')"></app-country-code-validation>
+      <div *ngIf="formGroup.get('mobileNumber').touched && formGroup.get('mobileNumber').hasError('required')"
+           class="p-invalid text-align-left">
+        Contact Number is required
+      </div>
+      <div *ngIf="formGroup.get('mobileNumber').hasError('validatePhoneNumber')" class="p-invalid text-align-left">
+        Invalid Contact Number
+      </div>
+    </div>
+
+    <div class="col-6 field p-fluid">
+      <label class="label" for="cardNickName">Card Nick Name<span
+        *ngIf="isAsteriskMarkShown(f,'cardNickName')">{{'*'}}</span></label>
+      <input pInputText id="cardNickName" maxlength="200" formControlName="cardNickName" blockSpace>
+      <div class="p-invalid text-align-left"
+           *ngIf="formGroup.get('cardNickName').dirty && formGroup.get('cardNickName').errors">
+        Card Nick Name is required
+      </div>
+    </div>
+
+    <div class="col-6 field p-fluid">
+      <label class="label" for="amount">Card Limit<span
+        *ngIf="isAsteriskMarkShown(f,'amount')">{{'*'}}</span></label>
+      <input [options]="{ prefix: '', thousands: ',', decimal: '.', allowNegative: false}"  currencyMask formControlName="amount"
+             id="amount" pInputText type="text" maxlength="19" autocomplete="off">
+      <div class="p-invalid  text-align-left"
+           *ngIf="formGroup.get('amount').dirty && formGroup.get('amount').errors">
+        <div *ngIf="formGroup.get('amount').errors.required">Card Limit is required</div>
+        <div *ngIf="formGroup.controls['amount'].hasError('max')">Card Limit cannot exceed the PO Amount
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 field p-fluid">
+      <label class="label" for="effectiveUntil">Valid Thru<span
+        *ngIf="isAsteriskMarkShown(f,'effectiveUntil')">{{'*'}}</span></label>
+      <p-calendar appTabindexMinusOne id="effectiveUntil" readonlyInput="true" [showButtonBar]="true" [maxDate]="maxDate"
+                  [showIcon]="true" formControlName="effectiveUntil" appendTo="body" [minDate]="today"></p-calendar>
+      <div class="p-invalid text-align-left"
+           *ngIf="formGroup.get('effectiveUntil').dirty && formGroup.get('effectiveUntil').errors">
+        Valid Thru is required
+      </div>
+    </div>
+
+    <div class="col-12 field p-fluid">
+      <label class="label" for="poList">PO No.</label>
+      <p-dropdown [virtualScroll]="poList.data.length >20" virtualScrollItemSize="25" inputId="dropdown"
+                  id="poList" [autoDisplayFirst]="true" optionDisabled="inactive" [showClear]="true"
+                  [options]="poList.data" [filter]="true" optionLabel="name" optionValue="id"
+                  formControlName="poId" placeholder="Select PO" appendTo="body"
+                  (onChange)="changePo(); commonUtil.isPressEnterInsideDropdown(poNo)" #poNo>
+      </p-dropdown>
+    </div>
+
+    <div class="col-12 field p-fluid">
+      <label class="label" for="account">Account</label>
+      <p-dropdown [virtualScroll]="accountList.data.length >20" virtualScrollItemSize="25" inputId="dropdown"
+                  id="account" [autoDisplayFirst]="true" optionDisabled="inactive" [showClear]="true"
+                  [options]="accountList.data" [filter]="true" optionLabel="name" optionValue="id" appendTo="body"
+                  (onChange)="commonUtil.isPressEnterInsideDropdown(account)"
+                  formControlName="accountId" placeholder="Select Account" [disabled]="f.poId.value" #account>
+      </p-dropdown>
+    </div>
+
+    <div class="col-12 field p-fluid">
+      <label class="label" for="project">Project/ Task</label>
+      <p-dropdown [virtualScroll]="projectList.data.length >20" virtualScrollItemSize="25" inputId="dropdown"
+                  id="project" [autoDisplayFirst]="true" optionDisabled="inactive" [showClear]="true"
+                  [options]="projectList.data" [filter]="true" optionLabel="name" optionValue="id" appendTo="body"
+                  #projectTask (onChange)="commonUtil.isPressEnterInsideDropdown(projectTask)"
+                  formControlName="projectId" placeholder="Select Project/ Task"  [disabled]="f.poId.value">
+      </p-dropdown>
+    </div>
+
+<!--    <div class="col-12 field p-fluid">-->
+<!--      <div class="field-checkbox col-12">-->
+<!--        <p-checkbox [binary]="true" id="remembered" formControlName="agree"></p-checkbox>-->
+<!--        <label for="remembered" [class.p-invalid]="formGroup.get('agree').dirty && formGroup.get('agree').errors">-->
+<!--          I consent to receiving text messages, OTP verification messages and system updates from-->
+<!--          PaperTrl.inc. I understand that I can unsubscribe at any time.</label>-->
+<!--      </div>-->
+<!--    </div>-->
+
+  </div>
+</form>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" label="Reset" (click)="resetForm()" [disabled]="loading"
+              class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+      <button pButton type="button" (click)="submit()" [loading]="loading" icon="pi pi-check"
+              class="p-button-sm" iconPos="left" label="Create Card {{f.payeeType.value == userTypeNewVendor ? '& Invite' : ''}}"></button>
+    </div>
+  </div>
+</div>
+
+<!--Add User-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" appendTo="body" [modal]="true" position="right"
+           *ngIf="userPanel"
+           [(visible)]="userPanel">
+  <ng-template pTemplate="header">Create User</ng-template>
+  <app-add-user [panel]="true" (refreshTable)="getEmployees()" *ngIf="userPanel"></app-add-user>
+</p-sidebar>
+
+<!--Add Vendor User-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" appendTo="body" [modal]="true" position="right"
+           *ngIf="vendorUserPanel" [(visible)]="vendorUserPanel">
+  <ng-template pTemplate="header">Create Vendor User</ng-template>
+  <app-add-vendor-users [vendorId]="f.vendorId.value" (userAdded)="getVendorRelatedUsers()" *ngIf="vendorUserPanel"></app-add-vendor-users>
+</p-sidebar>

@@ -1,0 +1,76 @@
+<h5 [class]="isOnlyExpenseTable ? 'subHeadingGreen mb-1 p-mt-0' : 'subHeadingGreen mb-1 mt-3'"
+    *ngIf="this.reportUtility.expenseBillableDetails.length > 0">Expenses</h5>
+<p-table responsiveLayout="scroll" [value]="reportUtility.expenseBillableDetails" scrollable="true"
+         [scrollHeight]="reportUtility.innerHeightOfExpenseBillableTransactionTable + 'px'"
+         [style]="{width:'auto'}" class="billable-expense-table-wrapper"
+         styleClass="p-datatable-sm p-datatable-striped detail-table"  *ngIf="this.reportUtility.expenseBillableDetails.length > 0">
+
+  <ng-template pTemplate="colgroup" let-columns>
+    <colgroup>
+      <col style="width:150px">
+      <col style="width:150px">
+      <col style="width:150px">
+      <col style="width:150px">
+      <col style="width:150px">
+      <col style="width:150px">
+    </colgroup>
+  </ng-template>
+
+  <ng-template pTemplate="header">
+    <tr>
+      <th class="text-center" id="reportName">Report Name</th>
+      <th class="text-center" id="date">Date</th>
+      <th class="text-center" id="merchant">Merchant</th>
+      <th class="text-center" id="expenseType">Expense Type</th>
+      <th class="text-center" id="expenseAccount">Expense Account</th>
+      <th class="text-center" id="lineAmount">Line Amount</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-i="rowIndex" let-expense>
+    <tr id="tr_{{i}}" [pEditableRow]="expense">
+
+      <td [maxCharacters]="22" app-read-more-text [fieldValue]="expense.reportName"></td>
+
+      <td class="text-center" [maxCharacters]="22" app-read-more-text [fieldValue]="expense.dateStr"></td>
+
+      <td [maxCharacters]="22" app-read-more-text [fieldValue]="expense.merchant"></td>
+
+      <td [maxCharacters]="22" app-read-more-text [fieldValue]="expense.expenseType"></td>
+
+      <td>
+        <span (mouseout)="reportUtility.hideOverlay(accountOverlay)"
+              (scroll)="reportUtility.hideOverlay(accountOverlay)"
+              (mouseover)="reportUtility.viewOverlayPanel(expense.accountId, $event, accountOverlay,
+              privilegeService.isAuthorized(appAuthorities.ACCOUNTS_DETAIL_VIEW))"
+              [maxCharacters]="22" app-read-more-text [fieldValue]="expense.expenseAccount"
+              [class]="reportUtility.selectClass('accountId') ? 'selected-item-wrapper':''"
+              (click)="reportUtility.clickTableData(expense, 'accountId')">
+
+        </span>
+      </td>
+
+      <td class="text-right">{{expense.lineAmount | number : '1.2-2'}}</td>
+
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td [attr.colspan]="reportUtility.expenseBillableDetails.length">No Data found.</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-overlayPanel appendTo="body" #accountOverlay>
+  <ng-template pTemplate>
+    <app-table-account-overlay [accountId]="reportUtility.overlayId"></app-table-account-overlay>
+  </ng-template>
+</p-overlayPanel>
+
+<!--Account Detail View-->
+<p-sidebar styleClass="p-sidebar-sm" [modal]="true" [dismissible]="true" position="right"
+           [(visible)]="reportUtility.isViewAccount">
+  <ng-template pTemplate="header">Account Detail View</ng-template>
+  <app-account-create [panel]="true" [detailView]="true" [accountID]="reportUtility.accountId" [editView]="false"
+                      *ngIf="reportUtility.isViewAccount"></app-account-create>
+</p-sidebar>

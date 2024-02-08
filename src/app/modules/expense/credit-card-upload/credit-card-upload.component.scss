@@ -1,0 +1,137 @@
+@import "../../../../scss/color.scss";
+
+.credit-card {
+  border: solid $tertiary-gray 1px;
+
+  p-calendar {
+    width: 100%
+  }
+
+  p-autoComplete {
+    width: 100% !important;
+
+    ::ng-deep .p-button {
+      background-color: #eceeef !important;
+      color: #73828a !important;
+    }
+  }
+
+  .left-side {
+    border-right: solid $tertiary-gray 1px;
+
+    .loading-wrapper {
+      position: relative;
+      top: 40%;
+
+      em {
+        font-size: 150px;
+        text-align: center;
+        margin-bottom: 20px;
+        opacity: 0.8 !important;
+        color: $green;
+      }
+    }
+  }
+
+  .file-attached {
+    position: relative;
+    text-align: center;
+    background-color: $secondary-light-green;
+    cursor: pointer;
+    min-height: 400px;
+
+    .drop-files {
+      position: absolute;
+      top: 50%;
+      left: 5%;
+      right: 5%;
+    }
+  }
+
+  .footer {
+    position: absolute;
+    background-color: #ffffff;
+    right: 51px;
+    bottom: 6px;
+  }
+
+  .right-side {
+    position: relative;
+
+    .form-wrapper {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background-color: $tertiary-gray;
+      background-size: 50px;
+      background-repeat: no-repeat;
+      background-position: center;
+      z-index: 10000000;
+      opacity: 0.2;
+      filter: alpha(opacity=40);
+      text-align: center;
+    }
+
+    .third-step {
+      .header {
+        position: sticky;
+        top: 0;
+        background: white;
+        z-index: 1;
+
+        div {
+          font-weight: bold;
+        }
+      }
+
+      .line {
+        background: linear-gradient(90deg, rgba(255, 255, 255, 1) 15%, rgb(194, 194, 194) 50%, rgba(255, 255, 255, 1) 85%);
+        height: 1px;
+        margin-top: 1px;
+        width: 100%;
+        margin-bottom: 1px
+      }
+
+      .data {
+        padding-top: 0;
+        align-items: baseline;
+
+        .text-center {
+          color: $black-gray;
+        }
+
+        .icon {
+          color: $green;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .forms {
+    height: 631px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+.pdf-wrapper {
+  width: 50%;
+
+  ::ng-deep .p-dialog-header {
+    border-radius: 0;
+
+    .grid {
+      width: 100%;
+    }
+  }
+}
+
+
+.close-btn-detail-view {
+  position: fixed;
+  right: 19px;
+  margin-top: 28px;
+}

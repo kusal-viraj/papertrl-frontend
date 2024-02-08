@@ -1,0 +1,154 @@
+<ngx-extended-pdf-viewer (pagesLoaded)="getPageCount($event)"
+                         *ngIf="attachmentUrl"
+                         [class]="'pdf-wrap'"
+                         [customToolbar]="toolBar"
+                         [showBookmarkButton]="false"
+                         [showDownloadButton]="true"
+                         [showFindButton]="false"
+                         [showHandToolButton]="false"
+                         [showOpenFileButton]="false"
+                         [showPagingButtons]="false"
+                         [showPresentationModeButton]="false"
+                         [showPrintButton]="false"
+                         [showPropertiesButton]="false"
+                         [showRotateButton]="false"
+                         [showScrollingButton]="false"
+                         [showSecondaryToolbarButton]="true"
+                         [showSidebarButton]="false"
+                         [showSpreadButton]="false"
+                         [showZoomButtons]="false"
+                         [src]="attachmentUrl"
+                         [useBrowserLocale]="true" height="100%" zoom="60%">
+</ngx-extended-pdf-viewer>
+
+<ng-template #toolBar>
+
+
+  <div class="grid">
+    <section class="col-12" style="display: flex; width: 90%; padding-top: 16px">
+      <div class="col-1 next-previous-icon">
+        <ng-template [ngTemplateOutlet]="templateRef"></ng-template>
+      </div>
+      <div class="col-11 text-left">
+        <div (mouseenter)="showFullText($event)" class="uploaded-by-wrapper invoice-number-wrapper">{{selectRecordInvoiceNumber}} &nbsp;</div>
+      </div>
+    </section>
+
+    <section class="col-12" style="display: flex">
+      <div class="col-6 pt-2">
+    <span class="email-address pl-3" *ngIf="isUpload">
+    <span  class="upload-wrapper">Uploaded by {{emailedBy}}</span>
+    </span>
+
+        <span class="email-address pl-3" *ngIf="!isUpload">
+    <span  class="upload-wrapper">Emailed by {{emailedBy}}</span>
+    </span>
+
+        <span [class]="'review-on-wrapper date-time pl-2'">
+      <span class="received-on-wrapper">{{receivedDateTime}}</span>
+    </span>
+      </div>
+
+
+      <div [class]=" tabIndex === 2 ?
+        'action-btn-top-deleted' : ''" class="col-6  text-right action-btn-top" style="display: flex;">
+        <div class="col-12">
+          <ng-template [ngTemplateOutlet]="actionBtnList"></ng-template>
+          <ng-template [ngTemplateOutlet]="INBOX_SEGREGATE"></ng-template>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+
+  <div [class]="'col-12 page-wrapper'">
+    <span class="page-count-wrapper">Page</span>
+    <pdf-page-number class="custom-button pb-0">
+    </pdf-page-number>
+    <pdf-previous-page [class]="'next-previous-btn'"
+                       [ngClass]="isProgressSplitClickEvent ? 'p-disabled':''"></pdf-previous-page>
+    <pdf-next-page [class]="'next-previous-btn'"
+                   [ngClass]="isProgressSplitClickEvent ? 'p-disabled':''"></pdf-next-page>
+  </div>
+
+  <div [class]="'col-12 tool-bar-wrapper'">
+    <ng-template [ngTemplateOutlet]="zoomPdf_page"></ng-template>
+  </div>
+
+</ng-template>
+
+
+<ng-template #zoomPdf_page>
+  <div [class]="'col-3 inbox-option-wrapper'">
+
+    <pdf-rotate-page [class]="'custom-button'"
+                     [ngClass]="isProgressSplitClickEvent || isSendToBillButtonStatusIsDisabled ? 'p-disabled':''">
+    </pdf-rotate-page>
+    <pdf-zoom-in [class]="'custom-button'"
+                 [ngClass]="isProgressSplitClickEvent || isSendToBillButtonStatusIsDisabled ? 'p-disabled':''">
+    </pdf-zoom-in>
+    <pdf-zoom-out [class]="'custom-button'"
+                  [ngClass]="isProgressSplitClickEvent || isSendToBillButtonStatusIsDisabled ? 'p-disabled':''">
+    </pdf-zoom-out>
+    <pdf-download [class]="'custom-button'"
+                  [ngClass]="isProgressSplitClickEvent || isSendToBillButtonStatusIsDisabled ? 'p-disabled':''">
+    </pdf-download>
+
+  </div>
+</ng-template>
+
+
+<ng-template #INBOX_SEGREGATE>
+  <div *ngIf="privilegeService.isAuthorized(appAuthorities.INBOX_SEGREGATE)">
+    <div *ngIf="tabIndex ===0" class="segregate-label-wrap">
+      <span (click)="revertAttachmentChanges()" *ngIf="(isSplitedSuccess && !isOn) && isRevertLinkEnabled"
+            [class.p-disabled]="isDisabledRevertLink"
+            class="fa fa-undo"
+            pTooltip="Revert attachment changes"
+            tooltipPosition="bottom"></span>
+      <span (click)="isVisibleToModal = true" *ngIf="pageCount > 1 && !isRevertLinkEnabled"
+            [class.p-disabled]="isProgressSplitClickEvent || isSendToBillButtonStatusIsDisabled"
+            class="fa fa-columns"
+            pTooltip="Segregate Invoices"
+            tooltipPosition="bottom"></span>
+    </div>
+  </div>
+</ng-template>
+
+
+<p-dialog [(visible)]="isVisibleToModal" [closable]="true"
+          [draggable]="true"
+          [modal]="true" [style]="{width: '30vw'}" class="attached-to-dialog-wrapper p-dialog-wrapper" position="center">
+  <ng-template pTemplate="header">
+      <span class="text-xl font-bold" style="font-size: 17px !important;padding-bottom: 0">
+        Segregate
+      </span>
+  </ng-template>
+  <div class="col-12 mt-2">
+        <span *ngIf="isVisibleToModal && tabIndex === 0"
+              class="{{isVisibleToModal ? 'page-number-wrap-segregrate' : ''}}">
+          <div class="grid">
+          <span class="col-6">
+           <label class="label-wrapper">Page</label>
+          <input #pageFrom [disabled]="isProgressSplitClickEvent" class="custom-input-wrap" maxlength="2" numbersOnly
+                 pInputText>
+          </span>
+          <span class="col-6">
+             <label class="label-wrapper">To</label>
+          <input #pageTo [disabled]="isProgressSplitClickEvent" class="custom-input-wrap mr-1" maxlength="2" numbersOnly
+                 pInputText>
+          </span>
+            </div>
+          <br>
+                 <button (click)="validateSplitFunction(attachmentId, pageFrom.value, pageTo.value)"
+                         [disabled]="isProgressSplitClickEvent || !(pageFrom.value && pageTo.value)"
+                         class="p-button-sm custom-button-wrap split-button-wrapper pull-right" iconPos="left"
+                         label="Split"
+                         pButton type="button">
+                 </button>
+        </span>
+  </div>
+</p-dialog>
+
+

@@ -1,0 +1,185 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "vendor.id": "Sdc Inc",
+      "bill.billNo": "BILL-001",
+      "bill.billDate": "12/25/2021",
+      "bill.billAmount": "25000.00",
+      "bill.paidAmount": "10000.00",
+      "bill.balanceAmount": "5000.00",
+      "bill.paymentType": "Check Payment",
+      "bill.paymentAmount": "2500.00",
+      "bill.applicableDiscount": "500.00",
+      "discountApplicableDate": "11/22/2021",
+      "bill.paymentStatus": "Paid",
+      "bill.dueDate": "10/08/2021",
+      "comment": "Hello",
+      "payments": [
+        {
+          "txn.batchId": "BATCH-01",
+          "txn.txnRef": "TXN-001",
+          "txn.paidAmount": "1000.00",
+          "txn.paymentDate": "15/10/2021",
+          "txn.txnType": "VMC",
+          "txn.approvalStatus": "P",
+          "txn.paymentStatus": "TP"
+        },
+        {
+          "txn.batchId": "BATCH-02",
+          "txn.txnRef": "TXN-002",
+          "txn.paidAmount": "1000.00",
+          "txn.paymentDate": "15/10/2021",
+          "txn.txnType": "VMC",
+          "txn.approvalStatus": "P",
+          "txn.paymentStatus": "AP"
+        },
+        {
+          "txn.batchId": "BATCH-03",
+          "txn.txnRef": "TXN-003",
+          "txn.paidAmount": "1500.00",
+          "txn.paymentDate": "15/10/2021",
+          "txn.txnType": "VMC",
+          "txn.approvalStatus": "A",
+          "txn.paymentStatus": "AP"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "vendor.id": "Sdc Inc 2",
+      "bill.billNo": "Tidewater",
+      "bill.billDate": "12/25/2021",
+      "bill.billAmount": "25000.00",
+      "bill.paidAmount": "10000.00",
+      "bill.balanceAmount": "5000.00",
+      "bill.paymentType": "Check Payment",
+      "bill.paymentAmount": "2500.00",
+      "bill.applicableDiscount": "500.00",
+      "discountApplicableDate": "11/22/2021",
+      "bill.paymentStatus": "Not-Paid",
+      "bill.dueDate": "10/08/2021",
+      "comment": "Hello",
+      "payments": [
+        {
+          "txn.batchId": "BATCH-01",
+          "txn.txnRef": "TXN-001",
+          "txn.paidAmount": "1000.00",
+          "txn.paymentDate": "15/10/2021",
+          "txn.txnType": "VMC",
+          "txn.approvalStatus": "P",
+          "txn.paymentStatus": "AP"
+        },
+        {
+          "txn.batchId": "BATCH-02",
+          "txn.txnRef": "TXN-002",
+          "txn.paidAmount": "1000.00",
+          "txn.paymentDate": "15/10/2021",
+          "txn.txnType": "VMC",
+          "txn.approvalStatus": "P",
+          "txn.paymentStatus": "AP"
+        },
+        {
+          "txn.batchId": "BATCH-03",
+          "txn.txnRef": "TXN-003",
+          "txn.paidAmount": "1500.00",
+          "txn.paymentDate": "15/10/2021",
+          "txn.txnType": "VMC",
+          "txn.approvalStatus": "P",
+          "txn.paymentStatus": "AP"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "vendor.id": "NMA",
+      "bill.billNo": "BILL-001",
+      "bill.billDate": "12/25/2021",
+      "bill.billAmount": "25000.00",
+      "bill.paidAmount": "10000.00",
+      "bill.balanceAmount": "5000.00",
+      "bill.paymentType": "Check Payment",
+      "bill.paymentAmount": "2500.00",
+      "bill.applicableDiscount": "500.00",
+      "discountApplicableDate": "11/22/2021",
+      "bill.paymentStatus": "Partially-Paid",
+      "bill.dueDate": "10/08/2021",
+      "comment": "Hello",
+      "payments": [
+        {
+          "txn.batchId": "BATCH-01",
+          "txn.txnRef": "TXN-001",
+          "txn.paidAmount": "1000.00",
+          "txn.paymentDate": "15/10/2021",
+          "txn.txnType": "VMC",
+          "txn.approvalStatus": "P",
+          "txn.paymentStatus": "AP"
+        },
+        {
+          "txn.batchId": "BATCH-02",
+          "txn.txnRef": "TXN-002",
+          "txn.paidAmount": "1000.00",
+          "txn.paymentDate": "15/10/2021",
+          "txn.txnType": "VMC",
+          "txn.status": "R",
+          "txn.approvalStatus": "A",
+          "txn.paymentStatus": "AP"
+        },
+        {
+          "txn.batchId": "BATCH-03",
+          "txn.txnRef": "TXN-003",
+          "txn.paidAmount": "1500.00",
+          "txn.paymentDate": "15/10/2021",
+          "txn.txnType": "VMC",
+          "txn.approvalStatus": "A",
+          "txn.paymentStatus": "AP"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "vendor.id": "Silver Kite",
+      "bill.billNo": "BILL-001",
+      "bill.billDate": "12/25/2021",
+      "bill.billAmount": "25000.00",
+      "bill.paidAmount": "10000.00",
+      "bill.balanceAmount": "5000.00",
+      "bill.paymentType": "Check Payment",
+      "bill.paymentAmount": "2500.00",
+      "bill.applicableDiscount": "500.00",
+      "discountApplicableDate": "11/22/2021",
+      "bill.paymentStatus": "Paid",
+      "bill.dueDate": "10/08/2021",
+      "comment": "Hello",
+      "payments": [
+        {
+          "txn.batchId": "BATCH-01",
+          "txn.txnRef": "TXN-001",
+          "txn.paidAmount": "1000.00",
+          "txn.paymentDate": "15/10/2021",
+          "txn.txnType": "VMC",
+          "txn.approvalStatus": "A",
+          "txn.paymentStatus": "AP"
+        },
+        {
+          "txn.batchId": "BATCH-02",
+          "txn.txnRef": "TXN-002",
+          "txn.paidAmount": "1000.00",
+          "txn.paymentDate": "15/10/2021",
+          "txn.txnType": "VMC",
+          "txn.approvalStatus": "A",
+          "txn.paymentStatus": "AP"
+        },
+        {
+          "txn.batchId": "BATCH-03",
+          "txn.txnRef": "TXN-003",
+          "txn.paidAmount": "1500.00",
+          "txn.paymentDate": "15/10/2021",
+          "txn.txnType": "VMC",
+          "txn.approvalStatus": "A",
+          "txn.paymentStatus": "AP"
+        }
+      ]
+    }
+  ]
+}

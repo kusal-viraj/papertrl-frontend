@@ -1,0 +1,306 @@
+<div class="grid mt-3">
+  <div class="col-12">
+    <p-table responsiveLayout="scroll" [value]="transactionList" [scrollable]="true" scrollHeight="460px"
+             [class.cursor-loading]="cursorLoading"
+             [style]="{width:'auto'}" styleClass="p-datatable-sm p-datatable-striped detail-table"
+             [(selection)]="selectedData">
+
+      <ng-template pTemplate="colgroup">
+        <colgroup>
+          <col style="min-width:50px">
+          <col style="min-width:50px">
+          <col style="min-width:220px">
+          <col style="min-width:150px">
+          <col style="min-width:150px">
+          <col style="min-width:180px">
+          <col style="min-width:180px">
+          <col style="min-width:185px">
+          <col style="min-width:150px">
+          <col style="min-width:185px">
+          <col style="min-width:185px">
+          <col *ngIf="viewApprovalComment" style="min-width:180px">
+          <col style="min-width:65px">
+          <col style="min-width:150px">
+        </colgroup>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="thead-style detail-table-header-left" id="no">#</th>
+          <th style="padding: 2px !important;">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th class="thead-style detail-table-header-left" id="receipt">Receipt *</th>
+          <th class="thead-style detail-table-header-left" id="date">Transaction Date</th>
+          <th class="thead-style detail-table-header-left" id="pDate">Posting Date</th>
+          <th class="thead-style detail-table-header-left" id="merchant">Merchant</th>
+          <th class="thead-style detail-table-header-left" id="description">Description</th>
+          <th class="thead-style detail-table-header-left" id="department">Department</th>
+          <th class="thead-style detail-table-header-left" id="amount">Amount</th>
+          <th class="thead-style detail-table-header-left" id="account">Expense Account*</th>
+          <th class="thead-style detail-table-header-left" id="code">Project/Task</th>
+          <th *ngIf="viewApprovalComment" class="thead-style detail-table-header-left" id="cmt">Approval Comment</th>
+          <th class="thead-style detail-table-header-left" id="billable">Billable</th>
+          <th class="thead-style detail-table-header-left" id="cardNo">Card Number</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-i="rowIndex" let-item>
+        <tr class="table-rows">
+          <td style="text-align: center"><label>{{i + 1}}</label></td>
+
+          <td>
+            <p-tableCheckbox [value]="item"></p-tableCheckbox>
+          </td>
+
+          <td>
+            <app-receipt-popup-manage [item]="item" (selectAction)="activeTransaction = item"
+                                      (actionComplete)="attachData($event)"></app-receipt-popup-manage>
+          </td>
+
+          <td class="text-center">
+            <div>{{item.transactionDateStr}}</div>
+          </td>
+
+          <td class="text-center">
+            <div>{{item.postingDateStr}}</div>
+          </td>
+
+          <td>
+            <p-autoComplete [(ngModel)]="item.merchant" [suggestions]="merchantResults" id="{{'merchant' + i}}"
+                            (focusout)="saveSingleTransactionData(item)" placeholder="Merchant" class="max-width"
+                            maxlength="100" minLength="1" (keyup)="clearSpace(item.merchant)"
+                            (onSelect)="searchMerchants($event, item, true)" appendTo="body"
+                            (completeMethod)="searchMerchants($event, item, false)"></p-autoComplete>
+          </td>
+
+          <td>
+            <textarea rows="1" pInputTextarea class="max-width" [(ngModel)]="item.description" maxlength="300"
+                      (keyup)="clearSpace(item.description)" placeholder="Description"
+                      (focusout)="saveSingleTransactionData(item)"></textarea>
+          </td>
+
+          <td>
+            <div class="grid">
+              <div class="col-12 text-center" *ngIf="privilegeService.isAuthorized(appAuthorities.CREDIT_CARD_SPLIT_TRANSACTION) && item.split">
+                <span (click)="splitTransactionId = item.id; showSplit()" class="link">--Split--</span>
+              </div>
+              <div class="col-12" *ngIf="!item.split">
+                <p-dropdown [virtualScroll]="department.data.length>20"
+                            virtualScrollItemSize="25" [filter]="true"
+                            [options]="department.data" id="{{'department' + i}}"
+                            [autoDisplayFirst]="false"
+                            [(ngModel)]="item.departmentId" class="department-dropdown" [showClear]="true"
+                            optionDisabled="inactive" optionLabel="name" optionValue="id" placeholder="Select Department"
+                            [style]="{'width':'100%'}" appendTo="body" (onChange)="saveSingleTransactionData(item)">
+
+                  <ng-template pTemplate="footer">
+                    <div class="grid dp-footer">
+                      <div class="col-12 button-wrapper">
+                        <button pButton class="p-button-sm" label="Add New"
+                                *ngIf="privilegeService.isAuthorized(appAuthorities.DEPARTMENT_CREATE)"
+                                (click)="isAddNewDepartment = true;"></button>
+                        <button pButton class="p-button-outlined p-button-sm ml-2" label="Split"
+                                *ngIf="privilegeService.isAuthorized(appAuthorities.CREDIT_CARD_SPLIT_TRANSACTION)"
+                                (click)="splitTransactionId = item.id; showSplit()"></button>
+                      </div>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+            </div>
+          </td>
+
+          <td class="text-right">
+            <div>{{item.amount | number : '1.2-2'}}</div>
+          </td>
+
+          <td>
+            <div class="grid">
+              <div class="col-12 text-center" *ngIf="privilegeService.isAuthorized(appAuthorities.CREDIT_CARD_SPLIT_TRANSACTION) && item.split">
+                <span (click)="splitTransactionId = item.id; showSplit()" class="link">--Split--</span>
+              </div>
+              <div class="col-12" *ngIf="!item.split">
+                <p-dropdown [virtualScroll]="expenseAccountList.data.length > 20"
+                            virtualScrollItemSize="25" [filter]="true"
+                            [options]="expenseAccountList.data" id="{{'account' + i}}"
+                            [autoDisplayFirst]="false"
+                            [(ngModel)]="item.accountId" class="expense-table-dropdown" [showClear]="true"
+                            optionDisabled="inactive" optionLabel="name" optionValue="id" placeholder="Select Account"
+                            [style]="{'width':'100%'}" (onChange)="accountChanged($event, item);" appendTo="body">
+
+                  <ng-template pTemplate="footer">
+                    <div class="grid dp-footer">
+                      <div class="col-12 button-wrapper">
+                        <button pButton class="p-button-sm" label="Add New"
+                                *ngIf="privilegeService.isAuthorized(appAuthorities.ACCOUNTS_CREATE)"
+                                (click)="isAddNewAccount = true;"></button>
+                        <button pButton class="p-button-outlined p-button-sm ml-2" label="Split"
+                                *ngIf="privilegeService.isAuthorized(appAuthorities.CREDIT_CARD_SPLIT_TRANSACTION)"
+                                (click)="splitTransactionId = item.id; showSplit()"></button>
+                      </div>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+            </div>
+          </td>
+
+          <td>
+            <div class="grid">
+              <div class="col-12 text-center" *ngIf="privilegeService.isAuthorized(appAuthorities.CREDIT_CARD_SPLIT_TRANSACTION) && item.split">
+              <span (click)="splitTransactionId = item.id; showSplit()" class="link">--Split--</span>
+              </div>
+              <div class="col-12" *ngIf="!item.split">
+                <p-dropdown [virtualScroll]="projectCodeList.data.length > 20" virtualScrollItemSize="25"
+                            [filter]="true"
+                            [options]="projectCodeList.data" id="{{'code' + i}}" [autoDisplayFirst]="false"
+                            [(ngModel)]="item.projectCodeId" class="project-dropdown" [showClear]="true"
+                            optionDisabled="inactive" optionLabel="name" optionValue="id"
+                            placeholder="Select Project Task"
+                            [style]="{'width':'100%'}" (onChange)="projectChanged($event, item);" appendTo="body">
+
+                  <ng-template pTemplate="footer">
+                    <div class="grid dp-footer">
+                      <div class="col-12 button-wrapper">
+                        <button pButton class="p-button-sm" label="Add New"
+                                *ngIf="privilegeService.isAuthorized(appAuthorities.PROJECT_CODES_CREATE)"
+                                (click)="isAddNewProject = true;"></button>
+                        <button pButton class="p-button-outlined p-button-sm ml-2" label="Split"
+                                *ngIf="privilegeService.isAuthorized(appAuthorities.CREDIT_CARD_SPLIT_TRANSACTION)"
+                                (click)="splitTransactionId = item.id; showSplit()"></button>
+                      </div>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+            </div>
+          </td>
+
+          <td *ngIf="viewApprovalComment">
+            <div app-read-more-text [fieldValue]="item.expenseType" [maxCharacters]="25"></div>
+          </td>
+
+
+          <td class="text-center">
+            <p-checkbox (focusout)="saveSingleTransactionData(item)" [(ngModel)]="item.billableBln" [binary]="true"
+                        label=""></p-checkbox>
+          </td>
+
+          <td class="text-center">
+            <div>{{item.cardNoStr}}</div>
+          </td>
+
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <div class="col-12 text-right mt-2">
+    <h5 class="subHeadingColour font-bold">Transaction Total : {{getTotalCount() | number : '1.2-2'}}</h5>
+  </div>
+
+  <div class="col-12">
+    <h6 class="subHeadingColour"> Select Approver(s)</h6>
+  </div>
+
+  <div class="col-12 mt-1" *ngFor="let workFlow of adHockWorkflow; let i=index">
+    <div class="grid">
+
+      <div class="field col-1 align-self-center text-center" style="padding-top: 25px;">
+        <input pInputText class="index-style text-style amounts"
+               value="{{i + 1}}"
+               readonly></div>
+
+      <div class="field p-fluid col-3">
+        <div class="label-wrapper">Select Approval Group</div>
+        <div class="p-inputgroup">
+          <p-dropdown [virtualScroll]="approvalGroupList.data.length > 20" virtualScrollItemSize="25"
+                      [(ngModel)]="workFlow.approvalGroup" id="approvalGroup{{i}}"
+                      [autoDisplayFirst]="false" optionValue="id" optionLabel="name"
+                      (onChange)="workFlow.approvalUser = null;"
+                      [showClear]="true" appendTo="body" placeholder="Select Approval Group"
+                      [options]="approvalGroupList.data" optionDisabled="inactive" [filter]="true">
+          </p-dropdown>
+        </div>
+      </div>
+
+      <div class="field p-fluid text-center p-2 label-wrapper" style="padding-top: 33px !important;">or</div>
+
+      <div class="field p-fluid col-3">
+        <div class="label-wrapper">Select Approval User</div>
+        <div class="p-inputgroup">
+          <p-dropdown [virtualScroll]="approvalUserList.data.length > 20" virtualScrollItemSize="25"
+                      [(ngModel)]="workFlow.approvalUser" id="approvalUser{{i}}"
+                      (onChange)="workFlow.approvalGroup = null;"
+                      optionValue="id" optionLabel="name" appendTo="body" placeholder="Select Approval User"
+                      [options]="approvalUserList.data" optionDisabled="inactive" [filter]="true"
+                      [showClear]="true">
+          </p-dropdown>
+        </div>
+      </div>
+
+      <div class="field col-1" style="padding-top: 24px;">
+        <button pButton type="button" class="p-button-sm p-button-borderless" iconPos="left"
+                icon="fa-solid fa-trash-can" *ngIf="adHockWorkflow.length > 1" (click)="deleteWorkflow(i)">
+        </button>&nbsp;
+        <button pButton type="button" class="p-button-sm p-button-borderless" iconPos="left"
+                icon="fa-solid fa-plus" (click)="initWorkFlow()">
+
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="grid fixed panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" label="Reset" (click)="reset()" class="p-button-outlined p-button-sm"
+              [disabled]="saveLoading || saveAsApprovedLoading || submitLoading"
+              icon="fa-solid fa-rotate-right"></button>
+
+      <button pButton type="button" class="p-button-sm ml-2" iconPos="left" (click)="submit('APPROVED')"
+              *ngIf="privilegeService.isAuthorized(appAuthorities.CREDIT_CARD_PROCESS_SAVE_AS_APPROVED)"
+              [icon]="saveAsApprovedLoading ? 'pi pi-spin pi-spinner': 'pi pi-save'" label="Save As Approved"
+              [disabled]="saveLoading || saveAsApprovedLoading || submitLoading"></button>
+
+      <button pButton type="button" class="p-button-sm ml-2" iconPos="left" (click)="submit('SUBMIT')"
+              *ngIf="privilegeService.isAuthorized(appAuthorities.CREDIT_CARD_PROCESS_SUBMIT)"
+              [icon]="submitLoading ? 'pi pi-spin pi-spinner': 'fa-solid fa-share-from-square'"
+              label="Submit For Approval"
+              [disabled]="saveLoading || saveAsApprovedLoading || submitLoading"></button>
+    </div>
+  </div>
+</div>
+
+
+<!--Add New Account-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" appendTo="body" [modal]="true" position="right"
+           class="overflow-side-bar" *ngIf="isAddNewAccount" [(visible)]="isAddNewAccount">
+  <ng-template pTemplate="header">Account Information</ng-template>
+  <app-add-account (updatedAccountList)="getAccounts()"
+                   [detailView]="false" [editView]="false" [panel]="true" *ngIf="isAddNewAccount"></app-add-account>
+</p-sidebar>
+
+<!--Add New Project Code-->
+<p-sidebar styleClass="p-sidebar-sm" *ngIf="isAddNewProject" [dismissible]="true" appendTo="body" [modal]="true"
+           position="right" class="overflow-side-bar" [(visible)]="isAddNewProject">
+  <ng-template pTemplate="header">Create Project</ng-template>
+  <app-create-new-project-code (updatedParentCodeList)="getProjectTaskList()" *ngIf="isAddNewProject">
+  </app-create-new-project-code>
+</p-sidebar>
+
+<!--Create New Department-->
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           class="overflow-side-bar"
+           *ngIf="isAddNewDepartment" [(visible)]="isAddNewDepartment">
+  <ng-template pTemplate="header">Create Department</ng-template>
+  <app-add-department (updateDepartments)="getDepartment(); isAddNewDepartment = false"
+                      *ngIf="isAddNewDepartment"></app-add-department>
+</p-sidebar>
+
+<p-dialog appendTo="body" [modal]="true" transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)" [draggable]="false"
+          [(visible)]="showSplitPopup" *ngIf="showSplitPopup" [resizable]="false"
+          header="Split Transaction" position="center" [style]="{width: '65vw'}" styleClass="dialog-padding-zero">
+  <app-credit-card-transaction-split (onSuccess)="showSplitPopup = false; updateSplitRecord($event)"
+                                     [transactionId]="splitTransactionId"></app-credit-card-transaction-split>
+</p-dialog>

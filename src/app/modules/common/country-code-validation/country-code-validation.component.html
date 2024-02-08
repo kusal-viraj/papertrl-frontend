@@ -1,0 +1,17 @@
+<ngx-intl-tel-input
+  [cssClass]="telephoneFormControl.touched && telephoneFormControl.hasError('required') ? ' country-input p-inputtext ' : ' p-inputtext '"
+  [enableAutoCountrySelect]="true"
+  [enablePlaceholder]="true"
+  [required]="false"
+  [numberFormat]="PhoneNumberFormat.International"
+  [phoneValidation]="true"
+  [preferredCountries]="preferredCountries"
+  [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+  [searchCountryFlag]="true"
+  [selectFirstCountry]="false"
+  [selectedCountryISO]="CountryISO.UnitedStates"
+  [separateDialCode]="false"
+  [formControl]="telephoneFormControl"
+  (countryChange)="onCountryChange($event)"
+  appCountryPanelOpen
+></ngx-intl-tel-input>

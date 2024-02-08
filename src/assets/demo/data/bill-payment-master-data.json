@@ -1,0 +1,61 @@
+{
+  "data": [
+    {
+      "id": 415,
+      "paymentRef": "24355345",
+      "paymentAmount": "20,000.00",
+      "discountAmount": "5000.00",
+      "paymentDate": "17/12/2020",
+      "billNo": "345876",
+      "billAmount": "20,000.00",
+      "vendor": "Bamboo Watch",
+      "billDate": "17/12/2020",
+      "billDueDate": "20/12/2020",
+      "poNo": "PO000012",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 2,
+      "paymentRef": "24355345",
+      "paymentAmount": "20,000.00",
+      "discountAmount": "5000.00",
+      "paymentDate": "17/12/2020",
+      "billNo": "345876",
+      "billAmount": "20,000.00",
+      "vendor": "Bamboo Watch",
+      "billDate": "17/12/2020",
+      "billDueDate": "20/12/2020",
+      "poNo": "PO000012",
+      "status": "V"
+    },
+    {
+      "id": 415,
+      "paymentRef": "24355345",
+      "paymentAmount": "20,000.00",
+      "discountAmount": "5000.00",
+      "paymentDate": "Thu Feb 18 2021 00:00:00 GMT+0530 (India Standard Time)",
+      "invoiceId": 414,
+      "billAmount": "20,000.00",
+      "vendor": 2416,
+      "billDate": "17/12/2020",
+      "billDueDate": "20/12/2020",
+      "poNo": "PO000012",
+      "status": "PAID"
+    },
+    {
+      "id": 4,
+      "paymentRef": "24355345",
+      "paymentAmount": "20,000.00",
+      "discountAmount": "5000.00",
+      "paymentDate": "17/12/2020",
+      "billNo": "345876",
+      "billAmount": "20,000.00",
+      "vendor": "Bamboo Watch",
+      "billDate": "17/12/2020",
+      "billDueDate": "20/12/2020",
+      "poNo": "PO000012",
+      "status": "M"
+    }
+  ],
+  "totalRecords": 2
+}

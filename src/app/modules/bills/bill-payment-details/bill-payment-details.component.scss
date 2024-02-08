@@ -1,0 +1,48 @@
+@import '../../../../scss/color';
+@import '../../../../scss/table-responsive';
+
+.payment-form {
+  margin-top: 20px;
+}
+
+.close-btn-detail-view{
+  position: fixed;
+  right: 19px;
+  margin-top: 28px;
+}
+
+.topic {
+  color: $green;
+}
+
+.audit-trail-content{
+  max-width: 100%;
+  max-height: calc(100vh - 480px);
+  overflow: auto;
+.audit-trail {
+  border: 1px solid $tertiary-light-grey;
+  margin-bottom: 8px;
+  border-radius: 8px;
+
+  .audit-topic {
+    font-size: 12px;
+  }
+
+  .audit-auto-topic {
+    font-size: 12px;
+  }
+
+  .audit-date {
+    font-size: 11px;
+    color: #999;
+    position: relative;
+    right: calc(100px - 253px);
+    margin-top: 11px;
+  }
+
+  .audit-cmt {
+    font-size: 12px;
+    color: $black-gray;
+  }
+}
+}

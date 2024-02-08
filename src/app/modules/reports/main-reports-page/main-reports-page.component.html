@@ -1,0 +1,65 @@
+<div class="p-card card-custom">
+  <div class="p-card-body grid">
+
+    <div class="col-3  field pr-0">
+      <div
+        [class]="reportId === appConstant.BILLABLE_TRANSACTION ? 'report-type-list-billableTransaction' : 'report-type-list-wrapper'">
+        <div class="report-type-list-height">
+
+          <div *ngFor="let reports of reportGroups">
+            <p-fieldset [collapsed]=false [toggleable]="true" legend="{{reports.reportCategory}}">
+              <p-listbox class="list-box" optionLabel="name" optionValue="id" [options]="reports.reportTypes"
+                         (onClick)="loadReportFilters($event)"></p-listbox>
+            </p-fieldset>
+            <br>
+          </div>
+
+        </div>
+        <br>
+        <app-report-main-form [reportId]="reportId" [fieldIds]="filterIds" #reportMainFormComponent
+                              [reportName]="reportName"></app-report-main-form>
+      </div>
+
+    </div>
+
+    <div class="divider-width-wrapper" [style]="'padding : 0'">
+      <p-divider layout="vertical" [ngStyle]="{'color': '#8c8c8c29'}"></p-divider>
+    </div>
+
+
+    <div class="col-8 preview-content-wrapper">
+      <div class="p-fluid">
+        <div class="col-12">
+          <ngx-extended-pdf-viewer *ngIf="reportId !== appConstant.BILLABLE_TRANSACTION" [handTool]="false"
+                                   [showOpenFileButton]="false" [src]="reportUrl"
+                                   [showBookmarkButton]="false" [zoom]="125" [enablePrint]="false"
+                                   useBrowserLocale="true"
+                                   height="100%"></ngx-extended-pdf-viewer>
+
+          <ng-container *ngIf="reportId === appConstant.BILLABLE_TRANSACTION">
+
+            <div class="grid item-account-identifier"
+                 *ngIf="viewPoBillableTransactionTable || viewBillBillableTransactionTable">
+              <span class="item-color-wrapper"></span> &nbsp; Item &nbsp;
+              <span class="account-color-wrapper"></span> &nbsp; Account
+            </div>
+
+            <app-po-billable-transaction-table></app-po-billable-transaction-table>
+            <app-bill-billable-transaction-table></app-bill-billable-transaction-table>
+            <app-expense-billable-transaction-table></app-expense-billable-transaction-table>
+
+            <div class="empty-data-wrapper"
+                 *ngIf="!viewPoBillableTransactionTable && !viewBillBillableTransactionTable &&
+            !viewExpenseBillableTransactionTable">No Data to Display
+            </div>
+
+          </ng-container>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,8 @@
+{
+  "accountDetailType": {"label": "Test Account Detail", "id": "NY"},
+  "accountName": "SAMPLE ACCOUNT-100",
+  "accountNumber": "ACC-1000",
+  "accountType": {"label": "Inventory", "id": "NY"},
+  "description": "sample account exsaple",
+  "parentAccount": {"label": "Account Three", "id": "LDN"}
+}

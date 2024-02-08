@@ -1,0 +1,227 @@
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
+import {NotificationService} from '../../../../shared/services/notification/notification.service';
+import {IntegrationUiUtility} from '../integration-ui-utility';
+import {IntegrationService} from '../../../../shared/services/support/integration.service';
+import {AppConstant} from '../../../../shared/utility/app-constant';
+import {HttpResponseMessage} from '../../../../shared/utility/http-response-message';
+import {CommonUtility} from '../../../../shared/utility/common-utility';
+import {DropdownDto} from "../../../../shared/dto/common/dropDown/dropdown-dto";
+import {AppFormConstants} from "../../../../shared/enums/app-form-constants";
+
+@Component({
+  selector: 'app-integration-configuration-create',
+  templateUrl: './integration-configuration-create.component.html',
+  styleUrls: ['./integration-configuration-create.component.scss']
+})
+export class IntegrationConfigurationCreateComponent implements OnInit {
+  constructor(public formBuilder: UntypedFormBuilder, public notificationService: NotificationService,
+              public integrationService: IntegrationService) {
+  }
+
+  @Input() editView;
+  @Input() configId;
+  @Output() success: EventEmitter<any> = new EventEmitter<any>();
+
+  public configurationForm: UntypedFormGroup;
+  public integrationUiUtility: IntegrationUiUtility = new IntegrationUiUtility(this.integrationService, this.notificationService);
+  public appConstant = new AppConstant();
+  SYSTEM_BUSINESS_CENTRAL_CLOUD = AppConstant.SYSTEM_BUISNESS_CENTRAL_CLOUD;
+  public showRedirectUrl = false;
+  public loading = false;
+  public isViewBasicAuthDetails = false;
+  public otherData: any;
+  public systemList: DropdownDto = new DropdownDto();
+
+
+  ngOnInit(): void {
+    this.configurationForm = this.formBuilder.group({
+      id: [null],
+      tenantId: [null, Validators.required],
+      systemId: [null, Validators.required],
+      redirectUrl: [null],
+      baseUrl: [null],
+      tpEnvironment: [null],
+      tpTenantId: [null],
+      integrationSystemTenantId: [null],
+      integrationSystemCompanyName: [null],
+      pullInitDataFrom: [null],
+
+    });
+
+    this.configurationForm.get(AppFormConstants.TENANT_ID).valueChanges.subscribe(data => this.getIntegrationSystems(data));
+
+    if (this.editView) {
+      this.getDataToEdit().then(r => {
+        this.systemChanged(this.otherData);
+      });
+    }
+  }
+
+  getIntegrationSystems(tenantId) {
+    if (!tenantId) {
+      this.systemList.data = [];
+      return;
+    }
+    if (this.editView) {
+      this.integrationService.getAllIntegrationSystemList().subscribe((res: any[]) => {
+        this.systemList.data = res;
+      }, error => {
+        this.notificationService.errorMessage(error);
+      });
+    } else {
+      this.integrationService.getIntegrationSystemList(tenantId).subscribe((res: any[]) => {
+        this.systemList.data = res;
+      }, error => {
+        this.notificationService.errorMessage(error);
+      });
+    }
+  }
+
+
+  /**
+   * remove space if empty space typed
+   */
+  removeSpace(fieldName) {
+    if (this.configurationForm.get(fieldName).value) {
+      if (this.configurationForm.get(fieldName).value[0] === ' ') {
+        this.configurationForm.get(fieldName).patchValue('');
+      }
+    }
+  }
+
+  addSystem() {
+    this.loading = true;
+    if (this.configurationForm.valid) {
+      // if (this.editView) {
+      //   this.editConfig();
+      // } else {
+      this.createConfig();
+      // }
+    } else {
+      this.loading = false;
+      new CommonUtility().validateForm(this.configurationForm);
+    }
+  }
+
+  /**
+   * Create System
+   */
+  createConfig() {
+    this.integrationService.createConfiguration(this.configurationForm.value).subscribe((res: any) => {
+      if (res.status === AppConstant.HTTP_RESPONSE_STATUS_CREATED) {
+        this.notificationService.successMessage(HttpResponseMessage.INTEGRATION_CONFIG_CREATED_SUCCESSFULLY);
+        this.configurationForm.reset();
+        this.loading = false;
+        this.success.emit();
+      } else {
+        this.loading = false;
+        this.notificationService.infoMessage(res.body.message);
+      }
+    }, error => {
+      this.loading = false;
+      this.notificationService.errorMessage(error);
+    });
+  }
+
+  // /**
+  //  * Edit System
+  //  */
+  // editConfig() {
+  //   this.integrationService.editConfiguration(this.configurationForm.value).subscribe((res: any) => {
+  //     if (res.status === AppConstant.HTTP_RESPONSE_STATUS_CREATED) {
+  //       this.notificationService.successMessage(HttpResponseMessage.INTEGRATION_CONFIG_UPDATED_SUCCESSFULLY);
+  //       this.success.emit();
+  //       this.loading = false;
+  //     } else {
+  //       this.loading = false;
+  //       this.notificationService.infoMessage(res.body.message);
+  //     }
+  //   }, error => {
+  //     this.loading = false;
+  //     this.notificationService.errorMessage(error);
+  //   });
+  // }
+
+  /**
+   * System changed from dropdown
+   */
+  systemChanged(e: any) {
+    this.otherData = e;
+    this.showRedirectUrl = e === AppConstant.AUTH_CODE_GRANT_TYPE_ID;
+    this.systemChangedFormValidate();
+    this.validateFields(e);
+  }
+
+  /**
+   * Get Data to Edit From Backend
+   */
+  getDataToEdit() {
+    return new Promise<void>(resolve => {
+      this.integrationService.getIntegrationConfiguration(this.configId).subscribe((res: any) => {
+        if (res.status === AppConstant.HTTP_RESPONSE_STATUS_SUCCESS) {
+          this.showRedirectUrl = !!res.body.redirectUrl;
+          this.isViewBasicAuthDetails = !!res.body.baseUrl;
+          this.configurationForm.patchValue(res.body);
+        } else {
+          this.notificationService.infoMessage(res.body.message);
+        }
+        resolve();
+      }, error => {
+        resolve();
+        this.notificationService.errorMessage(error);
+      });
+    })
+  }
+
+  /**
+   * Validate Redirect Url field on system change
+   */
+  systemChangedFormValidate() {
+    const redirectUrl = this.configurationForm.get('redirectUrl');
+    if (this.showRedirectUrl) {
+      redirectUrl.setValidators([Validators.required]);
+    } else {
+      redirectUrl.reset();
+      redirectUrl.clearValidators();
+    }
+    redirectUrl.updateValueAndValidity();
+  }
+
+  /**
+   * Reset
+   */
+  reset() {
+    if (this.editView) {
+      this.getDataToEdit();
+    } else {
+      this.configurationForm.reset();
+    }
+  }
+
+  /**
+   * this method can be used to validate integrated tenant id / company name
+   * @param e to auth type id
+   */
+  validateFields(e) {
+    const integratedTenantId = this.configurationForm.get('tenantId');
+    const integratedCompanyName = this.configurationForm.get('systemId');
+    const tpEnvironment = this.configurationForm.get('tpEnvironment');
+    this.isViewBasicAuthDetails = (AppConstant.BASIC_AUTH_TYPE_ID === e);
+    if (e === AppConstant.BASIC_AUTH_TYPE_ID) {
+      integratedTenantId.setValidators(Validators.required);
+      integratedCompanyName.setValidators(Validators.required);
+    } else {
+      integratedTenantId.clearValidators();
+      integratedCompanyName.clearValidators();
+    }
+    if (integratedCompanyName.value == AppConstant.SYSTEM_BUISNESS_CENTRAL_CLOUD) {
+      tpEnvironment.setValidators(Validators.required);
+    } else {
+      tpEnvironment.clearValidators();
+    }
+    integratedTenantId.updateValueAndValidity();
+    integratedCompanyName.updateValueAndValidity();
+    tpEnvironment.updateValueAndValidity();
+  }
+}

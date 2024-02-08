@@ -1,0 +1,186 @@
+<br>
+<form  [formGroup]="poSubmitForm">
+  <div class="grid ml-2 mr-2 p-fluid">
+    <div class="field xl:col-12 lg:col-12 md:col-12 sm:col-12 col-12" *ngIf="!isDetailView">
+      <div>
+        <div class="p-inputgroup">
+          <p-checkbox class="costume-checkbox checkbox-label-wrapper"
+                      [binary]="true" (onChange)="isInsertApproverPO($event)">
+          </p-checkbox>
+          <span
+            class="col-10">Insert additional approver. (Add another approver before me).</span>
+        </div>
+      </div>
+    </div>
+    <div [ngClass]="extraSmallHorSplitter ? 'field xl:col-6 lg:col-6 md:col-12 sm:col-12 col-12': 'col-12'">
+      <span  [ngStyle]="{'opacity': !(isAssigneeCanSelect && !isDetailView && !matchingAutomation || isInsertApproverChecked) ? '0.5' : '1'}">
+          <label class="label-wrapper" for="assignee">Select Approver</label>
+           <p-dropdown [readonly]="!(isAssigneeCanSelect && !isDetailView && !matchingAutomation || isInsertApproverChecked)"
+                       [virtualScroll]="approvers.data.length>20" virtualScrollItemSize="25"
+                       id="assignee" appendTo="body" #dpApprovalUser
+                       [options]="approvers.data" optionDisabled="inactive" [autoDisplayFirst]="false"
+                       formControlName="approvalUser" optionLabel="name" optionValue="id"
+                       [showClear]="true" (onChange)="onChangeAssignee(dpApprovalUser.selectedOption.id)" [filter]="true">
+             <ng-template pTemplate="selectedItem">
+               <div>{{dpApprovalUser.selectedOption.name}}</div>
+             </ng-template>
+             <ng-template let-approvalGroups pTemplate="item">
+                 <div class="grid">
+                     <div class="dropdown-list"
+                          [ngClass]="approvalGroups.id == 0 ? ' dropdown-add': null">{{approvalGroups.name}}</div>
+                     <em *ngIf="approvalGroups.id == 0" class="pi pi-plus dropdown-icon dropdown-add"></em>
+                 </div>
+             </ng-template>
+           </p-dropdown>
+
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="poSubmitForm.get('approvalUser').dirty && poSubmitForm.get('approvalUser').errors">
+        It is mandatory to select an approver when the checkbox is enabled
+      </div>
+    </div>
+    <div class="field xl:col-12 lg:col-12 md:col-12 sm:col-12 col-12" *ngIf="!isDetailView">
+      <label class="label-wrapper" for="comment">Comment</label>
+      <div  class="p-inputgroup">
+          <span class="p-float-label">
+            <textarea id="comment" formControlName="comment" [rows]="3"
+                      (keyup)="removeSpaces.clearSpace(poSubmitForm, 'comment'); clearCommentValidation(submitForm.comment.value)"
+                      pInputTextarea maxlength="300"></textarea>
+
+          </span>
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="isReachMaxLength">Comment must be less than 300 characters</div>
+      <div class="p-invalid text-align-left" *ngIf="isCommentNotAvailable">Comments are required to reject this
+        document
+      </div>
+    </div>
+  </div>  <br>
+
+  <div *ngIf="matchingAutomation && isWorkflowConfigAvailable"
+       class="order-drop-zone col-12 top-marging">
+    <div class="grid mt-2" *ngIf="!this.isSaveAsApprovedWorkFlow">
+      <div class="col-12">
+        <h6 class="subHeadingColour">Automated Workflow</h6>
+        <p-table responsiveLayout="scroll" [value]="matchingAutomation" scrollable="true" scrollHeight="150px"
+                 styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col style="width:80px">
+              <col style="width:180px">
+              <col style="width:180px">
+            </colgroup>
+          </ng-template>
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="thead-style detail-table-header-left" id="appOrder">Approval Order</th>
+              <th class="thead-style detail-table-header-left" id="appgroup">Approval Group</th>
+              <th class="thead-style detail-table-header-left" id="appUser">Approval User</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-i="rowIndex" let-item>
+            <tr>
+              <td class="text-center" [style]="'height : 30px'">
+                <label> {{item.approvalOrder}}</label>
+              </td>
+
+              <td [style]="'height : 30px'">
+                <label> {{item.approvalGroupName}}</label>
+              </td>
+
+              <td [style]="'height : 30px'">
+                <label> {{item.approvalUserName}}</label>
+              </td>
+
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+
+
+</form>
+
+<div class="grid p-fluid sticky-btn" *ngIf="!isDetailView">
+  <div class="button-set-wrapper form-footer-button">
+    <div [ngClass]="extraSmallHorSplitter ? 'xl:col-3 lg:col-3 md:col-12 sm:col-12 btn-resize': 'col-12'">
+      <button pButton (click)="downloadAttachment(poMasterDto)" class="audit-btn p-button-outlined p-button-sm approval" type="button"
+              label=" " [disabled]="btnLoading">
+        <div style="width: 100%">
+          <span *ngIf="!isSplitterSmall" class="{{appIcons.ICON_DOWNLOAD_BILL_FONT_AWESOME}}"></span> &nbsp;
+          <span>Download Attachments</span></div>
+      </button>
+    </div>
+
+    <div [ngClass]="extraSmallHorSplitter ? 'xl:col-3 lg:col-3 md:col-12 sm:col-12 btn-resize': 'col-12'">
+      <button pButton (click)="viewAuditTrial()" class="audit-btn p-button-outlined p-button-sm approval" type="button"
+              label=" " [disabled]="btnLoading" *ngIf="privilegeService.isAuthorized(appAuthorities.PURCHASE_ORDER_VIEW_AUDIT_TRAIL)">
+        <div style="width: 100%"><span *ngIf="!isSplitterSmall" class="{{appIcons.ICON_AUDIT_TRAIL}}"></span> &nbsp;
+          <span>Audit Trial</span></div>
+      </button>
+    </div>
+
+    <div [ngClass]="extraSmallHorSplitter ? 'xl:col-3 lg:col-3 md:col-12 sm:col-12 btn-resize': 'col-12'">
+      <button pButton (click)="rejectPO(); checkCommentAvailable()" class="reject-btn outlined p-button-sm approval"
+              *ngIf="isValidApproveAccess(appAuthorities.PURCHASE_ORDER_REJECT)"
+              type="button" label=" " [disabled]="btnLoading" >
+        <div style="width: 100%"><span *ngIf="!isSplitterSmall" [ngClass]="rejectBtn ? 'pi pi-spin pi-spinner': 'fa fa-minus-circle'"></span> &nbsp; <span
+        >Reject</span></div>
+      </button>
+    </div>
+
+    <div *ngIf="isApprove && isValidApproveAccess(appAuthorities.PURCHASE_ORDER_APPROVE) && !(isInsertApproverChecked && poSubmitForm.get('approvalUser').value)"
+         [ngClass]="extraSmallHorSplitter ? 'xl:col-3 lg:col-3 md:col-12 sm:col-12 btn-resize': 'col-12'">
+      <button pButton (click)="approveAndReassign(false)" class="p-button p-button-sm approval" type="submit"
+              label=" " [disabled]="btnLoading">
+        <div style="width: 100%"><span *ngIf="!isSplitterSmall" [ngClass]="reassignBtn ? 'pi pi-spin pi-spinner': 'fa fa-check'"></span> &nbsp;<span>Approve</span>
+        </div>
+      </button>
+    </div>
+
+    <div *ngIf="isApproveAndReassign && isValidApproveAccess(appAuthorities.PURCHASE_ORDER_APPROVE) && !isInsertApproverChecked
+    && !(isInsertApproverChecked && poSubmitForm.get('approvalUser').value)"
+         [ngClass]="extraSmallHorSplitter ? 'xl:col-3 lg:col-3 md:col-12 sm:col-12 btn-resize': 'col-12'">
+      <button pButton (click)="approveAndReassign(false)" class="p-button p-button-sm approval" type="submit"
+              label=" " [disabled]="btnLoading">
+        <div style="width: 100%"><span *ngIf="!isSplitterSmall" [ngClass]="reassignBtn ? 'pi pi-spin pi-spinner': 'fa fa-check'"></span> &nbsp;<span>Approve & Reassign</span>
+        </div>
+      </button>
+    </div>
+
+    <div *ngIf="isApproveAndFinalize && isValidApproveAccess(appAuthorities.PURCHASE_ORDER_APPROVE) && !(isInsertApproverChecked && poSubmitForm.get('approvalUser').value)"
+         [ngClass]="extraSmallHorSplitter ? 'xl:col-3 lg:col-3 md:col-12 sm:col-12 btn-resize': 'col-12'">
+      <button pButton (click)="approveAndFinalize()" class="p-button p-button-sm approval" type="submit"
+              label=" ">
+        <div style="width: 100%"><span *ngIf="!isSplitterSmall" [ngClass]="finalizeBtn ? 'pi pi-spin pi-spinner': 'fa fa-check'"></span> &nbsp;
+          <span>{{matchingAutomation && !isSaveAsApprovedWorkFlow? 'Approve' : 'Approve & Finalize'}}</span>
+        </div>
+      </button>
+    </div>
+
+    <div *ngIf="(isInsertApproverChecked && poSubmitForm.get('approvalUser').value) && isValidApproveAccess(appAuthorities.PURCHASE_ORDER_APPROVE)"
+         [ngClass]="extraSmallHorSplitter ? 'xl:col-3 lg:col-3 md:col-12 sm:col-12 btn-resize': 'col-12'">
+      <button pButton (click)="approveAndReassign(true)" class="p-button p-button-sm approval" type="submit"
+              label=" " [disabled]="btnLoading">
+        <div style="width: 100%"><span *ngIf="!isSplitterSmall" [ngClass]="reassignBtn ? 'pi pi-spin pi-spinner': 'fa fa-paper-plane'"></span> &nbsp;<span>Submit for Approvel</span>
+        </div>
+      </button>
+    </div>
+
+  </div>
+</div>
+<!--PO AuditTrail-->
+<app-audit-trial *ngIf="auditTrialPanel" [auditTrial]="auditTrialDto" [heading]="'Purchase Order#' + poNumber"
+                 (closeDrawer)="auditTrialPanel = false" [panelShow]="auditTrialPanel"></app-audit-trial><br>
+
+<p-toast position="bottom-right"></p-toast>
+
+<!--Add New User-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" appendTo="body" [modal]="true" position="right"
+           class="overflow-side-bar" *ngIf="isAddNewUser" [(visible)]="isAddNewUser">
+  <ng-template pTemplate="header">Create User</ng-template>
+  <app-add-user (emittedTabIndex)="getExtendedApprovalUserList(approvers)" [panel]="true" [detailView]="false"
+                [editView]="false" *ngIf="isAddNewUser"></app-add-user>
+</p-sidebar>

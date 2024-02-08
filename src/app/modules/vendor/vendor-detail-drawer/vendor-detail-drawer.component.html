@@ -1,0 +1,96 @@
+<div class="side-bar-drawer-content p-3">
+<div class="p-fluid grid">
+  <div class="col-12 subHeadingColour" *ngIf="vendor.name">
+    <label class="font-bold">Name : &nbsp;</label> {{vendor.name}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.vendorCode">
+    <label class="font-bold">Vendor Code : &nbsp;</label> {{vendor.vendorCode}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.contactNumber">
+    <label class="font-bold">Contact Number : &nbsp;</label>{{vendor.contactNumber}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.email">
+    <label class="font-bold">Email Address : &nbsp;</label>{{vendor.email}} </div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.contactPerson">
+    <label class="font-bold">Contact Name : &nbsp;</label> {{vendor.contactPerson}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.ccEmail">
+    <label class="font-bold">CC Email Address : &nbsp;</label>{{vendor.ccEmail}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.fax">
+    <label class="font-bold">Fax Number : &nbsp;</label> {{vendor.fax}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.tenNinetyNine">
+    <label class="font-bold">Is 1099 Vendor?: &nbsp;</label> {{vendor.tenNinetyNine ? 'Yes' : 'No'}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.permenantAddress.addressLine1">
+    <label class="font-bold">Address Line 1 : &nbsp;</label> {{vendor.permenantAddress.addressLine1}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.permenantAddress.addressLine2">
+    <label class="font-bold">Address Line 2 : &nbsp;</label> {{vendor.permenantAddress.addressLine2}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.permenantAddress.country">
+    <label class="font-bold">Country : &nbsp;</label> {{vendor.permenantAddress.country}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.permenantAddress.zipcode">
+    <label class="font-bold">Zip code : &nbsp;</label> {{vendor.permenantAddress.zipcode}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.permenantAddress.city">
+    <label class="font-bold">City : &nbsp;</label> {{vendor.permenantAddress.city}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.permenantAddress.addressState">
+    <label class="font-bold">State : &nbsp;</label> {{vendor.permenantAddress.addressState}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.remitAddress && vendor.remitAddress.addressLine1">
+    <label class="font-bold">Remit Address Line 1 : &nbsp;</label> {{vendor.remitAddress.addressLine1}} </div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.remitAddress && vendor.remitAddress.addressLine2">
+    <label class="font-bold">Remit Address Line 2 : &nbsp;</label> {{ vendor.remitAddress.addressLine2}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.remitAddress && vendor.remitAddress.country">
+    <label class="font-bold">Remit Country : &nbsp;</label> {{vendor.remitAddress.country}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.remitAddress && vendor.remitAddress.zipcode">
+    <label class="font-bold">Remit Zip code : &nbsp;</label> {{vendor.remitAddress.zipcode}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.remitAddress && vendor.remitAddress.city">
+    <label class="font-bold">Remit City : &nbsp;</label> {{vendor.remitAddress.city}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.remitAddress && vendor.remitAddress.addressState">
+    <label class="font-bold">Remit State : &nbsp;</label> {{vendor.remitAddress.addressState}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.taxClassification && vendor.taxClassification">
+    <label class="font-bold">Federal Tax : &nbsp;</label> {{vendor.taxClassification}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.empIdNo && vendor.empIdNo">
+    <label class="font-bold">SSN / Employee ID : &nbsp;</label> {{vendor.empIdNo}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.exemptPayeeCode && vendor.exemptPayeeCode">
+    <label class="font-bold">Exempt Payee Code : &nbsp;</label> {{vendor.exemptPayeeCode}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.fatcaReportingCode && vendor.fatcaReportingCode">
+    <label class="font-bold">FACTA Reporting Code : &nbsp;</label> {{vendor.fatcaReportingCode}}</div>
+
+  <div class="col-12 subHeadingColour" *ngIf="vendor.w9Attachment && vendor.w9Attachment.length !== 0">
+    <label class="font-bold">W9 Attachment: &nbsp;</label><br>
+    <ul class="font-bold">
+      <li class="custom-link" *ngFor="let w9Attachment of vendor.w9Attachment"
+          (click)="downloadW9(w9Attachment)">Download {{w9Attachment.fileName}} <i *ngIf="w9Attachment.downloading" class="pi pi-spin pi-spinner"></i></li>
+    </ul>
+  </div>
+
+  <br>
+  <div class="col-12 subHeadingColour mt-3" *ngIf="vendor.diverseSupplier">
+    <label class="font-bold" style="font-size: 14px">Supplier Diversity Information</label></div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.diverseSupplier">
+    <label class="font-bold">Diverse Supplier : &nbsp;</label> {{vendor.diverseSupplier ? 'Yes' : 'No'}}</div>
+
+  <div class="col-12 subHeadingColour" *ngIf="vendor.classificationIdList && vendor.classificationIdList.length !== 0">
+    <label class="font-bold">Classifications : &nbsp;</label><br>
+    <ul>
+      <li *ngFor="let classification of classificationList">{{classification}}</li>
+    </ul>
+  </div>
+
+  <div class="col-12 subHeadingColour" *ngIf="vendor.classificationAttachment && vendor.classificationAttachment.length !== 0">
+    <label class="font-bold">Diversity Certifications: &nbsp;</label><br>
+    <ul class="font-bold">
+      <li class="custom-link" *ngFor="let classification of vendor.classificationAttachment"
+          (click)="downloadClassification(classification)">Download {{classification.fileName}} <i *ngIf="classification.downloading" class="pi pi-spin pi-spinner"></i></li>
+    </ul>
+  </div>
+
+
+  <br>
+  <div class="col-12 subHeadingColour mt-3"
+       *ngIf="vendor.sicCode || vendor.naicsCode || vendor.webUrl || vendor.businessDescription">
+    <label class="font-bold" style="font-size: 14px">Additional Company Details for PaperTrl Marketplace</label></div>
+
+  <div class="col-12 subHeadingColour" *ngIf="vendor.sicCode">
+    <label class="font-bold">SIC Code : &nbsp;</label> {{vendor.sicCodeName}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.naicsCode">
+    <label class="font-bold">NAICS Code : &nbsp;</label> {{vendor.naicsCodeName}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.webUrl">
+    <label class="font-bold">Web URL : &nbsp;</label> {{vendor.webUrl}}</div>
+  <div class="col-12 subHeadingColour" *ngIf="vendor.businessDescription">
+    <label class="font-bold">Company Description : &nbsp;</label> {{vendor.businessDescription}}</div>
+</div>
+</div>

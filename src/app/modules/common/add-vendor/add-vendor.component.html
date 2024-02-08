@@ -1,0 +1,206 @@
+<div class="side-bar-drawer-content p-3 pt-4">
+<form [formGroup]="addVendorForm" (ngSubmit)="addNewVendor(addVendorForm)" autocomplete="off">
+  <div class="grid p-fluid">
+    <div [ngClass]="'field col-12'">
+      <div>
+            <span>
+              <label class="label-wrapper"  for="vendorName">Vendor Name* </label>
+              <input formControlName="name" id="vendorName" type="text"
+              maxlength="150" (keyup)="removeSpace('name')" pInputText>
+                   </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="addVendorForm.get('name').dirty && addVendorForm.get('name').hasError('required')">
+        Vendor Name is required
+      </div>
+    </div>
+
+    <div [ngClass]="'field col-12'">
+      <div>
+            <span>
+              <label class="label-wrapper" for="email">Email Address*</label>
+              <input (keyup)="checkEmailAvailability(); removeSpace('email')" (paste)="checkEmailAvailability(); removeSpace('email')" formControlName="email"
+                     id="email" maxlength="150" pInputText>
+            </span>
+      </div>
+      <div class="p-invalid  text-align-left"
+           *ngIf="addVendorForm.get('email').dirty && addVendorForm.get('email').errors">
+        <div *ngIf="addVendorForm.get('email').errors.required">Email Address is required</div>
+        <div *ngIf="addVendorForm.controls['email'].hasError('emailValidate')">Email must be a valid
+          email address
+        </div>
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="isEmailAvailable">
+        Email already exist, Please enter new one
+      </div>
+    </div>
+    <div [ngClass]="'field col-12'">
+           <span>
+               <label class="label-wrapper" for="country">Select Country*</label>
+               <p-dropdown [virtualScroll]="countries.length > 0" virtualScrollItemSize="25"  id="country" formControlName="country" showClear="true"
+                           [autoDisplayFirst]="false" [options]="countries" [filter]="true" appendTo="body"
+                           optionLabel="name" optionValue="id"></p-dropdown>
+
+           </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="addVendorForm.get('country').dirty && addVendorForm.get('country').errors">
+        Country is required
+      </div>
+    </div>
+
+
+    <div [ngClass]="'field col-12'">
+      <div>
+            <span>
+              <label class="label-wrapper" for="vendorCode">Vendor Code</label>
+              <input (keyup)="checkVendorCodeAvailability(); removeSpace('vendorCode')" (paste)="checkVendorCodeAvailability();removeSpace('vendorCode')"
+                     formControlName="vendorCode" id="vendorCode"
+                     pInputText>
+
+            </span>
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="isVendorCodeAvailable">
+        Vendor Code already exist, Please enter new one
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="addVendorForm.get('vendorCode').hasError('maxlength')">
+        Vendor Code must be less than 50 characters
+      </div>
+    </div>
+    <div [ngClass]="'field col-12'">
+      <div>
+            <span>
+              <label class="label-wrapper" for="contactName">Contact Name</label>
+              <input formControlName="contactPerson" id="contactName"
+                     maxlength="150" (keyup)="removeSpace('contactPerson')" pInputText>
+            </span>
+      </div>
+    </div>
+    <div [ngClass]="'field col-12'">
+     <label class="label-wrapper" for="contactNumber">Contact Number</label>
+     <app-country-code-validation  [telephoneFormControl]="addVendorForm.get('contactNumber')"></app-country-code-validation>
+      <div *ngIf="addVendorForm.get('contactNumber').hasError('validatePhoneNumber')" class="p-invalid text-align-left">
+        Invalid Contact Number
+      </div>
+    </div>
+    <div [ngClass]="'field col-12'">
+      <div>
+            <span>
+              <label class="label-wrapper" for="faxNumber">Fax Number</label>
+              <input formControlName="fax" id="faxNumber"
+                     pInputText (keyup)="removeSpace('fax')">
+            </span>
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="addVendorForm.get('fax').hasError('maxlength')">
+        Fax Number must be less than 50 characters
+      </div>
+    </div>
+
+    <div [ngClass]="'field col-12'">
+      <div>
+            <span>
+              <label class="label-wrapper" for="ccEmail">CC Email Address</label>
+              <input formControlName="ccEmail" id="ccEmail"
+                     maxlength="150" pInputText (keyup)="removeSpace('ccEmail')">
+
+            </span>
+      </div>
+      <div class="p-invalid  text-align-left"
+           *ngIf="addVendorForm.get('ccEmail').dirty && addVendorForm.get('ccEmail').errors">
+        <div *ngIf="addVendorForm.controls['ccEmail'].hasError('emailValidate')">Email must be a valid
+          email address
+        </div>
+      </div>
+    </div>
+
+    <div [ngClass]="'field col-12'">
+         <span>
+            <label class="label-wrapper" for="approvalGroup">Select Vendor Group</label>
+               <p-multiSelect [virtualScroll]="vendorsGroupList.data.length > 20" virtualScrollItemSize="25"
+                              [options]="vendorsGroupList.data" id="approvalGroup" optionValue="id"
+                              optionDisabled="inactive" class="responsive-multiselect" #multiSelect
+                              (onChange)="vendorGroupChanged($event, multiSelect )"
+                              inputId="approvalGroup" formControlName="vendorGroupIdList" optionLabel="name"
+                              [showToggleAll]="true" [filter]="true">
+
+                 <ng-template let-vendorAccount pTemplate="item">
+                   <div class="grid">
+                     <div class="dropdown-list"
+                          [ngClass]="vendorAccount.id == 0 ? ' dropdown-add': null">{{vendorAccount.name}}</div>
+                     <i *ngIf="vendorAccount.name == 'Add New'" class="pi pi-plus dropdown-icon  dropdown-add"></i>
+                   </div>
+                 </ng-template>
+               </p-multiSelect>
+
+            </span>
+    </div>
+
+    <div [ngClass]="'field col-12'">
+       <span>
+         <label  class="label-wrapper" for="term">Select Payment Term</label>
+              <p-dropdown [options]="termList.data" id="term" [autoDisplayFirst]="false" [filter]="true"
+                          formControlName="term" optionValue="id" optionLabel="name" [showClear]="true">
+               </p-dropdown>
+
+            </span>
+    </div>
+
+    <div [ngClass]="'field col-12'"  *ngIf="addVendorForm.get(appFormConstants.TERM).value === 10">
+      <div>
+            <span>
+              <label class="label-wrapper" for="netDaysDue">Net Days Due</label>
+              <input formControlName="netDaysDue" numbersOnly id="netDaysDue" type="text" pInputText>
+            </span>
+      </div>
+    </div>
+
+    <div [ngClass]="'field col-12'"  *ngIf="addVendorForm.get(appFormConstants.TERM).value === 10">
+      <div>
+            <span>
+              <label class="label-wrapper" for="discountPercentage">Discount Percentage</label>
+              <input formControlName="discountPercentage" id="discountPercentage" type="text" pInputText
+                     currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.'}" maxlength="6">
+
+            </span>
+      </div>
+    </div>
+
+    <div [ngClass]="'field col-12'"  *ngIf="addVendorForm.get(appFormConstants.TERM).value === 10">
+      <div>
+            <span>
+              <label class="label-wrapper" for="discountDaysDue">Discount Days Due</label>
+              <input formControlName="discountDaysDue" numbersOnly id="discountDaysDue" type="text" pInputText>
+
+            </span>
+      </div>
+    </div>
+
+    <div [ngClass]="'field col-12'" *ngIf="isConfidential">
+      <div>
+        <label class="label-wrapper" for="confidential">Is Confidential Vendor?</label>
+        <p-checkbox name="confidential" binary="true"
+                    class="costume-checkbox-wrapper" formControlName="confidential"
+                    id="confidential"></p-checkbox>
+      </div>
+    </div>
+
+  </div>
+</form>
+</div>
+
+  <div class="grid panel-footer footer">
+    <div class="col-12 button-set-wrapper form-footer-button">
+      <div class="pull-right">
+        <button pButton type="button" label="Reset" (click)="resetVendorForm()" [disabled]="loading"
+                class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+        <button pButton type="button" (click)="addNewVendor(addVendorForm)" [disabled]="loading" [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-plus'"
+                class="p-button-sm" iconPos="left" label="Create Vendor"></button>
+      </div>
+    </div>
+  </div>
+
+<!--Create New Vendor Group-->
+<p-sidebar styleClass="p-sidebar-sm" position="right" [modal]="true" [dismissible]="true" appendTo="body"
+           *ngIf="createVendorGroup" [(visible)]="createVendorGroup">
+  <ng-template pTemplate="header">Create Vendor Group</ng-template>
+  <app-vendor-group-form (refreshGrid)="getVendorGroups(); createVendorGroup = false"  [panel]="true" *ngIf="createVendorGroup"></app-vendor-group-form>
+</p-sidebar>

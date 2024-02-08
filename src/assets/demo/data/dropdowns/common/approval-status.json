@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "label": "Approved"
+  },
+  {
+    "id": 2,
+    "label": "Rejected"
+  },
+  {
+    "id": 3,
+    "label": "Skipped Approval"
+  }
+]

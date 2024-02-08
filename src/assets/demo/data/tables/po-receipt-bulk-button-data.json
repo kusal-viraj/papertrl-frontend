@@ -1,0 +1,23 @@
+[
+  {
+    "action": "OPEN",
+    "label": "Reopen",
+    "icon": "fa-regular fa-circle-check",
+    "active": false,
+    "authCode": "PO_RECEIPT_RE_OPEN_PO_RECEIPT"
+  },
+  {
+    "action": "CLOSE",
+    "label": "Close",
+    "icon": "fa fa-times",
+    "active": false,
+    "authCode": "PO_RECEIPT_CLOSE_PO_RECEIPT"
+  },
+  {
+    "action": "DELETE",
+    "label": "Delete",
+    "icon": "fa fa-trash",
+    "active": false,
+    "authCode": "PO_RECEIPT_DELETE"
+  }
+]

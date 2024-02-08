@@ -1,0 +1,41 @@
+<div class="grid field-wrapper">
+  <div class="card-scroller col-12">
+    <div *ngFor="let field of fields">
+      <div class="card shadow-3 mb-4">
+        <div class="grid">
+          <div class="col-6">
+            <h5 class="subHeadingColour m-0">{{field.fieldName}}</h5>
+          </div>
+          <div class="col-6 text-right">
+            <p-inputSwitch [(ngModel)]="field.enable" (onChange)="onChangeField()"></p-inputSwitch>
+          </div>
+        </div>
+        <div class="grid modules" *ngIf="field.enable">
+          <div class="xl:col-4 sm:col-12" *ngFor="let module of field.documentTypeFieldConfig">
+            <div class="module-card">
+              <div class="grid">
+                <div class="col-1">
+                  <p-checkbox  binary="true"
+                               [(ngModel)]="module.enable"
+                               (ngModelChange) ="onChangeModule(module)"
+                  ></p-checkbox>
+                </div>
+                <div class="col-11">
+                  <h6>{{module.documentName}}</h6>
+                </div>
+              </div>
+              <div *ngFor="let section of module.sectionConfig">
+                <span class="indent"></span>
+                <p-checkbox  label="{{section.sectionName}}"
+                             binary="true"
+                             [(ngModel)]="section.enable"
+                             (ngModelChange) ="onChangeSection(section,module)"
+                ></p-checkbox>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

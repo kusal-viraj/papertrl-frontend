@@ -1,0 +1,13 @@
+@import "../../../../scss/color.scss";
+
+.custom-link {
+  color: $secondary-blue;
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+.side-bar-drawer-content {
+  min-height: calc(100% - 105px);
+}

@@ -1,0 +1,69 @@
+<div class="field grid ticket-manage-wrapper">
+  <div class="col-6">
+    <h5 class="create-expenses subHeadingColour col-6">Conversation History</h5>
+  </div>
+  <div class="col-6 text-right">
+    <div class="fa fa-close side-drawer-icon"
+         (click)="closeEditMode()"></div>
+  </div>
+
+  <div class="col-12 time-line">
+    <p-timeline align="alternate" [value]="dataList">
+      <ng-template pTemplate="marker" let-event>
+        <span class="custom-marker shadow-2"><i class="pi pi-comments"></i></span>
+      </ng-template>
+
+      <ng-template pTemplate="content" let-event>
+        <div class="card mb-4">
+          <h6 class="subHeadingColour">Comment by {{event.displayName}}<br>
+            <span class="date p-text-normal p-text-italic subHeadingColour">{{event.dateStr}}</span>
+          </h6>
+          <p class="subHeadingColour" app-read-more-text [maxCharacters]="125"
+             [fieldValue]="event.comment"></p>
+        </div>
+      </ng-template>
+    </p-timeline>
+  </div>
+
+  <div class="col-12 mt-3">
+    <form [formGroup]="formGroup">
+
+      <div class="col-12 mt-3 mb-3">
+        <label class="label-wrapper" for="description">Comment*</label>
+      <span class="p-float-label">
+        <textarea id="description" class="comment" formControlName="comment" [rows]="3" pInputTextarea
+                  maxlength="300"
+                  (keyup)="removeSpaces.clearSpace(formGroup, 'comment')"></textarea>
+      </span>
+        <div class="p-invalid text-align-left"
+             *ngIf="formGroup.get('comment').dirty && formGroup.get('comment').errors">
+          Comment is required
+        </div>
+      </div>
+
+
+      <div class="col-12">
+        <ngx-dropzone accept="application/pdf,image/png,image/jpeg,image/jpg" (change)="changeFileList($event)"
+                      class="drop-zone-style" [maxFileSize]="2.5e+7">
+          <ngx-dropzone-label class="subHeadingColour p-text-normal">Drop File(s) Here To Upload <br><br>
+           <span class="dp-zone-small-text-wrapper p-text-normal">(We only accept PDF, JPG JPEG and PNG formats, all the other formats will be ignored)</span>
+          </ngx-dropzone-label>
+          <ngx-dropzone-preview *ngFor="let f of attachments" [removable]="true" (removed)="onRemove(f)">
+            <ngx-dropzone-label class="file-label">{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+          </ngx-dropzone-preview>
+        </ngx-dropzone>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="grid fixed panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" [disabled]="loading" (click)="reset()" label="Reset"
+              class="p-button-outlined p-button-sm" icon="fa-solid fa-rotate-right"></button>
+      <button pButton type="button" [disabled]="loading" class="p-button-sm ml-2" label="Post Comment"
+              iconPos="left" [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-save'" (click)="addComment()"></button>
+    </div>
+  </div>
+  </div>

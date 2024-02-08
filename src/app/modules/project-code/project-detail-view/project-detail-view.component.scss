@@ -1,0 +1,24 @@
+@import '../../../../scss/color';
+@import '../../../../scss/table-responsive';
+
+.project-form {
+  margin-top: 20px;
+}
+
+.table-margin{
+  margin-bottom: 75px;
+}
+
+.topic {
+  color: $green;
+}
+
+.table-wrapper {
+  height: calc(100vh - 442px);
+}
+
+.table-wrapper{
+  height: calc(100vh - 470px) !important;
+}
+
+

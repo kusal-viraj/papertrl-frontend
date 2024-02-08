@@ -1,0 +1,164 @@
+<app-approval-group-create *ngIf="privilegeService.isAuthorized(appAuthorities.APPROVAL_GROUPS_CREATE)"
+                           #approvalGroupCreateComponent
+                           (refreshTable)="updateApprovalGroupTable()"></app-approval-group-create>
+<hr *ngIf="privilegeService.isAuthorized(appAuthorities.APPROVAL_GROUPS_CREATE)">
+
+<div class="grid">
+  <div class="col-6">
+    <app-table-header-action-buttons
+      [tableSupportBase]="tableSupportBase" [componentInstance]="this"
+      (refresh)="loadData(tableSupportBase.searchFilterDto)"
+      (delete)="deleteApprovalGroupList()"
+      (inactive)="inactiveApprovalGroupList()"
+      (active)="activeApprovalGroupList()"
+      (showFilters)="showFilter = !showFilter;
+      showFilterColumns = false"
+      (showColumns)="showFilterColumns = !showFilterColumns; showFilter = false"
+      [visibleActions]="availableHeaderActions"></app-table-header-action-buttons>
+  </div>
+</div>
+<div class="table-wrapper">
+  <p-table responsiveLayout="scroll" id="columnSelect" #dt [columns]="selectedColumns" (onColReorder)="onTableChanged()"
+           (onColResize)="onTableChanged()" [hidden]="tableSupportBase.isVisibleTable"
+           (onFilter)="tableSupportBase.onFilter(dt)" (onSort)="tableSupportBase.onSort(dt)"
+           (onRowSelect)="tableSupportBase.rowSelected(dt,null)" (onRowUnselect)="tableSupportBase.rowSelected(dt,null)"
+           [(selection)]="tableSupportBase.rows" [value]="tableSupportBase.dataSource" columnResizeMode="expand"
+           dataKey="id" [reorderableColumns]="true" [rowHover]="true" [lazy]="true" (onLazyLoad)="loadData($event)"
+           [responsive]="false" selectionMode="multiple" scrollHeight="flex" [scrollable]="true"
+           stateStorage="session" stateKey="{{tableKeyEnum.APPROVAL_GROUP_TABLE_KEY}}" [rows]="25"
+           [showCurrentPageReport]="true"
+           [(contextMenuSelection)]="tableSupportBase.selectedContextActionData" [contextMenu]="cm"
+           [rowsPerPageOptions]="[25, 50, 75]" [loading]="tableSupportBase.loading" [resizableColumns]="true"
+           styleClass="p-datatable-sm p-datatable-striped no-grid-lines"
+           [totalRecords]="tableSupportBase.totalRecords" [paginator]="true"
+           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [filterDelay]="0"
+           *ngIf="tableSupportBase.minWidth && privilegeService.isAuthorizedMultiple([appAuthorities.APPROVAL_GROUPS_INACTIVATE,
+         appAuthorities.APPROVAL_GROUPS_DELETE, appAuthorities.APPROVAL_GROUPS_EDIT,
+         appAuthorities.APPROVAL_GROUPS_ACTIVATE])">
+
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns" pResizableColumn [pResizableColumnDisabled]="!col.isReSizable"
+            [ngStyle]="{'text-align': col.align}"
+            [pReorderableColumnDisabled]="!col.isReOrderable" pReorderableColumn
+            [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn
+            [pSortableColumnDisabled]="!col.isSortable" pSortableColumn="{{col.sortableField}}" class="sort-icon-wrapper">
+          <div class="grid">
+            <div class="col-12">
+              <div *ngIf="col.searchType == enums.CHECKBOX">
+                <p-tableHeaderCheckbox (click)="tableSupportBase.rowSelected(dt,null)"></p-tableHeaderCheckbox>
+              </div>
+              <span *ngIf="col.searchType !== enums.CHECKBOX">{{col.header}}</span>
+              <p-sortIcon class="grid-sort-icon" *ngIf="col.isSortable" field="{{col.sortableField}}"></p-sortIcon>
+            </div>
+            <div class="col-12">
+              <span app-table-inline-column-filters [tableSupportBase]="tableSupportBase" [dt]="dt"
+                    [columns]="columns" [col]="col"></span>
+            </div>
+          </div>
+        </th>
+      </tr>
+
+<!--      <tr>-->
+<!--        <th *ngFor="let col of columns" [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn>-->
+<!--          <span app-table-inline-column-filters [tableSupportBase]="tableSupportBase" [dt]="dt"-->
+<!--                [columns]="columns" [col]="col"></span>-->
+<!--        </th>-->
+<!--      </tr>-->
+    </ng-template>
+
+    <ng-template pTemplate="body" let-customer let-columns="columns">
+      <tr (auxclick)="tableSupportBase.hide(customer['apgr.status'])" (wheel)="tableSupportBase.scrollHideActionMenu(cm)"
+          [pContextMenuRow]="customer" (contextmenu)="actionButtonClick(customer);
+ tableSupportBase.setContextMenuActionBtnList(tableSupportBase.actionButtonList(customer['apgr.status']))">
+        <td *ngFor="let col of columns; let in = index" [ngStyle]="{'text-align': col.align}"
+            [class.freeze-right]="col.frozenDirection == 'right'"
+            [ngClass]="col.searchType == enums.ACTION_BUTTON ? 'vendor-table-action-btn' : null"
+            [class.td-border]="in === 0" [class.td-border-selected]="customer.selected && in === 0"
+            [style]="'width:' + col.columnWidth  + 'px'"
+            pFrozenColumn [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection"
+        >
+          <span class="p-column-title">{{col.header}}</span>
+          <span
+            *ngIf="col.field == enums.CHECKBOX && customer['apgr.name'] != 'Administrator' && customer['apgr.name'] != 'No Approval Group'">
+          <p-tableCheckbox #checkbox [value]="customer"></p-tableCheckbox>
+        </span>
+
+          <span
+            *ngIf="col.searchType ==  enums.ACTION_BUTTON && customer['apgr.name'] != 'Administrator' && customer['apgr.name'] != 'No Approval Group'"
+            class="td-actionButton">
+          <button type="button" pButton class="grid-action-btn p-button-text" icon="pi pi-ellipsis-v"
+                  [disabled]="tableSupportBase.actionButtonList(customer['apgr.status']).length === 0"
+                  (click)="menu.toggle($event); actionButtonClick(customer)"></button>
+          <p-menu #menu [popup]="true" appendTo="body"
+                  [model]="tableSupportBase.actionButtonList(customer['apgr.status'])"></p-menu>
+        </span>
+
+          <span *ngIf="col.field == 'apgr.status'">
+          <li [class]="'mr-2 status-style status-'  + tableSupportBase.getStatus(customer[col.field])"></li>
+            {{tableSupportBase.getStatus(customer[col.field]) | titlecase}}</span>
+
+          <span *ngIf="col.field !== 'apgr.status'">{{customer[col.field]}}</span>
+
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <div class="text-center grid table-empty-data">
+          <div class="col-12">
+            <i class="fa-solid fa-magnifying-glass"></i><br>
+            <p>There are no records found</p>
+          </div>
+      </div>
+    </ng-template>
+  </p-table>
+</div>
+<div class="no-data-show" *ngIf="tableSupportBase.isVisibleTable == true">
+  <span class="fa fa-search"></span>
+  <div style="margin-top: 1%">There are no transactions matching the criteria</div>
+</div>
+
+<!--Edit Approval Group-->
+<p-sidebar styleClass="p-sidebar-sm" [modal]="true" [dismissible]="true" position="right"
+           [(visible)]="editApprovalGroup" *ngIf="editApprovalGroup">
+  <ng-template pTemplate="header">Edit Approval Group</ng-template>
+  <app-approval-group-create *ngIf="editApprovalGroup" [panel]="true" [id]="approvalGroupId"
+                             #approvalGroupEditComponent
+                             (refreshTable)="loadData(tableSupportBase.searchFilterDto); editApprovalGroup = false"
+                             [isEditForm]="true"></app-approval-group-create>
+</p-sidebar>
+
+<p-confirmDialog #cd key="ag" header="Are you sure?" icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cd.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, delete"
+            (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+
+<!--Action Buttons-->
+
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" [modal]="true" [dismissible]="true" position="right" (onHide)="showFilter= false"
+           [fullScreen]="false" [(visible)]="showFilter" transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)">
+  <ng-template pTemplate="header">Advance Filter</ng-template>
+  <app-table-column-filters [dt]="table" [columns]="tableSupportBase.filterEnabledColumns" (closeDrawer)="showFilter = false"
+                            [tableSupportBase]="tableSupportBase"></app-table-column-filters>
+</p-sidebar>
+
+<p-sidebar styleClass="p-sidebar-sm table-column-sidebar" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           (onHide)="showFilterColumns= false" transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)"
+           [fullScreen]="false" [(visible)]="showFilterColumns">
+  <ng-template pTemplate="header">Columns</ng-template>
+  <app-table-column-toggle [cols]="selectedColumns" (selectionsUpdated)="selectedColumns = $event"
+                           [tableInstance]="table" (restoreTable)="loadTableData()"
+                           [tableKey]="tableKeyEnum.APPROVAL_GROUP_TABLE_KEY"
+                           [gridName]="appConstant.GRID_NAME_APPROVAL_GROUP"
+                           [hiddenOptions]="tableSupportBase.hiddenInOptions"
+                           (updateColOrder)="onTableChanged($event)"></app-table-column-toggle>
+</p-sidebar>
+
+<!--Context Menu-->
+<p-contextMenu #cm [hidden]="tableSupportBase.hideMenu" (onShow)="tableSupportBase.hideActionMenu(menu)" [model]="tableSupportBase.contextMenuActionList"></p-contextMenu>

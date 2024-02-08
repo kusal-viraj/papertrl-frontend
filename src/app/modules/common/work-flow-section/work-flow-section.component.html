@@ -1,0 +1,58 @@
+<ng-container [formGroup]="form" *ngIf="!isWorkflowConfigAvailable">
+
+  <div formArrayName="adHocWorkflowDetails" class="condition-resize" *ngIf="adHocWorkflowDetails.length>0">
+    <div class="grid p-fluid" *ngFor="let adHoc of adHocWorkflowDetails.controls; let adHocIndex=index"
+         [formGroupName]="adHocIndex">
+
+      <div class="field col-1  align-self-center text-center" style="padding-top: 25px;">{{adHocIndex + 1}}</div>
+
+      <div class="field p-fluid col-4">
+        <div class="label-wrapper">Select Approval Group</div>
+        <p-dropdown [virtualScroll]="approvalGroupList.data.length > 20" virtualScrollItemSize="25"
+                    formControlName="approvalGroup" id="approvalGroup1{{adHocIndex}}"
+                    (onChange)="this.adHocWorkflowDetails.controls[adHocIndex].get('approvalUser').reset();"
+                    [autoDisplayFirst]="false" optionValue="id" optionLabel="name"
+                    [showClear]="true" appendTo="body" placeholder="Select Approval Group"
+                    [options]="approvalGroupList.data" optionDisabled="inactive" [filter]="true">
+        </p-dropdown>
+      </div>
+      <div class="field p-fluid  text-center p-2 label-wrapper" style="padding-top: 33px !important;">or</div>
+      <div class="field p-fluid col-4">
+        <div class="label-wrapper">Select Approval User</div>
+        <p-dropdown [virtualScroll]="approvalUserList.data.length > 20" virtualScrollItemSize="25"
+                    formControlName="approvalUser" id="approvalUser1{{adHocIndex}}"
+                    (onChange)="this.adHocWorkflowDetails.controls[adHocIndex].get('approvalGroup').reset();"
+                    optionValue="id" optionLabel="name" appendTo="body" placeholder="Select Approval User"
+                    [options]="approvalUserList.data" optionDisabled="inactive" [filter]="true"
+                    [showClear]="true">
+        </p-dropdown>
+      </div>
+
+      <div class="field col-2" style="padding-top: 24px;">
+        <button pButton type="button" class="p-button-sm p-button-borderless" iconPos="left"
+                icon="fa-solid fa-trash-can" *ngIf="adHocWorkflowDetails.controls.length > 1"
+                (click)="removeAdHocWorkflow(adHocIndex)">
+        </button>&nbsp;
+        <button pButton type="button" class="p-button-sm p-button-borderless" iconPos="left"
+                icon="fa-solid fa-plus" *ngIf="adHocIndex == (adHocWorkflowDetails.controls.length-1)"
+                (click)="addAdHocWorkflowDetail()">
+        </button>
+      </div>
+
+
+    </div>
+  </div>
+</ng-container>
+
+
+<ng-container class="order-approval-list" *ngIf="isWorkflowConfigAvailable">
+
+  <div class="order-drop-zone col-12 xl:col-7 mt-2 top-marging">
+    <h6 class="subHeadingColour">Automated Workflow</h6>
+    <app-automated-workflow-preview *ngIf="matchingAutomation"
+                                    [matchingAutomation]="matchingAutomation">
+    </app-automated-workflow-preview>
+  </div>
+
+</ng-container>
+

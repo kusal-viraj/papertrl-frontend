@@ -1,0 +1,78 @@
+.card{
+  width: 74.5%;
+  height: calc(100vh - 126px);
+  margin: 28px;
+  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.15);
+}
+
+.v_line{
+  border-left: 3px solid #eeeeee;
+  height: calc(100vh - 171px);
+  margin: 0 auto;
+  width: 2px;
+}
+
+.upload-image-wrapper{
+  justify-content: space-evenly;
+}
+
+.drop-zone-style {
+  height: calc(100vh - 181px);
+  width: calc(100vw - 72vw);
+  overflow-x: unset;
+}
+
+
+.p-progressbar .p-progressbar-value {
+  border: 0 none;
+  margin: 0;
+  background: #89c2bc !important;
+}
+
+
+.footer {
+  position: absolute;
+  bottom: calc(100rem - 96rem);
+  left: unset;
+  top: unset;
+  right: unset;
+  background-color:unset;
+  z-index: unset;
+  width: unset;
+}
+
+.icons-padding-top{
+  padding-top: 1.2rem !important;
+}
+
+.upload-file-container{
+  overflow: auto;
+  height: calc(100vh - 228px);
+}
+
+.footer-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //height: 100vh;
+}
+
+.selected-card:hover{
+  background: #f4f6f9;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.status{
+  font-size: 12px;
+  color:#bcbcbc;
+  position: relative;
+  top: 6px;
+}
+
+.failure-status{
+  font-size: 12px;
+  color:#D94646;
+  position: relative;
+  top: 6px;
+}

@@ -1,0 +1,27 @@
+@import "../../../../scss/color.scss";
+
+
+.field-wrapper {
+  .card-scroller {
+
+    height: calc(100vh - 175px);
+    overflow-y: auto;
+
+    .modules {
+      margin-top: 20px;
+
+      .module-card {
+        padding: 20px;
+        background-color: $drop-zone-background;
+        height: 100%;
+        border-radius: 5px;
+
+        .indent{
+          display: inline-block;
+          margin-left: 15px;
+        }
+      }
+    }
+  }
+}
+

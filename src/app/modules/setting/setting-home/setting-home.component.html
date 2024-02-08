@@ -1,0 +1,307 @@
+<div class="p-grid configuration-main-menu  col-12">
+  <div class="col-2 p-0 custom-vertical-menu">
+
+    <div class="inner-padding">
+
+      <div [ngClass]="configurationMenu[0].label === 'CompanyProfile' ? 'imageWrapper':'imageWrapper-other-menu'"
+           *ngIf="isAccessCompanyProfile()">
+
+        <input type='file' id="imageUpload" accept="image/*" #fileInput hidden
+               (change)="companyProfileComponent?.uploadFile($event)"/>
+
+        <div class="imagePreview" *ngIf="imageUrl"
+             [style.backgroundImage]="'url('+ imageUrl +')'">
+        </div>
+
+        <div class="imagePreview" *ngIf="!imageUrl">
+          <div class="upload-img-wrapper" #event (click)="configurationMenu[0].label === 'CompanyProfile' && fileInput.click()">
+            <div class="pi pi-image">
+            </div>
+          </div>
+        </div>
+
+        <div class="imageOptions" *ngIf="configurationMenu[0].label === 'CompanyProfile'">
+          <span class="delete" (click)="companyProfileComponent?.deleteFile()">DELETE</span>
+          <span class="edit" (click)="fileInput.click()">UPDATE</span>
+        </div>
+      </div>
+
+
+    <ul>
+
+      <li *ngIf="isAccessCompanyProfile()"
+          (click)="activeComponent = companyProfileConfiguration; configurationMenu[0].label = 'CompanyProfile'"
+          [ngClass]="activeComponent == companyProfileConfiguration || configurationMenu[0].label === 'CompanyProfile'?
+                    'selected-menu-bg':''"><span
+        class="menu-icon fa fa-building"></span>Company Profile
+      </li>
+
+      <li *ngIf="accessDepartment()"
+          (click)="activeComponent = department; configurationMenu[0].label = null; menuChange()"
+          [ngClass]="activeComponent == department || configurationMenu[0].label === 'Department'?
+                    'selected-menu-bg':''"><span
+        class="menu-icon fa fa-sitemap"></span>Departments
+      </li>
+
+      <li *ngIf="isAccessGeneralConfiguration()"
+          (click)="activeComponent = componentsInGeneralConfiguration; configurationMenu[0].label = null; menuChange()"
+          [ngClass]="activeComponent == componentsInGeneralConfiguration || configurationMenu[0].label === 'General'?
+                    'selected-menu-bg':''"><span
+        class="menu-icon fa fa-cogs"></span>General Settings
+      </li>
+
+      <li *ngIf="isAccessFieldConfigurationGroup()"
+          (click)="activeComponent = componentsInFieldConfiguration; configurationMenu[0].label = null; menuChange()"
+          [ngClass]="activeComponent === componentsInFieldConfiguration || configurationMenu[0].label === 'Field' ?
+                    'selected-menu-bg':''"><span
+        class="menu-icon fa fa-book"></span>Fields Configuration
+      </li>
+
+      <li *ngIf="isAccessPaymentConfiguration()"
+          (click)="activeComponent = componentsInPaymentConfiguration; configurationMenu[0].label = null; menuChange()"
+          [ngClass]="activeComponent === componentsInPaymentConfiguration || configurationMenu[0].label === 'Payment' ?
+                    'selected-menu-bg':''"><span
+        class="menu-icon fa fa-usd"></span>Online Payments
+      </li>
+
+      <li *ngIf="isAccessFeatureConfiguration()"
+          (click)="activeComponent = componentsInFeatureConfiguration; configurationMenu[0].label = null; menuChange()"
+          [ngClass]="activeComponent === componentsInFeatureConfiguration || configurationMenu[0].label === 'Feature'?
+                    'selected-menu-bg':''">
+        <span class="menu-icon fa fa-users-gear"></span>Feature Settings
+      </li>
+
+      <li *ngIf="isReminderConfigurationModule()"
+          (click)="activeComponent = componentsInReminderConfigurationConfiguration; configurationMenu[0].label = null; menuChange()"
+          [ngClass]="activeComponent === componentsInReminderConfigurationConfiguration || configurationMenu[0].label === 'Reminder' ?
+                     'selected-menu-bg':''">
+        <span class="menu-icon pi pi-bell"></span> Reminders
+      </li>
+    </ul>
+
+    </div>
+
+  </div>
+
+  <div class="col-10 m-0 p-0 selection-body">
+    <ng-container *ngTemplateOutlet="activeComponent"></ng-container>
+  </div>
+
+</div>
+
+<!--Company Profile-->
+
+<ng-template #companyProfileConfiguration>
+
+  <div class="grid">
+    <div class="col-12 xl:col-3 lg:col-3 md:col-4 sm:col-12 alignHeading">
+      <h5 *ngIf="isEditCompanyProfile && privilegeService.isAuthorized(appAuthorities.COMPANY_PROFILE_EDIT)"
+          class="subHeadingColour ml-4 pull-left">Edit Company Profile</h5>
+
+      <h5
+        *ngIf="!isPortal && isTenantConversion && privilegeService.isAuthorized(appAuthorities.COMPANY_PROFILE_CONVERT_TO_PORTAL)"
+        class="subHeadingColour ml-2 pull-left">Convert to Agency Portal</h5>
+    </div>
+
+    <div class="col-12 xl:col-9 lg:col-9 md:col-8 sm:col-12" style="text-align: right">
+      <button pButton class="p-button-sm"
+              *ngIf="!isEditCompanyProfile && privilegeService.isAuthorized(appAuthorities.COMPANY_PROFILE_EDIT)"
+              label="Edit Company Profile" (click)="toggleCompanyProfile('e')"></button>
+
+      <button pButton class="p-button-sm mr-3"
+              *ngIf="!isPortal && !isTenantConversion && privilegeService.isAuthorized(appAuthorities.COMPANY_PROFILE_CONVERT_TO_PORTAL)"
+              label="Convert to Agency Portal" (click)="toggleCompanyProfile('t')"></button>
+    </div>
+  </div>
+  <app-company-profile (isHasTimeZone)="viewNotification($event)" #companyProfileComponent  [imageUrl]="imageUrl" (imageUrlForHome)="imageUrl = $event"
+                       *ngIf="isEditCompanyProfile && privilegeService.isAuthorized(appAuthorities.COMPANY_PROFILE_EDIT)"></app-company-profile>
+
+  <div class="height"
+       *ngIf="isTenantConversion && privilegeService.isAuthorized(appAuthorities.COMPANY_PROFILE_CONVERT_TO_PORTAL)">
+    <app-tenant-conversion></app-tenant-conversion>
+  </div>
+
+</ng-template>
+
+<!--Department-->
+<ng-template #department>
+  <app-department-list (departmentAdded)="deptAddedFromEdit(); addNewDep()"></app-department-list>
+</ng-template>
+
+<!--General Configuration-->
+
+<ng-template #componentsInGeneralConfiguration>
+  <p-tabView styleClass="tabview-custom" (activeIndexChange)="generalConfigurationTabChange()">
+
+    <p-tabPanel *ngIf="privilegeService.isAuthorized(appAuthorities.CONFIGURE_PO_VARIANCE_ALLOWANCE)">
+
+      <ng-template pTemplate="header">
+        <span class="custom-span">PO Variance Allowance</span>
+      </ng-template>
+
+      <ng-template pTemplate="content">
+
+        <app-po-price-variance
+          (refreshTable)="poPriceVarianceList.loadData(poPriceVarianceList.tableSupportBase.searchFilterDto)">
+        </app-po-price-variance>
+
+        <app-po-price-variance-list
+          #poPriceVarianceList>
+        </app-po-price-variance-list>
+
+      </ng-template>
+
+    </p-tabPanel>
+
+    <p-tabPanel *ngIf="privilegeService.isAuthorized(appAuthorities.CONFIGURE_MILEAGE_RATE)">
+
+      <ng-template pTemplate="header">
+        <span class="custom-span">Mileage Rate</span>
+      </ng-template>
+
+      <ng-template pTemplate="content">
+
+        <app-mileage-configuration #mileageConfigurationComponent
+                                   (successfullyCreated)="mileageRateListComponent.loadData(mileageRateList?.searchFilterDto)">
+        </app-mileage-configuration>
+        <app-mileage-rate-list #mileageRateListComponent></app-mileage-rate-list>
+
+      </ng-template>
+
+    </p-tabPanel>
+
+  </p-tabView>
+</ng-template>
+
+<!--Field Configuration-->
+
+<ng-template #componentsInFieldConfiguration>
+  <p-tabView styleClass="tabview-custom">
+
+    <p-tabPanel *ngIf="privilegeService.isAuthorized(appAuthorities.MANAGE_ADDITIONAL_FIELDS)">
+      <ng-template pTemplate="header">
+        <span class="custom-span">Additional Fields</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <div class="grid mt-2">
+          <div class="col-12" *ngIf="isAdditionalFieldCreate">
+            <h5 class="subHeadingColour">Create Additional Field</h5>
+          </div>
+          <div class="col-6">
+            <app-table-header-action-buttons
+              [hidden]="isAdditionalFieldCreate"
+              [tableSupportBase]="additionalFieldListComponent?.tableSupportBase"
+              [componentInstance]="additionalFieldListComponent"
+              (refresh)="additionalFieldListComponent?.loadData(additionalFieldListComponent?.tableSupportBase.searchFilterDto)"
+              (inactive)="additionalFieldListComponent?.bulkActivateInactivate(false)"
+              (active)="additionalFieldListComponent?.bulkActivateInactivate(true)"
+              (showFilters)="additionalFieldListComponent.showFilter = !additionalFieldListComponent.showFilter;
+                                          additionalFieldListComponent.showFilterColumns = false"
+              (showColumns)="additionalFieldListComponent.showFilterColumns = !additionalFieldListComponent.showFilterColumns; additionalFieldListComponent.showFilter = false"
+              [visibleActions]="additionalFieldListComponent?.availableHeaderActions"></app-table-header-action-buttons>
+          </div>
+
+          <div class="col-6 text-right">
+
+            <button pButton class="p-button-sm"
+                    *ngIf="!isAdditionalFieldCreate" label="Create Field"
+                    (click)="toggleAdditionalFieldCreate()"></button>
+
+            <button pButton class="p-button-outlined" *ngIf="isAdditionalFieldCreate"
+                    label="View Field List" (click)="toggleAdditionalFieldCreate()"></button>
+          </div>
+
+        </div>
+        <app-additional-field-list #additionalFieldListComponent
+                                   [hidden]="isAdditionalFieldCreate"></app-additional-field-list>
+
+        <app-additional-field-create
+          *ngIf="isAdditionalFieldCreate"
+          (afterSuccess)="isAdditionalFieldCreate = false; additionalFieldService.updateTableData.next(true)">
+        </app-additional-field-create>
+      </ng-template>
+    </p-tabPanel>
+
+    <p-tabPanel *ngIf="privilegeService.isAuthorized(appAuthorities.MANAGE_SHOW_HIDE_FIELDS)">
+      <ng-template pTemplate="header">
+        <span class="custom-span">Show/ Hide Fields</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-show-hide-fields></app-show-hide-fields>
+      </ng-template>
+    </p-tabPanel>
+
+    <p-tabPanel
+      *ngIf="!privilegeService.isVendor() && (isSubAccount || !isPortal) &&
+                                      privilegeService.isAuthorized(appAuthorities.PO_NO_CONFIGURATION)">
+      <ng-template pTemplate="header">
+        <span class="custom-span">PO Number Configuration</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-po-number-configuration
+          (isCreteNewOne)="getAfterSuccess($event)"
+          (newDeptAdded)="addNewDep()" #poNumberConfig></app-po-number-configuration>
+        <app-po-number-list
+          (deptAddedFromEdit)="deptAddedFromEdit()"
+          #poNumberListComponent [tableSupportBase]="tableBaseComponent"></app-po-number-list>
+      </ng-template>
+    </p-tabPanel>
+
+    <p-tabPanel *ngIf="privilegeService.isAuthorized(appAuthorities.MANDATORY_FIELD_CONFIGURATION)">
+      <ng-template pTemplate="header">
+        <span class="custom-span">Mandatory Field Configuration</span>
+      </ng-template>
+        <ng-template pTemplate="content">
+          <app-field-validation></app-field-validation>
+        </ng-template>
+    </p-tabPanel>
+
+  </p-tabView>
+</ng-template>
+
+<!--Payment Configuration-->
+
+<ng-template #componentsInPaymentConfiguration>
+  <app-payment-configuration></app-payment-configuration>
+</ng-template>
+
+<!--Feature Configuration-->
+
+<ng-template #componentsInFeatureConfiguration>
+  <app-manage-feature></app-manage-feature>
+</ng-template>
+
+<!--Reminder Configuration-->
+
+<ng-template #componentsInReminderConfigurationConfiguration>
+  <div class="grid">
+
+    <div class="col-6">
+      <app-table-header-action-buttons [hidden]="isReminderCreate" [componentInstance]="reminderListComponent"
+                                       [tableSupportBase]="reminderListComponent?.tableSupportBase"
+                                       (refresh)="reminderListComponent?.loadData(reminderListComponent?.tableSupportBase.searchFilterDto)"
+                                       (showFilters)="reminderListComponent.showFilter = !reminderListComponent?.showFilter; reminderListComponent.showFilterColumns = false"
+                                       (showColumns)="reminderListComponent.showFilterColumns = !reminderListComponent?.showFilterColumns; reminderListComponent.showFilter = false"
+                                       (delete)="reminderListComponent?.deleteBulk()"
+                                       (inactive)="reminderListComponent?.inactivateBulk()"
+                                       (active)="reminderListComponent?.activateBulk()"
+                                       [visibleActions]="reminderListComponent?.availableHeaderActions"></app-table-header-action-buttons>
+    </div>
+
+    <div class="col-6 text-right">
+
+      <button pButton class="p-button-sm" *ngIf="!isReminderCreate"
+              iconPos="left" label="Create Reminder"
+              (click)="isReminderCreate = !isReminderCreate"></button>
+
+      <button pButton class="p-button-outlined" *ngIf="isReminderCreate"
+              iconPos="left" label="View Reminder List"
+              (click)="isReminderCreate = !isReminderCreate"></button>
+    </div>
+
+  </div>
+
+  <app-reminder-configuration *ngIf="isReminderCreate" (onComplete)="reminderListComponent?.getDataFromBackend(); isReminderCreate = false">
+  </app-reminder-configuration>
+  <app-reminder-list #reminderListComponent [hidden]="isReminderCreate"></app-reminder-list>
+</ng-template>

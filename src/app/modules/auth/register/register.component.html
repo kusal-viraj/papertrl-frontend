@@ -1,0 +1,207 @@
+<div class="layout-topbar top-bar-custom">
+  <div class="topbar-left">
+    <img id="logo-mobile" class="logo-desktop" src="../../../../assets/images/header-white-logo.png" alt="PaperTrl"/>
+  </div>
+</div>
+<div class="exception-body" [class.mobile-fields]="fromCard">
+  <div class="exception-content">
+    <div class="exception-detail">
+      <div class="grid">
+        <p-card class="card-custom" styleClass="p-card-shadow-remove">
+          <div class="card-custom-padding">
+            <h5 class="card-header-custom" *ngIf="!fromCard">VENDOR REGISTRATION</h5>
+            <h5 class="card-header-custom" *ngIf="fromCard">Create Account</h5>
+            <p class="card-subheader-custom">Once you register, you will receive an email with password reset
+              instructions</p><br>
+
+            <form [formGroup]="vendorRegisterForm" class="text-align-left"
+                  (ngSubmit)="onSubmit(vendorRegisterForm.value)">
+
+              <div class="p-fluid grid">
+                <div class=" field col-12 sm:col-12 md:col-6 lg:col-6 xl:col-6">
+                  <label class="label-wrapper" for="companyName">Company name*</label>
+                  <input formControlName="businessName" (keyup)="checkValidation('businessName')" maxlength="150"
+                         id="companyName" type="text" pInputText>
+                  <div class="p-invalid text-align-left"
+                       *ngIf="vendorRegisterForm.get('businessName').dirty && vendorRegisterForm.get('businessName').errors">
+                    Company Name is required
+                  </div>
+                </div>
+
+                <div class="field col-12 sm:col-12 md:col-6 lg:col-6 xl:col-6 ">
+                  <label class="label-wrapper" for="contactName">Contact name*</label>
+                  <input formControlName="contactPerson" (keyup)="checkValidation('contactPerson')" id="contactName"
+                         maxlength="150" type="text" pInputText>
+                  <div class="p-invalid text-align-left"
+                       *ngIf="vendorRegisterForm.get('contactPerson').dirty && vendorRegisterForm.get('contactPerson').errors">
+                    Contact Name is required
+                  </div>
+                </div>
+
+                <div class="field col-12 sm:col-12 md:col-6 lg:col-6 xl:col-6 ">
+                  <label  class="label-wrapper" for="contactNumber">Contact number*</label>
+                  <app-country-code-validation id="contactNumber" [telephoneFormControl]="vendorRegisterForm.get('contactNumber')"></app-country-code-validation>
+                  <div *ngIf="vendorRegisterForm.get('contactNumber').touched && vendorRegisterForm.get('contactNumber').hasError('required')"
+                       class="p-invalid text-align-left">
+                    Contact Number is required
+                  </div>
+                  <div *ngIf="vendorRegisterForm.get('contactNumber').hasError('validatePhoneNumber')" class="p-invalid text-align-left">
+                    Invalid Contact Number
+                  </div>
+                </div>
+
+
+                <div class="field col-12 sm:col-12 md:col-6 lg:col-6 xl:col-6 ">
+                  <label class="label-wrapper" for="emailAddress">Email address*</label>
+                  <input formControlName="email" maxlength="100" id="emailAddress" type="text" pInputText>
+                  <div class="p-invalid  text-align-left"
+                       *ngIf="vendorRegisterForm.get('email').dirty && vendorRegisterForm.get('email').errors">
+                    <div *ngIf="vendorRegisterForm.get('email').errors.required">Email Address is required</div>
+                    <div *ngIf="vendorRegisterForm.controls['email'].hasError('emailValidate')">Email must be a
+                      valid email address
+                    </div>
+                  </div>
+                </div>
+
+                <div class="field col-12 sm:col-12 md:col-6 lg:col-6 xl:col-6 text-align-left">
+                  <label  class="label-wrapper" for="country">Select Country*</label>
+                  <p-dropdown [virtualScroll]="true" virtualScrollItemSize="25" id="country"
+                              formControlName="country" showClear="true"
+                              [autoDisplayFirst]="false" [options]="countries" [filter]="true" appendTo="body"
+                              optionLabel="name" optionValue="id"></p-dropdown>
+                  <div class="p-invalid text-align-left"
+                       *ngIf="vendorRegisterForm.get('country').dirty && vendorRegisterForm.get('country').errors">
+                    Country is required
+                  </div>
+                </div>
+
+                <ng-template [ngIf]="!fromCard">
+                  <div class="field col-12 sm:col-12 md:col-6 lg:col-6 xl:col-6 ">
+                    <label class="label-wrapper" for="fileText">Upload W9 Here </label>
+                    <div class="p-inputgroup">
+                      <input id="fileUpload" #w9Form (change)="fileUpload($event)" type="file"
+                             accept="application/pdf" hidden>
+                      <input id="fileText" readonly formControlName="w9FormName"
+                             onClick="document.getElementById('fileUpload').click()" accept="application/pdf"
+                             [value]="w9Form.files[0] ? w9Form.files[0].name : null" type="text" pInputText>
+                      <button pButton type="button" label="Browse" class="p-button file-browse p-button-sm"
+                              onClick="document.getElementById('fileUpload').click()"></button>
+                    </div>
+                  </div>
+
+                  <div class=" text-left col-12 xl:col-12">
+                    <h6 style="color: #73828A">Supplier Diversity Information</h6>
+                  </div>
+
+                  <div class="text-left col-12 mb-2">
+                    <p class="subHeadingColour">A diverse supplier is defined as a U.S. privately held company that is
+                      51% owned and operated by a woman, minority, veteran, disable veteran, person with a disability or
+                      a member of the lesbian, gay, bisexual or transgender (LGBT) community.</p>
+                  </div>
+
+                  <div style="align-self: center" class="pb-0 mb-0 field col-12 xl:col-6">
+                    <div class="grid">
+                      <div class="text-left col-7">Are you a diverse supplier?</div>
+                      <div class="col-2">
+                        <div class="field-radiobutton">
+                          <p-radioButton [value]="true" formControlName="diverseSupplier"
+                                         inputId="city3"></p-radioButton>
+                          <label>Yes</label>
+                        </div>
+                      </div>
+                      <div class="col-2">
+                        <div class="field-radiobutton">
+                          <p-radioButton [value]="false" formControlName="diverseSupplier"
+                                         inputId="city4"></p-radioButton>
+                          <label>No</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="field col-12 xl:col-6 text-left"
+                       [hidden]="!vendorRegisterForm.get('diverseSupplier').value">
+                    <label for="classification">Select Classification* </label>
+                    <p-multiSelect [virtualScroll]="classification.data.length >20" virtualScrollItemSize="25"
+                                   inputId="dropdown"
+                                   formControlName="classificationIdList" id="classification"
+                                   [options]="classification.data" [filter]="true" optionLabel="name"
+                                   optionValue="id">
+                    </p-multiSelect>
+                    <div class="p-invalid text-align-left"
+                         *ngIf="vendorRegisterForm.get('classificationIdList').dirty && vendorRegisterForm.get('classificationIdList').hasError('required')">
+                      Classification is required
+                    </div>
+                  </div>
+
+                  <div class="field col-12 xl:col-12" [hidden]="!vendorRegisterForm.get('diverseSupplier').value">
+                    <label for="fileText">Attach Diversity Certification</label>
+                    <div class="p-inputgroup">
+                      <input id="classificationUpload" #diversity accept="application/pdf"
+                             (change)="classificationUpload($event)" type="file" multiple hidden>
+                      <input readonly onClick="document.getElementById('classificationUpload').click()"
+                             formControlName="classificationAttachmentListNames"
+                             type="text" pInputText [value]="getClassificationAttachmentNames(diversity)">
+                      <button type="button" pButton label="Browse" class="p-button file-browse p-button-sm"
+                              onClick="document.getElementById('classificationUpload').click()"></button>
+                      <button pButton type="button" class="p-button-outlined p-button-sm" *ngIf="diversity.value"
+                              icon="fa fa-close"
+                              (click)="diversity.value = null; vendorRegisterForm.get('classificationAttachmentList').reset()"></button>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <h6 class="text-left" style="color: #73828A; margin-top: 8px">Additional Company Details for
+                      PaperTrl Marketplace.</h6>
+                  </div>
+
+                  <div class="mb-4 text-left col-12">
+                    <p class="subHeadingColour">Provide more information so other PaperTrl users can find you!</p>
+                  </div>
+
+                  <div class="field col-12 sm:col-12 md:col-6 lg:col-6 xl:col-6 text-align-left">
+                    <label class="label-wrapper" for="sicCode">SIC Code</label>
+                    <p-dropdown [virtualScroll]="true" virtualScrollItemSize="25" id="sicCode" formControlName="sicCode"
+                                showClear="true" [autoDisplayFirst]="false" [options]="sicCode" [filter]="true"
+                                appendTo="body"
+                                optionLabel="name" optionValue="id"></p-dropdown>
+                  </div>
+
+                  <div class="field col-12 sm:col-12 md:col-6 lg:col-6 xl:col-6 text-align-left">
+                    <label class="label-wrapper" for="naicsCode">NAICS Code</label>
+                    <p-dropdown [virtualScroll]="true" virtualScrollItemSize="25" id="naicsCode"
+                                formControlName="naicsCode" showClear="true" [autoDisplayFirst]="false"
+                                [options]="naicsCode" [filter]="true" appendTo="body"
+                                optionLabel="name" optionValue="id"></p-dropdown>
+                  </div>
+
+                  <div class="field col-12 sm:col-12 md:col-12 lg:col-12 xl:col-12 ">
+                    <label class="label-wrapper" for="mDescription">Company Description</label>
+                    <textarea formControlName="businessDescription" maxlength="2000"
+                              (keyup)="checkValidation('businessDescription')" id="mDescription" rows="1"
+                              pInputTextarea></textarea>
+                  </div>
+
+                  <div class="field col-12 sm:col-12 md:col-6 lg:col-6 xl:col-6 ">
+                    <label class="label-wrapper" for="mAddress">Web Address</label>
+                    <input formControlName="webUrl" maxlength="300" (keyup)="checkValidation('webUrl')" id="mAddress"
+                           type="text" pInputText>
+                  </div>
+                  <div class="col-3"></div>
+                </ng-template>
+              </div>
+              <div class='grid buttons pull-right'>
+                <div class="col-12 ">
+                  <button pButton type="button" (click)="resetForm()" label="Reset"
+                          class="p-button-outlined p-button-sm" [disabled]="loading"></button>&nbsp;
+                  <button class="p-button-sm" [loading]="loading" pButton type="submit" [disabled]="loading" label="Register"></button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </p-card>
+      </div>
+    </div>
+  </div>
+</div>
+<p-toast position="bottom-right" key="bc1"></p-toast>

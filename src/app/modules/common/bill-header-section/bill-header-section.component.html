@@ -1,0 +1,371 @@
+<div [formGroup]="createEInvoiceForm" class="grid p-fluid">
+
+  <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12">
+    <label class="label-wrapper" for="vendor">Select Vendor*</label>
+    <span class="p-float-label p-fluid">
+          <p-dropdown [virtualScroll]="vendorsList.data.length>20" virtualScrollItemSize="25"
+                      (onChange)="vendorChanged($event, selectedVendorName)"
+                      [options]="vendorsList.data"
+                      id="vendor" #selectedVendorName optionDisabled="inactive"
+                      formControlName="vendorId" optionValue="id" optionLabel="name"
+                      [autoDisplayFirst]="false" [filter]="true">
+             <ng-template pTemplate="selectedItem">
+               <div>{{selectedVendorName.selectedOption.name}}</div>
+             </ng-template>
+
+                <ng-template pTemplate="footer" *ngIf="privilegeService.isAuthorized(appAuthorities.VENDORS_CREATE)">
+                  <div class="grid dp-footer">
+                    <div class="col-12 button-wrapper">
+                      <button pButton class="p-button-sm" label="Add New"
+                              (click)="changeVendorList()"></button>
+                    </div>
+                  </div>
+                </ng-template>
+           </p-dropdown>
+
+        </span>
+    <div class="p-invalid text-align-left"
+         *ngIf="createEInvoiceForm.get('vendorId').dirty && createEInvoiceForm.get('vendorId').errors">
+      Vendor is required
+    </div>
+  </div>
+
+  <div class="field col-12 lg:col-3 xl:col-3 md:col-4 sm:col-6">
+      <span>
+        <label class="label-wrapper" for="projectCodeId">Select Project/Task<span
+          *ngIf="isAsteriskMarkShown(bill,appFormConstants.PROJECT_CODE_ID)">{{'*'}}</span>
+        </label>
+           <p-dropdown [virtualScroll]="projectTasks.data.length>20" virtualScrollItemSize="25"
+                       (onChange)="projectCodeChanged(); commonUtil.isPressEnterInsideDropdown(dpNameProjectTask)"
+                       [options]="projectTasks.data" id="projectCodeId" optionDisabled="inactive"
+                       inputId="dropdown" appendTo="body" showClear="true" #dpNameProjectTask
+                       formControlName="projectCodeId" optionLabel="name" optionValue="id"
+                       [autoDisplayFirst]="false" [filter]="true">
+
+             <ng-template pTemplate="selectedItem">
+               <div>{{dpNameProjectTask.selectedOption.name}}</div>
+             </ng-template>
+
+             <ng-template pTemplate="footer" *ngIf="privilegeService.isAuthorized(appAuthorities.PROJECT_CODES_CREATE)">
+                  <div class="grid dp-footer">
+                    <div class="col-12 button-wrapper">
+                      <button pButton class="p-button-sm" label="Add New"
+                              (click)="isAddNewProjectCodes = true"></button>
+                    </div>
+                  </div>
+             </ng-template>
+
+           </p-dropdown>
+         <div class="p-invalid text-align-left"
+              *ngIf="createEInvoiceForm.get('projectCodeId').dirty && createEInvoiceForm.get('projectCodeId').errors">
+          Project/Task is required
+        </div>
+        </span>
+  </div>
+
+  <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12" *ngIf="!fromCreditCard">
+    <label class="label-wrapper" for="vendor">Select Purchase Order</label>
+    <span class="p-float-label p-fluid">
+          <p-dropdown [virtualScroll]="poList.data.length>20" virtualScrollItemSize="25" [options]="poList.data"
+                      (onChange)="commonUtil.isPressEnterInsideDropdown(selectedPoName)"
+                      id="poId"
+                      #selectedPoName
+                      formControlName="poId" optionValue="id" optionLabel="name" [showClear]="true"
+                      [autoDisplayFirst]="false" [filter]="true">
+             <ng-template pTemplate="selectedItem">
+               <div>{{selectedPoName.selectedOption.name}}</div>
+             </ng-template>
+           </p-dropdown>
+        </span>
+  </div>
+
+  <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12"
+       *ngIf="createEInvoiceForm.get('poId').value !== null">
+    <label class="label-wrapper" for="remainingCeiling">Remaining Ceiling</label>
+    <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input formControlName="remainingPoCeiling" [readOnly]="true" class="disabled" id="remainingCeiling"
+                     currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                     type="text" pInputText>
+            </span>
+
+    </div>
+  </div>
+
+  <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12" *ngIf="!fromCreditCard">
+    <label class="label-wrapper" for="receiptNumber">PO Receipt Number</label>
+    <span class="p-float-label p-fluid">
+          <p-dropdown [virtualScroll]="receiptList.data.length>20" virtualScrollItemSize="25"
+                      (onChange)="commonUtil.isPressEnterInsideDropdown(selectedPoName)"
+                      [options]="receiptList.data" id="receiptNumber" #selectedPoName
+                      formControlName="receiptId" optionValue="id" optionLabel="name" [showClear]="true"
+                      [autoDisplayFirst]="false" [filter]="true">
+           </p-dropdown>
+
+        </span>
+  </div>
+
+  <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12">
+    <label class="label-wrapper" for="invNumId">Bill Number*</label>
+    <span class="p-float-label">
+            <input formControlName="billNo"
+                   (keyup)="removeSpace.clearSpace(createEInvoiceForm, 'billNo')"
+                   [ngClass]="fromRecurringBill? 'disabled-field': ''" id="invNumId" type="text"
+                   [readOnly]="fromRecurringBill" pInputText>
+          </span>
+    <div class="p-invalid text-align-left"
+         *ngIf="createEInvoiceForm.get('billNo').dirty && createEInvoiceForm.get('billNo').hasError('required')">
+      Bill Number is required
+    </div>
+    <div class="p-invalid text-align-left" *ngIf="createEInvoiceForm.get('billNo').hasError('maxlength')">
+      Bill Number must be less than 50 characters
+    </div>
+  </div>
+
+  <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12">
+    <label class="label-wrapper" for="billDateId">Bill Date*</label>
+    <span class="p-float-label">
+             <p-calendar appTabindexMinusOne formControlName="billDate" dateFormat="mm/dd/yy" [showIcon]="true" [showButtonBar]="true"
+                         (onSelect)="billDateChanged()" id="billDateId"></p-calendar>
+            </span>
+
+    <div class="p-invalid text-align-left"
+         *ngIf="createEInvoiceForm.get('billDate').dirty && createEInvoiceForm.get('billDate').errors">
+      Bill Date is required
+    </div>
+  </div>
+
+  <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12">
+    <label class="label-wrapper" for="vendor">Select Payment Term*</label>
+    <span class="p-float-label p-fluid">
+          <p-dropdown [virtualScroll]="termList.data.length>20" virtualScrollItemSize="25" [options]="termList.data"
+                      id="term"
+                      #selectedTermName (onChange)="termManuallyChanged();
+                      commonUtil.isPressEnterInsideDropdown(selectedTermName)"
+                      formControlName="term" optionValue="id" optionLabel="name" [showClear]="true"
+                      [autoDisplayFirst]="false" [filter]="true">
+             <ng-template pTemplate="selectedItem">
+               <div>{{selectedTermName.selectedOption.name}}</div>
+             </ng-template>
+           </p-dropdown>
+        </span>
+    <div class="p-invalid text-align-left"
+         *ngIf="createEInvoiceForm.get('term').dirty && createEInvoiceForm.get('term').errors">
+      Payment Term is required
+    </div>
+  </div>
+
+  <div class="field col-12 xl:col-3 sm:col-12 lg:col-4 md:col-6"
+       *ngIf="createEInvoiceForm.get(appFormConstants.TERM).value === 10">
+    <label class="label-wrapper" for="netDaysDue">Net Days Due</label>
+    <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input formControlName="netDaysDue" numbersOnly id="netDaysDue" type="text"
+                     (focusout)="automationService.setAutomationData(createEInvoiceForm, appFormConstants.NET_DAYS_DUE)"
+                     pInputText (keyup)="getDueDate($event, false, true, false)">
+            </span>
+    </div>
+
+    <div class="p-invalid text-align-left" *ngIf="createEInvoiceForm.get('netDaysDue').dirty &&
+           createEInvoiceForm.get('netDaysDue').hasError('required')">
+      Net Days Due is required
+    </div>
+    <div class="p-invalid text-align-left"
+         *ngIf="createEInvoiceForm.get('netDaysDue').dirty && createEInvoiceForm.get('netDaysDue').hasError('min')">
+      Invalid net days due
+    </div>
+
+  </div>
+
+  <div class="field col-12 xl:col-3 sm:col-12 lg:col-4 md:col-6"
+       *ngIf="createEInvoiceForm.get(appFormConstants.TERM).value === 10">
+    <label class="label-wrapper" for="discountPercentage">Discount Percentage</label>
+    <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input formControlName="discountPercentage" id="discountPercentage" type="text"
+                     currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.'}" maxlength="6"
+                     pInputText>
+            </span>
+    </div>
+  </div>
+
+  <div class="field col-12 xl:col-3 sm:col-12 lg:col-4 md:col-6"
+       *ngIf="createEInvoiceForm.get(appFormConstants.TERM).value === 10">
+    <label class="label-wrapper" for="discountDaysDue">Discount Days Due</label>
+    <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input formControlName="discountDaysDue" numbersOnly id="discountDaysDue" type="text"
+                     pInputText (keyup)="onKeyUpDiscountDaysDue()">
+            </span>
+    </div>
+    <div class="p-invalid" *ngIf="isValidDiscountDate">
+      <div>Discount days should be lower than net days due</div>
+    </div>
+  </div>
+
+  <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12">
+    <label class="label-wrapper" for="invNumId">Due Date</label>
+    <div class="p-inputgroup">
+          <span class="p-float-label">
+             <p-calendar appTabindexMinusOne formControlName="dueDate" (onSelect)="getDueDate($event, false,false, true)"
+                         dateFormat="mm/dd/yy" [showIcon]="true" [showButtonBar]="true" id="dueDateStr"
+                         *ngIf="createEInvoiceForm.get(appFormConstants.TERM).value == 10"></p-calendar>
+
+            <input *ngIf="createEInvoiceForm.get(appFormConstants.TERM).value !== 10" formControlName="dueDate"
+                   class="disabled-field" readonly id="dueDateId" type="text" pInputText>
+          </span>
+    </div>
+  </div>
+
+  <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12">
+    <label class="label-wrapper" for="projectCodeId">Select Department<span
+      *ngIf="isAsteriskMarkShown(bill,appFormConstants.DEPARTMENT_ID)">{{'*'}}</span>
+    </label>
+    <span class="p-float-label">
+        <p-dropdown [virtualScroll]="department.data.length>20" virtualScrollItemSize="25"
+                    [options]="department.data" id="departmentId" optionDisabled="inactive"
+                    (onChange)="departmentChanged(); commonUtil.isPressEnterInsideDropdown(dpNameDepartment)"
+                    inputId="dropdown" appendTo="body" showClear="true" #dpNameDepartment
+                    formControlName="departmentId" optionLabel="name" optionValue="id"
+                    [autoDisplayFirst]="false" [filter]="true">
+
+          <ng-template pTemplate="selectedItem">
+            <div>{{dpNameDepartment.selectedOption.name}}</div>
+          </ng-template>
+
+                 <ng-template pTemplate="footer"
+                              *ngIf="privilegeService.isAuthorized(appAuthorities.DEPARTMENT_CREATE)">
+                  <div class="grid dp-footer">
+                    <div class="col-12 button-wrapper">
+                      <button pButton class="p-button-sm" label="Add New"
+                              (click)="addDepartment()"></button>
+                    </div>
+                  </div>
+                </ng-template>
+        </p-dropdown>
+         <div class="p-invalid text-align-left"
+              *ngIf="createEInvoiceForm.get('departmentId').dirty && createEInvoiceForm.get('departmentId').errors">
+          Department is required
+        </div>
+      </span>
+  </div>
+
+  <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12">
+    <label class="label-wrapper" for="accountPeriodMonth">Accounting Period – Month<span
+      *ngIf="isAsteriskMarkShown(bill,appFormConstants.ACCOUNT_PERIOD_MONTH)">{{'*'}}</span>
+    </label>
+    <p-dropdown [options]="billUtility.periodMonth" optionValue="id" #accPeriod
+                (onChange)="commonUtil.isPressEnterInsideDropdown(accPeriod)"
+                [autoDisplayFirst]="false" optionLabel="name"
+                [filter]="false" formControlName="accountPeriodMonth"
+                showClear="true" id="accountPeriodMonth" appendTo="body">
+      <ng-template let-item pTemplate="selectedItem">
+        {{ item.name }}
+      </ng-template>
+    </p-dropdown>
+    <div class="p-invalid text-align-left"
+         *ngIf="bill.accountPeriodMonth.dirty && bill.accountPeriodMonth.errors">
+      Accounting Period – Month is required
+    </div>
+  </div>
+
+  <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12">
+    <label class="label-wrapper" for="accountPeriodYear">Accounting Period – Year<span
+      *ngIf="isAsteriskMarkShown(bill,appFormConstants.ACCOUNT_PERIOD_YEAR)">{{'*'}}</span>
+    </label>
+    <p-dropdown [options]="billUtility.periodYears" optionValue="value" #accPeriodY
+                (onChange)="commonUtil.isPressEnterInsideDropdown(accPeriodY)"
+                [autoDisplayFirst]="false" optionLabel="value"
+                id="accountPeriodYear"
+                formControlName="accountPeriodYear" [filter]="false"
+                showClear="true" appendTo="body">
+      <ng-template let-item pTemplate="selectedItem">
+        {{ item.value }}
+      </ng-template>
+    </p-dropdown>
+    <div class="p-invalid text-align-left"
+         *ngIf="bill.accountPeriodYear.dirty && bill.accountPeriodYear.errors">
+      Accounting Period – Year is required
+    </div>
+  </div>
+
+  <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12">
+    <div class="label-wrapper">Pay When Customer Pay</div>
+    <div class="p-inputgroup">
+      <p-checkbox class="costume-checkbox checkbox-label-wrapper"
+                  (onChange)="billUtility.payWhenCustomerPay($event, createEInvoiceForm)"
+                  formControlName="payWhenCustomerPay" [binary]="true">
+      </p-checkbox>
+    </div>
+  </div>
+
+
+  <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12" *ngIf="billUtility.isCheckedPayWhenCustomerPay">
+        <span class="p-fluid">
+           <label class="label-wrapper" for="vendor">Select Invoice*</label>
+          <p-dropdown [virtualScroll]="customerInvoiceList.data.length>20" virtualScrollItemSize="25"
+                      (onChange)="commonUtil.isPressEnterInsideDropdown(selectedInvoice)"
+                      [options]="customerInvoiceList.data" id="invoiceList"
+                      #selectedInvoice
+                      formControlName="customerInvoiceId" optionValue="id" optionLabel="name" [showClear]="true"
+                      [autoDisplayFirst]="false" [filter]="true">
+             <ng-template pTemplate="selectedItem">
+               <div>{{selectedInvoice.selectedOption.name}}</div>
+             </ng-template>
+
+                  <ng-template pTemplate="footer" *ngIf="privilegeService.isAuthorized(appAuthorities.CREATE_INVOICE)">
+                  <div class="grid dp-footer">
+                    <div class="col-12 button-wrapper">
+                      <button pButton class="p-button-sm" label="Add New"
+                              (click)="isCreateInvoice = true"></button>
+                    </div>
+                  </div>
+             </ng-template>
+           </p-dropdown>
+
+        </span>
+    <div class="p-invalid text-align-left"
+         *ngIf="createEInvoiceForm.get('customerInvoiceId').dirty && createEInvoiceForm.get('customerInvoiceId').errors">
+      Customer Invoice is required
+    </div>
+  </div>
+
+  <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12"
+       *ngIf="createEInvoiceForm.get('poId').value && (poStatus !== appConstant.STATUS_CANCEL || (poStatus === appConstant.STATUS_CANCEL && isClosedPO === true))">
+    <p-checkbox class="costume-checkbox checkbox-label-wrapper" formControlName="closePo" [binary]="true"
+                label="Close PO">
+    </p-checkbox>
+  </div>
+
+  <ng-container class="grid" formArrayName="additionalData" *ngIf="headerAdditionalFieldDetails.length > 0">
+    <ng-container *ngFor="let additionalField of headingSectionArray.controls; let itemIndex = index"
+                  [formGroupName]="itemIndex">
+      <app-additional-field-header-items
+        *ngIf="commonUtil.checkUndefinedValues(additionalField.get('fieldValue').value, headerAdditionalFieldDetails[itemIndex].docStatus, false)"
+        [additionalField]="additionalField" [parentForm]="createEInvoiceForm"
+        class="field lg:col-4 xl:col-3 md:col-4 sm:col-6 col-12"
+        [itemIndex]="itemIndex" [additionalFieldHeader]="headerAdditionalFieldDetails">
+      </app-additional-field-header-items>
+    </ng-container>
+  </ng-container>
+</div>
+
+<!--Add New Project Code-->
+<p-sidebar styleClass="p-sidebar-sm" *ngIf="isAddNewProjectCodes" [dismissible]="true" appendTo="body" [modal]="true"
+           position="right" class="overflow-side-bar"
+           [(visible)]="isAddNewProjectCodes">
+  <ng-template pTemplate="header">Create Project</ng-template>
+  <app-create-new-project-code (updatedParentCodeList)="updatedProjectCodeList.emit()"
+                               *ngIf="isAddNewProjectCodes">
+  </app-create-new-project-code>
+</p-sidebar>
+
+<!--Create Invoice-->
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           (onHide)="isCreateInvoice= false" [fullScreen]="false" [(visible)]="isCreateInvoice"
+           transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)">
+  <ng-template pTemplate="header">Create Invoice</ng-template>
+  <app-add-customer-invoice *ngIf="isCreateInvoice"
+                            (emitAfterSuccess)="updatedCustomerInvoiceList.emit(); isCreateInvoice= false;">
+  </app-add-customer-invoice>
+</p-sidebar>

@@ -1,0 +1,16 @@
+[
+  {
+    "action": "SEND_INVITATION",
+    "label": "Re-Send Invitations",
+    "icon": "fa fa-share",
+    "active": false,
+    "authCode": "VENDORS_RESEND_VENDOR_INVITATION"
+  },
+  {
+    "action": "DELETE",
+    "label": "Delete",
+    "icon": "fa fa-trash",
+    "active": false,
+    "authCode": "VENDORS_DELETE_VENDOR_INVITATION"
+  }
+]

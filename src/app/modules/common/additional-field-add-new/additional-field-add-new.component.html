@@ -1,0 +1,39 @@
+<div class="drawer-content p-3">
+<form [formGroup]="dropdownOptionCreateForm" (submit)="createDropdownOption()">
+  <h5 class="subHeadingColour">Drop Down # {{field.fieldName}}</h5>
+  <br>
+
+  <div class="grid p-fluid">
+    <div [ngClass]="'field col-12'">
+      <div>
+        <label class="label-wrapper" for="optionValue">Option Value *</label>
+            <span class="p-float-label">
+              <input formControlName="optionValue" id="optionValue" type="text" pInputText
+                     maxlength="100"
+                     (keyup)="removeFieldSpace(dropdownOptionForm.optionValue)">
+
+            </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="dropdownOptionForm.optionValue.dirty && dropdownOptionForm.optionValue.errors">
+        Drop down option is required
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="isOptionValueAvailable">
+        Option value exist, Please enter new one
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" class="p-button-outlined p-button-sm mr-2" iconPos="left" (click)="dropdownOptionCreateForm.reset()"
+              icon="fa-solid fa-rotate-right" [disabled]="isProgressClickEvent" label="Reset"></button>
+      <button pButton type="button" (click)="createDropdownOption()" class="p-button-sm" iconPos="left"
+              [icon]="!isProgressClickEvent ? 'pi pi-save': 'pi pi-spinner'" [disabled]="isProgressClickEvent"
+              label="Save"></button>
+    </div>
+  </div>
+</div>

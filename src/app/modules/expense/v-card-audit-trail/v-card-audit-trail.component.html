@@ -1,0 +1,44 @@
+<p-sidebar styleClass="p-sidebar-md activity-log" [modal]="true" [dismissible]="true" appendTo="body" (onHide)="closeDrawer.emit()"
+           position="right"
+           [(visible)]="panelShow">
+  <ng-template pTemplate="header">
+    <div class="grid">
+      <div class="col-12">
+        Activity Log
+      </div>
+      <div class="col-12" *ngIf="heading || cardNo">
+        <p class="nick-name mb-1" *ngIf="heading">Nick Name - {{heading}}</p>
+        <p class="nick-name" *ngIf="cardNo">Card Number - {{cardNo}}</p>
+      </div>
+    </div>
+  </ng-template>
+
+  <div class="p-4">
+    <p-timeline [value]="auditTrial" styleClass="v-card-audit-trail">
+      <ng-template pTemplate="marker" let-event>
+            <span class="marker shadow-2">
+                <i [ngClass]="event.statusId.icon"></i>
+            </span>
+      </ng-template>
+      <ng-template pTemplate="content" let-event>
+        <div class="grid data mb-5">
+          <div class="col-12">
+            <h5>{{event.statusId.name}}</h5>
+          </div>
+          <div class="col-12 description">
+            <p *ngIf="event.amount || event.amount == 0"><b>Amount:</b> {{event.amount  | number : '1.2-2'}}</p>
+            <p *ngIf="event.balanceAmount || event.balanceAmount == 0"><b>Remaining Balance:</b> {{event.balanceAmount  | number : '1.2-2'}}</p>
+            <p *ngIf="event.nickName"><b>Nick Name:</b> {{event.nickName}}</p>
+            <p *ngIf="event.effectiveUntil"><b>Valid Thru:</b> {{event.effectiveUntil}}</p>
+            <p *ngIf="event.userName"><b>User:</b> {{event.userName}}</p>
+            <p class="break-word" *ngIf="event.cancelReason"><b>Cancelled Reason:</b> {{event.cancelReason}}</p>
+            <p class="break-word" *ngIf="event.comment"><b>Comment:</b> {{event.comment}}</p>
+          </div>
+          <div class="col-12">
+            <p>{{event.actionDate | date:dateFormatter.DATE_TIME_FORMAT}}</p>
+          </div>
+        </div>
+      </ng-template>
+    </p-timeline>
+  </div>
+</p-sidebar>

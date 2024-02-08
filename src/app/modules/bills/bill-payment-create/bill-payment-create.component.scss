@@ -1,0 +1,21 @@
+@import '../../../../scss/table-responsive';
+
+.bill-payment-form {
+  .detail-field {
+    margin-bottom: 1px;
+
+    label {
+      font-size: 11px;
+      color: $grey;
+      margin-bottom: 1px;
+    }
+
+    div {
+      font-size: 13px;
+    }
+  }
+}
+
+.side-bar-drawer-content{
+  min-height: calc(100vh - 120px);
+}

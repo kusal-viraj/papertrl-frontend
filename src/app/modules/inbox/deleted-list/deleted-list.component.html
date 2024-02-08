@@ -1,0 +1,93 @@
+<div class="total-record-wrapper" *ngIf="deletedDataListLength === appConstant.ZERO">No Data Found.</div>
+
+<p-virtualScroller [value]="deletedList" [itemSize]="65" [lazy]="true" #deletedListRef
+                   scrollHeight="{{screenHeight}}"
+                   [class]="deletedDataListLength === appConstant.ZERO ? 'p-virtualScroller-hide' : 'p-virtualScroller-wrap'"
+                   (onLazyLoad)="loadDeletedList($event)">
+
+  <ng-template let-deletedList pTemplate="item" let-scrollOptions="options">
+    <div class="grid p-vertual-wrap list-data-wrap"
+         [ngClass]="scrollOptions.index == clickIndexInDelete ? 'background-color': 'background-color-wrap'" [class.p-disabled]="isProgressOtherFileDownload">
+
+      <div class="inner-wrapper" [class.p-disabled]="isProgressViewInDeleteTab || isDisabledWhenProgressSplitEvent">
+
+        <div class="costume-checkbox-wrap">
+          <p-checkbox [binary]="true" [(ngModel)]="deletedList.isChecked" (onChange)="addIdToList(scrollOptions.index, deletedList)">
+          </p-checkbox>
+        </div>
+
+        <div (click)="listDataClick(scrollOptions.index, deletedList)" class="col-10 mail-item p-0 pt-3 pl-3">
+
+          <div class="email-body" (mouseenter)="showFullText($event)">
+          <span id="expandIcon" *ngIf="deletedList.attachmentList.length > 0"
+                (click)="deletedList.isExpanded = !deletedList.isExpanded"
+                [class]="!deletedList.isExpanded ? 'pi pi-chevron-right expand-icon-wrap':
+                 'pi pi-chevron-down expand-icon-wrap'"></span>
+            <span id="title">
+            {{deletedList.title}}
+            </span>
+          </div>
+
+          <div class="p-vertual-wrap" *ngIf="deletedList.isUpload">
+            <div class="emailed-by">Uploaded
+              by {{deletedList.emailUserName}} {{deletedList.createdOn}}
+            </div>
+          </div>
+
+          <div class="p-vertual-wrap" *ngIf="!deletedList.isUpload">
+            <div class="emailed-by">Emailed
+              by {{deletedList.emailAddress}} {{deletedList.createdOn}}
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-1 ellipsis-icon-wrap"
+             [class.p-disabled]="!deletedList.emailBody"
+             [class]="deletedList.emailBody === null ? 'inactive-email-box' : 'active-email-box'">
+          <div (click)="emailBOdyDetailDeletedList.emit(deletedList.emailBody)" [pTooltip]="'Click To View Email Body'"
+               [tooltipDisabled]="deletedList.emailBody == null || isProgressViewInDeleteTab">
+            <em [class.p-disabled]="isProgressViewInDeleteTab" class="fa fa-envelope-open-o"></em>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="outer-wrapper" [class.p-disabled]="isProgressViewInDeleteTab  || isDisabledWhenProgressSplitEvent">
+
+        <div class="attachment-chips-wrap pt-2 pl-5 col-12" *ngIf="deletedList.isExpanded">
+          <div *ngFor="let att of deletedList.attachmentList; let attIndex=index">
+            <span class="attachments-style attachments-style-default"
+                  [class]="(clickDeletedListAttachmentId === att.id) ? 'attachments-style-click': ''">
+              <span (click)="attachmentOnClick(att, attIndex, deletedList)">
+              {{att.fileName}}
+              </span>
+              <span class="pi pi-ellipsis-v" *ngIf="privilegeService.isAuthorizedMultiple(
+              [appAuthorities.INBOX_DELETE, appAuthorities.INBOX_ATTACH_TO])"
+                    [class.p-disabled]="isProgressViewInDeleteTab || clickDeletedListAttachmentId != att.id"
+                    (click)="deletedListAction.toggle($event)"
+                    [hidden]="!privilegeService.isAuthorizedMultiple([appAuthorities.INBOX_DELETE, appAuthorities.INBOX_RECOVER])">
+              </span>
+                <p-menu #deletedListAction [popup]="true"
+                        [model]="actionButtonList()"
+                        appendTo="body">
+                </p-menu>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </ng-template>
+
+</p-virtualScroller>
+
+<!--View permenate delete confirmstion modal-->
+<p-confirmDialog key="deletedList" #cd header="Are you sure?" icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cd.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, delete"
+            (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

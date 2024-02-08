@@ -1,0 +1,99 @@
+<div class="layout-topbar top-bar-custom">
+  <div class="topbar-left">
+    <img id="logo-mobile" class="logo-desktop" src="../../../../assets/images/header-white-logo.png" alt="PaperTrl"/>
+  </div>
+</div>
+<div class="exception-body">
+  <div class="exception-content">
+    <div class="exception-detail">
+      <div class="grid">
+        <p-card class="card-custom" styleClass="p-card-shadow">
+
+          <div class="card-custom-padding">
+            <img alt="Card" class="trial-logo" src="../../../../assets/images/logo.png">
+
+            <h5 class="card-header-custom">CONGRATULATIONS!</h5>
+            <p class="card-subheader-custom"><b>Today is the day you take control of your AP.</b></p>
+            <p class="card-subheader-custom">No credit card required to get started. Just fill out the <br> form then
+              look for an email verification in your inbox.</p>
+
+            <form class="p-fluid trial-request text-left" [formGroup]="trialRequestForm"
+                  (ngSubmit)="submit(trialRequestForm.value)">
+
+              <div class="col-12">
+                <label class="label-wrapper" for="firstName">First name*</label>
+                <input  formControlName="firstName" id="firstName" type="text"
+                       maxlength="150" blockSpace pInputText>
+                <div class="p-invalid text-align-left"
+                     *ngIf="trialRequestForm.get('firstName').dirty && trialRequestForm.get('firstName').errors">
+                  First Name is required
+                </div>
+              </div>
+
+              <div class="col-12">
+                <label class="label-wrapper" for="lastName">Last name*</label>
+                <input  formControlName="lastName" id="lastName" type="text"
+                       maxlength="150" blockSpace pInputText>
+                <div class="p-invalid text-align-left"
+                     *ngIf="trialRequestForm.get('lastName').dirty && trialRequestForm.get('lastName').errors">
+                  Last Name is required
+                </div>
+              </div>
+
+              <div class="col-12">
+                <label class="label-wrapper" for="phoneNumber">Phone Number*</label>
+                <app-country-code-validation id="phoneNumber"
+                                             [telephoneFormControl]="trialRequestForm.get('phoneNumber')"></app-country-code-validation>
+                <div
+                  *ngIf="trialRequestForm.get('phoneNumber').touched && trialRequestForm.get('phoneNumber').hasError('required')"
+                  class="p-invalid text-align-left">
+                  Phone Number is required
+                </div>
+                <div *ngIf="trialRequestForm.get('phoneNumber').hasError('validatePhoneNumber')"
+                     class="p-invalid text-align-left">
+                  Invalid Phone Number
+                </div>
+              </div>
+
+              <div class="col-12">
+                <label class="label-wrapper" for="emailAddress">Business Email Address*</label>
+                <input  formControlName="emailAddress" id="emailAddress" maxlength="100"
+                       (keyup)="checkEmailAvailability()" blockSpace type="text" pInputText>
+
+                <div class="p-invalid  text-align-left"
+                     *ngIf="trialRequestForm.get('emailAddress').dirty && (trialRequestForm.get('emailAddress').errors||!isUniqEmail)">
+                  <div *ngIf="!isUniqEmail">This email address is already exist, Please use a different one</div>
+                  <div *ngIf="isUniqEmail&&trialRequestForm.get('emailAddress').errors.required">Business email is
+                    required
+                  </div>
+                  <div *ngIf="isUniqEmail&&trialRequestForm.controls['emailAddress'].hasError('emailValidate')">Invalid
+                    email address
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <label class="label-wrapper" for="phoneNumber">Company Name*</label>
+                <input  formControlName="companyName" id="companyName" type="text"
+                       maxlength="100" blockSpace pInputText>
+                <div class="p-invalid text-align-left"
+                     *ngIf="trialRequestForm.get('companyName').dirty && trialRequestForm.get('companyName').errors">
+                  Company Name is required
+                </div>
+              </div>
+
+              <div class="p-fluid">
+                <div class="col-12 margin-between-fields-buttons">
+                  <button pButton [disabled]="trialRequestForm.invalid||!isUniqEmail||disableSubmitButton"
+                          class="p-button-lg btn-start" type="submit" label="START TRIAL"></button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </p-card>
+      </div>
+    </div>
+  </div>
+</div>
+<p-toast position="bottom-right"></p-toast>
+

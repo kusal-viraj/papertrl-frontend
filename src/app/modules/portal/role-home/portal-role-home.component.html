@@ -1,0 +1,21 @@
+<div class="p-card">
+  <div class="p-card-body">
+  <div class="grid">
+
+    <h5 class="menu-expense-home menu-Item col-4">Roles</h5>
+
+    <div class="screen-change-btn col-8" style="text-align: right">
+      <button pButton class="button-screen-change" *ngIf="!isCreateRole" iconPos="left" icon="pi pi-plus"
+              label="Create Role" (click)="toggleRoles('rc')"></button>
+      <button pButton class="button-screen-change" *ngIf="!isListRole" iconPos="left" icon="fa fa-list"
+              label="View Roles" (click)="toggleRoles('rl')"></button>
+    </div>
+
+    <div class="col-12">
+      <app-role-list *ngIf="isListRole"></app-role-list>
+      <app-role-create *ngIf="isCreateRole"></app-role-create>
+    </div>
+
+  </div>
+  </div>
+</div>

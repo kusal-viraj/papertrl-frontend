@@ -1,0 +1,50 @@
+@import '../../../../scss/table-responsive';
+
+.field-clear-button {
+  background-color: transparent !important;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 1366px) {
+  .reset-button-wrapper {
+    width: 9% !important;
+    min-width: 15%;
+
+  }
+  .send-request-button-wrapper {
+    width: 14% !important;
+    min-width: 23%;
+  }
+  .multiselect-wrapper{
+    width: 45% !important;
+  }
+}
+@media only screen and (width: 768px) {
+  .reset-button-wrapper {
+    width: 20% !important;
+
+  }
+  .send-request-button-wrapper {
+    width: 45% !important;
+  }
+  .multiselect-wrapper{
+    width: 35% !important;
+  }
+}
+@media only screen and (max-width: 1024px) {
+  .reset-button-wrapper {
+    width: 12% !important;
+
+  }
+  .send-request-button-wrapper {
+    width: 18% !important;
+  }
+  .multiselect-wrapper{
+    width: 45% !important;
+  }
+}
+
+.table-wrapper {
+  height: calc(100vh - 314px);
+}
+

@@ -1,0 +1,44 @@
+{
+  "data": [
+    {
+      "id": "1",
+      "vendorName": "ABC",
+      "noOfTransactions": 1,
+      "noOfProjects": 2,
+      "totalAmount": 1000,
+      "noOfPos": 5,
+      "billablePoDetailList": [
+        {
+          "poNumber": "PO100",
+          "itemOrAccountNo": "ACC001",
+          "description": "DESC01",
+          "projectCode": "Project01",
+          "departmentName": "Accounting",
+          "qty": 1,
+          "cost": 1000,
+          "lineAmount": 1000
+        },
+        {
+          "poNumber": "PO100",
+          "itemOrAccountNo": "ACC001",
+          "description": "DESC01",
+          "projectCode": "Project01",
+          "departmentName": "Accounting",
+          "qty": 1,
+          "cost": 1000,
+          "lineAmount": 1000
+        },
+        {
+          "poNumber": "PO100",
+          "itemOrAccountNo": "ACC001",
+          "description": "DESC01",
+          "projectCode": "Project01",
+          "departmentName": "Accounting",
+          "qty": 1,
+          "cost": 1000,
+          "lineAmount": 1000
+        }
+      ]
+    }
+  ]
+}

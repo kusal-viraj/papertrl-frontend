@@ -1,0 +1,74 @@
+<form [formGroup]="finalApprovalWorkflowLevel">
+
+  <div class="grid p-fluid">
+
+    <div class="scroll-fields col-3 xl:col-2 lg:col-3">
+      <label class="label-wrapper" for="approvalGroup">Select Approval Group</label>
+      <span class="p-float-label">
+          <p-dropdown [virtualScroll]="approvalGroups.data.length > 20" virtualScrollItemSize="25" appendTo="body"
+                      id="approvalGroup" [options]="approvalGroups.data" optionDisabled="inactive" [filter]="true"
+                      formControlName="approvalGroup" class="number-column-table-dropdown" optionValue="id"
+                      optionLabel="name" [style]="{'width':'100%'}" [autoDisplayFirst]="false"
+                      [required]="!finalApprovalWorkflowLevel.get('approvalUser').value" [showClear]="true"
+                      (onChange)="changedApprovalGroupSelection($event)">
+
+                        <ng-template let-approvalGroup pTemplate="item">
+                           <div class="grid">
+                               <div class="dropdown-list"
+                                    [ngClass]="approvalGroup.id == 0 ? ' dropdown-add': null">{{approvalGroup.name}}</div>
+                               <em *ngIf="approvalGroup.id == 0" class="pi pi-plus dropdown-icon dropdown-add"></em>
+                           </div>
+                       </ng-template>
+          </p-dropdown>
+        </span>
+      <div
+        *ngIf="finalApprovalWorkflowLevel.get('approvalGroup').dirty && finalApprovalWorkflowLevel.get('approvalGroup').errors"
+        class="p-invalid text-align-left">
+        Approval Group is required
+      </div>
+    </div>
+  <div style="padding-top: 51px !important;" class="field p-fluid p-2 text-center  label-wrapper">or</div>
+  <div class="scroll-fields col-3 xl:col-2 lg:col-3">
+    <label class="label-wrapper" for="approvalUser">Select Users </label>
+    <span class="p-float-label">
+          <p-dropdown [virtualScroll]="userList.data.length > 20" virtualScrollItemSize="25" [options]="userList.data"
+                      id="approvalUser"
+                      inputId="userId" optionDisabled="inactive" formControlName="approvalUser" [filter]="true"
+                      [showClear]="true"
+                      class="number-column-table-dropdown" optionLabel="name" optionValue="id" appendTo="body"
+                      [style]="{'width':'100%'}" [autoDisplayFirst]="false" (onChange)="changedUserSelection($event)"
+                      [required]="!finalApprovalWorkflowLevel.get('approvalGroup').value">
+
+
+            <ng-template let-approvalGroup pTemplate="item">
+                           <div class="grid">
+                               <div class="dropdown-list"
+                                    [ngClass]="approvalGroup.id == 0 ? ' dropdown-add': null">{{approvalGroup.name}}</div>
+                               <em *ngIf="approvalGroup.id == 0" class="pi pi-plus dropdown-icon dropdown-add"></em>
+                           </div>
+             </ng-template>
+          </p-dropdown>
+        </span>
+    <div *ngIf="finalApprovalWorkflowLevel.get('approvalUser').dirty && finalApprovalWorkflowLevel.get('approvalUser').errors"
+      class="p-invalid text-align-left">User is required
+    </div>
+    </div>
+  </div>
+</form>
+
+
+<!--Add User-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" appendTo="body" [modal]="true" position="right"
+           *ngIf="userPanel"
+           [(visible)]="userPanel">
+  <ng-template pTemplate="header">Create User</ng-template>
+  <app-add-user [panel]="true" (refreshTable)="getUserList()" *ngIf="userPanel"></app-add-user>
+</p-sidebar>
+
+<!--Add Approval Group-->
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" [dismissible]="true" [modal]="true" position="right"
+           *ngIf="approvalGroupPanel" [(visible)]="approvalGroupPanel">
+  <ng-template pTemplate="header">Create Approval Group</ng-template>
+  <app-add-new-approval-group [panel]="true" (updatedApprovalGroups)="getApprovalGroupList()"
+                              *ngIf="approvalGroupPanel"></app-add-new-approval-group>
+</p-sidebar>

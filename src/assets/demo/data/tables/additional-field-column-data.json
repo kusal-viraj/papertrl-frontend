@@ -1,0 +1,271 @@
+{
+  "advancedFilters": [
+    {
+      "field": "documentType",
+      "header": "Document Type",
+      "searchType": "dropdown",
+      "dropdownValues": [
+        {
+          "id": 1,
+          "label": "Bill"
+        },
+        {
+          "id": 2,
+          "label": "Bill Payment"
+        },
+        {
+          "id": 3,
+          "label": "Purchase Order"
+        },
+        {
+          "id": 4,
+          "label": "PO Receipt"
+        },
+        {
+          "id": 5,
+          "label": "Expenses"
+        }
+      ]
+    },
+    {
+      "field": "fieldName",
+      "header": "Field Name",
+      "searchType": "input"
+    },
+
+    {
+      "field": "fieldType",
+      "header": "Field Type",
+      "searchType": "dropdown",
+      "dropdownValues": [
+        {
+          "id": 1,
+          "label": "Text Box"
+        },
+        {
+          "id": 2,
+          "label": "Text Area"
+        },
+        {
+          "id": 3,
+          "label": "Dropdown"
+        },
+        {
+          "id": 4,
+          "label": "Data Field"
+        },
+        {
+          "id": 5,
+          "label": "File Upload"
+        },
+        {
+          "id": 6,
+          "label": "Radio Buttons"
+        },
+        {
+          "id": 7,
+          "label": "Check Boxes"
+        },
+        {
+          "id": 8,
+          "label": "Label"
+        }
+      ]
+    },
+    {
+      "field": "requiredStatus",
+      "header": "Required Status",
+      "searchType": "dropdown",
+      "dropdownValues": [
+        {
+          "label": "REQUIRED",
+          "value": "REQUIRED"
+        },
+        {
+          "label": "OPTIONAL",
+          "value": "OPTIONAL"
+        }
+      ]
+    },
+    {
+      "field": "activeStatus",
+      "header": "Active Status",
+      "searchType": "dropdown",
+      "dropdownValues": [
+        {
+          "label": "ACTIVE",
+          "value": "active"
+        },
+        {
+          "label": "INACTIVE",
+          "value": "I"
+        }
+      ]
+    }
+  ],
+  "columns": [
+    {
+      "field": "action",
+      "header": "Action",
+      "isSortable": false,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "actionButton",
+      "canHide": false
+    },
+    {
+      "field": "documentType",
+      "header": "Document Type",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "left",
+      "searchType": "dropdown",
+      "canHide": true,
+      "placeholder": "Document Type",
+      "dropdownValues": [
+        {
+          "label": "Bill",
+          "value": 1
+        },
+        {
+          "label": "Bill Payment",
+          "value": 2
+        },
+        {
+          "label": "Purchase Order",
+          "value": 3
+        },
+        {
+          "label": "PO Receipt",
+          "value": 4
+        },
+        {
+          "label": "Expenses",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "field": "fieldName",
+      "header": "Field Name",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Field Name"
+    },
+    {
+      "field": "fieldType",
+      "header": "Field Type",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "canHide": true,
+      "placeholder": "Field Type",
+      "searchType": "dropdown",
+      "dropdownValues": [
+        {
+          "label": "Text Box",
+          "value": 1
+
+        },
+        {
+          "label": "Text Area",
+          "value": 2
+
+        },
+        {
+          "label": "Dropdown",
+          "value": 3
+        },
+        {
+          "label": "Data Field",
+          "value": 4
+        },
+        {
+          "label": "File Upload",
+          "value": 5
+        },
+        {
+          "label": "Radio Buttons",
+          "value": 6
+        },
+        {
+          "label": "Check Boxes",
+          "value": 7
+        },
+        {
+          "label": "Label",
+          "value": 8
+        }
+      ]
+
+    },
+    {
+      "field": "requiredStatus",
+      "header": "Required Status",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "dropdown",
+      "canHide": true,
+      "placeholder": "All",
+      "dropdownValues": [
+        {
+          "label": "REQUIRED",
+          "value": "REQUIRED"
+        },
+        {
+          "label": "OPTIONAL",
+          "value": "OPTIONAL"
+        }
+      ]
+    },
+    {
+      "field": "activeStatus",
+      "header": "Active Status",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "dropdown",
+      "canHide": true,
+      "placeholder": "All",
+      "dropdownValues": [
+        {
+          "label": "ACTIVE",
+          "value": "active"
+        },
+        {
+          "label": "INACTIVE",
+          "value": "I"
+        }
+      ]
+    }
+  ],
+  "state": {
+    "first": 0,
+    "rows": 10,
+    "columnWidths": "100,220,218,214,218,218",
+    "columnOrder": [
+      "action",
+      "documentType",
+      "fieldName",
+      "fieldType",
+      "requiredStatus",
+      "activeStatus"
+    ]
+  }
+}

@@ -1,0 +1,276 @@
+<div [class]="editView ? 'side-bar-drawer-content' : ''" class="p-3">
+<form [formGroup]="departmentForm" (ngSubmit)="submitForm()">
+
+  <div class="grid side-bar-drawer-content">
+    <div [ngClass]=" !panel ? 'field col-12 xl:col-3 lg:col-3 md:col-6 sm:col-12' : 'field col-12'">
+      <label class="label-wrapper" for="uom">Enter Department Code* </label>
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+          <input formControlName="departmentCode" id="departmentCode" type="text" pInputText maxlength="100"
+                 (keyup)="removeSpace.clearSpace(departmentForm, 'departmentCode')">
+        </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="departmentForm.get('departmentCode').dirty && departmentForm.get('departmentCode').errors">
+        Department Code is required
+      </div>
+    </div>
+
+    <div [ngClass]=" !panel ? 'field col-12 xl:col-3 lg:col-3 md:col-6 sm:col-12' : 'field col-12'">
+      <label class="label-wrapper" for="uom">Enter Department Name* </label>
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+          <input formControlName="departmentName" id="uom" type="text" pInputText maxlength="100"
+                 (keyup)="removeSpace.clearSpace(departmentForm, 'departmentName')">
+        </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="departmentForm.get('departmentName').dirty && departmentForm.get('departmentName').errors">
+        Department Name is required
+      </div>
+    </div>
+
+    <div [ngClass]=" !panel ? 'field col-12 xl:col-3 lg:col-3 md:col-6 sm:col-12' : 'field col-12'">
+      <label class="label-wrapper" for="contactPerson">Contact person </label>
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+          <input formControlName="contactPerson" id="contactPerson" type="text" pInputText maxlength="100"
+                 (keyup)="removeSpace.clearSpace(departmentForm, 'contactPerson')">
+        </span>
+      </div>
+    </div>
+
+    <div [ngClass]=" !panel ? 'col-12 xl:col-3 lg:col-3 md:col-6 sm:col-12' : 'col-12'">
+      <h6>Billing Address</h6>
+    </div>
+
+    <ng-container formGroupName="billingAddress">
+
+    <div [ngClass]=" !panel ? 'field col-12 xl:col-3 lg:col-3 md:col-6 sm:col-12' : 'field col-12'">
+      <label class="label-wrapper" for="billingAddressLine1">Address Line 1
+        {{departmentForm.get('useForPoCreation').value ? '*' : ''}}</label>
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+          <textarea formControlName="addressLine1" id="billingAddressLine1" rows="2" pInputTextarea
+                    (keyup)="removeSpace.clearSpace(departmentForm.get('billingAddress'), 'addressLine1')"
+                    maxlength="255"></textarea>
+        </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="bAddressLine1.dirty && bAddressLine1.errors">
+        Address Line 1 is required
+      </div>
+    </div>
+
+    <div [ngClass]=" !panel ? 'field col-12 xl:col-3 lg:col-3 md:col-6 sm:col-12' : 'field col-12'">
+      <label class="label-wrapper" for="addressLine2">Address Line 2</label>
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+          <textarea formControlName="addressLine2" id="addressLine2" rows="2" pInputTextarea
+                    (keyup)="removeSpace.clearSpace(departmentForm.get('billingAddress'), 'addressLine2')"
+                    maxlength="255"></textarea>
+        </span>
+      </div>
+    </div>
+
+    <div [ngClass]=" !panel ? 'field col-12 xl:col-3 lg:col-3 md:col-6 sm:col-12' : 'field col-12'">
+      <label class="label-wrapper" for="city">City</label>
+      <div class="p-inputgroup">
+      <p-autoComplete delay="100" [minLength]="1" maxlength="100"
+                      (keyup)="removeSpace.clearSpace(departmentForm.get('billingAddress'), 'city')"
+                      [style]="{'width':'100%'}" formControlName="city"
+                      [suggestions]="filteredGroups" [autoHighlight]="true" id="city"
+                      (completeMethod)="filterCities($event, getBillingAddressCountry)"
+                      [multiple]="false" [dropdown]="false">
+      </p-autoComplete>
+      </div>
+    </div>
+
+    <div [ngClass]=" !panel ? 'field col-12 xl:col-3 lg:col-3 md:col-6 sm:col-12' : 'field col-12'">
+      <label class="label-wrapper" for="addressState">State</label>
+      <div class="p-inputgroup">
+        <p-autoComplete delay="100" [minLength]="1" maxlength="100"
+                        (keyup)="removeSpace.clearSpace(departmentForm.get('billingAddress'), 'addressState')"
+                        [style]="{'width':'100%'}" formControlName="addressState"
+                        [suggestions]="filteredGroups" [autoHighlight]="true" id="addressState"
+                        (completeMethod)="filterStates($event, getBillingAddressCountry)"
+                        [multiple]="false" [dropdown]="false">
+        </p-autoComplete>
+      </div>
+    </div>
+
+    <div [ngClass]=" !panel ? 'field col-12 xl:col-3 lg:col-3 md:col-6 sm:col-12' : 'field col-12'">
+      <label class="label-wrapper" for="zipcode">Zip Code</label>
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+            <input formControlName="zipCode" maxlength="100"
+            (keyup)="removeSpace.clearSpace(departmentForm.get('billingAddress'), 'zipCode')"
+            id="zipcode" type="text" pInputText>
+          </span>
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="getBillingAddressZipcode.hasError('maxlength')">
+        Zip Code must be less than 30 characters
+      </div>
+    </div>
+
+    <div [ngClass]=" !panel ? 'field col-12 xl:col-3 lg:col-3 md:col-6 sm:col-12' : 'field col-12'">
+      <label class="label-wrapper" for="country">Select Country
+        {{departmentForm.get('useForPoCreation').value ? '*' : ''}}</label>
+      <div class="p-inputgroup">
+      <p-dropdown id="country" formControlName="country" showClear="true" [virtualScroll]="true"
+                  virtualScrollItemSize="25"
+                  [autoDisplayFirst]="false" [options]="countries.data" [filter]="true" appendTo="body"
+                  optionLabel="name" optionValue="id">
+      </p-dropdown>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="getBillingAddressCountry.dirty && getBillingAddressCountry.errors">
+        Country is required
+      </div>
+    </div>
+
+    </ng-container>
+
+    <div [ngClass]="'field col-12 switch-address'">
+          <p-inputSwitch formControlName="existShippingAddress" class="switch-address-toggle"
+                         (onChange)="showShippingAddressFields($event)"></p-inputSwitch>
+          <span>Please check if Shipping address is different from the above address.</span>
+    </div>
+
+    <div *ngIf="showShippingAddress" class="col-12 grid p-fluid">
+    <div [ngClass]="'col-12'">
+      <h6>Shipping Address</h6>
+    </div>
+
+    <ng-container formGroupName="shippingAddress">
+
+    <div class="field col-12">
+      <label class="label-wrapper" for="shippingAddressLine1">Address Line 1
+        {{departmentForm.get('useForPoCreation').value && departmentForm.get('existShippingAddress').value ? '*' : ''}}
+      </label>
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+          <textarea formControlName="addressLine1" id="shippingAddressLine1" rows="2" pInputTextarea
+                    (keyup)="removeSpace.clearSpace(departmentForm.get('shippingAddress'), 'addressLine1')"
+                    maxlength="255"></textarea>
+        </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="sAddressLine1.dirty && sAddressLine1.errors">
+        Address Line 1 is required
+      </div>
+    </div>
+
+    <div class="field col-12">
+      <label class="label-wrapper" for="shippingAddressLine2">Address Line 2</label>
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+          <textarea formControlName="addressLine2" id="shippingAddressLine2" rows="2" pInputTextarea
+                    (keyup)="removeSpace.clearSpace(departmentForm.get('shippingAddress'), 'addressLine2')"
+                    maxlength="255"></textarea>
+        </span>
+      </div>
+    </div>
+
+    <div class="field col-12">
+      <label class="label-wrapper" for="shippingAddressCity">City</label>
+      <div class="p-inputgroup">
+        <p-autoComplete delay="100" [minLength]="1" maxlength="100"
+                        (keyup)="removeSpace.clearSpace(departmentForm.get('shippingAddress'), 'city')"
+                        [style]="{'width':'100%'}" formControlName="city"
+                        [suggestions]="filteredGroups" [autoHighlight]="true" id="shippingAddressCity"
+                        (completeMethod)="filterCities($event, getShippingAddressCountry)"
+                        [multiple]="false" [dropdown]="false">
+        </p-autoComplete>
+      </div>
+    </div>
+
+    <div class="field col-12">
+      <label class="label-wrapper" for="shippingAddressState">State</label>
+      <div class="p-inputgroup">
+        <p-autoComplete delay="100" [minLength]="1" maxlength="100"
+                        (keyup)="removeSpace.clearSpace(departmentForm.get('shippingAddress'), 'addressState')"
+                        [style]="{'width':'100%'}" formControlName="addressState"
+                        [suggestions]="filteredGroups" [autoHighlight]="true" id="shippingAddressState"
+                        (completeMethod)="filterStates($event, getShippingAddressCountry)"
+                        [multiple]="false" [dropdown]="false">
+        </p-autoComplete>
+      </div>
+    </div>
+
+    <div class="field col-12">
+      <label class="label-wrapper" for="shippingAddressZipcode">Zip Code</label>
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+            <input formControlName="zipCode" maxlength="100"
+                   (keyup)="removeSpace.clearSpace(departmentForm.get('shippingAddress'), 'zipCode')"
+                   id="shippingAddressZipcode" type="text" pInputText>
+          </span>
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="getShippingAddressZipcode.hasError('maxlength')">
+        Zip Code must be less than 30 characters
+      </div>
+    </div>
+
+    <div [ngClass]="'field col-12'">
+      <label class="label-wrapper" for="shippingAddressCountry">Select Country
+        {{departmentForm.get('useForPoCreation').value && departmentForm.get('existShippingAddress').value ? '*' : ''}}
+      </label>
+      <div class="p-inputgroup">
+        <p-dropdown id="shippingAddressCountry" formControlName="country" showClear="true" [virtualScroll]="true"
+                    virtualScrollItemSize="25"
+                    [autoDisplayFirst]="false" [options]="countries.data" [filter]="true" appendTo="body"
+                    optionLabel="name" optionValue="id">
+        </p-dropdown>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="getShippingAddressCountry.dirty && getShippingAddressCountry.errors">
+        Country is required
+      </div>
+    </div>
+    </ng-container>
+  </div>
+
+    <div [ngClass]="'field col-12 switch-address'">
+          <p-checkbox formControlName="useForPoCreation" [binary]="true" (onChange)="setValidators()"></p-checkbox>
+          <span>Use this address created by this Department as the Bill to and Ship to on PO’s.</span>
+    </div>
+
+    <ng-container *ngIf="!panel">
+    <div [ngClass]=" !panel ? 'field col-12 xl:col-4 lg:col-4 md:col-6 sm:col-12' : 'field col-12 text-right'"
+         style="padding-top: 25px;
+">
+
+      <button pButton type="button" label="Reset" (click)="reset()" [disabled]="loading"
+              class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+      <button pButton type="submit" class="p-button-sm create-department" iconPos="left" *ngIf="!editView"
+              [disabled]="loading" [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-plus'"
+              label="Create Department"></button>
+
+      <button pButton type="submit" class="p-button-sm" iconPos="left" *ngIf="editView"
+              [disabled]="loading" [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-save'"
+              label="Update Department"></button>
+
+  </div>
+    </ng-container>
+  </div>
+</form>
+</div>
+
+<ng-container>
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" label="Reset" (click)="reset()" [disabled]="loading"
+              class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+      <button pButton type="button"  (click)="submitForm()" class="p-button-sm create-department" iconPos="left" *ngIf="!editView"
+              [disabled]="loading" [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-plus'"
+              label="Create Department"></button>
+
+      <button pButton type="button" (click)="submitForm()" class="p-button-sm" iconPos="left" *ngIf="editView"
+              [disabled]="loading" [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-save'"
+              label="Update Department"></button>
+    </div>
+  </div>
+</div>
+</ng-container>

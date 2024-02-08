@@ -1,0 +1,29 @@
+<form [formGroup]="systemSyncConfig">
+
+  <div class="grid p-fluid">
+
+    <div class="scroll-fields col-3 xl:col-3 lg:col-4 md:col-4 sm:col-4">
+      <label class="label-wrapper" for="systemId">Select System Id * </label>
+        <span class="p-float-label">
+          <p-dropdown inputId="dropdown" formControlName="systemId" id="systemId" showClear="true"
+                      [autoDisplayFirst]="false" [options]="systemList.data" [filter]="true"
+                      appendTo="body" optionLabel="name" optionValue="id"></p-dropdown>
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="systemSyncConfig.get('systemId').dirty && systemSyncConfig.get('systemId').errors">
+        System Id is required
+      </div>
+    </div>
+
+  </div>
+
+
+  <hr>
+  <br>
+
+  <div class="grid p-fluid" *ngIf="actionIndex===(workflowAction.length-1) && !isDetailView">
+    <p class="more-info" (click)="addActionDropDown()"> Add More Action <em class="pi pi-plus"></em></p>
+  </div>
+
+
+</form>

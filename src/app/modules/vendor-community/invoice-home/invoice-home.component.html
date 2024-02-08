@@ -1,0 +1,169 @@
+
+    <p-tabView  [hidden]="isFirstVisit || isSubmitBill" (onChange)="tabChanged(tabIndex)" [(activeIndex)]="tabIndex"
+               styleClass="tabview-custom">
+
+
+      <p-tabPanel *ngIf="isInvoiceModule()">
+        <ng-template pTemplate="header">
+          <span class="custom-span">Invoices</span>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <div class="grid">
+
+            <div class="col-6">
+              <app-table-header-action-buttons
+                                               [componentInstance]="invoiceListComponent" *ngIf="invoiceListComponent"
+                                               [tableSupportBase]="invoiceListComponent?.tableSupportBase"
+                                               (refresh)="invoiceListComponent?.loadData(invoiceListComponent.tableSupportBase.searchFilterDto)"
+                                               (showFilters)="invoiceListComponent.showFilter = !invoiceListComponent?.showFilter;
+                                               invoiceListComponent.showFilterColumns = false"
+                                               (showColumns)="invoiceListComponent.showFilterColumns = !invoiceListComponent?.showFilterColumns; invoiceListComponent.showFilter = false"
+                                               [visibleActions]="invoiceListComponent?.availableHeaderActions">
+
+              </app-table-header-action-buttons>
+            </div>
+
+            <div class="col-6 text-right">
+
+              <button pButton *ngIf="isBillList && privilegeService.isAuthorized(appAuthorities.INVOICE_CREATE)"
+                      iconPos="left"
+                      class="p-button-sm" label="Process Invoices" (click)="clickComponentButton('bs')"></button>&nbsp;
+
+              <button pButton *ngIf="isBillList && privilegeService.isAuthorized(appAuthorities.INVOICE_CREATE)"
+                      iconPos="left"  label="Create Invoice"
+                      class="p-button-sm" (click)="clickComponentButton('bc')"></button>
+            </div>
+          </div>
+
+          <app-invoice-list #invoiceListComponent *ngIf="isBillList && isBillTable()"></app-invoice-list>
+        </ng-template>
+      </p-tabPanel>
+
+      <p-tabPanel *ngIf="isTemplateModule()">
+        <ng-template pTemplate="header">
+          <span class="custom-span">Invoice Templates</span>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <div class="grid">
+            <div class="col-6 text-left" >
+              <app-table-header-action-buttons
+                                               [componentInstance]="invoiceTemplateListComponent"
+                                               *ngIf="invoiceTemplateListComponent"
+                                               [tableSupportBase]="invoiceTemplateListComponent?.tableSupportBase"
+                                               (delete)="invoiceTemplateListComponent.bulkDelete()"
+                                               (inactive)="invoiceTemplateListComponent.bulkInactive()"
+                                               (active)="invoiceTemplateListComponent.bulkActivate()"
+                                               (refresh)="invoiceTemplateListComponent?.loadData(invoiceTemplateListComponent.tableSupportBase.searchFilterDto)"
+                                               (showFilters)="invoiceTemplateListComponent.showFilter = !invoiceTemplateListComponent?.showFilter;
+                                               invoiceTemplateListComponent.showFilterColumns = false"
+                                               (showColumns)="invoiceTemplateListComponent.showFilterColumns = !invoiceTemplateListComponent?.showFilterColumns; invoiceTemplateListComponent.showFilter = false"
+                                               [visibleActions]="invoiceTemplateListComponent?.availableHeaderActions">
+
+              </app-table-header-action-buttons>
+            </div>
+            <div class="col-6 text-right" >
+
+              <button pButton class="p-button-sm" iconPos="left" *ngIf="privilegeService.isAuthorized(appAuthorities.BILL_TEMPLATES_CREATE)"
+                      label="Create Invoice Template" (click)="toggleOcr('create')"></button>
+            </div>
+          </div>
+          <p-sidebar appendTo="body" [showCloseIcon]="false" [fullScreen]="true" [modal]="false"
+                     *ngIf="ocrCreate" [(visible)]="ocrCreate">
+            <app-add-template (closeTemplateCreateView)="ocrCreate= false" [fromTemplateManagement]="true"></app-add-template>
+          </p-sidebar>.
+          <app-invoice-template-list #invoiceTemplateListComponent *ngIf="isInvoiceTemplateTable() && !ocrCreate"></app-invoice-template-list>
+        </ng-template>
+      </p-tabPanel>
+
+
+      <p-tabPanel *ngIf="isRecurringBillModule()">
+        <ng-template pTemplate="header">
+          <span class="custom-span">Recurring Invoices</span>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <div class="grid">
+            <div class="col-6 text-left">
+              <app-table-header-action-buttons
+                [componentInstance]="recurringInvoiceListComponent" *ngIf="recurringInvoiceListComponent"
+                [tableSupportBase]="recurringInvoiceListComponent?.tableSupportBase"
+                (delete)="recurringInvoiceListComponent.bulkDelete()"
+                (inactive)="recurringInvoiceListComponent.bulkInactivate()"
+                (active)="recurringInvoiceListComponent.bulkActivate()"
+                (refresh)="recurringInvoiceListComponent?.loadData(recurringInvoiceListComponent.tableSupportBase.searchFilterDto)"
+                (showFilters)="recurringInvoiceListComponent.showFilter = !recurringInvoiceListComponent?.showFilter;
+                recurringInvoiceListComponent.showFilterColumns = false"
+                (showColumns)="recurringInvoiceListComponent.showFilterColumns = !recurringInvoiceListComponent?.showFilterColumns; recurringInvoiceListComponent.showFilter = false"
+                [visibleActions]="recurringInvoiceListComponent?.availableHeaderActions">
+
+              </app-table-header-action-buttons>
+
+            </div>
+            <div class="col-6 text-right">
+
+              <button pButton class="p-button-sm" iconPos="left" *ngIf="privilegeService.isAuthorized(appAuthorities.RECURRING_INVOICES_CREATE)"
+                      label="Configure Recurring Invoice" (click)="toggleRecurring('create')"></button>
+            </div>
+          </div>
+          <p-sidebar appendTo="body" [showCloseIcon]="false" [fullScreen]="true" [modal]="false"
+                     *ngIf="recurringInvoice" [(visible)]="recurringInvoice" styleClass="remove-sidebar-padding">
+            <app-recurring-invoice-create (isClickCloseButton)="recurringInvoice = false"></app-recurring-invoice-create>
+          </p-sidebar>.
+          <app-recurring-invoice-list #recurringInvoiceListComponent *ngIf="isRecurringBillTable() && !recurringInvoice"></app-recurring-invoice-list>
+        </ng-template>
+      </p-tabPanel>
+
+
+      <p-tabPanel *ngIf="isPaymentTable()">
+        <ng-template pTemplate="header">
+          <span class="custom-span">Payments</span>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <app-payments *ngIf="isPaymentTable() "></app-payments>
+        </ng-template>
+      </p-tabPanel>
+
+      <!-------------Credit Note Related Changes--------------------------------------------------------------------->
+
+      <p-tabPanel *ngIf="isCreditNoteView()">
+
+        <ng-template pTemplate="header">
+          <span class="custom-span">Credit Notes</span>
+        </ng-template>
+
+        <ng-template pTemplate="content">
+          <app-credit-note-list-from-vendor #creditNoteListFromVendorComponent ></app-credit-note-list-from-vendor>
+        </ng-template>
+
+      </p-tabPanel>
+
+    </p-tabView>
+
+
+<app-invoice-upload *ngIf="!isBillsInQueue && isSubmitBill" [fromProcess]="false"
+                    (isUploadSuccess)="loadInvoiceSubmitDrawer()" (isClickBackButton)="emitValue($event)"></app-invoice-upload>
+
+<!--Submit Bills-->
+<p-sidebar [showCloseIcon]="false" [fullScreen]="true" [modal]="false"
+           [(visible)]="isBillsInQueue && isSubmitBill">
+  <app-invoice-process (navigateToList)="isSubmitBill = false"
+                       *ngIf="privilegeService.isAuthorized(appAuthorities.INVOICE_CREATE) && (isBillsInQueue && isSubmitBill)">
+  </app-invoice-process>
+</p-sidebar>
+
+<!--Create e-invoice-->
+<p-sidebar [showCloseIcon]="false" [fullScreen]="true" [modal]="false"
+           [(visible)]="isClickCreateEInvoiceButton"  styleClass="remove-p-sidebar-inner-padding">
+
+  <app-invoice-create (isClickCloseButton)="emittedValue($event)"
+                      *ngIf="isClickCreateEInvoiceButton  && privilegeService.isAuthorized(appAuthorities.INVOICE_CREATE)">
+  </app-invoice-create>
+</p-sidebar>
+
+<!--Invoices-->
+<p-sidebar [showCloseIcon]="false" *ngIf="invoiceDetailView " [fullScreen]="true" [modal]="false"
+           [(visible)]="invoiceDetailView">
+  <app-invoice-process [billIdFromList]="invoiceId" [isDetailViewBill]="true" [tenantIdToEdit]="tenantId"
+                       [isEInvoiceType]="false"
+                       (closeButtonEmitToHome)="invoiceDetailView = false"
+                       [fromNotification]="true" [isEditBill]="false" *ngIf="invoiceDetailView"></app-invoice-process>
+</p-sidebar>

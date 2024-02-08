@@ -1,0 +1,347 @@
+@import "../../../../scss/color.scss";
+
+.card-space {
+  padding-right: 14px;
+}
+
+.create-new {
+  margin-left: 58%;
+}
+
+.title-margin {
+  margin-top: 6%;
+}
+
+.custom-card-header {
+  margin: -18px -18px 0 0px;
+}
+
+.card-view {
+  padding: 7px;
+  margin-top: 20px;
+}
+
+.vendor-li:hover {
+  cursor: pointer;
+  background-color: #ECEEEF;
+}
+
+@media only screen and (max-width: 1190px) {
+  .vendor-li {
+    height: 80px;
+  }
+}
+
+
+@media only screen and (max-width: 1370px) and (min-width: 1200px) {
+  .searchInput {
+    width: 100%;
+  }
+  .hide-in-responsive {
+    display: none;
+  }
+  .create-vendor-btn-wrapper {
+    width: 90%;
+  }
+  .searchDropdownGroup {
+    width: 100%;
+  }
+
+}
+
+.vendor-li-active {
+  background-color: #ECEEEF;
+}
+
+.card {
+  height: calc(100vh - 71px);
+}
+
+.more-info {
+  color: $green;
+  font-weight: normal;
+  text-align: left;
+}
+
+.sortAlphabetic:hover {
+  cursor: pointer;
+  color: $green;
+}
+
+.sortAlphabetic-active {
+  color: $green;
+}
+
+.more-info:hover {
+  cursor: pointer;
+}
+
+.p-splitbutton-menubutton {
+  background-color: transparent;
+  margin-left: 2%;
+  color: black
+}
+
+.vendor-btn-section {
+  background-color: #f4f6f9;
+}
+
+.vendor-btn-section ::ng-deep .p-dropdown {
+  background-color: #f4f6f9;
+  border: none;
+}
+
+.drop-down-button {
+  background: transparent;
+  color: #adb7bb;
+  font-size: 20px;
+  padding: 0;
+  left: -8px;
+  align-items: flex-end;
+}
+
+.header-hr {
+  width: 100%;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.drop-down-button:hover {
+  background: transparent;
+  color: $green;
+}
+
+.vendor-edit-button {
+  color: #73828A;
+}
+
+.vendor-edit-button:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.vendor-code-name {
+  color: #adb7bb;
+  font-size: 12px;
+}
+
+.iconColour {
+  color: $green !important;
+}
+
+#sortIcon:hover {
+  cursor: pointer;
+  color: $green;
+}
+
+#sortIcon {
+  color: #adb7bb;
+}
+
+.card-overflow {
+  //max-height: 740px;
+  //overflow-y: clip;
+  /* overflow-wrap: anywhere; */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.overflow-panels {
+  max-height: 660px;
+  overflow-y: scroll;
+}
+
+
+.inline-name {
+  margin-bottom: 5%;
+}
+
+.showMoreBtn:hover {
+  cursor: pointer;
+  color: $green;
+}
+
+.showMoreBtn i {
+  vertical-align: middle;
+}
+
+.sortAlphabetic {
+  font-size: 11px
+}
+
+.vendor-notification-2 {
+  font-size: 10px;
+  color: #fbc642;
+}
+
+.vendor-name {
+  font-size: 15px;
+  margin-right: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.vendor-code-name {
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+
+@media only screen and (max-width: 480px) and (min-width: 380px) {
+  .vendor-name {
+    max-width: 200px;
+  }
+  .vendor-code-name {
+    max-width: 200px;
+  }
+}
+
+@media only screen and (max-width: 580px) and (min-width: 480px) {
+  .vendor-name {
+    max-width: 300px;
+  }
+  .vendor-code-name {
+    max-width: 300px;
+  }
+}
+
+@media only screen and (max-width: 680px) and (min-width: 580px) {
+  .vendor-name {
+    max-width: 418px;
+  }
+  .vendor-code-name {
+    max-width: 418px;
+  }
+}
+
+@media only screen and (max-width: 780px) and (min-width: 680px) {
+  .vendor-name {
+    max-width: 480px;
+  }
+  .vendor-code-name {
+    max-width: 480px;
+  }
+}
+
+@media only screen and (max-width: 991px) and (min-width: 780px) {
+  .vendor-name {
+    max-width: 600px;
+  }
+  .vendor-code-name {
+    max-width: 600px;
+  }
+}
+
+@media only screen and (max-width: 1024px) and (min-width: 991px) {
+  .vendor-name {
+    max-width: 94px;
+  }
+  .vendor-code-name {
+    max-width: 94px;
+  }
+}
+
+@media only screen and (max-width: 1100px) and (min-width: 1024px) {
+  .vendor-name {
+    max-width: 115px;
+  }
+  .vendor-code-name {
+    max-width: 115px;
+  }
+}
+
+@media only screen and (max-width: 1200px) and (min-width: 1100px) {
+  .vendor-name {
+    max-width: 125px;
+  }
+  .vendor-code-name {
+    max-width: 125px;
+  }
+}
+
+@media only screen and (max-width: 1300px) and (min-width: 1200px) {
+  .vendor-name {
+    max-width: 150px;
+  }
+  .vendor-code-name {
+    max-width: 150px;
+  }
+}
+
+@media only screen and (max-width: 1400px) and (min-width: 1300px) {
+  .vendor-name {
+    max-width: 160px;
+  }
+  .vendor-code-name {
+    max-width: 160px;
+  }
+}
+
+@media only screen and (max-width: 1600px) and (min-width: 1400px) {
+  .vendor-name {
+    max-width: 190px;
+  }
+  .vendor-code-name {
+    max-width: 190px;
+  }
+}
+
+@media only screen and (max-width: 1700px) and (min-width: 1600px) {
+  .vendor-name {
+    max-width: 240px;
+  }
+  .vendor-code-name {
+    max-width: 240px;
+  }
+}
+
+@media only screen and (max-width: 1800px) and (min-width: 1700px) {
+  .vendor-name {
+    max-width: 260px;
+  }
+  .vendor-code-name {
+    max-width: 260px;
+  }
+}
+
+@media only screen and (max-width: 1900px) and (min-width: 1800px) {
+  .vendor-name {
+    max-width: 275px;
+  }
+  .vendor-code-name {
+    max-width: 275px;
+  }
+}
+
+@media only screen and (max-width: 2000px) and (min-width: 1900px) {
+  .vendor-name {
+    max-width: 275px;
+  }
+  .vendor-code-name {
+    max-width: 290px;
+  }
+}
+
+@media only screen and (min-width: 2001px) {
+  .vendor-name {
+    max-width: 350px;;
+  }
+  .vendor-code-name {
+    max-width: 350px;;
+  }
+}
+
+.clearFilter:hover {
+  cursor: pointer;
+}
+
+.vendor-menu-btn-actions {
+  height: 30px;
+  padding-bottom: 8px;
+  width: 22px;
+}

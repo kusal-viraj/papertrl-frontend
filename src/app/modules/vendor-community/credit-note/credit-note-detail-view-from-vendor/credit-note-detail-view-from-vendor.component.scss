@@ -1,0 +1,36 @@
+@import '../../../../../scss/color';
+
+.form-outer-padding{
+  padding: 37px;
+}
+
+.alignment-with-item-table{
+  margin-top: 22px;;
+}
+
+.amount-label-wrapper{
+  text-align: right;
+  align-self: center;
+}
+
+.align-field{
+  float: right !important;
+}
+
+.font-style-amount{
+  font-size: 12px;
+}
+
+@media only screen and (max-width: 1366px) {
+  .amount-content{
+    padding-right: 19px;
+  }
+}
+
+.table-width{
+  width: 99% !important;
+}
+
+.topic {
+  color: $green;
+}

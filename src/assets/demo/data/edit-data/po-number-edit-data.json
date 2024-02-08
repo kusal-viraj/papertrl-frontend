@@ -1,0 +1,8 @@
+{
+  "approvalGroup": {"label": "Test Account Detail", "id": "NY"},
+  "separator": "SAMPLE ACCOUNT-100",
+  "prefix": "ACC-1000",
+  "suffix": {"label": "Inventory", "id": "NY"},
+  "runningNo": "sample account exsaple",
+  "parentAccount": {"label": "Account Three", "id": "LDN"}
+}

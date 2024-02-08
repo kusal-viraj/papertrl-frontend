@@ -1,0 +1,115 @@
+{
+  "advancedFilters": [],
+  "columns": [
+    {
+      "field": "action",
+      "header": "Action",
+      "isSortable": false,
+      "isReOrderable": false,
+      "isReSizable": false,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "actionButton",
+      "canHide": false
+    },
+    {
+      "field": "companyName",
+      "header": "Company Name",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Company Name"
+    },
+    {
+      "field": "emailSubject",
+      "header": "Email Subject",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "left",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Email Subject"
+    },
+    {
+      "field": "emailAddress",
+      "header": "Email Address",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "left",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Email Address"
+    },
+    {
+      "field": "ccEmailAddress",
+      "header": "CC Email Address",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "left",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "CC Email Address"
+    },
+    {
+      "field": "attempts",
+      "header": "Attempts",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "number",
+      "canHide": true,
+      "placeholder": "Attempts"
+    },
+    {
+      "field": "date",
+      "header": "Date",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "date",
+      "canHide": true,
+      "placeholder": "Date"
+    },
+    {
+      "field": "status",
+      "header": "Status",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "dropdown",
+      "canHide": true,
+      "placeholder": "Status"
+    }
+  ],
+  "state": {
+    "first": 0,
+    "rows": 10,
+    "columnWidths": "100,220,400,220,210,110,210,210",
+    "columnOrder": [
+      "action",
+      "companyName",
+      "emailSubject",
+      "emailAddress",
+      "ccEmailAddress",
+      "attempts",
+      "date",
+      "status"
+    ]
+  }
+}

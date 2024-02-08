@@ -1,0 +1,74 @@
+@import "../../../../scss/color.scss";
+
+.download-link{
+  text-align: center;
+  color: $green;
+  font-weight: bolder;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.margin-top {
+  margin-top: 1% !important;
+}
+
+.margin-top-grid{
+  margin-top: 1% !important;
+}
+.infoUpload{
+  color: #A1ACB1;
+}
+
+//@media only screen and (max-width: 450px) {
+//  .inner-text-position {
+//    position: absolute;
+//
+//  }
+//  .input-max-width{
+//    max-width: 159px;
+//  }
+//}
+
+@media only screen and (max-width: 443px) {
+  .inner-text-position {
+    width: 100%;
+  }
+}
+@media only screen and (max-width: 442px) {
+  .upload-button {
+    display: none ;
+  }
+  .upload-button-mobile {
+    display: block ;
+  }
+}
+@media only screen and (min-width: 443px) {
+  .upload-button-mobile {
+    display: none ;
+  }
+  .upload-button {
+    display: block ;
+  }
+}
+
+.back-drop{
+  backdrop-filter: blur(10px);
+}
+
+.exception-body{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.border-hide ::ng-deep .p-panel .p-panel-header{
+  display: none;
+}
+
+.border-hide ::ng-deep .p-panel .p-panel-content{
+  border: none;
+}
+
+.height{
+  min-height: calc(100vh - 174px);
+}

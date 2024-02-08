@@ -1,0 +1,33 @@
+<div class="overlay-panel" *ngIf="payments.length !== 0">
+  <div class="pb-2">
+    <label class="font-bold topic">Last Five Success Transactions</label>
+  </div>
+  <div class="payment-details" *ngFor="let payment of payments; let i=index">
+    <div class="grid mt-0 mbt-0">
+      <div class="col-3 data-cell align-self-center">
+        <label class="font-bold">Payment Date</label>
+        <div class="break-word">{{commonUtil.detailViewIsDash(payment.paymentDate, false)}}</div>
+      </div>
+      <div class="col-3 data-cell align-self-center">
+        <label class="font-bold">Paid Amount</label>
+        <div class="break-word">{{commonUtil.detailViewIsDash(payment.paidAmount, true)| number : '1.2-2'}}</div>
+      </div>
+      <div class="col-3 data-cell align-self-center">
+        <label class="font-bold">Payment Type</label>
+        <div class="break-word">{{commonUtil.detailViewIsDash(payment.paymentReference, false)}}</div>
+      </div>
+      <div class="col-3 data-cell align-self-center">
+        <label class="font-bold">Transaction Status</label>
+        <div>
+          <li [class]="'mr-2 status-style status-'  + getStatus(payment.paymentStatus)"></li>
+          {{getStatus(payment.paymentStatus) | titlecase}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay-panel" *ngIf="payments.length == 0">
+  <div *ngIf="payments.length == 0" class="loading-wrapper">
+    <em class="fa fa-spinner fa-pulse"></em>
+  </div>
+</div>

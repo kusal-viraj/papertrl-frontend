@@ -1,0 +1,23 @@
+.add-credit-card{
+  .card-no{
+    width: 100% !important;
+  }
+}
+
+
+.side-bar-drawer-content{
+  min-height: calc(100vh - 121px);
+}
+
+@media only screen and (max-width: 1366px) {
+  .add-credit-card{
+    .card-no{
+      width: unset;
+    }
+  }
+
+
+  .side-bar-drawer-content{
+    min-height: calc(100vh - 100px);
+  }
+}

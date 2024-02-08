@@ -1,0 +1,38 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "vendorName": "NMA Holdings (PVT) Ltd",
+      "contactName": "Akila Lokugamage",
+      "contactPhone": "12345678",
+      "contactEmail": "akila@gmail.com",
+      "country": "India",
+      "socialSecNo": "DSAD3223",
+      "sicCode": "5463562",
+      "naicsCode": "DA534"
+    },
+    {
+      "id": 2,
+      "vendorName": "Kenora Holdings (PVT) Ltd",
+      "contactName": "Gihan Perera",
+      "contactPhone": "12345678",
+      "contactEmail": "gihan@gmail.com",
+      "country": "India",
+      "socialSecNo": "DSAD3223",
+      "sicCode": "5463562",
+      "naicsCode": "DA534"
+    },
+    {
+      "id": 3,
+      "vendorName": "Dmax (PVT) Ltd",
+      "contactName": "Ajith Perera",
+      "contactPhone": "12345678",
+      "contactEmail": "ajith@gmail.com",
+      "country": "India",
+      "socialSecNo": "DSAD3223",
+      "sicCode": "5463562",
+      "naicsCode": "DA534"
+    }
+  ],
+  "totalRecords": 3
+}

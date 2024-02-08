@@ -1,0 +1,31 @@
+@import "../../../../scss/color.scss";
+
+p-calendar {
+  width: 100%
+}
+
+.drawer-content {
+  min-height: calc(100vh - 105px);
+}
+
+.role-dropdown-list {
+  padding-top: 10px;
+  margin-right: 25px;
+  padding-left: 5px;
+}
+
+.role-dropdown-icon {
+  right: 10px;
+  padding-top: 10px;
+  position: absolute;
+  z-index: 1;
+}
+
+.role-dropdown-icon:hover {
+  color: $green;
+  z-index: 1;
+}
+
+.role-dropdown-add {
+  color: $green;
+}

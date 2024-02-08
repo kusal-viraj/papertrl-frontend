@@ -1,0 +1,263 @@
+{
+  "advancedFilters": [
+    {
+      "field": "paymentRef",
+      "header": "Payment Ref",
+      "searchType": "input"
+    },
+    {
+      "field": "paymentAmount",
+      "header": "Amount",
+      "searchType": "input"
+    },
+    {
+      "field": "billAmount",
+      "header": "Bill Amount",
+      "searchType": "input"
+    },
+    {
+      "field": "discountAmount",
+      "header": "Discount Amount",
+      "searchType": "input"
+    },
+    {
+      "field": "paymentDate",
+      "header": "Date",
+      "searchType": "date"
+    },
+    {
+      "field": "billNo",
+      "header": "Bill No",
+      "searchType": "input"
+    },
+    {
+      "field": "vendor",
+      "header": "Vendor",
+      "searchType": "input"
+    },
+    {
+      "field": "billDate",
+      "header": "Bill Date",
+      "searchType": "date"
+    },
+    {
+      "field": "billDueDate",
+      "header": "Due Date",
+      "searchType": "date"
+    },
+    {
+      "field": "poNo",
+      "header": "PO No",
+      "searchType": "input"
+    },
+    {
+      "field": "status",
+      "header": "Status",
+      "searchType": "dropdown",
+      "dropdownValues": [
+        {
+          "label": "ACTIVE",
+          "value": "A"
+        },
+        {
+          "label": "VOID",
+          "value": "V"
+        }
+      ]
+    }
+  ],
+  "columns": [
+    {
+      "field": "checkbox",
+      "header": null,
+      "columnShow": true,
+      "isSortable": false,
+      "isReOrderable": false,
+      "isReSizable": false,
+      "canHide": false,
+      "align": "center",
+      "searchType": "checkbox"
+    },
+    {
+      "field": "action",
+      "header": "Action",
+      "isSortable": false,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "actionButton",
+      "canHide": false
+    },
+    {
+      "field": "paymentRef",
+      "header": "Payment Ref.",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Payment Ref."
+    },
+    {
+      "field": "paymentAmount",
+      "header": "Amount",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "right",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Amount"
+    },
+    {
+      "field": "discountAmount",
+      "header": "Discount Amount",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "right",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Discount Amount"
+    },
+    {
+      "field": "paymentDate",
+      "header": "Date",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "date",
+      "canHide": true,
+      "placeholder": "Date"
+    },
+    {
+      "field": "billNo",
+      "header": "Bill No",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Bill No."
+    },
+    {
+      "field": "billAmount",
+      "header": "Bill Amount",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "right",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Bill Amount"
+    },
+    {
+      "field": "vendor",
+      "header": "Vendor",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": false,
+      "align": "left",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Vendor"
+    },
+    {
+      "field": "billDate",
+      "header": "Bill Date",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": false,
+      "align": "center",
+      "searchType": "date",
+      "canHide": true,
+      "placeholder": "Bill Date"
+    },
+    {
+      "field": "billDueDate",
+      "header": "Due Date",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": false,
+      "align": "center",
+      "searchType": "date",
+      "canHide": true,
+      "placeholder": "Due Date"
+    },
+    {
+      "field": "poNumber",
+      "header": "PO No",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": false,
+      "align": "left",
+      "searchType": "date",
+      "canHide": true,
+      "placeholder": "PO No"
+    },
+    {
+      "field": "status",
+      "header": "Status",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "dropdown",
+      "canHide": true,
+      "placeholder": "All",
+      "dropdownValues": [
+        {
+          "label": "Active",
+          "value": "ACTIVE"
+        },
+        {
+          "label": "Void",
+          "value": "V"
+        },
+        {
+          "label": "Paid",
+          "value": "PAID"
+        },
+        {
+          "label": "Mailed",
+          "value": "M"
+        }
+      ]
+    }
+  ],
+  "state": {
+    "first": 0,
+    "rows": 10,
+    "columnWidths": "50,100,154,155,155,155,155,155,155",
+    "columnOrder": [
+      "checkbox",
+      "action",
+      "paymentRef",
+      "paymentAmount",
+      "discountAmount",
+      "paymentDate",
+      "billNo",
+      "billAmount",
+      "vendor",
+      "billDate",
+      "billDueDate",
+      "poNo",
+      "status"
+    ]
+  }
+}

@@ -1,0 +1,162 @@
+
+@import '../../../../scss/table-responsive';
+
+.custom-card-form{
+  width: 100%;
+  border: none;
+  box-shadow: none;
+  //contain: size;
+  height: 100%;
+
+}
+.custom-card-items{
+  width: 100%;
+  border: none;
+  box-shadow: none;
+  //contain: size;
+  height: 100%;
+
+}
+.custom-card-approve-btn{
+  width: 100%;
+  border: none;
+  box-shadow: none;
+  //contain: size;
+  height: 100%;
+}
+.topic{
+  color: $green;
+}
+.po-no{
+  color: #73828A;
+}
+.top-btn{
+  color: #A3ACB0;
+  border-color: #A3ACB0;
+}
+.download-report {
+  cursor: pointer;
+  color: $green;
+}
+.customSplit{
+  contain: strict;
+  overflow-y: auto;
+  margin-right: 10px;
+}
+
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 1px !important;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-inputtext {
+  border: none;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-inputtext:focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown {
+  border: none;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown:focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown:not(.p-disabled).p-focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown.p-dropdown-open {
+  border: 1px solid;
+}
+
+.table-footer-style{
+  @extend .table-scroll;
+}
+.table-footer-style ::ng-deep .p-datatable .p-datatable-footer {
+  padding: 20px !important;
+}
+
+.table-footer-none ::ng-deep .p-datatable .p-datatable-footer {
+  display: none;
+}
+
+.calender-width ::ng-deep .p-calendar {
+  width: 100%;
+}
+.item-remove-button {
+  color: #acacac;
+  opacity: 1;
+  &:hover{
+    cursor: pointer;
+    color: #444444;
+  }
+}
+
+.audit-btn{
+  color: #73828A;
+  border-color: #A3ACB0;
+}
+
+.amounts {
+  width: 100%;
+  background-color: #f8f9fa
+}
+
+.footer {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: #ffffff;
+}
+
+.index-style {
+  color: #b2b2b2;
+  font-weight: 500;
+}
+
+.table-footer-amount{
+  color: #656060;
+  font-weight: 400;
+}
+
+
+.button-set-wrapper{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.sticky-btn {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: #ffffff;
+  margin-bottom: -21px;
+}
+
+td{
+  vertical-align: middle;
+}
+
+.expense-table-dropdown ::ng-deep .p-dropdown .p-inputtext .ng-star-inserted {
+  width: 150px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+@media only screen and (max-width: 1366px) {
+  .field {
+    margin-bottom: 0;
+  }
+
+  .p-button.p-button-sm {
+    font-size: 13px !important;
+  }
+}

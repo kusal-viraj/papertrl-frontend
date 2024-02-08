@@ -1,0 +1,28 @@
+
+.transactions{
+  .card-no{
+    width: 100% !important;
+  }
+  p-calendar{
+    width: 100%;
+  }
+  p-autoComplete{
+    width: 100% !important;
+  }
+}
+
+
+
+.credit-card-create{
+  position: fixed;
+  bottom: 0;
+  right: 10px;
+}
+
+.side-bar-drawer-content{
+  height: calc(100vh - 303px);
+}
+
+.block{
+  color: #b2b2b2 !important;
+}

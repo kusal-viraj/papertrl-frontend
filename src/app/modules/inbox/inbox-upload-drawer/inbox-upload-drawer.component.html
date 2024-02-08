@@ -1,0 +1,73 @@
+
+
+<div [class]="!loading ? 'outer-content-wrapper' : ''" *ngIf="!fromProcess">
+  <div class="card upload-bill-content" *ngIf="!loading">
+    <ng-template [ngTemplateOutlet]="upload_fields"></ng-template>
+  </div>
+
+  <div class="loading-content-outer" *ngIf="loading">
+    <div class="loading-content-inner">
+      <div class="grid upload-image-wrapper p-col-12" *ngIf="!fromProcess">
+        <img class="progress-gif" alt="card" src="../../../../assets/images/progress-gif.gif">
+      </div><br>
+      <span class="col-12 process-lg-label">Processing Your Bills...</span>
+      <span class="col-12 process-sm-label">Thanks for your patience, this shouldn't take long.</span>
+      <div class="col-12">
+        <button pButton type="button" label="Cancel" style="font-size:12px !important; font-weight: bold !important;"
+                class="p-button-outlined p-button-sm"></button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+<ng-container *ngIf="fromProcess">
+  <ng-template [ngTemplateOutlet]="upload_fields"></ng-template>
+</ng-container>
+
+
+
+<ng-template #upload_fields>
+
+  <div class="p-fluid" >
+    <form  autocomplete="off">
+      <div class="grid p-fluid">
+
+        <div class="col-12 xl:col-12 pt-0 pb-0" *ngIf="!loading">
+          <ngx-dropzone accept="application/pdf,image/png,image/jpeg,image/jpg"  (change)="changeFiledList($event)"
+                        class="drop-zone-style">
+
+            <ngx-dropzone-label class="dp-zone-big-text-wrapper p-text-normal">
+              <div class="grid upload-image-wrapper p-col-12" *ngIf="!fromProcess">
+                <img alt="card" src="../../../../assets/images/dropzone-bg-image-removebg-preview.png">
+              </div><br *ngIf="!fromProcess"><br *ngIf="!fromProcess">
+              Drop File(s) Here To Upload <br><br>
+              <span class="dp-zone-small-text-wrapper p-text-normal"> (We only accept PDF, JPG JPEG and PNG formats,
+                all the other formats will be ignored)<br>
+                <br>
+              <b>Max file size : 5 MB</b></span>
+            </ngx-dropzone-label>
+            <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+              <ngx-dropzone-label>{{ f.fileName}}</ngx-dropzone-label>
+            </ngx-dropzone-preview>
+          </ngx-dropzone>
+        </div>
+        <div class="col-12 xl:col-12  pt-0 pb-0" *ngIf="loading && fromProcess">
+          <ngx-dropzone [disabled]="true" class="drop-zone-progress-style">
+            <ngx-dropzone-label>
+              <p-progressSpinner [style]="{width: '70px', height: '70px'}" styleClass="custom-spinner" strokeWidth="4"
+                                 fill="transparent"
+                                 animationDuration=".8s"></p-progressSpinner>
+              <br>
+              <ngx-dropzone-label class="subHeadingColour p-text-normal">Please wait, We are processing your file(s)
+              </ngx-dropzone-label>
+            </ngx-dropzone-label>
+          </ngx-dropzone>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</ng-template>

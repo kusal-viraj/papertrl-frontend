@@ -1,0 +1,7 @@
+<div class="custom-table-loader" [class]="styleClass">
+  <img *ngIf="showLoader" class="progress-gif" alt="card" src="../../../../assets/images/progress-gif.gif">
+  <i *ngIf="showIcon" class="icon" [class]="icon"></i>
+  <br>
+  <span *ngIf="showHeaderMessage" class="col-12 process-lg-label">{{headerMessage}}</span>
+  <span *ngIf="showContentMessage" class="col-12 process-sm-label">{{messageContent}}</span>
+</div>

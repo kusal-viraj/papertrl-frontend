@@ -1,0 +1,10 @@
+.drawer-content {
+  min-height: calc(100% - 94px);
+}
+
+.switch-address {
+  display: grid;
+  grid-auto-flow: column;
+  align-items: center;
+  gap: 0.5rem;
+}

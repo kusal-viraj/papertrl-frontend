@@ -1,0 +1,93 @@
+{
+  "importMstId": 24,
+  "totalRecords": 13,
+  "scceeded": 1,
+  "failed": 12,
+  "errors": [
+    {
+      "lineNo": 4,
+      "description": "Invalid item type."
+    },
+    {
+      "lineNo": 5,
+      "description": "Invalid item type."
+    },
+    {
+      "lineNo": 6,
+      "description": "Invalid item type."
+    },
+    {
+      "lineNo": 7,
+      "description": "Invalid item type."
+    },
+    {
+      "lineNo": 8,
+      "description": "Invalid item type."
+    },
+    {
+      "lineNo": 9,
+      "description": "Invalid item type."
+    },
+    {
+      "lineNo": 10,
+      "description": "Invalid item type."
+    },
+    {
+      "lineNo": 11,
+      "description": "Invalid item type."
+    },
+    {
+      "lineNo": 12,
+      "description": "Invalid item type."
+    },
+    {
+      "lineNo": 13,
+      "description": "Invalid item type."
+    },
+    {
+      "lineNo": 14,
+      "description": "Invalid item type."
+    },
+    {
+      "lineNo": 15,
+      "description": "Invalid item type."
+    }
+  ],
+  "vendorItems": [
+    {
+      "vendorItemNumber": "1234",
+      "itemDescription": "Example Item",
+      "price": 10.99,
+      "minOrderQty": 5,
+      "status": "Active"
+    },
+    {
+      "vendorItemNumber": "1234A",
+      "itemDescription": "Example Item1",
+      "price": 10.99,
+      "minOrderQty": 5,
+      "status": "Active"
+    },
+    {
+      "vendorItemNumber": "1234B",
+      "itemDescription": "Example Item2",
+      "price": 10.99,
+      "minOrderQty": 5,
+      "status": "Active"
+    },
+    {
+      "vendorItemNumber": "1234C",
+      "itemDescription": "Example Item3",
+      "price": 10.99,
+      "minOrderQty": 5,
+      "status": "Active"
+    },
+    {
+      "vendorItemNumber": "1234D",
+      "itemDescription": "Example Item4",
+      "price": 10.99,
+      "minOrderQty": 5,
+      "status": "Active"
+    }
+  ]
+}

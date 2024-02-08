@@ -1,0 +1,97 @@
+@import '../../../../scss/color';
+@import '../../../../scss/table-responsive';
+
+.selectedHover {
+  cursor: pointer;
+  text-decoration: underline;
+  color: $green;
+}
+.item-image-wrapper{
+  cursor: pointer;
+  text-decoration: underline;
+  color: $green;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.avatar-upload .avatar-preview {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.avatar-upload .avatar-preview > div {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.dialog-item-view-wrapper ::ng-deep .p-dialog .p-dialog-header {
+  border-bottom: 0 none;
+  background: #ffffff;
+  color: #73828A !important;
+  padding: 0.5rem 1rem 1rem 1rem !important;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+}
+
+.dialog-item-view-wrapper ::ng-deep .p-dialog .p-dialog-header .p-dialog-title {
+  font-size: 14px !important;
+}
+
+.dialog-item-view-wrapper ::ng-deep .p-dialog .p-dialog-content {
+  padding: 0 1rem 1rem 1rem !important;
+}
+
+
+.dialog-item-view-wrapper ::ng-deep .p-dialog .p-dialog-header .p-dialog-header-icon:last-child {
+  margin-right: 0;
+  margin-left: 5px !important;
+}
+
+.dialog-item-view-wrapper ::ng-deep .p-dialog{
+  min-width: 300px !important;
+  min-height: 300px !important;
+}
+.p-dialog-image-wrapper{
+  min-height: 300px;
+  min-width: 300px;
+}
+.item-image-alignment{
+  padding-left: 24px;
+}
+
+.topic {
+  color: $green;
+}
+
+.item-detail-label{
+  width: 93% !important;
+}
+
+.item-close-button{
+  width: 7% !important;
+}
+
+@media only screen and (max-width: 1366px) {
+  .item-detail-label{
+    width: 91% !important;
+  }
+
+  .item-close-button{
+    width: 9% !important;
+  }
+}
+
+.item-detail-top-button{
+  text-align: -webkit-right;
+}
+
+.top-btn {
+  color: #A3ACB0;
+  border-color: #A3ACB0;
+}

@@ -1,0 +1,237 @@
+@import '../../../../scss/table-responsive';
+
+p-calendar {
+  width: 100%
+}
+
+#item-table-in-tab-1{
+  display: none;
+}
+#item-table-in-tab-2{
+  display: none;
+}
+
+.amount-text-alignment {
+  text-align: end;
+  margin-top: 7px;
+  color: #b2b2b2;
+  font-weight: 500;
+}
+
+.thead-style {
+  text-align: center;
+  color: #73828A;
+  opacity: 1;
+}
+
+.amount-net {
+  color: $green;
+}
+
+.drop-text-color {
+  size: 10px;
+  color: #b2b2b2;
+  font-weight: 400;
+}
+
+.drop-zone-style {
+  margin-top: 29px;
+  border-color: #ebebeb;
+  border-width: 3px;
+  height: 155px !important;
+  background-color: #f9f9f9;
+}
+
+.item-remove-button {
+  color: #9c9c9c;
+}
+
+.item-remove-button:hover {
+  cursor: pointer;
+}
+
+@media screen and (max-width: 1200px) {
+  .item-list-responsive-screen-change {
+    overflow-x: auto;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .order-amount-fields {
+    order: 1;
+  }
+
+  .order-drop-zone {
+    order: 2;
+  }
+
+  .amount-label {
+    text-align: -webkit-center;
+    //margin-bottom: -35px;
+  }
+
+  .amount-text-input {
+    margin-left: 48%;
+  }
+
+
+}
+
+.create-po {
+  size: 16px;
+  color: $green;
+  font-weight: 600;
+
+}
+.po-no{
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.amounts {
+  width: 100%;
+  background-color: #f8f9fa
+}
+
+.amount-topic {
+  text-align: right;
+  align-self: flex-end;
+}
+
+.amountsNet {
+  width: 100%;
+  background-color: #CDECEA;
+  color: $green;
+}
+
+.amount-topic-net {
+  text-align: right;
+  color: $green;
+  align-self: flex-end;
+}
+
+.item-line {
+  margin-bottom: 15px;
+  background-color: #F5F6F7;
+}
+
+.top-marging {
+  margin-top: -15px;
+}
+
+.index-style {
+  color: #b2b2b2;
+  font-weight: 500;
+}
+
+.text-style {
+  text-align: center;
+  color: #A1ACB1;
+  opacity: 1;
+}
+
+@media screen and (max-width: 550px) {
+  .mobile-view {
+    width: 252%;
+  }
+}
+
+.footer {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: #ffffff;
+}
+
+.scroll-fields {
+  min-width: 230px;
+  display: inline-block;
+}
+
+@media only screen and (max-width: 1100px) {
+  .condition-resize {
+    white-space: nowrap;
+    overflow: auto
+  }
+}
+
+.field-radiobutton {
+  margin: 0;
+}
+
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 1px !important;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-inputtext {
+  border: none;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-inputtext:focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown {
+  border: none;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown:focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown:not(.p-disabled).p-focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown.p-dropdown-open {
+  border: 1px solid;
+}
+
+.table-add-btn:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.download-icon{
+  color: #73828A;
+  font-size: 20px;
+}
+.download-icon:hover{
+  color: black;
+  cursor: pointer;
+}
+.preview-file{
+  align-items: center;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+  max-width: -48px;
+  min-height: 99px !important;
+  min-width: 139px !important;
+  position: relative;
+  max-height: 78px !important;
+}
+
+.uploaded-file-name{
+  width: 91px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+p-calendar{
+  width: 100%;
+}
+.po-form-calandar ::ng-deep span input{
+  border: 1px solid #d7d7d7;
+}
+
+input{
+  border: 1px solid #d7d7d7;
+}
+textarea{
+  border: 1px solid #d7d7d7;
+}

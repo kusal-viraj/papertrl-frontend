@@ -1,0 +1,267 @@
+@import "../../../../scss/color.scss";
+.form-margin {
+  margin: 30px
+}
+
+.create-e-invoice-heading {
+  size: 24px;
+  color: $green;
+  font-weight: 600;
+}
+
+.subHeading {
+  color: #73828A;
+  opacity: 1;
+}
+
+.disabled-field {
+  background-color: #f8f9fa
+}
+
+.full-width {
+  width: 100%;
+}
+
+//.item-remove-button {
+//  background-color: #D0D5D8;
+//  opacity: 1;
+//}
+
+@media screen and (min-width: 294px) and (max-width: 1200px) {
+  .order-amount-fields {
+    order: 1;
+  }
+
+  .order-drop-zone {
+    order: 2;
+  }
+
+  .amount-text-input {
+    margin-left: 48%;
+  }
+}
+
+.amounts {
+  width: 100%;
+  background-color: #f8f9fa
+}
+
+.drop-text-color {
+  size: 10px;
+  color: #b2b2b2;
+  font-weight: 400;
+}
+
+.drop-zone-style {
+  margin-top: 25px;
+  border-color: #ebebeb;
+  border-width: 3px;
+  height: 120px !important;
+  background-color: #f9f9f9;
+}
+
+.amountsNet {
+  width: 100%;
+  background-color: #CDECEA;
+  color: $green;
+}
+
+.amount-text-alignment {
+  text-align: end;
+  margin-top: 7px;
+  color: #b2b2b2;
+  font-weight: 500;
+}
+
+.net-amount-label {
+  color: $green;
+}
+
+
+.text-style {
+  text-align: center;
+  color: #A1ACB1;
+  opacity: 1;
+}
+
+
+.index-style {
+  color: #b2b2b2;
+  font-weight: 500;
+}
+
+@media screen and (min-width: 1200px) {
+  .notes-tag-responsive {
+    margin-left: -305px;
+  }
+}
+
+.footer {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: #ffffff;
+  z-index: 1;
+}
+
+
+.costume-checkbox {
+  left: 0.5rem;
+  color: #b2b2b2;
+  transition-duration: 0.2s;
+  vertical-align: super !important;
+}
+
+
+@media only screen and (max-width: 600px) {
+  .condition-resize {
+    white-space: nowrap;
+    overflow: auto
+  }
+}
+
+@media only screen and (max-width: 1320px) and (min-width: 1200px) {
+  .text-area-size {
+    width: 325px;
+    float: right;
+  }
+}
+
+@media only screen and (max-width: 1380px) and (min-width: 1320px) {
+  .text-area-size {
+    width: 350px;
+    float: right;
+  }
+}
+
+p-calendar {
+  width: 100%
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 1px !important;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown {
+  padding: 1px !important;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-inputtextarea {
+  border: none;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown {
+  border: none;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown:focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown:not(.p-disabled).p-focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown.p-dropdown-open {
+  border: 1px solid;
+}
+
+.item-remove-button {
+  color: #9c9c9c;
+}
+
+.item-remove-button:hover {
+  cursor: pointer;
+}
+
+.disabled {
+  width: 100%;
+  background-color: #f8f9fa
+}
+
+@media only screen and (max-width: 1100px) {
+  .condition-resize {
+    white-space: nowrap;
+    overflow: auto
+  }
+}
+
+.preview-file {
+  align-items: center;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+  max-width: -48px;
+  min-height: 99px !important;
+  min-width: 139px !important;
+  position: relative;
+  max-height: 78px !important;
+}
+
+.uploaded-file-name {
+  width: 100px;
+  height: 50px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: pre-line;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.btn-behaviour:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: bold !important;
+}
+.notify-days-msg {
+  background: $tertiary-yellow;
+  color: $brown;
+  border: 1px solid $tertiary-yellow-light;
+  border-radius: 3px;
+  padding: 5px 10px;
+  margin: 0px 0px 10px;
+}
+
+.clear-button:hover {
+  background-color: #D0D5D8;
+  opacity: 1;
+}
+
+.clear-button {
+  background-color: #D0D5D8;
+  opacity: 1;
+}
+
+.apply-button{
+  padding: 1px 6px 2px !important;
+  border-radius: 5px;
+}
+
+.apply-button ::ng-deep .p-button-label{
+  font-size: 13px;
+}
+
+.add-new-label{
+  color: $green;
+  cursor: pointer;
+  font-weight: bold;
+  &:hover{
+    text-decoration: underline;
+  }
+}
+
+.footer{
+  width: 99.4%;
+  z-index: 10;
+}
+
+.height{
+  min-height: calc(100vh - 213px);
+}
+
+li{
+  list-style-type: none;
+}

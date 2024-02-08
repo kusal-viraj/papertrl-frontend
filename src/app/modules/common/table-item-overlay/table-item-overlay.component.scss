@@ -1,0 +1,23 @@
+@import '../../../../scss/table-responsive';
+@import "../../../../scss/color.scss";
+
+.overlay-panel {
+  width: 300px;
+
+  .loading-wrapper {
+    position: relative;
+    text-align: center;
+    height: 80px;
+
+    em {
+      font-size: 50px;
+      opacity: 0.8 !important;
+      margin-top: 5%;
+      color: $green;
+    }
+  }
+}
+
+.overlay-panel .grid .ml-2{
+  line-break: anywhere;
+}

@@ -1,0 +1,140 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "vendor.id": "Sdc Inc",
+      "pay.vendor": "BILL-001",
+      "pay.noOfBills": "12/25/2021",
+      "pay.paymentAmount": "25000.00",
+      "pay.balanceToBePaid": "10000.00",
+      "payments": [
+        {
+          "txn.billNo": "BATCH-01",
+          "txn.billDate": "15/10/2021",
+          "txn.billAmount": "1000.00",
+          "txn.dueDate": "15/10/2021",
+          "txn.paymentStatus": "TF",
+          "txn.paymentType": "Check"
+        },
+        {
+          "txn.billNo": "BATCH-02",
+          "txn.billDate": "15/10/2021",
+          "txn.billAmount": "1000.00",
+          "txn.dueDate": "15/10/2021",
+          "txn.paymentStatus": "TS",
+          "txn.paymentType": "Cash"
+        },
+        {
+          "txn.billNo": "BATCH-03",
+          "txn.billDate": "15/10/2021",
+          "txn.billAmount": "1500.00",
+          "txn.dueDate": "15/10/2021",
+          "txn.paymentStatus": "TP",
+          "txn.paymentType": "ACH"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "vendor.id": "Sdc Inc 2",
+      "pay.vendor": "Tidewater",
+      "pay.noOfBills": "12/25/2021",
+      "pay.paymentAmount": "25000.00",
+      "pay.balanceToBePaid": "10000.00",
+      "payments": [
+        {
+          "txn.billNo": "BATCH-01",
+          "txn.billDate": "15/10/2021",
+          "txn.billAmount": "1000.00",
+          "txn.dueDate": "15/10/2021",
+          "txn.paymentStatus": "AP",
+          "txn.paymentType": "Check"
+        },
+        {
+          "txn.billNo": "BATCH-02",
+          "txn.billDate": "15/10/2021",
+          "txn.billAmount": "1000.00",
+          "txn.dueDate": "15/10/2021",
+          "txn.paymentStatus": "A",
+          "txn.paymentType": "Cash"
+        },
+        {
+          "txn.billNo": "BATCH-03",
+          "txn.billDate": "15/10/2021",
+          "txn.billAmount": "1500.00",
+          "txn.dueDate": "15/10/2021",
+          "txn.paymentStatus": "R",
+          "txn.paymentType": "ACH"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "vendor.id": "NMA",
+      "pay.vendor": "BILL-001",
+      "pay.noOfBills": "12/25/2021",
+      "pay.paymentAmount": "25000.00",
+      "pay.balanceToBePaid": "10000.00",
+      "payments": [
+        {
+          "txn.billNo": "BATCH-01",
+          "txn.billDate": "15/10/2021",
+          "txn.billAmount": "1000.00",
+          "txn.dueDate": "15/10/2021",
+          "txn.paymentStatus": "R",
+          "txn.paymentType": "Check"
+        },
+        {
+          "txn.billNo": "BATCH-02",
+          "txn.billDate": "15/10/2021",
+          "txn.billAmount": "1000.00",
+          "txn.dueDate": "15/10/2021",
+          "txn.paymentStatus": "A",
+          "txn.paymentType": "Cash"
+        },
+        {
+          "txn.billNo": "BATCH-03",
+          "txn.billDate": "15/10/2021",
+          "txn.billAmount": "1500.00",
+          "txn.dueDate": "15/10/2021",
+          "txn.paymentStatus": "AP",
+          "txn.paymentType": "ACH"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "vendor.id": "Silver Kite",
+      "pay.vendor": "BILL-001",
+      "pay.noOfBills": "12/25/2021",
+      "pay.paymentAmount": "25000.00",
+      "pay.balanceToBePaid": "10000.00",
+      "payments": [
+        {
+          "txn.billNo": "BATCH-01",
+          "txn.billDate": "15/10/2021",
+          "txn.billAmount": "1000.00",
+          "txn.dueDate": "15/10/2021",
+          "txn.paymentStatus": "A",
+          "txn.paymentType": "Check"
+        },
+        {
+          "txn.billNo": "BATCH-02",
+          "txn.billDate": "15/10/2021",
+          "txn.billAmount": "1000.00",
+          "txn.dueDate": "15/10/2021",
+          "txn.paymentStatus": "A",
+          "txn.paymentType": "Cash"
+        },
+        {
+          "txn.billNo": "BATCH-03",
+          "txn.billDate": "15/10/2021",
+          "txn.billAmount": "1500.00",
+          "txn.dueDate": "15/10/2021",
+          "txn.paymentStatus": "A",
+          "txn.paymentType": "ACH"
+        }
+      ]
+    }
+  ]
+}

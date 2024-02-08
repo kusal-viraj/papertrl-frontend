@@ -1,0 +1,373 @@
+<form [formGroup]="reportMainForm" autocomplete="off">
+
+  <div class="grid p-fluid">
+
+    <div class="p-fluid col-12" *ngIf="fieldIds.length>0 && reportName">
+      <h6>{{reportName}}</h6>
+      <hr>
+    </div>
+
+    <div class="field lg:col-12 xl:col-12 xl:col-12  md:col-12 sm:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_APPROVED_BY)">
+      <span class="p-float-label">
+        <p-dropdown [virtualScroll]="reportUtility.approvedByList.data.length > 20"
+                    virtualScrollItemSize="25" inputId="approvedBy" formControlName="approvedBy" id="finalApprovalUser"
+                    [autoDisplayFirst]="false"
+                    [showClear]="true" optionValue="id" #approvedBy [filter]="true"
+                    [options]="reportUtility.approvedByList.data"
+                    optionLabel="name">
+          <ng-template pTemplate="selectedItem">
+            <div>{{approvedBy.selectedOption.name}}</div>
+          </ng-template>
+        </p-dropdown>
+        <label for="itemType">Select Final Approver</label>
+      </span>
+    </div>
+
+    <div class="field lg:col-12 xl:col-12 xl:col-12  md:col-12 sm:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_CURRENTLY_ASSIGNED_USER)">
+      <span class="p-float-label">
+        <p-dropdown [virtualScroll]="reportUtility.approvedByList.data.length > 20"
+                    virtualScrollItemSize="25" inputId="approvedBy" formControlName="approvedBy" id="currentlyAssignUser"
+                    [autoDisplayFirst]="false"
+                    [showClear]="true" optionValue="id" #approvedBy [filter]="true"
+                    [options]="reportUtility.approvedByList.data"
+                    optionLabel="name">
+          <ng-template pTemplate="selectedItem">
+            <div>{{approvedBy.selectedOption.name}}</div>
+          </ng-template>
+        </p-dropdown>
+        <label for="itemType">Select Currently Assigned User</label>
+      </span>
+    </div>
+
+    <div class="field lg:col-12 xl:col-12 xl:col-12  md:col-12 sm:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_APPROVAL_GROUP)">
+      <span class="p-float-label">
+        <p-dropdown [virtualScroll]="approvalGroupList.data.length > 20"
+                    virtualScrollItemSize="25" inputId="approvalGroup" formControlName="approvalGroup"
+                    id="currentlyAssignApprovalGroup" [autoDisplayFirst]="false"
+                    [showClear]="true" optionValue="id" #approvalGroup [filter]="true"
+                    [options]="approvalGroupList.data"
+                    optionLabel="name">
+          <ng-template pTemplate="selectedItem">
+            <div>{{approvalGroup.selectedOption.name}}</div>
+          </ng-template>
+        </p-dropdown>
+        <label for="itemType">Select Currently Assigned Approval Group</label>
+      </span>
+    </div>
+
+    <div class="field lg:col-12 xl:col-12 xl:col-12 md:col-12 sm:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_PROJECT_TASK_LIST)">
+      <span class="p-float-label">
+           <p-multiSelect [virtualScroll]="projectTaskList.data.length>20" virtualScrollItemSize="25"
+                          [options]="projectTaskList.data" id="projectCodeId"
+                          inputId="dropdown" appendTo="body" [showToggleAll]="true"
+                          formControlName="projectCodeIdList" optionLabel="name" optionValue="id"
+                          [filter]="true">
+           </p-multiSelect>
+
+          <label for="projectCodeId">Select Project/Task</label>
+        </span>
+    </div>
+
+    <div class="field lg:col-12 xl:col-12 xl:col-12 md:col-12 sm:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_STATUS)">
+      <span class="p-float-label">
+        <p-dropdown [virtualScroll]="reportUtility.statusList.data.length > 20" virtualScrollItemSize="25"
+                    inputId="status" formControlName="poStatus" id="status" [autoDisplayFirst]="false"
+                    [showClear]="true"
+                    optionValue="id" #status [filter]="true" [options]="reportUtility.statusList.data"
+                    optionLabel="name">
+          <ng-template pTemplate="selectedItem">
+            <div>{{status.selectedOption.name}}</div>
+          </ng-template>
+        </p-dropdown>
+        <label for="vendor">Select Status</label>
+      </span>
+    </div>
+
+    <div class="field lg:col-12 xl:col-12 xl:col-12 md:col-12 sm:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_VENDOR)">
+      <span class="p-float-label">
+        <p-dropdown [virtualScroll]="vendorList.data.length > 20" virtualScrollItemSize="25"
+                    inputId="vendor" formControlName="vendor" id="vendor" [autoDisplayFirst]="false" [showClear]="true"
+                    optionValue="id" #vendor [filter]="true" [options]="vendorList.data" optionLabel="name">
+          <ng-template pTemplate="selectedItem">
+            <div>{{vendor.selectedOption.name}}</div>
+          </ng-template>
+        </p-dropdown>
+        <label for="vendor">Select Vendor</label>
+      </span>
+    </div>
+
+    <div class="field lg:col-12 xl:col-12 xl:col-12 md:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_VENDOR_EMAIL)">
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+          <input formControlName="vendorEmail" (keyup)="removeFieldSpace(f.vendorEmail)" id="vendorEmail" type="text"
+                 pInputText>
+          <label for="vendorEmail">Vendor Email</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="field sm:col-12 lg:col-12 xl:col-6 md:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_VENDOR_CODE)">
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+          <input formControlName="vendorCode" (keyup)="removeFieldSpace(f.vendorCode)" id="vendorCode" type="text"
+                 pInputText>
+          <label for="vendorCode">Vendor Code</label>
+        </span>
+      </div>
+    </div>
+
+
+    <div class="field sm:col-12 lg:col-12 xl:col-6 md:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_DIVERSE_SUPPLIER)">
+      <span class="p-float-label">
+    <p-dropdown inputId="diverseSupplier" formControlName="diverseSupplier" id="diverseSupplier"
+                [autoDisplayFirst]="false" [showClear]="true" optionValue="value" #diverseSupplier
+                [options]="classificationYesNo.data" optionLabel="label">
+    </p-dropdown>
+    <label for="vendor">Diverse Supplier</label>
+      </span>
+    </div>
+
+    <div class="field lg:col-12 xl:col-12 xl:col-12 md:col-12 sm:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_DIVERSITY_CLASSIFICATION)">
+      <span class="p-float-label">
+         <p-multiSelect [virtualScroll]="classification.data.length >20" virtualScrollItemSize="25"
+                        inputId="diversityClassification" formControlName="diversityClassification" id="diversityClassification"
+                        [options]="classification.data" [filter]="true" optionLabel="name" optionValue="id">
+            </p-multiSelect>
+        <label for="paymentType">Diversity Classification</label>
+      </span>
+    </div>
+
+    <div class="field lg:col-12 xl:col-12 xl:col-12 md:col-12 sm:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_COUNTRY)">
+      <span class="p-float-label">
+        <p-dropdown [virtualScroll]="reportUtility.countryList.data.length > 20" virtualScrollItemSize="25"
+                    inputId="country" formControlName="country" id="country" [autoDisplayFirst]="false"
+                    [showClear]="true" optionLabel="name" optionValue="id" #country [filter]="true"
+                    [options]="reportUtility.countryList.data">
+          <ng-template pTemplate="selectedItem">
+            <div>{{country.selectedOption.name}}</div>
+          </ng-template>
+        </p-dropdown>
+        <label for="country">Select Country</label>
+      </span>
+    </div>
+
+    <div class="field sm:col-12 md:col-12 lg:col-12 xl:col-6 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_STATE)">
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+          <input formControlName="state" autocomplete="off" (keyup)="removeFieldSpace(f.state)" id="state" type="text"
+                 pInputText>
+          <label for="state">State</label>
+        </span>
+      </div>
+    </div>
+
+
+    <div class="field sm:col-12 md:col-12 lg:col-12 xl:col-6 col-6" *ngIf="fieldIds.includes(appReportFilters.FILTER_CITY)">
+      <span class="p-float-label">
+        <p-dropdown [virtualScroll]="reportUtility.cityList.data.length > 20" virtualScrollItemSize="25"
+                    inputId="country" formControlName="city" id="city" [autoDisplayFirst]="false" [showClear]="true"
+                    #city [filter]="true" optionLabel="name" optionValue="name" [options]="reportUtility.cityList.data">
+          <ng-template pTemplate="selectedItem">
+            <div>{{city.selectedOption.name}}</div>
+          </ng-template>
+        </p-dropdown>
+        <label for="country">Select City</label>
+      </span>
+    </div>
+
+    <div class="field sm:col-12 md:col-12 lg:col-12 xl:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_CONTACT_NO)">
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+          <input formControlName="contactNumber" (keyup)="removeFieldSpace(f.contactNumber)" id="contactNumber"
+                 type="text" pInputText>
+          <label for="contactNumber">Contact No</label>
+        </span>
+      </div>
+    </div>
+
+
+    <div class="field sm:col-12 md:col-12 lg:col-12 xl:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_BILL_DATE)">
+      <span class="p-float-label">
+        <p-calendar formControlName="billDate" appendTo="body" name="billDate" selectionMode="range" id="billDate"
+                    #billDate [showButtonBar]="true" (onSelect)="onDateSelect(f.billDateRange, billDate.value)"
+                    (onClearClick)="resetBillDate()" [readonlyInput]="true" dateFormat="mm-dd-yy"></p-calendar>
+        <label for="billDate">Select Bill Date</label>
+      </span>
+    </div>
+
+    <div class="field sm:col-12 md:col-12 lg:col-12 xl:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_DUE_DATE)">
+      <span class="p-float-label">
+        <p-calendar appendTo="body" name="dueDate" id="dueDate" selectionMode="range" formControlName="dueDate" #dueDate
+                    [showButtonBar]="true" (onSelect)="onDateSelect(f.dueDateRange, dueDate.value)"
+                    (onClearClick)="resetDueDate()" [readonlyInput]="true" dateFormat="mm-dd-yy"></p-calendar>
+        <label for="dueDate">Select Due Date</label>
+      </span>
+    </div>
+
+
+    <div class="field sm:col-12 md:col-12 lg:col-12 xl:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_DATE_AGING)">
+      <span class="p-float-label">
+        <p-dropdown [virtualScroll]="reportUtility.agingList.data.length > 20" virtualScrollItemSize="25"
+                    inputId="aging" formControlName="aging" id="aging" [autoDisplayFirst]="false" [showClear]="true"
+                    #aging [filter]="true" optionLabel="name" optionValue="id" [options]="reportUtility.agingList.data">
+          <ng-template pTemplate="selectedItem">
+            <div>{{aging.selectedOption.name}}</div>
+          </ng-template>
+        </p-dropdown>
+        <label for="country">Aging</label>
+      </span>
+    </div>
+
+    <div class="field sm:col-12 md:col-12 lg:col-12 xl:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_CREATED_DATE)">
+      <span class="p-float-label">
+        <p-calendar formControlName="createdDate" appendTo="body" name="createdDate" selectionMode="range"
+                    id="createdDate" #createdDate [showButtonBar]="true"
+                    (onSelect)="onDateSelect(f.createdDateRange, createdDate.value)" (onClearClick)="resetCreatedDate()"
+                    [readonlyInput]="true" dateFormat="mm-dd-yy"></p-calendar>
+        <label for="createdDate">Select Created Date</label>
+      </span>
+    </div>
+
+    <div class="field lg:col-12 xl:col-12 md:col-12 sm:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_REQUESTOR)">
+      <span class="p-float-label">
+        <p-dropdown [virtualScroll]="reportUtility.approvedByList.data.length > 20" virtualScrollItemSize="25"
+                    inputId="requester" formControlName="requester" id="itemType" [autoDisplayFirst]="false"
+                    [showClear]="true" optionValue="id" #requester [filter]="true"
+                    [options]="reportUtility.approvedByList.data"
+                    optionLabel="name">
+          <ng-template pTemplate="selectedItem">
+            <div>{{requester.selectedOption.name}}</div>
+          </ng-template>
+        </p-dropdown>
+        <label for="itemType">Select Created User</label>
+      </span>
+    </div>
+
+    <div class="field lg:col-12 xl:col-12 md:col-12 sm:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_DEPARTMENT)">
+      <span class="p-float-label">
+        <p-dropdown [virtualScroll]="departmentList.data.length > 20" virtualScrollItemSize="25"
+                    inputId="department" formControlName="department" id="department" [autoDisplayFirst]="false"
+                    [showClear]="true" optionValue="id" #department [filter]="true"
+                    [options]="departmentList.data"
+                    optionLabel="name">
+          <ng-template pTemplate="selectedItem">
+            <div>{{department.selectedOption.name}}</div>
+          </ng-template>
+        </p-dropdown>
+        <label for="itemType">Select Department</label>
+      </span>
+    </div>
+
+    <div class="field lg:col-12 xl:col-12 md:col-12 sm:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_CUSTOM_FIELD)">
+      <span class="p-float-label">
+        <p-dropdown [virtualScroll]="reportUtility.customFieldList.data.length > 20" virtualScrollItemSize="25"
+                    inputId="customField" formControlName="customField" id="customField" [autoDisplayFirst]="false"
+                    [showClear]="true" optionValue="id" #customField [filter]="true"
+                    [options]="reportUtility.customFieldList.data"
+                    optionLabel="name">
+          <ng-template pTemplate="selectedItem">
+            <div>{{customField.selectedOption.name}}</div>
+          </ng-template>
+        </p-dropdown>
+        <label for="itemType">Select Custom Field</label>
+      </span>
+    </div>
+
+    <div class="field lg:col-12 xl:col-12 md:col-12 sm:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_ACCOUNT)">
+      <span class="p-float-label">
+        <p-dropdown [virtualScroll]="accountList.data.length > 20" virtualScrollItemSize="25"
+                    inputId="account" formControlName="account" id="account" [autoDisplayFirst]="false"
+                    [showClear]="true" optionValue="id" #account [filter]="true"
+                    [options]="accountList.data"
+                    optionLabel="name">
+          <ng-template pTemplate="selectedItem">
+            <div>{{account.selectedOption.name}}</div>
+          </ng-template>
+        </p-dropdown>
+        <label for="itemType">Select Account</label>
+      </span>
+    </div>
+
+
+    <div class="field lg:col-12 xl:col-12 xl:col-12 md:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_REFERENCE_NUMBER)">
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+          <input formControlName="referenceNo" (keyup)="removeFieldSpace(f.referenceNo)" id="referenceNo" type="text"
+                 pInputText>
+          <label for="referenceNo">Reference Number</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="field lg:col-12 xl:col-12 xl:col-12 md:col-12 col-6"
+         *ngIf="fieldIds.includes(appReportFilters.FILTER_TRANSACTION_TYPE)">
+      <span class="p-float-label">
+        <p-multiSelect [options]="reportUtility.transActionType.data" optionValue="id" optionLabel="name"
+                       id="departments"
+                       formControlName="transactionTypes"
+                       class="responsive-multiselect">
+        <ng-template let-transaction pTemplate="group">
+          <div class="flex p-ai-center">
+            <span class="fa fa-sitemap icon-custom"></span> &nbsp;<span
+            class="m-2 font-bold">{{transaction.name}}</span>
+          </div>
+        </ng-template>
+      </p-multiSelect>
+        <label for="departments">Select Transaction Type</label>
+      </span>
+    </div>
+
+  </div>
+
+  <div class="grid p-fluid footer pull-right" *ngIf="fieldIds.length>0">
+
+    <div class=" pull-right view-btn col-fixed" *ngIf="reportId != appReportType.BILLABLE_TRANSACTIONS">
+      <button pButton type="button" label="View Report" (click)="showReport()" class=" p-button-sm"
+              [icon]="mainReportPageComponent.isViewLoading ? 'pi pi-spin pi-spinner' : 'fa fa-eye'"
+              [disabled]="mainReportPageComponent.btnDisable"></button>
+    </div>
+
+    <div class=" pull-right view-btn trs-view-button-wrapper col-fixed" *ngIf="reportId == appReportType.BILLABLE_TRANSACTIONS">
+      <button pButton type="button" label="View Report" (click)="showReport()" class=" p-button-sm"
+              [icon]="isProgressBillableTableData() ?
+              'pi pi-spin pi-spinner' : 'fa fa-eye'"
+              [disabled]="isProgressBillableTableData()"></button>
+    </div>
+
+    <div class=" pull-right export-btn col-fixed" *ngIf="reportId != appReportType.BILLABLE_TRANSACTIONS">
+      <button pButton type="button" label="Export to Excel" (click)="export()" class=" p-button-sm"
+              [icon]="mainReportPageComponent.isExportLoading ? 'pi pi-spin pi-spinner' : 'fa fa-share'"
+              [disabled]="mainReportPageComponent.btnDisable"></button>
+    </div>
+
+    <div class=" pull-right reset-btn col-fixed" [class]="appReportType.BILLABLE_TRANSACTIONS ? 'reset-button-wrapper':''">
+      <button pButton type="button" label="Reset" [disabled]="mainReportPageComponent.btnDisable"
+              (click)="reportMainForm.reset(); resetBillDate(); resetDueDate(); resetCreatedDate() "
+              class="p-button-outlined p-button-sm" icon="fa-solid fa-rotate-right"></button>
+    </div>
+  </div>
+
+
+</form>

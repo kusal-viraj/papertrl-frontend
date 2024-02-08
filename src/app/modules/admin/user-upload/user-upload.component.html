@@ -1,0 +1,75 @@
+<div class="height">
+  <p-blockUI class="boarder-hide" *ngIf="responsePercentage !== 0" [blocked]="responsePercentage > 0" [target]="pnl">
+    <div class="exception-body" *ngIf="responsePercentage">
+      <div class="exception-content">
+        <circle-progress
+          [percent]="[responsePercentage]"
+          [radius]="70"
+          [outerStrokeWidth]="10"
+          [innerStrokeWidth]="100"
+          [outerStrokeColor]="'#95fdff'"
+          [innerStrokeColor]="'transparent'"
+          [showUnits]=true
+          [titleFontWeight]="600"
+          [showSubtitle]=false
+          [backgroundGradient]=false
+          [animation]="false">
+        </circle-progress>
+      </div>
+    </div>
+  </p-blockUI>
+
+  <p-panel class="border-hide" #pnl>
+    <div class="boarder-hide text-left">
+      <p class="margin-top infoUpload"><b>Step 1: </b><span class="download-link" (click)="downloadUserListTemplate()">Download</span>
+        the template.</p>
+      <p class="margin-top infoUpload"><b>Step 2: </b> Fill in all fields and save.</p>
+      <p class="margin-top infoUpload"><b>Step 3: </b> Upload the completed template.</p>
+    </div>
+    <br>
+
+    <form [formGroup]="uploadUserForm" enctype="multipart/form-data">
+      <div class="grid margin-top-grid">
+        <div class="col-12 xl:col-4 md:col-8 lg:col-6 upload-field">
+          <div class="p-inputgroup">
+            <span class="p-float-label inner-text-position">
+            <input id="fileUpload" #userList formControlName="userListController" (change)="userListChange($event)"
+                   accept=".xls,.xlsx"
+                   type="file" hidden>
+            <input id="fileText"
+                   [value]="userList.files[0] ? userList.files[0].name : null" readonly class="input-max-width"
+                   accept=".xls,.xlsx" formControlName="userListController"
+                   onClick="document.getElementById('fileUpload').click()" type="text" pInputText>
+              <label for="fileText">Browse a file to upload* </label>
+            <button pButton label="Browse" class="p-button file-browse p-button-sm"
+                    onClick="document.getElementById('fileUpload').click()"></button>
+                         </span>
+          </div>
+          <button class="p-button-sm upload-button ml-2" pButton type="submit" icon="fa fa-cloud-upload" label="Upload"
+                  [disabled]="isDisabled"
+                  (click)="uploadUserList()"></button>
+
+          <button pButton class="p-button-sm upload-button ml-2 p-button-outlined" type="button"
+                  icon="fa-solid fa-rotate-right" label="Reset"
+                  [disabled]="isDisabled" (click)="uploadUserForm.reset()"></button>
+
+        </div>
+        <div class="upload-button-mobile field col-12">
+
+          <button class="p-button-sm" pButton type="submit" icon="fa fa-cloud-upload" label="Upload"
+                  [disabled]="isDisabled"
+                  (click)="uploadUserList()"></button>
+        </div>
+        <div class=" upload-button-mobile field col-12">
+          <button pButton class="p-button-sm p-button-outlined" type="button" icon="fa-solid fa-rotate-right"
+                  label="Reset"
+                  [disabled]="isDisabled" (click)="uploadUserForm.reset()"></button>
+        </div>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="uploadUserForm.get('userListController').dirty && uploadUserForm.get('userListController').errors">
+        File is required
+      </div>
+    </form>
+  </p-panel>
+</div>

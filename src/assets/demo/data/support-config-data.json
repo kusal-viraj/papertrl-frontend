@@ -1,0 +1,17 @@
+{
+  "data": [
+    {
+      "id": "",
+      "cusName": "Name",
+      "systemName": "System",
+      "authType": "Auth"
+    },
+    {
+      "id": "",
+      "cusName": "Name1",
+      "systemName": "System1",
+      "authType": "Auth1"
+    }
+  ],
+  "totalRecords": 2
+}

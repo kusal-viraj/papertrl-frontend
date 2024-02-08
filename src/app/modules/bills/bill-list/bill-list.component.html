@@ -1,0 +1,301 @@
+<div class="table-wrapper">
+  <p-table responsiveLayout="scroll" id="columnSelect" #dt [columns]="selectedColumns" (onColResize)="onTableChanged()"
+           (onColReorder)="onTableChanged()" (onFilter)="tableSupportBase.onFilter(dt)"
+           (onSort)="tableSupportBase.onSort(dt)" [hidden]="tableSupportBase.isVisibleTable"
+           [(contextMenuSelection)]="tableSupportBase.selectedContextActionData" [contextMenu]="cm"
+           (onRowSelect)="tableSupportBase.rowSelected(dt,null); isAllowedToDownloadDetailReport()"
+           (onRowUnselect)="tableSupportBase.rowSelected(dt,null); isAllowedToDownloadDetailReport()"
+           [(selection)]="tableSupportBase.rows" [value]="tableSupportBase.dataSource" columnResizeMode="expand"
+           dataKey="id" [reorderableColumns]="true" [rowHover]="true" [lazy]="true" (onLazyLoad)="loadData($event)"
+           [responsive]="false" selectionMode="multiple" scrollHeight="flex" [scrollable]="true"
+           stateStorage="session" stateKey="{{tableKeyEnum.BILL_TABLE_KEY}}" [rows]="25" [showCurrentPageReport]="true"
+           [rowsPerPageOptions]="[25, 50, 75]" [loading]="tableSupportBase.loading" [resizableColumns]="true"
+           [totalRecords]="tableSupportBase.totalRecords" [paginator]="true" *ngIf="tableSupportBase.minWidth"
+           styleClass="p-datatable-sm p-datatable-striped no-grid-lines"
+           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [filterDelay]="0">
+
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns" pResizableColumn [pResizableColumnDisabled]="!col.isReSizable"
+            [ngStyle]="{'text-align': col.align}"
+            [pReorderableColumnDisabled]="!col.isReOrderable" pReorderableColumn
+            [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn
+            [pSortableColumnDisabled]="!col.isSortable" pSortableColumn="{{col.sortableField}}" class="sort-icon-wrapper">
+          <div class="grid">
+            <div class="col-12">
+              <div *ngIf="col.searchType == enums.CHECKBOX">
+                <p-tableHeaderCheckbox (click)="tableSupportBase.rowSelected(dt,null); isAllowedToDownloadDetailReport()"></p-tableHeaderCheckbox>
+              </div>
+              <span *ngIf="col.searchType !== enums.CHECKBOX">{{col.header}}</span>
+              <p-sortIcon class="grid-sort-icon" *ngIf="col.isSortable" field="{{col.sortableField}}"></p-sortIcon>
+            </div>
+            <div class="col-12">
+              <span app-table-inline-column-filters [tableSupportBase]="tableSupportBase" [dt]="dt"
+                    [columns]="columns" [col]="col"></span>
+            </div>
+          </div>
+
+        </th>
+      </tr>
+<!--      <tr>-->
+<!--        <th>asd</th>-->
+<!--        <th *ngFor="let col of columns" [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn>-->
+<!--          <span app-table-inline-column-filters [tableSupportBase]="tableSupportBase" [dt]="dt"-->
+<!--                [columns]="columns" [col]="col"></span>-->
+<!--        </th>-->
+<!--      </tr>-->
+    </ng-template>
+
+
+    <ng-template pTemplate="body" let-bill let-columns="columns">
+      <tr (wheel)="tableSupportBase.scrollHideActionMenu(cm)" [pContextMenuRow]="bill" (contextmenu)="actionButtonClick(bill); tableSupportBase.setContextMenuActionBtnList(
+      actionButtonList(bill)
+      )">
+        <td *ngFor="let col of columns; let in=index" [ngStyle]="{'text-align': col.align}"
+            [class.td-border]="in === 0" [class.td-border-selected]="bill.selected && in === 0"
+            [class.freeze-right]="col.frozenDirection == 'right'" [ngClass]="col.searchType == enums.ACTION_BUTTON ? 'vendor-table-action-btn' : null"
+            pFrozenColumn [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection">
+          <span class="p-column-title">{{col.header}}</span>
+
+          <span *ngIf="col.field == enums.CHECKBOX">
+          <p-tableCheckbox [value]="bill"></p-tableCheckbox>
+        </span>
+
+
+          <span *ngIf="col.searchType ==  enums.ACTION_BUTTON">
+          <button type="button" pButton class="grid-action-btn p-button-text" icon="pi pi-ellipsis-v"
+                  [disabled]="actionButtonList(bill).length === 0"
+                  (click)="menu.toggle($event); actionButtonClick(bill)"></button>
+         <p-menu #menu [popup]="true" appendTo="body"
+                 [model]="actionButtonList(bill)"></p-menu>
+        </span>
+
+
+          <span [ngClass]="isClassHover(col.field) ? 'selectedHover': null" (click)="tdClick(col.field, bill, $event)"
+                (mouseover)="tdHover(col.field, bill, $event)" (scroll)="hideOverlays()" (mouseout)="hideOverlays()">
+
+           <span *ngIf="col.field == 'bill.status'" class="capitalize">
+            <li [class]="'mr-2 status-style status-'  + tableSupportBase.getStatus(bill[col.field])"></li>
+             {{tableSupportBase.getStatus(bill[col.field]) | titlecase}}
+          </span>
+
+            <span *ngIf="col.field == 'bill.exportStatus'" class="capitalize">
+            <li [class]="'mr-2 status-style status-'  + tableSupportBase.getStatus(bill[col.field])"></li>
+              {{tableSupportBase.getStatus(bill[col.field]) | titlecase}}
+          </span>
+
+            <span class="white-space-normal break-word" *ngIf="col.field !== 'bill.status' && col.field !== 'bill.paymentStatus' &&
+              col.field !== 'bill.exportStatus' && col.field !== 'code.id'">{{bill[col.field]}}</span>
+
+
+            <span *ngIf="col.field == 'code.id'">
+              <span *ngIf="bill[col.field]?.length == 1">{{bill[col.field]}}</span>
+              <span *ngIf="bill[col.field]?.length > 1" (click)="multipleProjectsView(bill)"
+                    class="selectedHover">Split</span>
+            </span>
+
+
+           <span *ngIf="col.field == 'bill.paymentStatus'" class="capitalize">
+            <li [class]="'mr-2 status-style status-'  + getStatus(bill[col.field])"></li>
+             {{getStatus(bill[col.field]) | titlecase}}
+          </span>
+
+        </span>
+        </td>
+      </tr>
+    </ng-template>
+
+    <p-overlayPanel appendTo="body" #poOverlay>
+      <ng-template pTemplate>
+        <app-table-po-overlay [poId]="overlayId"></app-table-po-overlay>
+      </ng-template>
+    </p-overlayPanel>
+
+    <p-overlayPanel appendTo="body" #vendorOverlay>
+      <ng-template pTemplate>
+        <app-table-vendor-overlay [vendorId]="overlayId"></app-table-vendor-overlay>
+      </ng-template>
+    </p-overlayPanel>
+
+    <p-overlayPanel appendTo="body" #paymentOverlay>
+      <ng-template pTemplate>
+        <app-table-payments-overlay [docType]="documentType" [id]="overlayId"></app-table-payments-overlay>
+      </ng-template>
+    </p-overlayPanel>
+
+    <p-overlayPanel appendTo="body" #poReceiptOverlay>
+      <ng-template pTemplate>
+        <app-table-po-receipt-overlay [id]="overlayId"></app-table-po-receipt-overlay>
+      </ng-template>
+    </p-overlayPanel>
+
+
+    <ng-template pTemplate="emptymessage">
+      <div class="text-center grid table-empty-data">
+        <div class="col-12">
+          <i class="fa-solid fa-magnifying-glass"></i><br>
+          <p>There are no records found</p>
+        </div>
+      </div>
+    </ng-template>
+  </p-table>
+</div>
+
+
+<div class="no-data-show" *ngIf="tableSupportBase.isVisibleTable == true">
+  <span class="fa fa-search"></span>
+  <div style="margin-top: 1%">There are no transactions matching the criteria</div>
+</div>
+
+<!--Approve Purchase Order-->
+<p-sidebar closeOnEscape="false" [showCloseIcon]="false" [fullScreen]="true" [modal]="false"
+           [(visible)]="approveBillView"
+           *ngIf="approveBillView">
+  <app-bill-approve-main [tableSearch]="tableSupportBase.searchFilterDto" [isDetailView]="detailView"
+                         [approveView]="approveBillView" [hasUserInApprovalGroupOrAssignee]="isValidApproveAccess(activeAction)"
+                         (closeBillApprove)="closeApproveView()"
+                         (closeBillDetailView)="approveBillView = false; detailView = false; loadData(tableSupportBase.searchFilterDto)"
+                         [billNoFromList]="this.activeAction['bill.billNo']"
+                         (openBillApprove) = "approveBillView = true; detailView = false;" [billIdFromList]="id"
+                         *ngIf="approveBillView" [billStatus]="this.activeAction['bill.status']"  [billType]="billType"
+                         [billId]="id"></app-bill-approve-main>
+</p-sidebar>
+
+<!--Edit Bills-->
+<p-sidebar closeOnEscape="false" [showCloseIcon]="false" *ngIf="reSubmit" [fullScreen]="true" [modal]="false"
+           [(visible)]="reSubmit" class="bill-drawer-remove-inner-padding">
+  <app-edit-process-bill [billIdFromList]="id" [isEditBill]="true" *ngIf="reSubmit"
+                         (navigateToList)="reSubmit = false; loadData(tableSupportBase.searchFilterDto)"></app-edit-process-bill>
+</p-sidebar>
+
+<!--Edit Bills-->
+<p-sidebar closeOnEscape="false" [showCloseIcon]="false" *ngIf="eBillEdit" [fullScreen]="true" [modal]="false"
+           [(visible)]="eBillEdit" styleClass="remove-p-sidebar-inner-padding">
+  <app-create-e-bill [editView]="true"
+                     (isClickCloseButton)="eBillEdit = false; loadData(tableSupportBase.searchFilterDto)"
+                     [billId]="id" *ngIf="eBillEdit"></app-create-e-bill>
+</p-sidebar>
+
+<app-audit-trial *ngIf="auditTrialPanel" [auditTrial]="auditTrial" [heading]="'Bill# ' + billNo"
+                 (closeDrawer)="auditTrialPanel = false" [panelShow]="auditTrialPanel"></app-audit-trial>
+
+<p-confirmDialog #cdD key="billDelete" header="Are you sure?" icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cdD.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, Delete it"
+            (click)="cdD.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<!--Change Assignee-->
+<p-sidebar closeOnEscape="false" [(visible)]="viewChangeAssignee" position="right" styleClass="p-sidebar-sm"
+           *ngIf="viewChangeAssignee">
+  <ng-template pTemplate="header">Change Assignee</ng-template>
+
+  <app-bill-change-assignee *ngIf="viewChangeAssignee" [heading]="originalFileName" [billId]="id"
+                            [vendorId]="activeAction.vendorId"
+                            (refreshGridAfterChangedAssignee)="loadData(tableSupportBase.searchFilterDto);
+                            viewChangeAssignee = false">
+  </app-bill-change-assignee>
+</p-sidebar>
+
+<!--Apply Payment-->
+<p-sidebar closeOnEscape="false" [(visible)]="isBillPayment" position="right" styleClass="p-sidebar-sm"
+           *ngIf="isBillPayment" appendTo="body">
+  <ng-template pTemplate="header">Create Bill Payment</ng-template>
+  <app-bill-payment-create (emittedTabIndex)="isBillPayment = false; getDataFromBackend()" [isPanel]="true"
+                           [billId]="tableActiveBillId" [vendorId]="tableActiveVendor" [billTableData]="activeAction"
+                           *ngIf="isBillPayment && privilegeService.isAuthorized(appAuthorities.PAYMENT_CREATE)"></app-bill-payment-create>
+</p-sidebar>
+
+
+<!--Undo-->
+<p-confirmDialog #cdR key="poUA" appendTo="body" header="Are you sure?"
+                 icon="subHeadingGreen pi pi-check">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cdR.reject()"></button>
+    <button type="button" pButton icon="pi pi-check" label="Yes, Undo it"
+            (click)="cdR.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+
+<p-confirmDialog key="billReject" #cd header="Are you sure?" icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cd.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, Reject it"
+            (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<!--apply to credit note modal-->
+
+<p-dialog *ngIf="isApplyCreditNote" header="Apply Credit Note"
+          [draggable]="false" [resizable]="false"
+          class="apply-credit-wrapper" [modal]="true"
+          [(visible)]="isApplyCreditNote">
+  <app-apply-credit-note [isFromApprovedBill]="false"
+                         (success)="isApplyCreditNote = false; loadData(tableSupportBase.searchFilterDto)"
+                         *ngIf="isApplyCreditNote" [activeAction]="activeAction"></app-apply-credit-note>
+</p-dialog>
+
+
+<!--apply to credit note modal-->
+
+<p-dialog *ngIf="isApplyCreditNoteAsBulk" header="Apply Credit Note(s)"
+          [draggable]="false" [resizable]="false"
+          class="credit-note-wrapper credit-note-bulk-wrapper" [modal]="true"
+          [(visible)]="isApplyCreditNoteAsBulk">
+  <app-apply-credit-note-as-bulk
+    (success)="isApplyCreditNoteAsBulk = false;tableSupportBase.rows = []; loadData(tableSupportBase.searchFilterDto)"
+    (selectedBillLengthZero)="isApplyCreditNoteAsBulk = false" [warningForIgnoredBill]="warningForIgnoredBill"
+    *ngIf="isApplyCreditNoteAsBulk" [selectedBillList]="filteredBills" [activeAction]="activeAction">
+  </app-apply-credit-note-as-bulk>
+</p-dialog>
+
+<!--Process-->
+<p-confirmDialog #billPP key="billPP" appendTo="body" header="Are you sure?" icon="subHeadingGreen pi pi-check">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="billPP.reject()"></button>
+    <button type="button" pButton icon="pi pi-check" label="Yes, Mark As Offline Payment"
+            (click)="billPP.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<!--UnProcess-->
+<p-confirmDialog #billPU key="billPU" appendTo="body" header="Are you sure?" icon="subHeadingGreen pi pi-check">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="billPU.reject()"></button>
+    <button type="button" pButton icon="pi pi-check" label="Yes, Undo Offline Payment"
+            (click)="billPU.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+<!--Action Buttons-->
+
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           (onHide)="showFilter= false"
+           [fullScreen]="false" [(visible)]="showFilter" transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)">
+  <ng-template pTemplate="header">Advance Filter</ng-template>
+  <app-table-column-filters [columns]="tableSupportBase.filterEnabledColumns" (closeDrawer)="showFilter = false"
+                            [dt]="table" [tableSupportBase]="tableSupportBase"></app-table-column-filters>
+</p-sidebar>
+
+<p-sidebar styleClass="p-sidebar-sm table-column-sidebar" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           (onHide)="showFilterColumns= false" transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)"
+           [fullScreen]="false" [(visible)]="showFilterColumns">
+  <ng-template pTemplate="header">Columns</ng-template>
+  <app-table-column-toggle [cols]="selectedColumns" (selectionsUpdated)="selectedColumns = $event"
+                           [tableInstance]="table" (restoreTable)="loadTableData()"
+                           [tableKey]="tableKeyEnum.BILL_TABLE_KEY"
+                           [gridName]="appConstant.GRID_NAME_Bill_LIST"
+                           [hiddenOptions]="tableSupportBase.hiddenInOptions"
+                           (updateColOrder)="onTableChanged($event)"></app-table-column-toggle>
+</p-sidebar>
+
+<!--Context Menu-->
+<p-contextMenu #cm  (onShow)="tableSupportBase.hideActionMenu(menu)" [model]="tableSupportBase.contextMenuActionList"></p-contextMenu>

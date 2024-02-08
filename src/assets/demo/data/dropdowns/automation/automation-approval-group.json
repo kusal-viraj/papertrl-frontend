@@ -1,0 +1,22 @@
+[
+  {
+    "id": "0",
+    "label": "Add New"
+  },
+  {
+    "id": "1",
+    "label": "Project Manager"
+  },
+  {
+    "id": "2",
+    "label": "Account Payable"
+  },
+  {
+    "id": "3",
+    "label": "Account Receivable"
+  },
+  {
+    "id": "4",
+    "label": "Audit User"
+  }
+]

@@ -1,0 +1,27 @@
+.checkbox-position{
+
+}
+
+:host::ng-deep {
+  .ui-chkbox-label {
+    text-align: left;
+    position: relative;
+  }
+}
+
+.button-alignment{
+  text-align: right;
+}
+.overflowCustom{
+  overflow-y: auto!important;
+}
+
+.role-edit-view{
+  height: 80vh;
+  overflow-y: auto;
+}
+
+.role-create-view{
+  height: 52vh;
+  overflow-y: auto;
+}

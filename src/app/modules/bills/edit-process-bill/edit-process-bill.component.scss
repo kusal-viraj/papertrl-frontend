@@ -1,0 +1,12 @@
+@import "../../../../scss/bill/bill-process.scss";
+@import "../../../../scss/color";
+
+.submit-detail-wrapper-not-draft {
+  position: relative;
+  border: solid 1px $canceled-gray;
+  width: 100% !important;
+}
+
+.po-comparison-label-wrapper-with-pane {
+  margin-bottom: 14px !important;
+}

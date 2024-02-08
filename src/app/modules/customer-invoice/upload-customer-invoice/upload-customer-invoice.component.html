@@ -1,0 +1,80 @@
+<p-blockUI class="boarder-hide" *ngIf="responsePercentage !== 0" [blocked]="responsePercentage > 0" [target]="pnl">
+  <div class="exception-body" *ngIf="responsePercentage">
+    <div class="exception-content">
+      <circle-progress
+        [percent]="[responsePercentage]"
+        [radius]="70"
+        [outerStrokeWidth]="10"
+        [innerStrokeWidth]="100"
+        [outerStrokeColor]="'#95fdff'"
+        [innerStrokeColor]="'transparent'"
+        [showUnits]=true
+        [titleFontWeight]="600"
+        [showSubtitle]=false
+        [backgroundGradient]=false
+        [animation]="false">
+      </circle-progress>
+    </div>
+  </div>
+</p-blockUI>
+
+<div class="height">
+
+  <div class="text-left ">
+    <p class="margin-top infoUpload"><b>Step 1: </b><span (click)="downloadCustomerInvoiceTemplate()" class="download-link">Download</span>
+      the template.</p>
+    <p class="margin-top infoUpload"><b>Step 2: </b> Fill in all fields and save.</p>
+    <p class="margin-top infoUpload"><b>Step 3: </b> Upload the completed template.</p>
+  </div>
+
+  <form [formGroup]="uploadInvoiceForm">
+    <div class="grid">
+      <div class="col-12 mt-5 upload-field">
+        <div class="p-inputgroup">
+        <span class="p-float-label inner-text-position">
+          <input id="fileUpload" #codeList formControlName="importAttachment"
+                 accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                 (change)="customerInvoiceFileChange($event)" type="file" hidden>
+          <input id="fileText" formControlName="importAttachment"
+                 [value]="codeList.files[0] ? codeList.files[0].name : null" readonly class="input-max-width file-input-vendor"
+                 onClick="document.getElementById('fileUpload').click()" type="text" pInputText>
+          <label for="fileText">Browse a file to upload* </label>
+          <button pButton label="Browse" class="p-button file-browse p-button-sm"
+                  onClick="document.getElementById('fileUpload').click()"></button>
+                  </span>
+        </div>
+      </div>
+    </div>
+    <div class="p-invalid text-align-left"
+         *ngIf="uploadInvoiceForm.get('importAttachment').dirty && uploadInvoiceForm.get('importAttachment').errors">
+      File is required
+    </div>
+  </form>
+</div>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+
+      <button pButton class="p-button-sm p-button-outlined ml-2" type="button"
+              icon="fa-solid fa-rotate-right" label="Reset" [disabled]="isDisabled"
+              (click)="uploadInvoiceForm.reset()"></button>
+
+      <button class="p-button-sm  ml-2" pButton type="submit" icon="fa fa-cloud-upload"
+              label="Upload" [disabled]="isDisabled"
+              (click)="uploadCustomerInvoiceList()"></button>
+
+      <div class="upload-button-mobile field col-12">
+        <button pButton class="p-button-sm p-button-outlined" type="button" icon="fa-solid fa-rotate-right"
+                label="Reset"
+                [disabled]="isDisabled" (click)="uploadInvoiceForm.reset()"></button>
+      </div>
+
+      <div class=" upload-button-mobile field col-12">
+        <button class="p-button-sm" pButton type="submit" icon="fa fa-cloud-upload" label="Upload"
+                [disabled]="isDisabled" (click)="uploadCustomerInvoiceList()"></button>
+      </div>
+
+    </div>
+  </div>
+</div>

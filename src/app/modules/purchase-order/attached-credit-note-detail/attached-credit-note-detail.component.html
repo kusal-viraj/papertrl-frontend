@@ -1,0 +1,58 @@
+<form [formGroup]="attachedCreditNoteDetailForm" class="form-outer-padding mb-0">
+
+  <div class="grid attached-cred-note-detail-wrapper">
+
+    <div class="field col-3">
+      <label>Vendor</label>
+      <div>{{attachedCreditNoteDetailForm.get('vendorName').value}}</div>
+    </div>
+
+    <div class="field  col-3">
+      <label>PO Number</label>
+      <div>{{attachedCreditNoteDetailForm.get('poNumber').value}}</div>
+    </div>
+
+    <div class="field  col-3">
+      <label>PO Amount</label>
+      <div>{{attachedCreditNoteDetailForm.get('netAmount').value}}</div>
+    </div>
+
+    <div class="col-12">
+      <p-table responsiveLayout="scroll" [value]="lineItemMainTable.controls" scrollable="true" scrollHeight="160px"
+               [style]="{width:'auto'}"  scrollDirection="both"
+               styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="min-width:20px"  class="thead-style detail-table-header-left" id="no">#</th>
+            <th style="min-width:100px" class="thead-style detail-table-header-left" id="itemNumber1">Credit Note No</th>
+            <th style="min-width:100px" class="thead-style detail-table-header-left" id="sku">Total Credit</th>
+            <th style="min-width:100px" class="thead-style detail-table-header-left" id="itemName1">Credit Balance</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-i="rowIndex" let-item formArrayName="creditNoteDetails">
+          <tr id="tr_{{i}}" [formGroupName]="i" [pEditableRow]="item">
+            <td style="text-align: center; width:20px"><label>{{i + 1}}</label></td>
+
+            <td style="width:100px">
+              <div>{{f.creditNoteDetails.value[i].creditNoteNo}}</div>
+            </td>
+
+            <td style="width:100px" class="text-right">
+              <div>{{f.creditNoteDetails.value[i].creditTotal | number : '1.2-2'}}</div>
+            </td>
+
+            <td style="width:100px" class="text-right">
+              <div>{{f.creditNoteDetails.value[i].creditBalance | number : '1.2-2'}}</div>
+            </td>
+
+          </tr>
+
+        </ng-template>
+      </p-table>
+    </div>
+
+  </div>
+
+</form>
+

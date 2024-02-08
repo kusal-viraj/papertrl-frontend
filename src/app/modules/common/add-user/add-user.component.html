@@ -1,0 +1,462 @@
+<div class="side-bar-drawer-content p-3">
+  <form (ngSubmit)="onSubmitForm(createUserForm.value)" [formGroup]="createUserForm" class="mt-3">
+    <div class="grid p-fluid">
+      <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-12'">
+        <div>
+            <span>
+              <label class="label-wrapper" for="emailAddress">Email Address* </label>
+                     <input (keyup)="checkAvailability(createUserForm.value); removeSpaces.clearSpace(createUserForm, 'email')" (paste)="checkAvailability(createUserForm.value);  removeSpaces.clearSpace(createUserForm, 'email')" formControlName="email"
+                            id="emailAddress"
+                            maxlength="100"
+                            pInputText type="text">
+                   </span>
+        </div>
+        <div *ngIf="createUserForm.get('email').dirty && createUserForm.get('email').errors"
+             class="p-invalid  text-align-left">
+          <div *ngIf="createUserForm.get('email').errors.required">Email Address is required</div>
+          <div *ngIf="createUserForm.controls['email'].hasError('emailValidate')">Email must be a valid
+            email address
+          </div>
+        </div>
+        <div *ngIf="!isEmailAvailable" class="p-invalid text-align-left">
+          Email already exists, Please enter a new one
+        </div>
+      </div>
+
+      <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-12'">
+        <div>
+            <span>
+              <label class="label-wrapper" for="firstLastName">Name* </label>
+                     <input (keyup)="removeSpaces.clearSpace(createUserForm, 'name')" (paste)="removeSpaces.clearSpace(createUserForm, 'name')" formControlName="name"
+                            id="firstLastName"
+                            maxlength="150" pInputText type="text">
+
+                   </span>
+        </div>
+        <div *ngIf="createUserForm.get('name').dirty && createUserForm.get('name').errors"
+             class="p-invalid text-align-left">
+          Name is required
+        </div>
+      </div>
+      <div [ngClass]="!panel ? 'field col-12 xl:col-2 lg:col-4' : 'field col-12'">
+        <div>
+            <span>
+              <label class="label-wrapper" for="employeeNumber">Employee Number </label>
+                     <input (keyup)="removeSpaces.clearSpace(createUserForm, 'nicPassportNo')"
+                            formControlName="nicPassportNo" id="employeeNumber"
+                            pInputText type="text">
+                   </span>
+        </div>
+        <div *ngIf="createUserForm.get('nicPassportNo').hasError('maxlength')" class="p-invalid text-align-left">
+          Employee Number must be less than 50 characters
+        </div>
+      </div>
+
+      <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-12'">
+
+        <label class="label-wrapper" for="employeeNumber">Contact Number*</label>
+        <app-country-code-validation
+          [telephoneFormControl]="createUserForm.get('telephoneNo')"></app-country-code-validation>
+
+        <div *ngIf="createUserForm.get('telephoneNo').touched && createUserForm.get('telephoneNo').hasError('required')"
+             class="p-invalid text-align-left">
+          Contact Number is required
+        </div>
+        <div *ngIf="createUserForm.get('telephoneNo').hasError('validatePhoneNumber')"
+             class="p-invalid text-align-left">
+          Invalid Contact Number
+        </div>
+      </div>
+
+      <div *ngIf="!detailView" [ngClass]="!panel ? 'field col-12 lg:col-4' : 'field col-12'">
+        <label class="label-wrapper" for="fileText">Profile Picture</label>
+        <div class="p-inputgroup">
+            <span class="p-float-label">
+            <input #profilePicture (change)="onFileChange($event)" accept="image/*" formControlName="profilePic"
+                   hidden id="fileUpload" type="file">
+            <input #profilePicture [value]="profilePicture.files[0] ? profilePicture.files[0].name : null" accept="image/*"
+                   formControlName="profilePic"
+                   id="fileText"
+                   onClick="document.getElementById('fileUpload').click()" pInputText type="text">
+
+            <button [hidden]="detailView" class="p-button browse-button-wrapper p-button-sm" label="Browse" onClick="document.getElementById('fileUpload').click()"
+                    pButton style="margin: 0 !important;height: 31px !important;"
+                    type="button"></button>
+              <button (click)="profilePicture.value = null;" class="p-button-borderless p-button-sm" icon="fa-solid fa-rotate-right" pButton
+                      type="button"
+              >
+
+              </button>
+           </span>
+        </div>
+      </div>
+      <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-12'">
+        <span *ngIf="!detailView">
+          <label class="label-wrapper" for="approvalGroup">Select Approval Groups* </label>
+           <p-multiSelect #select (onChange)="addNewApprovalGroup($event)" [(ngModel)]="userMasterDto.approvalGroups" [filter]="true"
+                          [options]="userUtility.approvalGroups.data" [showToggleAll]="true"
+                          [virtualScroll]="userUtility.approvalGroups.data.length > 20" class="responsive-multiselect" display="chip"
+                          formControlName="approvalGroups" id="approvalGroup" inputId="approvalGroup"
+                          optionLabel="name" optionValue="id" virtualScrollItemSize="25">
+             <ng-template pTemplate="selectedItem">
+                <div>{{createUserForm.get('approvalGroups').value.name}}</div>
+             </ng-template>
+
+             <ng-template let-approvalGroups pTemplate="item">
+                 <div class="grid">
+                     <div [ngClass]="approvalGroups.id == 0 ? ' role-dropdown-add': null"
+                          class="role-dropdown-list">{{approvalGroups.name}}</div>
+                     <em *ngIf="approvalGroups.name == 'Add New'"
+                         class="pi pi-plus role-dropdown-icon role-dropdown-add"></em>
+                 </div>
+             </ng-template>
+           </p-multiSelect>
+
+        </span>
+
+        <span *ngIf="detailView" class="ul-font">
+      <label>Approval Groups </label>
+      <ul *ngFor="let group of approvalGroupsNameArray">
+        <li>{{group}}</li>
+      </ul>
+      </span>
+
+        <div *ngIf="createUserForm.get('approvalGroups').dirty && createUserForm.get('approvalGroups').errors"
+             class="p-invalid text-align-left">
+          Approval Group is required
+        </div>
+      </div>
+
+      <div *ngIf="!isHidden()"
+           [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-12'">
+      <span>
+        <label class="label-wrapper" for="departments">Select Departments</label>
+        <p-multiSelect [group]="true" [optionDisabled]="detailView? 'label': ''" [options]="userUtility.departments" class="responsive-multiselect"
+                       display="chip" formControlName="departments" id="departments"
+                       optionGroupChildren="items" optionValue="value">
+        <ng-template let-group pTemplate="group">
+          <div class="flex p-ai-center">
+            <span class="fa fa-sitemap icon-custom"></span> &nbsp;<span class="m-2 font-bold">{{group.label}}</span>
+          </div>
+        </ng-template>
+      </p-multiSelect>
+
+      </span>
+      </div>
+
+      <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-12'">
+        <span>
+          <label class="label-wrapper" for="role">Select Role* </label>
+          <p-multiSelect #dpName [(ngModel)]="input" [filter]="true" [options]="roles.data"
+                      [virtualScroll]="roles.data.length > 20" class="responsive-dropdown" formControlName="roleIdList" id="role"
+                      inputId="role" optionLabel="name" optionValue="id" virtualScrollItemSize="25">
+
+            <ng-template let-roles pTemplate="item">
+              <div class="grid">
+                <div [ngClass]="roles.id == 0 ? ' role-dropdown-add': null"
+                     class="dropdown-list">{{roles.name}}</div>
+                <em (click)="viewRoleClicked(roles)" *ngIf="roles.id != 0"
+                    class="pi pi-eye role-dropdown-icon"></em>
+                <em *ngIf="roles.name == 'Add New'" class="pi pi-plus role-dropdown-icon role-dropdown-add"></em>
+              </div>
+            </ng-template>
+          </p-multiSelect>
+        </span>
+        <div *ngIf="createUserForm.get('roleIdList').dirty && createUserForm.get('roleIdList').errors"
+             class="p-invalid text-align-left">
+          Role is required
+        </div>
+      </div>
+
+
+
+
+      <div [ngClass]="!panel ? 'field col-12 xl:col-2 lg:col-4' : 'field col-12'">
+        <span>
+          <label class="label-wrapper" for="status">Select Status* </label>
+            <p-dropdown [autoDisplayFirst]="false" [filter]="true"
+                        [options]="userUtility.statusList.data" [virtualScroll]="userUtility.statusList.data.length > 20" formControlName="status" id="status"
+                        inputId="status" optionLabel="name" optionValue="id"
+                        virtualScrollItemSize="25"></p-dropdown>
+        </span>
+
+        <div *ngIf="createUserForm.get('status').dirty && createUserForm.get('status').errors"
+             class="p-invalid text-align-left">
+          Status is required
+        </div>
+      </div>
+
+      <div [ngClass]="!panel ? 'field col-12 xl:col-2 lg:col-4' : 'field col-12'">
+        <div>
+      <span class="p-input-icon-right">
+        <label class="label-wrapper" for="float-input">Password*</label>
+           <i (click)="passwordShow? passwordShow= false: passwordShow= true"
+              [ngClass]="passwordShow? 'pi pi-eye-slash' : 'pt-2 pi pi-eye'"></i>
+             <input [feedback]="false" [readOnly]="detailView" [showPassword]="passwordShow"
+                    autocomplete="new-password" class="password-text" formControlName="password"
+                    id="float-input" pPassword style="width: 100%" type="password">
+      </span>
+        </div>
+        <div *ngIf="createUserForm.get('password').dirty && createUserForm.get('password').errors"
+             class="p-invalid  text-align-left">
+          <div *ngIf="createUserForm.get('password').errors.required">Password is required</div>
+          <div *ngIf="createUserForm.get('password').errors.minlength">Password must be at least 8 characters</div>
+          <div *ngIf="createUserForm.get('password').errors.maxlength">Password must be less than 20 characters</div>
+        </div>
+      </div>
+
+      <div [ngClass]="!panel ? 'field col-12 xl:col-2 lg:col-4' : 'field col-12'">
+        <div>
+     <span class=" p-input-icon-right">
+       <label class="label-wrapper" for="confirmPassword">Confirm Password*</label>
+        <i (click)="confirmPasswordShow? confirmPasswordShow= false: confirmPasswordShow= true"
+           [ngClass]="confirmPasswordShow? 'pi pi-eye-slash' : 'pt-2 pi pi-eye'"></i>
+              <input [feedback]="false" [readOnly]="detailView"
+                     [showPassword]="confirmPasswordShow" autocomplete="new-password" class="password-text"
+                     formControlName="confirmPassword" id="confirmPassword" pPassword style="width: 100%"
+                     type="password">
+
+     </span>
+        </div>
+        <div *ngIf="createUserForm.get('confirmPassword').dirty && createUserForm.get('confirmPassword').errors"
+             class="p-invalid">
+          <div *ngIf=" createUserForm.get('confirmPassword').errors.required">Confirm Password is
+            required
+          </div>
+          <div *ngIf="createUserForm.get('confirmPassword').errors.mustMatch">New password and
+            Confirm Password must match
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-12">
+        <h6 style="color: #73828A">Postal Address</h6>
+      </div>
+
+      <div [ngClass]="!panel ? 'field col-12 xl:col-6 lg:col-4' : 'field col-12'">
+        <div>
+            <span>
+              <label class="label-wrapper" for="addressLine1">Address Line1 </label>
+              <input blockSpace formControlName="addressLine1" id="addressLine1" maxlength="300" pInputText
+                     type="text">
+            </span>
+        </div>
+        <div *ngIf="createUserForm.get('addressLine1').dirty && createUserForm.get('addressLine1').errors"
+             class="p-invalid text-align-left">
+          Address Line1 is required
+        </div>
+      </div>
+
+      <div [ngClass]="!panel ? 'field col-12 xl:col-6 lg:col-4' : 'field col-12'">
+        <div>
+            <span>
+              <label class="label-wrapper" for="addressLine2">Address Line2  </label>
+              <input blockSpace formControlName="addressLine2" id="addressLine2"
+                     maxlength="300" pInputText type="text">
+            </span>
+        </div>
+      </div>
+
+      <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-12'">
+          <span>
+            <label class="label-wrapper" for="city">City</label>
+          <p-autoComplete (completeMethod)="filterCities($event)" [autoHighlight]="true" [dropdown]="false" [minLength]="1"
+                          [multiple]="false" [style]="{'width':'100%'}"
+                          [suggestions]="filteredGroups" blockSpace delay="100"
+                          formControlName="city"
+                          id="city" maxlength="200">
+          </p-autoComplete>
+
+          </span>
+      </div>
+
+      <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-12'">
+          <span>
+            <label class="label-wrapper" for="state">State</label>
+          <p-autoComplete (completeMethod)="filterStates($event)" [autoHighlight]="true" [dropdown]="false" [minLength]="1"
+                          [multiple]="false" [style]="{'width':'100%'}"
+                          [suggestions]="filteredGroups" blockSpace delay="100"
+                          formControlName="state"
+                          id="state" maxlength="200">
+          </p-autoComplete>
+
+            </span>
+      </div>
+
+      <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-12'">
+        <div>
+            <span>
+              <label class="label-wrapper" for="zipCode">Zip Code </label>
+              <input blockSpace formControlName="zipCode" id="zipCode" pInputText type="text">
+
+            </span>
+        </div>
+        <div *ngIf="createUserForm.get('zipCode').hasError('maxlength')" class="p-invalid text-align-left">
+          Zip Code must be less than 30 characters
+        </div>
+      </div>
+
+      <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-12'">
+           <span>
+             <label class="label-wrapper" for="country">Select Country*</label>
+               <p-dropdown [autoDisplayFirst]="false" [filter]="true" [options]="countries.data" [virtualScroll]="true"
+                           appendTo="body"
+                           formControlName="country" id="country" optionLabel="name" optionValue="id"
+                           showClear="true" virtualScrollItemSize="25"></p-dropdown>
+           </span>
+        <div *ngIf="createUserForm.get('country').dirty && createUserForm.get('country').errors"
+             class="p-invalid text-align-left">
+          Country is required
+        </div>
+      </div>
+
+      <span class="col-12 flex">
+          <p-inputSwitch (onChange)="showRemitAddress($event)" [(ngModel)]="showAddress" [ngModelOptions]="{standalone: true}"
+                         class="custom-checkbox"></p-inputSwitch>
+          <span
+            class="col-10 p-0 pl-4 costume-checkbox">Please check if the remit address is different from above</span>
+          </span>
+
+      <ng-container *ngIf="showAddress">
+        <div class="col-12">
+          <h6 style="color: #73828A">Remit Address</h6>
+        </div>
+
+        <div [ngClass]="!panel ? 'field col-12 xl:col-6 lg:col-4' : 'field col-12'">
+          <div>
+            <span>
+              <label class="label-wrapper" for="rAddressLine1">Address Line1 </label>
+              <input blockSpace formControlName="rAddressLine1" id="rAddressLine1"
+                     maxlength="300" pInputText type="text">
+            </span>
+          </div>
+          <div *ngIf="createUserForm.get('rAddressLine1').dirty && createUserForm.get('rAddressLine1').errors"
+               class="p-invalid text-align-left">
+            Address Line1 is required
+          </div>
+        </div>
+
+        <div [ngClass]="!panel ? 'field col-12 xl:col-6 lg:col-4' : 'field col-12'">
+          <div>
+            <span>
+              <label class="label-wrapper" for="rAddressLine2">Address Line2 </label>
+              <input blockSpace formControlName="rAddressLine2" id="rAddressLine2"
+                     maxlength="300" pInputText type="text">
+            </span>
+          </div>
+        </div>
+
+        <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-12'">
+             <span>
+               <label class="label-wrapper" for="rcity">City</label>
+            <p-autoComplete (completeMethod)="filterCities($event)" [autoHighlight]="true" [dropdown]="false" [minLength]="1"
+                            [multiple]="false" [style]="{'width':'100%'}"
+                            [suggestions]="filteredGroups" blockSpace dataKey="id"
+                            delay="100" formControlName="rCity"
+                            id="rcity" maxlength="200">
+            </p-autoComplete>
+
+             </span>
+        </div>
+
+
+        <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-3' : 'field col-12'">
+           <span>
+             <label class="label-wrapper" for="rstate">State</label>
+            <p-autoComplete (completeMethod)="filterStates($event)" [autoHighlight]="true" [autocomplete]="false"
+                            [dropdown]="false" [minLength]="1" [multiple]="false"
+                            [style]="{'width':'100%'}" [suggestions]="filteredGroups" blockSpace
+                            delay="100" formControlName="rState"
+                            id="rstate" maxlength="200">
+            </p-autoComplete>
+
+            </span>
+        </div>
+
+        <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-12'">
+          <div>
+            <span>
+              <label class="label-wrapper" for="rZipCode">Zip Code </label>
+              <input blockSpace formControlName="rZipCode" id="rZipCode" pInputText type="text">
+            </span>
+          </div>
+          <div *ngIf="createUserForm.get('rZipCode').hasError('maxlength')" class="p-invalid text-align-left">
+            Zip Code must be less than 30 characters
+          </div>
+        </div>
+
+        <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-12'">
+           <span>
+             <label class="label-wrapper" for="rCountry">Select Country</label>
+               <p-dropdown [autoDisplayFirst]="false" [filter]="true" [options]="countries.data" [virtualScroll]="true"
+                           appendTo="body"
+                           formControlName="rCountry" id="rCountry" optionLabel="name" optionValue="id"
+                           showClear="true" virtualScrollItemSize="25"></p-dropdown>
+           </span>
+        </div>
+      </ng-container>
+
+
+    </div>
+  </form>
+</div>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button (click)="resetUserForm()" *ngIf="!detailView" [disabled]="loading" class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right" label="Reset"
+              pButton type="button"></button>&nbsp;
+      <button (click)="onSubmitForm(createUserForm.value)" *ngIf="!editView && !detailView" [disabled]="loading" [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-plus'"
+              class="p-button-sm" iconPos="left"
+              label="Create User" pButton
+              type="button"></button>
+      <button (click)="updateUser(createUserForm.value)" *ngIf="editView" [disabled]="loading" [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-save'" class="p-button-sm"
+              iconPos="left" label="Save" pButton
+              type="button"></button>
+    </div>
+  </div>
+</div>
+
+<!--Create Role-->
+<p-sidebar *ngIf="createRole" [(visible)]="createRole" [dismissible]="true" [modal]="true" appendTo="body"
+           class="overflow-side-bar" position="right" styleClass="p-sidebar-sm">
+  <ng-template pTemplate="header">Create Role</ng-template>
+  <app-role-create (closeModal)="createRole = false; getRoles(roles, true, 0, editView)" *ngIf="createRole" [detailView]="false" [editView]="false"
+                   [panel]="true"></app-role-create>
+</p-sidebar>
+
+<!--View Single Role-->
+<p-sidebar *ngIf="viewRole" [(visible)]="viewRole" [dismissible]="true" [modal]="true" appendTo="body"
+           class="overflow-side-bar" position="right" styleClass="p-sidebar-sm">
+  <ng-template pTemplate="header">Role Details</ng-template>
+  <app-role-create *ngIf="viewRole" [detailView]="true" [editView]="false" [id]="roleId" [panel]="true"
+                   [roleName]="roleName"></app-role-create>
+</p-sidebar>
+
+<p-sidebar *ngIf="createPortalRole" [(visible)]="createPortalRole" [dismissible]="true" [fullScreen]="true" [modal]="true"
+           appendTo="body"
+           class="overflow-side-bar" position="right">
+  <app-portal-role-create (closeModal)="createPortalRole=false; getRoles(roles, true, 0,editView)"
+                          *ngIf="createPortalRole && privilegeService.isAuthorized(appAuthorities.ROLES_CREATE)"></app-portal-role-create>
+</p-sidebar>
+
+<!--Edit Portal Role-->
+<p-sidebar *ngIf="portalViewRole" [(visible)]="portalViewRole" [fullScreen]="true" [modal]="true"
+           [showCloseIcon]="true" appendTo="body" class="overflow-side-bar" position="right">
+  <app-portal-role-create *ngIf="portalViewRole" [detailView]="portalViewRole" [editView]="false" [id]="roleId"
+                          [panel]="false" [roleName]="roleName"></app-portal-role-create>
+
+</p-sidebar>
+
+<!--Create Approval Group-->
+<p-sidebar *ngIf="approvalGroupPanel" [(visible)]="approvalGroupPanel" [dismissible]="true" [modal]="true" appendTo="body"
+           class="overflow-side-bar"
+           position="right"
+           styleClass="p-sidebar-sm">
+  <ng-template pTemplate="header">Create Approval Group</ng-template>
+  <app-create-approval-group (updatedApprovalGroups)="updatedApprovalGroups($event); approvalGroupPanel = false"
+                             *ngIf="approvalGroupPanel"
+                             [approvalGroup]="userMasterDto.approvalGroups"
+                             [panel]="true"></app-create-approval-group>
+</p-sidebar>

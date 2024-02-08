@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "label": "Text Box"
+  },
+  {
+    "id": 2,
+    "label": "Text Area"
+  },
+  {
+    "id": 3,
+    "label": "Dropdown"
+  },
+  {
+    "id": 4,
+    "label": "Data Field"
+  },
+  {
+    "id": 5,
+    "label": "File Upload"
+  },
+  {
+    "id": 6,
+    "label": "Radio Buttons"
+  },
+  {
+    "id": 7,
+    "label": "Check Boxes"
+  },
+  {
+    "id": 8,
+    "label": "Label"
+  }
+]

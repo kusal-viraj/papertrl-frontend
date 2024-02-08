@@ -1,0 +1,16 @@
+[
+  {
+    "action": "INACTIVATE",
+    "label": "Inactivate",
+    "icon": "fa fa-toggle-off",
+    "active": false,
+    "authCode": "ADDITIONAL_FIELDS_INACTIVATE"
+  },
+  {
+    "action": "ACTIVATE",
+    "label": "Activate",
+    "icon": "fa fa-toggle-on",
+    "active": false,
+    "authCode": "ADDITIONAL_FIELDS_ACTIVATE"
+  }
+]

@@ -1,0 +1,83 @@
+<form [formGroup]="assignToConfig">
+
+  <div class="grid p-fluid">
+
+    <div class="field col-4" *ngIf="isAllowedToSelectAnAccount">
+    <span >
+       <label class="label-wrapper" for="itemId">Select Account*</label>
+      <p-dropdown [virtualScroll]="accountList.data.length > 20" virtualScrollItemSize="25"
+                  [options]="accountList.data" id="accountId" inputId="account"
+                  optionDisabled="inactive" (onChange)="changeAccountList(selectAccountLabel.selectedOption.id)"
+                  formControlName="fieldValue" class="number-column-table-dropdown"
+                  [showClear]="true"
+                  optionLabel="name" optionValue="id"
+                  [style]="{'width':'100%'}"
+                  [autoDisplayFirst]="false" #selectAccountLabel appendTo="body"
+                  [filter]="true">
+        <ng-template pTemplate="selectedItem">
+          <div>{{selectAccountLabel.selectedOption.name}}</div>
+        </ng-template>
+
+        <ng-template let-account pTemplate="item">
+          <div class="grid">
+            <div class="dropdown-list"
+                 [ngClass]="account.id == 0 ? 'dropdown-add': null">{{account.name}}</div>
+            <em *ngIf="account.name == 'Add New'"
+                class="pi pi-plus dropdown-add dropdown-icon"></em>
+          </div>
+        </ng-template>
+      </p-dropdown>
+     </span>
+
+    </div>
+
+    <div class="field col-4" *ngIf="isAllowedToSelectAnItem">
+    <span>
+       <label  class="label-wrapper"  for="itemId">Select Item*</label>
+      <p-dropdown [virtualScroll]="itemList.data.length > 20" virtualScrollItemSize="25"
+                  [options]="itemList.data" id="itemId" inputId="itemId"
+                  optionDisabled="inactive" (onChange)="changeItemList(selectItemLabel.selectedOption.id)"
+                  formControlName="fieldValue" class="number-column-table-dropdown"
+                  [showClear]="true"
+                  optionLabel="name" optionValue="id"
+                  [style]="{'width':'100%'}"
+                  [autoDisplayFirst]="false" #selectItemLabel appendTo="body"
+                  [filter]="true">
+        <ng-template pTemplate="selectedItem">
+          <div>{{selectItemLabel.selectedOption.name}}</div>
+        </ng-template>
+
+        <ng-template let-item pTemplate="item">
+          <div class="grid">
+            <div class="dropdown-list"
+                 [ngClass]="item.id == 0 ? 'dropdown-add': null">{{item.name}}</div>
+            <em *ngIf="item.name == 'Add New'"
+                class="pi pi-plus dropdown-add dropdown-icon"></em>
+          </div>
+        </ng-template>
+      </p-dropdown>
+
+     </span>
+    </div>
+
+  </div>
+
+</form>
+
+
+<!--Add New Account-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" appendTo="body" [modal]="true" position="right"
+           class="overflow-side-bar" *ngIf="isAddNewAccount" [(visible)]="isAddNewAccount">
+  <ng-template pTemplate="header">Account Information</ng-template>
+
+  <app-add-account (updatedAccountList)="getAccounts(accountList)"
+                   [detailView]="false" [editView]="false" [panel]="true" *ngIf="isAddNewAccount"></app-add-account>
+</p-sidebar>
+
+<!--Add New Item-->
+<p-sidebar styleClass="p-sidebar-lg" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           class="overflow-side-bar" *ngIf="isAddNewItem" [(visible)]="isAddNewItem">
+  <ng-template pTemplate="header">Create Item</ng-template>
+  <app-add-item [editView]="false"
+                [detailView]="false" [panel]="true" *ngIf="isAddNewItem"></app-add-item>
+</p-sidebar>

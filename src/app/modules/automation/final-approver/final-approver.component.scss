@@ -1,0 +1,69 @@
+@import "../../../../scss/color.scss";
+
+.btn-trash {
+  background-color: #D0D5D8;
+  opacity: 1;
+}
+
+.btn-trash:hover {
+  background-color: #8c8e91;
+  opacity: 1;
+}
+
+.more-info {
+  color: $green;
+  font-weight: normal;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dropdown-list {
+  padding-top: 10px;
+  margin-right: 25px;
+  padding-left: 5px;
+}
+
+.dropdown-icon {
+  right: 10px;
+  padding-top: 10px;
+  position: absolute;
+  z-index: 1;
+}
+
+.dropdown-icon:hover {
+  color: $green;
+  z-index: 1;
+}
+
+.dropdown-add {
+  color: $green;
+}
+
+.scroll-fields {
+  min-width: 220px;
+  display: inline-block;
+  padding-top: 25px;
+}
+
+
+.notWorkflowConditions {
+  overflow-x: auto;
+  white-space: normal;
+  width: auto;
+}
+
+.index-style {
+  color: #b2b2b2;
+  background-color: #f8f9fa;
+  font-weight: 500;
+  text-align: center;
+  opacity: 1;
+  width: 100%;
+}
+
+@media only screen and (max-width: 800px) {
+  .sequence-resize {
+    white-space: nowrap;
+    overflow: auto
+  }
+}

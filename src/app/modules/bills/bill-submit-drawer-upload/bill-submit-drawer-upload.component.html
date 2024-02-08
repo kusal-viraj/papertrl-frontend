@@ -1,0 +1,134 @@
+<div *ngIf="!fromProcess && !loading" class="field pt-2 pl-4 form-header gridr">
+  <div class="col-12 text-right">
+    <span (click)="backToList()" class="fa fa-close side-drawer-icon"></span>
+  </div>
+</div>
+
+<div [class]="!loading ? 'outer-content-wrapper' : ''" *ngIf="!fromProcess">
+    <div class="card upload-bill-content" *ngIf="!loading">
+      <ng-template [ngTemplateOutlet]="upload_fields"></ng-template>
+    </div>
+
+  <div class="loading-content-outer" *ngIf="loading">
+    <div class="loading-content-inner">
+      <div class="grid upload-image-wrapper p-col-12" *ngIf="!fromProcess">
+        <img class="progress-gif" alt="card" src="../../../../assets/images/progress-gif.gif">
+      </div><br>
+    <span class="col-12 process-lg-label">Processing Your Bills...</span>
+    <span class="col-12 process-sm-label">Thanks for your patience, this shouldn't take long.</span>
+    </div>
+  </div>
+
+</div>
+
+<ng-container *ngIf="fromProcess">
+  <ng-template [ngTemplateOutlet]="upload_fields"></ng-template>
+</ng-container>
+
+<ng-template #upload_fields>
+
+  <div class="p-fluid" [class]="!fromProcess? 'inner-content-wrapper': ''">
+    <form [formGroup]="submitBillForm" autocomplete="off">
+      <div class="grid p-fluid">
+        <div class="field col-12 xl:col-6 md:col-6 pt-0 pb-0" [class]="!fromProcess ? 'vendor-field-wrapper' : ''">
+          <label class="label-wrapper" for="vendor">Select Vendor</label>
+        <span class="p-float-label ">
+             <p-dropdown [virtualScroll]="vendors.data.length>20" virtualScrollItemSize="25" [options]="vendors.data" id="vendor"
+                         inputId="vendor" #vendorName appendTo="body" optionDisabled="inactive"
+                         formControlName="vendorId" optionLabel="name" optionValue="id" [showClear]="true"
+                         [autoDisplayFirst]="false" class="text-left"
+                         (onChange)="changeVendorList(vendorName.selectedOption.id); onVendorSelect(vendorName.selectedOption.id)"
+                         [filter]="true">
+             <ng-template pTemplate="selectedItem">
+               <div>{{vendorName.selectedOption.name}}</div>
+             </ng-template>
+
+               <ng-template pTemplate="footer" *ngIf="privilegeService.isAuthorized(appAuthorities.VENDORS_CREATE)">
+               <div class="grid dp-footer">
+                 <div class="col-12 button-wrapper">
+                   <button pButton class="p-button-sm" label="Add New"
+                           (click)="addNewVendor = true"></button>
+                 </div>
+               </div>
+             </ng-template>
+
+           </p-dropdown>
+        </span>
+        </div>
+
+        <div class="field col-12 xl:col-6 md:col-6 pt-0 pb-0"
+             [class]="!fromProcess ? 'template-field-wrapper' : ''">
+          <label for="selectTemplate" class="label-wrapper">Select Template </label>
+        <span class="p-float-label">
+          <p-dropdown [virtualScroll]="templateList.data.length> 20" virtualScrollItemSize="25" [options]="templateList.data"
+                      id="selectTemplate" #templateName appendTo="body" class="text-left"
+                      formControlName="templateId" optionValue="id" optionLabel="name" [showClear]="true"
+                      [autoDisplayFirst]="false" (onChange)="changeTemplateList(templateName.selectedOption.id)"
+                      [filter]="true">
+             <ng-template pTemplate="selectedItem">
+               <div>{{templateName.selectedOption.name}}</div>
+             </ng-template>
+
+
+            <ng-template pTemplate="footer">
+               <div class="grid dp-footer">
+                 <div class="col-12 button-wrapper">
+                   <button pButton class="p-button-sm" label="Add New"
+                           (click)="addNewTemplate = true"></button>
+                 </div>
+               </div>
+             </ng-template>
+
+           </p-dropdown>
+        </span>
+        </div>
+
+        <div class="col-12 xl:col-12 pt-0 pb-0" *ngIf="!loading">
+          <ngx-dropzone accept="application/pdf,image/png,image/jpeg,image/jpg" (change)="changeFileList($event)"
+                        class="drop-zone-style">
+
+            <ngx-dropzone-label class="dp-zone-big-text-wrapper p-text-normal">
+              <div class="grid upload-image-wrapper p-col-12" *ngIf="!fromProcess">
+                <img alt="card" src="../../../../assets/images/dropzone-bg-image-removebg-preview.png">
+              </div><br *ngIf="!fromProcess"><br *ngIf="!fromProcess">
+              Drop File(s) Here To Upload <br><br>
+              <span class="dp-zone-small-text-wrapper p-text-normal"> (We only accept PDF, JPG JPEG and PNG formats, all the other formats will be ignored)</span>
+            </ngx-dropzone-label>
+            <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+              <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+            </ngx-dropzone-preview>
+          </ngx-dropzone>
+        </div>
+        <div class="col-12 xl:col-12  pt-0 pb-0" *ngIf="loading && fromProcess">
+          <ngx-dropzone [disabled]="true" class="drop-zone-progress-style">
+            <ngx-dropzone-label>
+              <p-progressSpinner [style]="{width: '70px', height: '70px'}" styleClass="custom-spinner" strokeWidth="4"
+                                 fill="transparent"
+                                 animationDuration=".8s"></p-progressSpinner>
+              <br>
+              <ngx-dropzone-label class="subHeadingColour p-text-normal">Please wait, We are processing your file(s)
+              </ngx-dropzone-label>
+            </ngx-dropzone-label>
+          </ngx-dropzone>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</ng-template>
+
+
+<!--Create New Vendor-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" appendTo="body" [modal]="true" position="right"
+           class="overflow-side-bar" *ngIf="addNewVendor" [(visible)]="addNewVendor">
+   <ng-template pTemplate="header">Create Vendor</ng-template>
+  <app-add-vendor (refreshVendorList)="getVendorList()" *ngIf="addNewVendor"></app-add-vendor>
+</p-sidebar>
+
+<!--Create New Template-->
+<p-sidebar fullScreen="true" [dismissible]="true" appendTo="body" [modal]="true" position="right"
+           class="overflow-side-bar" *ngIf="addNewTemplate" [showCloseIcon]="false" [(visible)]="addNewTemplate">
+  <app-add-template *ngIf="addNewTemplate" [fromTemplateManagement]="true"
+                    [vendorId]="submitBillForm.get('vendorId').value"
+                    (closeTemplateCreateView)="addNewTemplate = false; getVendorRelatedTemplateList(submitBillForm.get('vendorId').value)"></app-add-template>
+</p-sidebar>

@@ -1,0 +1,116 @@
+<div class="bgImg">
+  <div class="flex" style="height: 100%;">
+    <div class="login-side-bar">
+      <div class="login-side-bar-inner">
+        <img alt="Card" class="login-side-bar-logo" src="../../../../assets/images/header-white-logo.png">
+        <h5>A Comprehensive Procure to Pay Solution</h5>
+        <p>Gain control and add efficiency to your AP process with PaperTrl.</p>
+        <button pButton class="p-button-outlined learn-more" (click)="learnMore()" type="button" label="Learn More"></button>
+        <div class="links"></div>
+        <a class="links-a" href="https://papertrl.com/privacy-policy/">Privacy Policy</a><br>
+        <a class="links-a" href="https://papertrl.com/terms-of-service/">Terms of Service</a><br>
+        <a class="links-a" href="mailto: hello@papertrl.com">Contact Us</a><br>
+      </div>
+    </div>
+    <div class="mr-6 card-custom align-self-center">
+      <p-card class="card-custom" styleClass="p-card-shadow-remove card-custom align-self-center">
+        <div class="grid">
+          <div class="col-12 card-header-custom">
+            <img alt="Card" class="login-logo" src="../../../../assets/images/logo.png">
+          </div>
+        </div>
+        <div *ngIf="tenantActive" class="card-custom-padding">
+          <div class="field col-12" [style.height]="'0px'">
+            <h5 class="login-header">LOGIN</h5>
+          </div>
+
+          <form [formGroup]="logInForm" (ngSubmit)="login(logInForm.value)">
+            <div class="p-fluid">
+              <div class="col-12">
+                <div class="field margin-between-fields-headers">
+                  <label class="label-wrapper" for="float-input">Email *</label>
+                  <span class="p-float-label">
+                    <input class="p-inputtext-lg" [maxLength]="150" formControlName="userName" id="float-input"
+                           type="text" pInputText>
+                  </span>
+                  <div class="p-invalid" *ngIf="logInForm.get('userName').dirty && logInForm.get('userName').errors">
+                    Email is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="field margin-between-fields">
+                  <label  class="label-wrapper" for="password">Password *</label>
+                  <span class="p-float-label p-input-icon-right">
+                    <i class="passwordShow" [ngClass]="passwordShow? 'pi pi-eye-slash' : 'pi pi-eye'"
+                       (click)="passwordShow? passwordShow= false: passwordShow= true"></i>
+                       <input class="p-inputtext-lg" [showPassword]="passwordShow" formControlName="password"
+                              [feedback]="false" id="password" type="password" pPassword>
+                  </span>
+                  <div class="p-invalid text-align-left"
+                       *ngIf="logInForm.get('password').dirty && logInForm.get('password').hasError('required')">
+                    Password is required
+                  </div>
+                  <div class="p-invalid text-align-left" *ngIf="logInForm.get('password').hasError('maxlength')">
+                    Password must be less than 20 characters
+                  </div>
+                </div>
+                <span style="width: 100%" class="p-tag tag-size p-tag-rounded p-tag-danger"
+                      *ngIf="loginCredential">{{loginFailedMessage}}</span>
+                <span style="width: 100%" class="p-tag tag-size p-tag-rounded p-tag-warning" *ngIf="sessionExpired && !loginFailedMessage">
+                Your session has expired. Please login to continue.</span>
+              </div>
+
+              <div class="margin-between-fields-input col-12 grid">
+                <div class="field-checkbox col-6">
+                  <p-checkbox [binary]="true" id="remembered" formControlName="rememberMe"></p-checkbox>
+                  <label for="remembered">Remember me</label>
+                </div>
+
+                <div class="field-checkbox col-6 align-right">
+                  <p (click)="resetPassword()" class="forgot-password-link">Forgot Password?</p>
+                </div>
+              </div>
+
+              <div class="col-12 md:col-12 margin-between-buttons">
+                <button class="p-button-lg" [disabled]="isLoading" [icon]="isLoading ? 'pi pi-spin pi-spinner': 'pi'"
+                        iconPos="right" pButton type="submit" label="LOGIN"></button>
+              </div>
+
+<!--              <div class="p-fluid" *ngIf="!privilegeService.isVendor()">-->
+<!--                <div class="col-12 md:col-12 margin-between-buttons">-->
+<!--                  <p class="vendor-link">To Login as a vendor <span (click)="vendorLoginRedirect()">Click Here</span></p>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="p-fluid" *ngIf="privilegeService.isVendor()">-->
+<!--                <div class="col-12 md:col-12 margin-between-buttons">-->
+<!--                  <p class="vendor-link">Register Now <span (click)="vendorRegisterRedirect()">Click Here</span></p>-->
+<!--                </div>-->
+<!--              </div>-->
+              <div *ngIf="!privilegeService.isVendor()" class="col-12 md:col-12">
+                <hr class="solid">
+              </div>
+              <div *ngIf="!privilegeService.isVendor()" class="col-12 md:col-12 margin-between-buttons btn-free-trial">
+                <button pButton class="p-button-outlined p-button-lg" (click)="routeToTrialPage()" type="button"
+                        label="START YOUR FREE TRIAL"></button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div *ngIf="!tenantActive" class="card-custom-padding inactive-msg">
+          <div class="field col-12">
+            <h5 class="login-header">Your trial has ended</h5>
+          </div>
+
+          <div class="col-12">
+            <p>But it's not too late to take step. Upgrade to paid plan to keep using features in PaperTrl!</p>
+            <p>Please contact us via <a class="supportLink" href="mailto:https://support.papertrl.com">support@papertrl.com</a></p>
+          </div>
+
+        </div>
+      </p-card>
+    </div>
+  </div>
+</div>

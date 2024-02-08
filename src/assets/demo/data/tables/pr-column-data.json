@@ -1,0 +1,227 @@
+{
+  "advancedFilters": [
+    {
+      "field": "receiptNo",
+      "header": "Receipt No",
+      "searchType": "input"
+    },
+    {
+      "field": "amount",
+      "header": "Amount",
+      "searchType": "input"
+    },
+    {
+      "field": "date",
+      "header": "Date",
+      "searchType": "input"
+    },
+    {
+      "field": "poNo",
+      "header": "PO No",
+      "searchType": "input"
+    },
+    {
+      "field": "poAmount",
+      "header": "PO Amount",
+      "searchType": "input"
+    },
+    {
+      "field": "billNo",
+      "header": "Bill No",
+      "searchType": "input"
+    },
+    {
+      "field": "vendor",
+      "header": "Vendor",
+      "searchType": "input"
+    },
+    {
+      "field": "submitDate",
+      "header": "Submit Date",
+      "searchType": "date"
+    },
+    {
+      "field": "status",
+      "header": "Status",
+      "searchType": "dropdown",
+      "dropdownValues": [
+        {
+          "label": "PENDING",
+          "value": "P"
+        },
+        {
+          "label": "APPROVED",
+          "value": "A"
+        },
+        {
+          "label": "REJECTED",
+          "value": "R"
+        }
+      ]
+    }
+  ],
+  "columns": [
+    {
+      "field": "checkbox",
+      "header": null,
+      "columnShow": true,
+      "isSortable": false,
+      "isReOrderable": false,
+      "isReSizable": false,
+      "canHide": false,
+      "align": "center",
+      "searchType": "checkbox"
+    },
+    {
+      "field": "action",
+      "header": "Action",
+      "isSortable": false,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "actionButton",
+      "canHide": false
+    },
+    {
+      "field": "receiptNo",
+      "header": "Receipt No",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Receipt No."
+    },
+    {
+      "field": "amount",
+      "header": "Amount",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "right",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Amount"
+    },
+    {
+      "field": "date",
+      "header": "Date",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "date",
+      "canHide": true,
+      "placeholder": "Date"
+    },
+    {
+      "field": "poNo",
+      "header": "PO No",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "PO No"
+    },
+    {
+      "field": "poAmount",
+      "header": "PO Amount",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "right",
+      "searchType": "numeric",
+      "canHide": true,
+      "placeholder": "PO Amount"
+    },
+    {
+      "field": "billNo",
+      "header": "Bill No",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Bill No"
+    },
+    {
+      "field": "vendor",
+      "header": "Vendor",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": false,
+      "align": "left",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Vendor"
+    },
+    {
+      "field": "submitDate",
+      "header": "Submit Date",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": false,
+      "align": "center",
+      "searchType": "date",
+      "canHide": true,
+      "placeholder": "Submit Date"
+    },
+    {
+      "field": "status",
+      "header": "Status",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "dropdown",
+      "canHide": true,
+      "placeholder": "All",
+      "dropdownValues": [
+        {
+          "label": "PENDING",
+          "value": "P"
+        },
+        {
+          "label": "APPROVED",
+          "value": "A"
+        },
+        {
+          "label": "REJECTED",
+          "value": "R"
+        }
+      ]
+    }
+  ],
+  "state": {
+    "first": 0,
+    "rows": 10,
+    "columnWidths": "50,100,154,154,155,155,155,155,155",
+    "columnOrder": [
+      "checkbox",
+      "action",
+      "receiptNo",
+      "amount",
+      "date",
+      "poNo",
+      "poAmount",
+      "billNo",
+      "vendor",
+      "submitDate",
+      "status"
+    ]
+  }
+}

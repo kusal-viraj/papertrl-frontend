@@ -1,0 +1,91 @@
+@import "../../../../scss/color.scss";
+
+.trial-logo {
+  width: auto;
+  height: 42px;
+  margin-top: 8%;
+}
+
+.card-custom {
+  width: 450px;
+}
+
+.card-custom-padding {
+  padding: 0 1rem 1rem 1rem;
+}
+
+.top-bar-custom {
+  position: fixed;
+  width: 100%;
+  height: 64px;
+  border: none;
+  background: #343A40 no-repeat padding-box;
+  z-index: 1;
+}
+
+.btn-start {
+  margin-bottom: -25px;
+}
+
+.card-header-custom {
+  font-weight: bold;
+  color: $green;
+}
+
+.logo-desktop {
+  height: 30px;
+  margin-left: 60%;
+}
+
+
+.exception-body {
+  background-image: url("../../../../assets/images/bg-img.png");
+}
+
+.margin-between-fields {
+  margin-top: 2%;
+}
+
+.margin-between-fields-headers {
+  margin-top: 3%;
+}
+
+.margin-between-fields-buttons {
+  margin-top: 2%;
+}
+
+
+.margin-between-buttons {
+  margin-top: 2%;
+}
+
+.text-align-left {
+  text-align: left;
+}
+
+@media only screen and (max-width: 991px) {
+  .card-custom {
+    margin-top: 10%;
+    height: 100%;
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  .exception-body {
+    background-image: none;
+  }
+  .exception-content {
+    width: 100%;
+    height: 100%;
+  }
+  .layout-topbar{
+    display: none;
+  }
+  .card-custom {
+    width: 100%;
+    height: 100% !important;
+    margin-left: 0 !important;
+    margin-top: 0;
+  }
+}
+

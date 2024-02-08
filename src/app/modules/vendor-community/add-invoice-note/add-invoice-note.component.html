@@ -1,0 +1,42 @@
+<form [formGroup]="noteForm" (ngSubmit)="addNote(noteForm)">
+  <div class="p-fluid">
+    <br><h6 class="subHeadingColour">Notes</h6><br><br>
+    <div class="grid">
+
+      <div *ngFor="let data of obj" [ngClass]="data.sender === 0 ? 'field col-10' : 'field col-offset-2 col-10'">
+        <div class="p-inputgroup">
+                <span class="p-float-label">
+                   <textarea [value]="data.message" [ngClass]="data.sender === 0 ? 'bg-light-green design' : 'design'"
+                             [readOnly]="true" maxlength="300" id="chat" autoResize="autoResize"
+                             pInputTextarea></textarea>
+                  <label for="chat">{{data.name}}</label>
+                </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="grid footer" style="margin-top: 3%">
+    <div class="col-12">
+      <div class="p-inputgroup">
+                <span class="p-float-label">
+                   <textarea formControlName="note" class="design" maxlength="300" id="note"
+                             autoResize="autoResize" pInputTextarea placeholder="Type Here..."></textarea>
+                </span>
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="noteForm.get('note').dirty && noteForm.get('note').errors">
+        Note is required
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="pull-right" style="margin-top: 10px; background-color: white">
+        <button pButton type="button" label="Reset" (click)="noteForm.reset()"
+                class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+        <button pButton type="submit" class="p-button-sm" iconPos="left" icon="fa fa-arrow-circle-right" label="Send"></button>
+      </div>
+    </div>
+
+  </div>
+</form>

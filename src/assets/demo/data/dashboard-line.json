@@ -1,0 +1,24 @@
+{
+  "labels": ["January", "February", "March", "April", "May", "June", "July"],
+  "datasets": [
+    {
+      "label": "Bills",
+      "data": [20, 59, 80, 81, 56, 55, 40],
+      "fill": false,
+      "borderColor": "#FFCD56"
+    },
+    {
+      "label": "Purchase Orders",
+      "data": [28, 48, 40, 60, 86, 27, 90],
+      "fill": false,
+      "borderColor": "#4BC0C0"
+    },
+    {
+      "label": "Expenses",
+      "data": [10, 25, 30, 20, 62, 50, 10],
+      "fill": false,
+      "borderColor": "#C04B7A"
+    }
+  ]
+}
+

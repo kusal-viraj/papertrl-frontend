@@ -1,0 +1,402 @@
+
+<div class="side-bar-drawer-content">
+<form [formGroup]="formGroup" class="form reminder-wrapper p-3 m-3">
+  <div class="grid p-fluid p-mt-0 header-section">
+    <div class="col-2 mt-4">
+      <label class="label-wrapper" for="name">Reminder Name* </label>
+        <span class="p-float-label">
+          <input formControlName="name" id="name" type="text" pInputText maxlength="100"
+                 (keyup)="removeSpace.clearSpace(formGroup, 'name')">
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="formGroup.get('name').dirty && formGroup.get('name').errors">
+        Name is required
+      </div>
+    </div>
+
+    <div class="col-12 mt-4">
+      <label class="subHeadingColour">{{detailView ? '' : '1.'}} Define Event</label>
+    </div>
+
+    <div class="col-12">
+      <label>When</label>
+
+      <span>
+        <p-dropdown inputId="dropdown" formControlName="documentTypeId" id="docdocumentTypeIdumentType"
+                    [autoDisplayFirst]="false"
+                    [options]="documentTypeList.data" [filter]="true" optionLabel="name" class="document-type"
+                    optionValue="id" placeholder="Document*"
+                    (onChange)="documentTypeChange($event.value, true)"></p-dropdown>
+            <div class="p-invalid text-align-left"
+                 *ngIf="formGroup.get('documentTypeId').dirty && formGroup.get('documentTypeId').errors">
+        Document Type is required
+      </div>
+      </span>
+
+      <span>
+        <p-dropdown inputId="dropdown" formControlName="eventId" id="eventId" [autoDisplayFirst]="false"
+                    [options]="eventTypeList.data" [filter]="true" optionLabel="name"
+                    optionValue="id" placeholder="Event*"></p-dropdown>
+         <div class="p-invalid text-align-left"
+              *ngIf="formGroup.get('eventId').dirty && formGroup.get('eventId').errors">
+        Event Type is required
+      </div>
+      </span>
+
+      <span class="p-float-label">
+        <p-inputNumber class="number" maxlength="3" min="0" formControlName="numberOfDays" mode="decimal"
+                       [useGrouping]="false">
+        </p-inputNumber>
+      </span>
+
+      <label>day(s)</label>
+    </div>
+  </div>
+
+
+  <div class="grid p-fluid mt-4" *ngIf="!detailView || (detailView && automationCondition.length>0)">
+    <div class="col-12">
+      <label class="subHeadingColour">{{detailView ? '' : '2.'}} Add Conditions (Optional)</label>
+    </div>
+  </div>
+
+  <div class="conditions" *ngIf="automationCondition.length>0">
+
+    <div formArrayName="conditionConfigs">
+
+      <div class="grid p-fluid mt-3" style="width: 1250px"
+           *ngFor="let condition of automationCondition.controls; let  conditionIndex =index"
+           [formGroupName]="conditionIndex">
+
+        <div class="field pt-5 col-1">
+          <input pInputText readonly class="amount-disabled-wrapper text-center" value="{{conditionIndex+1}}">
+        </div>
+
+        <div class="scroll-fields field xl:col-2 lg:col-3 md:col-3 sm:col-3">
+          <label class="label-wrapper" for="fieldId">Select Field</label>
+        <span class="p-float-label">
+          <p-dropdown inputId="dropdown" formControlName="fieldId" id="fieldId"
+                      [autoDisplayFirst]="false" [showClear]="true" appendTo="body"
+                      [options]="fieldList.data" [filter]="true"
+                      (onChange)="onFieldChanged($event.value, condition, conditionIndex, true)"
+                      optionLabel="name" optionValue="id"></p-dropdown>
+        </span>
+          <div class="p-invalid text-align-left"
+               *ngIf="condition.get('fieldId').dirty && condition.get('fieldId').errors">
+            Field is required
+          </div>
+
+        </div>
+
+        <div class="scroll-fields field xl:col-2 lg:col-3 md:col-3 sm:col-3">
+          <label class="label-wrapper" for="conditionId">Select Condition</label>
+              <span class="p-float-label">
+                <p-dropdown inputId="dropdown" formControlName="conditionId" id="conditionId"
+                            [autoDisplayFirst]="false" showClear="true" appendTo="body" optionDisabled="inactive"
+                            [options]="conditionList[conditionIndex].data" [filter]="true"
+                            optionLabel="name" optionValue="id"></p-dropdown>
+              </span>
+          <div class="p-invalid text-align-left"
+               *ngIf="condition.get('conditionId').dirty && condition.get('conditionId').errors">
+            Condition is required
+          </div>
+        </div>
+
+        <!--CONDITION SECTION FIRST VALUE FIELD SECTION-->
+        <div [class]="condition.get('dataType').value == appConstant.FIELD_DATA_TYPE_DECIMAL ||
+      condition.get('dataType').value == appConstant.FIELD_DATE_TYPE_DATE ?
+      'scroll-fields field field xl:col-2 lg:col-3 md:col-3 sm:col-3':'scroll-fields field field xl:col-3 lg:col-3 md:col-3 sm:col-3'">
+          <label class="label-wrapper" for="firstValue_{{conditionIndex}}" *ngIf="betweenCondition==condition.get('conditionId').value">First value</label>
+          <label class="label-wrapper" for="dateField_{{conditionIndex}}"
+                 *ngIf="betweenCondition!==condition.get('conditionId').value">Value</label>
+        <span class="p-float-label"
+              *ngIf="!condition.get('hasDropDownValue').value && (condition.get('dataType').value !== appConstant.FIELD_DATA_TYPE_INT && !condition.get('hasEmptyCondition').value
+              && condition.get('dataType').value !== appConstant.FIELD_DATA_TYPE_DECIMAL && condition.get('dataType').value !== appConstant.FIELD_DATE_TYPE_DATE )">
+          <input formControlName="firstValue" id="firstValue_{{conditionIndex}}" type="text" autocomplete="off"
+                 [maxLength]="condition.get('maxLength').value" (keyup)="removeFieldSpace(condition.get('firstValue'))"
+                 (keypress)="removeFieldSpace(condition.get('firstValue'))" pInputText>
+        </span>
+
+          <span class="p-float-label"
+                *ngIf="condition.get('hasDropDownValue').value && (condition.get('dataType').value === appConstant.FIELD_DATA_TYPE_TEXT
+              && !condition.get('hasEmptyCondition').value )">
+          <label class="label-wrapper" for="firstValue1_{{conditionIndex}}" *ngIf="betweenCondition==condition.get('conditionId').value">First value</label>
+          <label class="label-wrapper" for="dateField_{{conditionIndex}}"
+                 *ngIf="betweenCondition!==condition.get('conditionId').value">Value</label>
+          <input formControlName="firstValue" id="firstValue1_{{conditionIndex}}" type="text" autocomplete="off"
+                 [maxLength]="condition.get('maxLength').value" #inputElementValue
+                 (keyup)="removeFieldSpace(condition.get('firstValue'))"
+                 (keypress)="removeFieldSpace(condition.get('firstValue'))" pInputText>
+        </span>
+
+          <span class="p-float-label"
+                *ngIf="condition.get('hasDropDownValue').value && condition.get('dataType').value === appConstant.FIELD_DATA_TYPE_INT
+              && !condition.get('hasEmptyCondition').value">
+            <label class="label-wrapper" for="firstValueDropdown_{{conditionIndex}}"
+                   *ngIf="betweenCondition==condition.get('conditionId').value">Select First Value</label>
+          <label class="label-wrapper" for="dateField_{{conditionIndex}}"
+                 *ngIf="betweenCondition!==condition.get('conditionId').value">Value</label>
+          <p-dropdown inputId="dropdown" formControlName="firstValue" id="firstValueDropdown_{{conditionIndex}}"
+                      [autoDisplayFirst]="false" showClear="true" appendTo="body" optionDisabled="inactive"
+                      [options]="fieldValueList[conditionIndex].data" [filter]="true" #fDp
+                      optionLabel="name" optionValue="id">
+
+             <ng-template let-code pTemplate="item">
+                 <div class="grid">
+                     <div class="dropdown-list"
+                          [ngClass]="code.id == 0 ? ' dropdown-add': null">{{code.name}}</div>
+                     <em *ngIf="code.id == 0" class="pi pi-plus dropdown-icon dropdown-add"></em>
+                 </div>
+             </ng-template>
+          </p-dropdown>
+        </span>
+
+          <span class="p-float-label"
+                *ngIf="condition.get('hasDropDownValue').value && condition.get('dataType').value === appConstant.FIELD_DATA_TYPE_TEXT
+              && !condition.get('hasEmptyCondition').value">
+            <label class="label-wrapper" for="firstValueDropdown1_{{conditionIndex}}"
+                   *ngIf="betweenCondition==condition.get('conditionId').value">Select First Value</label>
+          <label class="label-wrapper" for="dateField_{{conditionIndex}}"
+                 *ngIf="betweenCondition!==condition.get('conditionId').value">Value</label>
+          <p-dropdown inputId="dropdown" formControlName="firstValue" id="firstValueDropdown1_{{conditionIndex}}"
+                      [autoDisplayFirst]="false" showClear="true" appendTo="body" optionDisabled="inactive"
+                      [options]="fieldValueList[conditionIndex].data" [filter]="true" #fDp
+                      optionLabel="name" optionValue="id">
+
+             <ng-template pTemplate="selectedItem">
+               <div>{{fDp.selectedOption.name}}</div>
+             </ng-template>
+
+             <ng-template let-code pTemplate="item">
+                 <div class="grid">
+                     <div class="dropdown-list"
+                          [ngClass]="code.id == 0 ? ' dropdown-add': null">{{code.name}}</div>
+                     <em *ngIf="code.id == 0" class="pi pi-plus dropdown-icon dropdown-add"></em>
+                 </div>
+             </ng-template>
+
+          </p-dropdown>
+
+        </span>
+
+          <span class="p-float-label"
+                *ngIf="!condition.get('hasDropDownValue').value && condition.get('dataType').value == appConstant.FIELD_DATA_TYPE_DECIMAL">
+              <label class="label-wrapper" for="firstValueDecimal_{{conditionIndex}}"
+                     *ngIf="betweenCondition==condition.get('conditionId').value">First value</label>
+          <label class="label-wrapper" for="dateField_{{conditionIndex}}"
+                 *ngIf="betweenCondition!==condition.get('conditionId').value">Value</label>
+          <input formControlName="firstValue" id="firstValueDecimal_{{conditionIndex}}" type="text" currencyMask
+                 [maxLength]="condition.get('maxLength').value" (keyup)="removeFieldSpace(condition.get('firstValue'))"
+                 [options]="{ prefix: '', thousands: ',', decimal: '.' }" autocomplete="off" pInputText>
+        </span>
+
+          <div class="p-inputgroup">
+        <span class="p-float-label"
+              *ngIf="!condition.get('hasDropDownValue').value && condition.get('dataType').value == appConstant.FIELD_DATE_TYPE_DATE">
+              <label class="label-wrapper" for="dateField_{{conditionIndex}}" *ngIf="betweenCondition==condition.get('conditionId').value">First value</label>
+              <label class="label-wrapper" for="dateField_{{conditionIndex}}" *ngIf="betweenCondition!==condition.get('conditionId').value">Value</label>
+              <p-calendar formControlName="firstValue" id="dateField_{{conditionIndex}}" [showIcon]="true"
+                          (onSelect)="onFirstDateSelected(condition)" appendTo="body"></p-calendar>
+            </span>
+          </div>
+
+          <div class="p-invalid text-align-left"
+               *ngIf="condition.get('firstValue').dirty && condition.get('firstValue').errors">
+            Value is required
+          </div>
+
+        </div>
+        <!-- END -->
+
+        <!--CONDITION SECTION SECOND VALUE FIELD SECTION-->
+        <div [class]="condition.get('dataType').value == appConstant.FIELD_DATA_TYPE_DECIMAL ||
+      condition.get('dataType').value == appConstant.FIELD_DATE_TYPE_DATE ?
+        'scroll-fields field xl:col-2 lg:col-3 md:col-3 sm:col-3':'scroll-fields field xl:col-3 lg:col-3 md:col-3 sm:col-3'"
+             *ngIf="betweenCondition==condition.get('conditionId').value">
+          <label class="label-wrapper" for="secondValue_{{conditionIndex}}">Second value</label>
+        <span class="p-float-label" *ngIf="!condition.get('hasDropDownValue').value && (condition.get('dataType').value !== appConstant.FIELD_DATA_TYPE_INT
+              && condition.get('dataType').value !== appConstant.FIELD_DATA_TYPE_DECIMAL && condition.get('dataType').value !== appConstant.FIELD_DATE_TYPE_DATE )">
+          <input formControlName="secondValue" id="secondValue_{{conditionIndex}}" type="text"
+                 [maxLength]="condition.get('maxLength').value"
+                 (keypress)="removeFieldSpace(condition.get('secondValue'))" pInputText>
+        </span>
+
+          <span class="p-float-label"
+                *ngIf="condition.get('hasDropDownValue').value && condition.get('dataType').value === appConstant.FIELD_DATA_TYPE_INT">
+              <label class="label-wrapper" for="secondValueDropdown_{{conditionIndex}}">Select Value</label>
+          <p-dropdown inputId="dropdown" formControlName="secondValue" id="secondValueDropdown_{{conditionIndex}}"
+                      [autoDisplayFirst]="false" showClear="true" appendTo="body" optionDisabled="inactive"
+                      [options]="fieldValueList[conditionIndex].data" [filter]="true"
+                      optionLabel="name" optionValue="id"></p-dropdown>
+        </span>
+
+
+          <span class="p-float-label"
+                *ngIf="!condition.get('hasDropDownValue').value && condition.get('dataType').value == appConstant.FIELD_DATA_TYPE_DECIMAL">
+          <input formControlName="secondValue" id="secondValueDecimal_{{conditionIndex}}" type="text" currencyMask
+                 [maxLength]="condition.get('maxLength').value"
+                 [options]="{ prefix: '', thousands: ',', decimal: '.' }" pInputText>
+        </span>
+
+          <div class="p-inputgroup">
+        <span class="p-float-label"
+              *ngIf="!condition.get('hasDropDownValue').value && condition.get('dataType').value == appConstant.FIELD_DATE_TYPE_DATE">
+              <p-calendar formControlName="secondValue" id="secondDateField_{{conditionIndex}}" appendTo="body"
+                          (onSelect)="onSecondDateSelected(condition)" [showIcon]="true"></p-calendar>
+            </span>
+          </div>
+
+          <div class="p-invalid text-align-left"
+               *ngIf="condition.get('secondValue').dirty && condition.get('secondValue').errors">
+            Second Value is required
+          </div>
+        </div>
+        <!-- END -->
+
+
+        <div class="field pt-5 col-2" style="display: inline-block" *ngIf="!detailView">
+          <button pButton type="button" class="p-button-sm p-button-borderless" iconPos="left" icon="fa-solid fa-trash-can"
+                  *ngIf="automationCondition.controls.length > 1" (click)="removeCondition(conditionIndex)"></button>
+
+          <button pButton type="button" class="p-button-sm p-button-borderless" iconPos="left" icon="fa-solid fa-plus"
+                  *ngIf="conditionIndex == (automationCondition.controls.length-1)"
+                  (click)="addConditionRow(conditionIndex)"></button>
+        </div>
+
+        <div class="col-10 adjoin-cond" *ngIf="conditionIndex != (automationCondition.controls.length-1)">
+          <div class="grid">
+
+            <div class="field-radiobutton col-1">
+              <div class="p-inputgroup">
+                <input type="radio" value="OR" id="or" formControlName="adjointCondition">
+                <span for="or">OR</span>
+              </div>
+            </div>
+
+            <div class="field-radiobutton col-1">
+              <div class="p-inputgroup">
+                <input type="radio" id="and" formControlName="adjointCondition"
+                       value="AND">
+                <span for="and">AND</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid p-fluid time-interval mt-4">
+    <div class="col-12">
+      <label class="subHeadingColour">{{detailView ? 'Send To Approves With Override Privilege' : '3.Send to approvers with override privilege'}} </label>
+    </div>
+    <div class="col-12">
+      <div class="field-checkbox">
+        <p-inputSwitch class="custom-checkbox" formControlName="sendToOverrider"></p-inputSwitch>
+<!--        <label class="subHeadingColour">Send To Overrider</label>-->
+      </div>
+    </div>
+  </div>
+
+  <div class="grid p-fluid time-interval mt-4">
+    <div class="col-12">
+      <label class="subHeadingColour">{{detailView ? '' : '4.'}} Set frequency of reminders</label>
+    </div>
+    <div class="col-12">
+      <label>Every</label>
+
+      <span class="p-float-label">
+        <p-inputNumber class="number" maxlength="3" min="1" formControlName="frequency" mode="decimal"
+                       [useGrouping]="false">
+        </p-inputNumber>
+      </span>
+
+      <label>day(s) &nbsp;&nbsp;&nbsp;&nbsp; End after number of occurrences</label>
+
+      <span class="p-float-label">
+        <p-inputNumber class="number" maxlength="3" min="0" formControlName="numberOfOccurrences" mode="decimal"
+                       [useGrouping]="false">
+        </p-inputNumber>
+      </span>
+    </div>
+  </div>
+
+  <div class="grid p-fluid mt-4" *ngIf="!detailView || (detailView && f.excludeUsers?.value?.length)">
+    <div class="col-12">
+      <label class="subHeadingColour">{{detailView ? '' : '5.'}} Exclude reminders for these users</label>
+    </div>
+    <div class="field col-3 mt-2">
+      <label class="label-wrapper" for="users">Select Exclude Users</label>
+      <span class="p-float-label">
+        <p-multiSelect inputId="dropdown" formControlName="excludeUsers" id="users" appendTo="body" optionValue="id"
+                       [options]="users.data" [filter]="true" optionLabel="name" class="document-type" virtualScrollItemSize="25"
+                       [virtualScroll]="users.data.length > 10" [optionDisabled]="detailView? 'id': 'inactive'"
+        ></p-multiSelect>
+      </span>
+    </div>
+  </div>
+
+  <div class="grid p-fluid escalate mt-2">
+    <div class="col-12">
+      <p-inputSwitch class="custom-checkbox" formControlName="escalatePresentBln"></p-inputSwitch>
+      <label class="subHeadingColour">Escalation</label>
+    </div>
+    <div class="col-12 mt-2" *ngIf="f.escalatePresentBln.value">
+      <label>Escalate to</label>
+      <span class="p-float-label">
+        <p-multiSelect inputId="dropdown" formControlName="escalateUsers" id="escalateUsers"
+                       [options]="excludeUsers.data" [filter]="true" optionLabel="name" class="document-type"
+                       (onChange)="changedUserSelection($event)" appendTo="body" optionValue="id" virtualScrollItemSize="25"
+                       [virtualScroll]="excludeUsers.data.length > 10" [optionDisabled]="detailView? 'id': 'inactive'">
+             <ng-template let-values pTemplate="item">
+                 <div class="grid">
+                     <div class="dropdown-list"
+                          [ngClass]="values.id == 0 ? ' dropdown-add': null">{{values.name}}
+                     </div>
+                 </div>
+             </ng-template>
+        </p-multiSelect>
+        <label for="users">Select Escalate Users*</label>
+         <div class="p-invalid text-align-left"
+              *ngIf="formGroup.get('escalateUsers').dirty && formGroup.get('escalateUsers').errors">
+        User is required
+      </div>
+      </span>
+      <label>reminder(s) &nbsp; every</label>
+      <p-inputNumber class="number" maxlength="3" min="0" formControlName="escalateFrequency" mode="decimal"
+                     [useGrouping]="false">
+      </p-inputNumber>
+      <label>day(s)</label>
+
+      <label>after</label>
+      <p-inputNumber class="number" maxlength="3" min="0" formControlName="escalateFromOccurrences" mode="decimal"
+                     [useGrouping]="false">
+      </p-inputNumber>
+
+    </div>
+  </div>
+</form>
+</div>
+
+<div class="grid footer pl-5 form-footer-button" *ngIf="!detailView">
+  <div class="col-6">
+    <div>
+      <button pButton type="button" (click)="resetForm()" label="Reset"
+              class="p-button-outlined p-button-sm" [disabled]="loading"
+              icon="fa-solid fa-rotate-right"></button>&nbsp;
+
+      <button pButton type="button"   class="p-button-sm" [disabled]="loading"
+              [icon]="loading ? 'pi pi-spin pi-spinner': isEdit ? 'pi pi-save' : 'pi pi-plus'"
+              iconPos="left" (click)="submitForm()" [label]="isEdit ? 'Save' : 'Create Reminder'"></button>
+    </div>
+  </div>
+</div>
+
+
+<!--Add User-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" appendTo="body" [modal]="true" position="right"
+           *ngIf="userPanel"
+           [(visible)]="userPanel">
+  <ng-template pTemplate="header">Create User</ng-template>
+  <app-add-user [panel]="true" (refreshTable)="getUsers()" *ngIf="userPanel"></app-add-user>
+</p-sidebar>

@@ -1,0 +1,33 @@
+[
+  {
+    "label": "Create Approval Workflow",
+    "id": "1",
+    "inactive": false
+  },
+  {
+    "label": "Send Email Notification",
+    "id": "2",
+    "inactive": false
+  },
+  {
+    "label": "Send User Notification",
+    "id": "3",
+    "inactive": false
+  },
+  {
+    "label": "Set Field Value",
+    "id": "4",
+    "inactive": false
+  },
+  {
+    "label": "Execute Automation",
+    "id": "5",
+    "inactive": false
+  },
+  {
+    "label": "Sync with Third-Party Application",
+    "id": "6",
+    "inactive": false
+  }
+]
+

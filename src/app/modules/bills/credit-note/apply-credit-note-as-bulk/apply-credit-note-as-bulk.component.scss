@@ -1,0 +1,54 @@
+@import '../../../../../scss/color';
+
+.form-outer-padding{
+  padding: 20px 20px 0 20px;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 1px !important;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-inputtext {
+  border: none;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-inputtext:focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown {
+  border: none;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown:focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown:not(.p-disabled).p-focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown.p-dropdown-open {
+  border: 1px solid;
+}
+
+.form-outer-padding{
+  padding: 20px 20px 0 20px;
+}
+
+.item-remove-button {
+  color: #9c9c9c;
+}
+
+.item-remove-button:hover {
+  cursor: pointer;
+}
+
+.notify-days-msg {
+  background: $tertiary-yellow;
+  color: $brown;
+  border: 1px solid $tertiary-yellow-light;
+  border-radius: 3px;
+  padding: 5px 10px;
+  margin: 0px 0px 29px;
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "action": "INBOX_SAVE_AND_CONTINUE",
+    "label": "Save And Continue",
+    "active": false,
+    "authCode": "BILL_SAVE_AS_APPROVED"
+  },
+  {
+    "action": "INBOX_SUBMIT_AND_CONTINUE",
+    "label": "Submit And Continue",
+    "active": false,
+    "authCode": "BILL_CREATE"
+  },
+  {
+    "action": "SAVE_AS_APPROVED_FROM_INBOX",
+    "label": "Save As Approved",
+    "active": false,
+    "authCode": "BILL_SAVE_AS_APPROVED"
+  },
+  {
+    "action": "SUBMIT_FOR_APPROVED_FROM_INBOX",
+    "label": "Submit For Approval",
+    "active": false,
+    "authCode": "BILL_CREATE"
+  }
+]

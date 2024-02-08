@@ -1,0 +1,42 @@
+@import "../../../../scss/color.scss";
+@import "../../../../scss/common-styles.scss";
+
+//automated workflow section styles
+
+.automated-workflow-config-preview{
+  @extend .previous-approver-chip-wrapper;
+
+  .level-number-style{
+    color: $white;
+    padding: 6px 9px 6px 9px;
+    background: $green;
+    border-radius: 25px;
+  }
+
+  .user-group-icon{
+    margin-left: 8px;
+    color: $secondary-black-grey;
+  }
+
+  .user-group-label{
+    margin-left: 4px;
+    color: $secondary-black-grey;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+  }
+
+  .fa-arrow-right{
+    padding-left: 2px;
+    padding-right: 2px;
+    color: $secondary-black-grey;
+  }
+
+  padding: 10px !important;
+  border: solid 1px $green;
+  position: initial;
+  display: inline-table;
+  margin-bottom: 5px;
+}

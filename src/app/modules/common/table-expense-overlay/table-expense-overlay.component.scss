@@ -1,0 +1,29 @@
+@import '../../../../scss/table-responsive';
+@import "../../../../scss/color.scss";
+
+.overlay-panel {
+  width: 310px;
+  height: 140px;
+  display: flex;
+  flex-direction: column;
+
+  .grid {
+    flex-grow: 1 !important;
+  }
+
+  .loading-wrapper {
+    position: relative;
+    text-align: center;
+    height: 80px;
+
+    em {
+      font-size: 50px;
+      opacity: 0.8 !important;
+      margin-top: 5%;
+      color: $green;
+    }
+  }
+  .full-width{
+    width: 140px;
+  }
+}

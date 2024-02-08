@@ -1,0 +1,59 @@
+<div #tr>
+  <div *ngIf="col.searchType == enums.MULTISELECT && col.filterShow" class="p-fluid">
+    <p-multiSelect [options]="col.dropdownValues" [virtualScroll]="true" virtualScrollItemSize="25"
+                   appMultiselectFocus #multiSelect
+                   placeholder="Any" appendTo="body" optionLabel="name" optionValue="id" [(ngModel)]="col.value"
+                   (onChange)="dt.filter($event.value, col.field, 'contains')" (click)="$event.stopPropagation()">
+      <ng-template let-option pTemplate="item">
+        <div class="p-multiselect-representative-option">
+          <span class="ml-1">{{option.name}}</span>
+        </div>
+      </ng-template>
+    </p-multiSelect>
+  </div>
+
+  <div *ngIf="col.searchType == enums.INPUT && col.filterShow" class="p-fluid">
+    <input pInputText type="text" [(ngModel)]="col.value" [placeholder]="col.placeholder" autocomplete="cc-csc"
+           (keyup)="dt.filter($event.target.value, col.field, 'contains')" class="p-column-filter"
+           (click)="$event.stopPropagation()">
+  </div>
+
+
+  <div *ngIf="col.searchType == enums.NUMERIC && col.filterShow" class="p-fluid">
+    <div class="p-inputgroup">
+      <input type="text" pInputText placeholder="0.00" #val1
+             [options]="{prefix: '', thousands: '', decimal: '.', allowNegative: true}"
+             [(ngModel)]="col.value" (click)="$event.stopPropagation()"
+             currencyMask (keyup)="tableSupportBase.filterRange(dt, val1.value, val2.value, col.field, $event)">
+
+      <span class="p-inputgroup-addon field-clear-button">< ></span>
+
+      <input type="text" pInputText placeholder="0.00" #val2
+             [options]="{prefix: '', thousands: '', decimal: '.', allowNegative: true}"
+             [(ngModel)]="col.value2" (click)="$event.stopPropagation()"
+             currencyMask (keyup)="tableSupportBase.filterRange(dt, val1.value, val2.value, col.field, $event)">
+    </div>
+  </div>
+
+  <div *ngIf="col.searchType == enums.NUMBER && col.filterShow" class="p-fluid" [style]="{'text-align': 'center'}">
+    <input pInputText pKeyFilter="money" type="number" [placeholder]="col.placeholder" [(ngModel)]="col.value"
+           (input)="dt.filter($event.target.value, col.field, 'contains')" class="p-column-filter"
+           (click)="$event.stopPropagation()">
+  </div>
+
+  <div *ngIf="col.searchType == enums.DATE && col.filterShow" class="p-fluid" [style]="{'text-align': 'center'}">
+    <p-calendar (onSelect)="tableSupportBase.onDateSelect(dt, selectedLaw.value, col.field)" #selectedLaw
+                (onClearClick)="dt.filter('', col.field, 'contains')" [(ngModel)]="col.value"
+                appendTo="body" name="{{col.fieldID}}" selectionMode="range" [numberOfMonths]="2"
+                [showButtonBar]="true" styleClass="p-column-filter" [placeholder]="col.placeholder"
+                [readonlyInput]="true" dateFormat="mm-dd-yy" (click)="$event.stopPropagation()"></p-calendar>
+  </div>
+
+  <div *ngIf="col.searchType == enums.DROPDOWN && col.filterShow" class="p-fluid">
+    <p-dropdown appendTo="body" optionLabel="name" optionValue="id" [showClear]="true"
+                [virtualScroll]="col.dropdownValues?.length > 25" virtualScrollItemSize="25" [filter]="true"
+                [options]="col.dropdownValues" [(ngModel)]="col.value"
+                (onChange)="dt.filter($event.value, col.field, 'equals')"
+                placeholder="Any" (click)="$event.stopPropagation()"></p-dropdown>
+  </div>
+</div>

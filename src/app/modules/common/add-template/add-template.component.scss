@@ -1,0 +1,56 @@
+@import "../../../../scss/color.scss";
+
+.change-cursor:hover {
+  cursor: pointer;
+}
+
+.change-input-color:focus {
+  border-color: $green;
+}
+.attachment{
+  cursor: pointer;
+  z-index: 0;
+  background-color: $tertiary-light-grey;
+}
+.attachment-pdf{
+  z-index: 1;
+}
+
+.discount-due-date{
+  width: 100% !important;
+}
+
+.chip-label{
+  position: absolute;
+  pointer-events: none;
+  margin-left: 0.5rem;
+  color: #b2b2b2;
+  transition-duration: 0.2s;
+  margin-top: -1.4em;
+  transition-property: all;
+  transition-timing-function: ease;
+  line-height: 1;
+  font-size: 12px;
+}
+.email-description{
+  font-size: 12px;
+  color: #b2b2b2;
+}
+
+.full-width{
+  width: 100% !important;
+}
+.topic{
+  color: $green;
+}
+
+.top-btn {
+  color: #A3ACB0;
+  border-color: #A3ACB0;
+}
+
+.form-margin{
+  margin: 23px 23px 0;
+}
+
+

@@ -1,0 +1,100 @@
+<div class="grid">
+  <div class="col-12" *ngIf="isDc">
+    <span [style]="'color: #fbc02d'"><i
+      class="pi pi-exclamation-circle"></i> Please use desktop connector to configure</span>
+  </div>
+  <div *ngIf="!isDc" class="col-12">
+    <div class="pull-right">
+      <button pButton label="Configuration" (close)="configurationViewBc = false; configurationViewQb = false" (click)="configurations()"
+              class="p-button-sm"></button>
+    </div>
+  </div>
+</div>
+
+
+<p-tabView styleClass="tabview-custom">
+  <p-tabPanel>
+    <ng-template pTemplate="header">
+      <span class="custom-span">Processing (Push)</span>
+    </ng-template>
+    <app-account-processing [systemId]="systemId"></app-account-processing>
+    <ng-template pTemplate="content">
+    </ng-template>
+  </p-tabPanel>
+  <p-tabPanel>
+    <ng-template pTemplate="header">
+      <span class="custom-span">Pending (Push)</span>
+    </ng-template>
+    <app-account-pending [systemId]="systemId"></app-account-pending>
+    <ng-template pTemplate="content">
+    </ng-template>
+  </p-tabPanel>
+  <p-tabPanel>
+    <ng-template pTemplate="header">
+      <span class="custom-span">Completed (Push)</span>
+    </ng-template>
+    <app-account-completed [systemId]="systemId"></app-account-completed>
+    <ng-template pTemplate="content">
+    </ng-template>
+  </p-tabPanel>
+  <p-tabPanel>
+    <ng-template pTemplate="header">
+      <span class="custom-span">Failed (Push)</span>
+    </ng-template>
+    <app-account-failed [systemId]="systemId"></app-account-failed>
+    <ng-template pTemplate="content">
+    </ng-template>
+  </p-tabPanel>
+  <p-tabPanel>
+    <ng-template pTemplate="header">
+      <span class="custom-span">Completed (Pull)</span>
+    </ng-template>
+    <app-account-completed-pull [systemId]="systemId"></app-account-completed-pull>
+    <ng-template pTemplate="content">
+    </ng-template>
+  </p-tabPanel>
+  <p-tabPanel>
+    <ng-template pTemplate="header">
+      <span class="custom-span">Failed (Pull)</span>
+    </ng-template>
+    <app-account-failed-pull [systemId]="systemId"></app-account-failed-pull>
+    <ng-template pTemplate="content">
+    </ng-template>
+  </p-tabPanel>
+</p-tabView>
+
+
+<p-sidebar styleClass="p-sidebar-sm" [modal]="true" [dismissible]="true" position="right" class="overflow-side-bar"
+           *ngIf="configurationViewQb" [(visible)]="configurationViewQb">
+  <ng-template pTemplate="header">PaperTrl Credentials</ng-template>
+  <app-qb-configurations [systemId]="systemId" [systemName]="systemName" *ngIf="configurationViewQb"
+                         [statusOfSystemButton]="statusOfSystemButton" [connectionTrigger]="connectionTrigger"></app-qb-configurations>
+</p-sidebar>
+
+<p-sidebar styleClass="p-sidebar-sm" [modal]="true" [dismissible]="true" position="right" class="overflow-side-bar"
+           *ngIf="configurationViewBc" [(visible)]="configurationViewBc">
+  <ng-template pTemplate="header">PaperTrl Credentials</ng-template>
+  <app-bc-configurations [systemId]="systemId" [systemName]="systemName" *ngIf="configurationViewBc"
+                         [statusOfSystemButton]="statusOfSystemButton" [connectionTrigger]="connectionTrigger"></app-bc-configurations>
+</p-sidebar>
+
+<p-sidebar styleClass="p-sidebar-sm" [modal]="true" [dismissible]="true" position="right" class="overflow-side-bar"
+           *ngIf="configurationViewBcc" [(visible)]="configurationViewBcc">
+  <ng-template pTemplate="header">PaperTrl Credentials</ng-template>
+  <app-bcc-configurations [systemId]="systemId" [systemName]="systemName" *ngIf="configurationViewBcc"
+                         [statusOfSystemButton]="statusOfSystemButton" [connectionTrigger]="connectionTrigger"></app-bcc-configurations>
+</p-sidebar>
+
+<p-sidebar styleClass="p-sidebar-sm" [modal]="true" [dismissible]="true" position="right" class="overflow-side-bar"
+           *ngIf="configurationViewQBb" [(visible)]="configurationViewQBb">
+  <ng-template pTemplate="header">PaperTrl Credentials</ng-template>
+  <app-bb-configuration [systemId]="systemId" [systemName]="systemName" *ngIf="configurationViewQBb"
+                         [statusOfSystemButton]="statusOfSystemButton" [connectionTrigger]="connectionTrigger"></app-bb-configuration>
+</p-sidebar>
+
+<p-sidebar styleClass="p-sidebar-sm" [modal]="true" [dismissible]="true" position="right" class="overflow-side-bar"
+           *ngIf="configurationViewDno" [(visible)]="configurationViewDno">
+  <ng-template pTemplate="header">PaperTrl Credentials</ng-template>
+  <app-dno-configurations [systemId]="systemId" [systemName]="systemName" *ngIf="configurationViewDno"
+                        [statusOfSystemButton]="statusOfSystemButton" [connectionTrigger]="connectionTrigger"></app-dno-configurations>
+</p-sidebar>

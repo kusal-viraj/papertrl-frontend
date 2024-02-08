@@ -1,0 +1,29 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "roleId": "001",
+      "roleName": "System Administrator",
+      "createdBy": "papertrl",
+      "createDate": "18/12/2020",
+      "status": "A"
+    },
+    {
+      "id": 2,
+      "roleId": "002",
+      "roleName": "Account Payable",
+      "createdBy": "admin",
+      "createDate": "18/12/2020",
+      "status": "A"
+    },
+    {
+      "id": 3,
+      "roleId": "003",
+      "roleName": "Account Receivable",
+      "createdBy": "admin",
+      "createDate": "18/12/2020",
+      "status": "I"
+    }
+  ],
+  "totalRecords": 3
+}

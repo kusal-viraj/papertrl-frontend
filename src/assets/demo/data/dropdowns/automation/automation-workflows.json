@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "label": "Workflow 1"
+  },
+  {
+    "id": "2",
+    "label": "Workflow 2"
+  },
+  {
+    "id": "3",
+    "label": "Workflow 3"
+  },
+  {
+    "id": "4",
+    "label": "Workflow 4"
+  },
+  {
+    "id": "5",
+    "label": "Workflow 5"
+  },
+  {
+    "id": "6",
+    "label": "Workflow 6"
+  }
+]

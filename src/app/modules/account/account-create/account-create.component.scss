@@ -1,0 +1,107 @@
+@import "../../../../scss/color.scss";
+
+@media only screen and (max-width: 1350px) and (min-width: 1201px){
+  .label-responsive{
+    font-size: 13px;
+  }
+}
+
+
+@media only screen and (max-width: 356px){
+  .button-responsive-mobile{
+    width: 100%;
+  }
+}
+
+.account-responsive-dropdown {
+  .dropdown-list {
+    text-overflow: ellipsis;
+    max-width: 205px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .p-dropdown-item{
+    text-overflow: ellipsis;
+    max-width: 205px !important;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+
+
+
+
+@media only screen and (max-width: 1366px) {
+  .account-responsive-dropdown {
+    .dropdown-list {
+      max-width: 150px;
+    }
+    .p-dropdown-item{
+      max-width: 150px;
+    }
+  }
+}
+
+@media only screen and (max-width: 1440px) {
+  .account-responsive-dropdown {
+    .dropdown-list {
+      max-width: 150px;
+    }
+    .p-dropdown-item{
+      max-width: 150px;
+    }
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .account-responsive-dropdown {
+    .dropdown-list {
+      max-width: 200px;
+    }
+    .p-dropdown-item{
+      max-width: 200px;
+    }
+  }
+  .purchasing-account-wrapper{
+    width: 27% !important;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .account-responsive-dropdown {
+    .dropdown-list {
+      max-width: 525px;
+    }
+    .p-dropdown-item{
+      max-width: 525px;
+    }
+  }
+  .purchasing-account-wrapper{
+    width: 27% !important;
+  }
+}
+
+.topic{
+  color: $green;
+}
+
+
+.purchasing-account-wrapper{
+  width: 15%;
+}
+
+.purchasing-account-edit-wrapper{
+  width: 50%;
+}
+
+.account-create{
+  position: fixed;
+  width: 100.5%;
+}
+
+
+.drawer-content {
+  min-height: calc(100% - 98px);
+}
+
+

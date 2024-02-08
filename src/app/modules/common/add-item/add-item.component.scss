@@ -1,0 +1,389 @@
+@import '../../../../scss/table-responsive';
+.download-link{
+  text-align: center;
+  color: $green;
+  font-weight: bolder;
+}
+
+
+.margin-top {
+  margin-top: 2% !important;
+}
+
+.margin-top-grid{
+  margin-top: 3% !important;
+}
+
+.custom-label {
+  color: #73828A;
+}
+
+.costume-checkbox{
+  left: 0.5rem;
+  color: #b2b2b2;
+  transition-duration: 0.2s;
+  vertical-align: super;
+}
+
+.category-dropdown-add {
+  color: $green;
+}
+
+.uom-dropdown-add{
+  color: $green;
+}
+
+.vendor-dropdown-add{
+  color: $green;
+}
+
+.vendor-dropdown-list{
+  padding-top: 10px;
+  margin-right: 25px;
+  padding-left: 5px;
+}
+
+.vendor-dropdown-icon{
+  right: 10px;
+  padding-top: 10px;
+  position: absolute;
+  z-index: 1;
+}
+
+.uom-dropdown-list {
+  padding-top: 10px;
+  margin-right: 25px;
+  padding-left: 5px;
+}
+.category-dropdown-list {
+  padding-top: 10px;
+  margin-right: 25px;
+  padding-left: 5px;
+}
+
+.uom-dropdown-icon{
+  right: 10px;
+  padding-top: 10px;
+  position: absolute;
+  z-index: 1;
+}
+
+
+.category-dropdown-icon{
+  right: 10px;
+  padding-top: 10px;
+  position: absolute;
+  z-index: 1;
+}
+
+@media only screen and (max-width: 346px){
+  .button-responsive-mobile{
+    width: 100%;
+  }
+}
+
+.drop-down-width ::ng-deep .p-dropdown .p-dropdown-items .p-dropdown-item{
+  max-width: 546px;
+  overflow: auto;
+}
+
+.upload-text{
+  color: #73828A;
+  font-size: .9rem;
+  font-weight: bold;
+  align-self: flex-end;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.avatar-upload{
+  min-width:100px;
+  .avatar-edit input {
+    display: none;
+  }
+}
+
+//upload-image -specific styles
+.img-fluid-remover{
+  min-width:100px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  //padding-left: 13px;
+}
+
+.taxable-check{
+  margin-top: 10%;
+}
+
+.avatar-upload .avatar-preview {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.avatar-upload .avatar-preview > div {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.profile-picture-create {
+  justify-content: center;
+  align-items: center;
+  top: 35px;
+  margin-left: -33px;
+}
+
+.profile-picture-edit {
+  justify-content: center;
+  align-items: center;
+  top: 35px;
+}
+
+
+.square {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.addImage{
+  text-align: center;
+  color: $green;
+  font-weight: bolder;
+  cursor:pointer;
+  text-decoration: underline;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -18px;
+}
+
+
+.vertical-divider{
+  color: aliceblue;
+  /* background: transparent; */
+  opacity: 0.1;
+}
+
+p-dropdown{
+  width: 100%;
+}
+
+.pi-image{
+  font-size: 27px;
+  color: #73828A;
+}
+
+.upload-img{
+  position: absolute;
+  left: 35%;
+  top: 30%;
+  font-size: 35px;
+  color: #00968891;
+}
+
+.upload-img-wrapper{
+  position: relative;
+  border-radius: 5px;
+  cursor: pointer;
+  &:hover{
+    border:1px solid #00968891;
+  }
+}
+
+.radio-button-text{
+}
+
+.item-responsive-dropdown {
+  .dropdown-list {
+    text-overflow: ellipsis;
+    max-width: 330px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .p-dropdown-item{
+    text-overflow: ellipsis;
+    max-width: 330px !important;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+
+
+
+
+@media only screen and (max-width: 1366px) {
+  .item-responsive-dropdown {
+    .dropdown-list {
+      max-width: 170px;
+    }
+    .p-dropdown-item{
+      max-width: 170px;
+    }
+  }
+}
+
+@media only screen and (max-width: 1440px) {
+  .item-responsive-dropdown {
+    .dropdown-list {
+      max-width: 225px;
+    }
+    .p-dropdown-item{
+      max-width: 225px;
+    }
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .item-responsive-dropdown {
+    .dropdown-list {
+      max-width: 200px;
+    }
+    .p-dropdown-item{
+      max-width: 200px;
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .item-responsive-dropdown {
+    .dropdown-list {
+      max-width: 525px;
+    }
+    .p-dropdown-item{
+      max-width: 525px;
+    }
+  }
+}
+
+.sales-information-wrapper{
+  //margin-top: 5px;
+}
+
+.btn-behaviour:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: bold !important;
+}
+
+.clear-button:hover {
+  background-color: #D0D5D8;
+  opacity: 1;
+}
+
+.clear-button {
+  background-color: #D0D5D8;
+  opacity: 1;
+}
+
+.item-remove-button {
+  color: #9c9c9c;
+  margin-top: 0.6rem;
+}
+
+.item-remove-button:hover {
+  cursor: pointer;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 1px !important;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-inputtext {
+  border: none;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-inputtext:focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown {
+  border: none;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown:focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown:not(.p-disabled).p-focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown.p-dropdown-open {
+  border: 1px solid;
+}
+
+.item-edit-label-wrapper{
+  size: 16px;
+  color: $green;
+  font-weight: 600;
+}
+
+.item-master-form-wrapper{
+  //padding: 37px !important;
+}
+
+.button-footer-wrapper {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: #ffffff;
+}
+
+.item-remove-button-hide {
+  color: #9c9c9c;
+  display: none;
+}
+
+.purchase-info-wrapper{
+  margin-left: 1px;
+}
+
+.switch-wrapper{
+  margin-left: -10px;
+}
+
+.dialog-item-view-wrapper ::ng-deep .p-dialog .p-dialog-header {
+  border-bottom: 0 none;
+  background: #ffffff;
+  color: #73828A !important;
+  padding: 0.5rem 1rem 1rem 1rem !important;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+}
+
+.dialog-item-view-wrapper ::ng-deep .p-dialog .p-dialog-header .p-dialog-title {
+  font-size: 14px !important;
+}
+
+.dialog-item-view-wrapper ::ng-deep .p-dialog .p-dialog-content {
+  padding: 0 1rem 1rem 1rem !important;
+}
+
+
+.dialog-item-view-wrapper ::ng-deep .p-dialog .p-dialog-header .p-dialog-header-icon:last-child {
+  margin-right: 0;
+  margin-left: 5px !important;
+}
+
+.expense-account-wrapper{
+  width: 100%;
+}
+
+.drawer-content {
+  min-height: calc(100% - 105px);
+}
+
+.qty-field-alignment {
+  text-align: -webkit-right;
+}

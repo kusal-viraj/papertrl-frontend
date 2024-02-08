@@ -1,0 +1,363 @@
+<div class="field pt-2 pl-4  form-header grid">
+  <div class="col-6">
+    <h5 class="subHeadingColour" *ngIf="isCreate">Create Credit Note</h5>
+    <h5 class="subHeadingColour" *ngIf="isEdit && creditNoteStatus !== enum.STATUS_DRAFT">Edit Credit Note</h5>
+    <h5 class="subHeadingColour" *ngIf="isEdit && creditNoteStatus === enum.STATUS_DRAFT">Edit Draft</h5>
+  </div>
+  <div class="col-6 text-right">
+    <div class="fa fa-close side-drawer-icon"
+         (click)="closeCreditNoteForm()"></div>
+  </div>
+</div>
+
+<form [formGroup]="createCreditNoteForm" autocomplete="off" class="form-outer-wrapper pt-5">
+
+  <div [class]="'grid p-fluid alignment-with-item-table'">
+
+    <div class="field" [ngClass]="'field col-12 lg:col-3'">
+      <label class="label-wrapper" for="vendor">Select Customer*</label>
+      <span class="p-float-label">
+              <span class="p-float-label p-fluid">
+          <p-dropdown [virtualScroll]="customerList.data.length > 20" virtualScrollItemSize="25"
+                      [options]="customerList.data" id="vendor" [showClear]="true"
+                      (onChange)="changeCustomerList(createCreditNoteForm.get('tenantId').value)"
+                      formControlName="tenantId" optionValue="id" optionLabel="name"
+                      [autoDisplayFirst]="false" [filter]="true">
+           </p-dropdown>
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="createCreditNoteForm.get('tenantId').dirty && createCreditNoteForm.get('tenantId').errors">
+        Customer is required
+      </div>
+      </span>
+    </div>
+
+    <div class="field" [ngClass]="'field col-12 lg:col-3'">
+      <label class="label-wrapper" for="poNumbId">PO Number</label>
+        <span class="p-float-label">
+            <p-dropdown [virtualScroll]="customerRelatedPoList.data.length>20" virtualScrollItemSize="25"
+                        inputId="poNumbId" formControlName="poId" id="poNumbId"
+                        [autoDisplayFirst]="false" optionValue="id"
+                        [showClear]="true" (onChange)="changePoList($event)"
+                        appendTo="body"
+                        [options]="customerRelatedPoList.data" optionLabel="name"
+                        [filter]="true"></p-dropdown>
+        </span>
+    </div>
+
+    <div class="field" [ngClass]="'field col-12 lg:col-3'">
+      <label class="label-wrapper" for="creditNoteNo">Credit Note No*</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input formControlName="creditNoteNo" id="creditNoteNo" type="text"
+                            (keyup)="removeSpaces.clearSpace(createCreditNoteForm, 'creditNoteNo')"
+                            pInputText>
+
+                   </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="createCreditNoteForm.get('creditNoteNo').dirty && createCreditNoteForm.get('creditNoteNo').hasError('required')">
+        Credit Note No is required
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="createCreditNoteForm.get('creditNoteNo').hasError('maxlength')">
+        Credit Note
+        Number must be less than 50 characters
+      </div>
+    </div>
+
+    <div class="field" [ngClass]="'field col-12 lg:col-3'">
+      <label class="label-wrapper" for="creditNoteDate">Credit Note Date*</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+              <p-calendar formControlName="creditNoteDate" id="creditNoteDate"
+                          readonlyInput="true" [showButtonBar]="true"
+                          [showIcon]="true"></p-calendar>
+            </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="createCreditNoteForm.get('creditNoteDate').dirty && createCreditNoteForm.get('creditNoteDate').hasError('required')">
+        Credit Note Date is required
+      </div>
+    </div>
+
+    <div class="field" [ngClass]="'field col-12 lg:col-3'" *ngIf="createCreditNoteForm.get('tenantId').value">
+      <label class="label-wrapper" for="customerEmail">Customer Contact Email</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input formControlName="customerEmail" id="customerEmail" type="text" [readOnly]="true"
+                            pInputText>
+                   </span>
+      </div>
+      <div class="p-invalid  text-align-left">
+        <div *ngIf="createCreditNoteForm.controls['customerEmail'].hasError('customerEmail')">Email must be a valid
+          email address
+        </div>
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="createCreditNoteForm.get('customerEmail').hasError('maxlength')">
+        Email must be less than 150 characters
+      </div>
+    </div>
+
+    <div class="field" [ngClass]="'field col-12 lg:col-6'">
+      <label class="label-wrapper" for="creditNoteNo">Comment</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <textarea formControlName="comment" id="comment" type="text" rows="1" maxlength="500"
+                               pInputTextarea></textarea>
+                   </span>
+      </div>
+    </div>
+
+
+  </div>
+
+  <div class="grid p-fluid">
+    <div class="col-12">
+      <div class="table-scroll alignment-with-item-table">
+        <p-table responsiveLayout="scroll" [value]="lineItemMainTable.controls" scrollable="true" scrollHeight="210px"
+                 [style]="{width:'auto'}"
+                 styleClass="p-datatable-gridlines p-datatable-sm item-table-wrapper">
+
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col [style]="{width:'25px'}">
+              <col [style]="{width:'100px'}">
+              <col [style]="{width:'100px'}">
+              <col [style]="{width:'50px'}">
+              <col [style]="{width:'100px'}">
+              <col [style]="{width:'100px'}">
+              <col [style]="{width:'25px'}">
+            </colgroup>
+          </ng-template>
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="thead-style detail-table-header-left" id="no">#</th>
+              <th class="thead-style detail-table-header-left" id="itemNumber1">Item Number</th>
+              <th class="thead-style detail-table-header-left" id="description">Description</th>
+              <th class="thead-style detail-table-header-right" id="qty1">Return Qty*</th>
+              <th class="thead-style detail-table-header-right" id="price1">Cost*</th>
+              <th class="thead-style detail-table-header-right" id="amount1">Line Amount</th>
+              <th class="thead-style detail-table-header-left" id="empty1" *ngIf="!poId"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-i="rowIndex" let-item formArrayName="creditNoteItemDetails">
+            <tr id="tr_{{i}}" [formGroupName]="i" [pEditableRow]="item" (click)="onLItemClick(i)">
+              <td style="text-align: center"><label>{{i + 1}}</label></td>
+
+              <td>
+                <input formControlName="itemNumber" (keydown)="navigate($event,'itemNumber',  i)"
+                       placeholder="Item Number" name="itemNumber" id="{{'itemNumber' + i}}"
+                       (focusout)="calculateAmount(i)" (keyup)="calculateAmount(i)"
+                       type="text" pInputText>
+              </td>
+
+              <td>
+                <div class="p-inputgroup">
+                  <input formControlName="description" (keydown)="navigate($event,'description_',  i)"
+                         placeholder="Description" name="description" id="{{'description_' + i}}"
+                         (focusout)="calculateAmount(i)" [readOnly]="poId" maxlength="500"
+                         (keyup)="removeFieldSpace(lineItemMainTable.controls[i].get('description'));
+                          calculateAmount(i)"
+                         type="text" pInputText>
+                </div>
+              </td>
+
+              <td>
+                <div class="p-inputgroup">
+                  <input formControlName="qty" name="qty" placeholder="Return Qty" id="{{'qty_' + i}}" type="text"
+                         class="qty-field-alignment"
+                         (keydown)="navigate($event,'qty_',  i); calculateAmount(i)" (keyup)="calculateAmount(i)"
+                         (paste)="calculateAmount(i);" autocomplete="off" maxlength="12"
+                         pInputText appDecimalNumber>
+                </div>
+              </td>
+
+
+              <td>
+                <div class="p-inputgroup">
+                  <input pInputText type="text" name="unitPrice" placeholder="Cost" autocomplete="off"
+                         maxlength="19" [readOnly]="poId"
+                         id="{{'cost' + i}}" (keydown)="navigate($event,'cost',  i)"
+                         (keyup)="calculateAmount(i)"
+                         currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' , allowNegative:false}"
+                         formControlName="unitPrice">
+                </div>
+              </td>
+
+              <td>
+                <div class="p-inputgroup">
+                  <input pInputText type="text" (keydown)="navigate($event,'amount',  i)"
+                         name="amount" id="{{'amount' + i}}" currencyMask [autocomplete]="false"
+                         [options]="{ prefix: '', thousands: ',', decimal: '.',allowNegative:false}" [readOnly]="true"
+                         value="{{lineItemMainTable.controls[i].value.amount | currency: '':''}}"
+                         placeholder="0.00" class="amounts"
+                         formControlName="amount">
+                </div>
+              </td>
+
+              <td class="text-center" *ngIf="!poId">
+                <em class="fa fa-trash delete-icon-wrapper" style="margin-top: 0.5rem" *ngIf="lineItemMainTable.length > 1"
+                    [class.p-disabled]="poId"
+                    (click)="removeItem(i); calculateAmount(i)"></em>
+              </td>
+
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="summary">
+            <div class="text-right">
+                <span class="hyperlink text-right p-text-normal"
+                      (click)="lineItemMainTable.reset(); calculateAmount(itemIndex)">Clear Lines
+                                </span> &nbsp;|&nbsp;
+              <span class="hyperlink text-right p-text-normal"
+                    (click)="addItem()">Add Line
+              </span>
+            </div>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="grid alignment-with-item-table">
+    <div class="field col-offset-9 col-1 mb-2 amount-label-wrapper">
+      <label for="subTotal"><b>Subtotal</b></label>
+    </div>
+    <div class="field mb-0 col-2 credit-amount-field-wrapper">
+      <input formControlName="subTotal" id="subTotal" type="text"
+             placeholder="0.00"
+             currencyMask [readOnly]="true" pInputText
+             [options]="{ prefix: '', thousands: ',', decimal: '.'}" class="amount-field-wrapper">
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="field col-offset-9 col-1 mb-2 amount-label-wrapper">
+      <label for="taxAmount"><b>Tax Amount</b></label>
+    </div>
+    <div class="field mb-0 col-2 credit-amount-field-wrapper">
+      <input formControlName="taxAmount" id="taxAmount" type="text"
+             placeholder="0.00"
+             currencyMask pInputText maxlength="19" (click)="calculateTotal()"
+             (keyup)="calculateTotal()"
+             [options]="{prefix: '', thousands: ',', decimal: '.', allowNegative:false}" class="tax-amount-wrapper">
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="field col-offset-9 col-1 mb-2 amount-label-wrapper">
+      <label for="creditTotal"><b>Total Credit</b></label>
+    </div>
+    <div class="field mb-0 col-2 credit-amount-field-wrapper">
+      <input formControlName="creditTotal" id="creditTotal" type="text"
+             placeholder="0.00"
+             currencyMask [readOnly]="true" pInputText
+             [options]="{prefix: '', thousands: ',', decimal: '.'}" class="amount-field-wrapper">
+    </div>
+  </div>
+
+
+  <div *ngIf="(isEdit) && creditNoteAttachments.length>0" class="grid">
+    <div class="col-6">
+      <h6 class="subHeadingColour">Files Attached</h6>
+      <div>
+        <p-table responsiveLayout="scroll" [value]="creditNoteAttachments" scrollable="true" scrollHeight="150px"
+                 styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col style="width: 150px">
+              <col style="width:100px">
+              <col style="width:40px">
+            </colgroup>
+          </ng-template>
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="thead-style detail-table-header-left" id="rName">File Name</th>
+              <th class="thead-style detail-table-header-left" id="fieldName">Field Name</th>
+              <th class="thead-style detail-table-header-left" id="action">Action</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-i="rowIndex" let-item>
+            <tr>
+
+              <td class="file-name-wrapper">
+                <label> {{item.fileName}}</label>
+              </td>
+
+              <td [style]="'height : 30px'">
+                <label> {{item.fieldName}}</label>
+              </td>
+
+              <td class="text-center">
+                <em (click)="downloadCreditNoteAttachment(item)"
+                    [class]="item.loading ? 'pi pi-spin pi-spinner':'fa fa-download download-icon'"></em> &nbsp;
+                <em (click)="deleteCreditNoteAttachment(item, i)"
+                    class="fa fa-trash download-icon"></em>
+              </td>
+
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="col-12 dropzone-content-wrapper">
+    <ngx-dropzone accept="application/pdf,image/png,image/jpeg,image/jpg" (change)="onSelect($event)"
+                  class="drop-zone-style custom-dropzone-wrapper">
+       <ngx-dropzone-label class="dp-zone-big-text-wrapper p-text-normal">Drop File(s) Here To Upload <br><br>
+       <span class="dp-zone-small-text-wrapper p-text-normal">(We only accept PDF, JPG JPEG and PNG formats, all the other formats will be ignored)</span>
+      </ngx-dropzone-label>
+      <ngx-dropzone-preview class="preview-file" *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+        <ngx-dropzone-label class="uploaded-file-name">{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+      </ngx-dropzone-preview>
+    </ngx-dropzone>
+  </div>
+
+</form>
+<div class="grid footer form-footer-button">
+  <div class="col-12 button-set-wrapper">
+    <div class="pull-right">
+      <button pButton type="button" (click)="resetCreditNoteForm()" label="Reset"
+              class="p-button-outlined p-button-sm" icon="fa-solid fa-rotate-right"></button>
+
+      <button pButton type="button" (click)="updateCreditNote(createCreditNoteForm.value)"
+              *ngIf="isEdit && privilegeService.isAuthorized(appAuthorities.VENDOR_CREDIT_NOTE_EDIT)"
+              [icon]="isUpdate ? 'pi pi-spin pi-spinner': 'pi pi-save'"
+              [disabled]="isUpdate"
+              class="p-button-sm ml-2 p-button-sm" iconPos="left"
+              label="Save"></button>
+
+      <button pButton type="button" (click)="creditNoteCreateAndSendToCustomer(createCreditNoteForm.value)"
+              *ngIf="!isEdit && privilegeService.isAuthorized(appAuthorities.CREDIT_NOTE_SEND_TO_CUSTOMER)"
+              [icon]="isSendToCustomer ? 'pi pi-spin pi-spinner': 'fa-solid fa-paper-plane'"
+              [disabled]="isSendToCustomer"
+              class="p-button-sm ml-2 p-button-sm" iconPos="left"
+              label="Send to Customer"></button>
+
+      <button pButton type="button" (click)="saveAndDraft(createCreditNoteForm.value)"
+              *ngIf="!isEdit && privilegeService.isAuthorized(appAuthorities.CREDIT_NOTE_SAVE_AS_DRAFT)"
+              class="p-button-sm ml-2" iconPos="left" label="Save As Draft"
+              [disabled]="isSaveAndDraft"
+              [icon]="isSaveAndDraft ? 'pi pi-spin pi-spinner': 'fa fa-file'">
+      </button>
+
+    </div>
+  </div>
+</div>
+
+<p-confirmDialog #cd key="creditNoteFromVendor" appendTo="body" header="Are you sure?"
+                 icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cd.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, Delete it!"
+            (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

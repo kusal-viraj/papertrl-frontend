@@ -1,0 +1,129 @@
+<form [formGroup]="billPaymentForm" class="p-3 side-bar-drawer-content bill-payment-form" (submit)="createPayment()" autocomplete="off">
+  <div class="grid p-fluid">
+
+    <div class="detail-field field col-12">
+      <label>Vendor</label>
+      <div>{{f.vendorName.value}}</div>
+    </div>
+
+    <div class="detail-field field col-12">
+      <label>Bill Number</label>
+      <div>{{f.billNo.value}}</div>
+    </div>
+
+    <div class="detail-field field col-12 mb-2">
+      <label>Bill Date</label>
+      <div>{{f.billDateStr.value}}</div>
+    </div>
+
+    <div class="detail-field field col-12">
+      <label>Bill Amount</label>
+      <div>{{f.billAmt.value}}</div>
+    </div>
+
+    <div class="detail-field field col-12 mb-3">
+      <label>Balance To Be Paid</label>
+      <div>{{commonUtil.detailViewIsDash(f.balanceAmount.value, true) | number : '1.2-2'}}</div>
+    </div>
+
+    <div [ngClass]="isPanel ? 'field col-12' : 'field col-12 lg:col-3 xl:col-2 md:col-6 sm:col-6'">
+      <span>
+         <label class="label-wrapper" for="paymentType">Select Payment Type* </label>
+        <p-dropdown [virtualScroll]="billPaymentUtility.paymentType.data.length >20" virtualScrollItemSize="25"
+                    inputId="dropdown"
+                    formControlName="paymentTypeId" id="paymentType" [filter]="true" showClear="true"
+                    [autoDisplayFirst]="false" [options]="billPaymentUtility.paymentType.data"
+                    optionLabel="name" optionValue="id">
+
+        </p-dropdown>
+      </span>
+
+      <div class="p-invalid text-align-left"
+           *ngIf="billPaymentForm.get('paymentTypeId').dirty && billPaymentForm.get('paymentTypeId').errors">
+        Payment Type is required
+      </div>
+    </div>
+
+    <div [ngClass]="isPanel ? 'field col-12' : 'field lg:col-3 col-12 xl:col-2 md:col-6 sm:col-6'">
+      <div>
+        <span>
+           <label  class="label-wrapper" for="paymentReferenceNo">Payment Reference* </label>
+          <input (keyup)="removeSpaces.clearSpace(billPaymentForm,'paymentReferanceNo')" maxlength="30"
+                 formControlName="paymentReferanceNo" id="paymentReferenceNo" type="text" pInputText>
+        </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="billPaymentForm.get('paymentReferanceNo').dirty && billPaymentForm.get('paymentReferanceNo').errors">
+        Payment Reference is required
+      </div>
+    </div>
+
+    <div [ngClass]="isPanel ? 'field col-12' : 'field lg:col-3 col-12 xl:col-2 md:col-6 sm:col-6'">
+      <div>
+            <span>
+               <label  class="label-wrapper" for="paymentDate">Payment Date*</label>
+              <p-calendar formControlName="paymentDate" appendTo="body" (ngModelChange)="onDateChange()"
+                          id="paymentDate" [showIcon]="true"></p-calendar>
+            </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="billPaymentForm.get('paymentDate').dirty && billPaymentForm.get('paymentDate').errors">
+        Payment Date is required
+      </div>
+      <div
+        *ngIf="billPaymentForm.get('paymentDate').dirty&& !billPaymentForm.get('paymentDate').errors && !isValidPaymentDate"
+        class="p-invalid">
+        <div>Payment Date can not be earlier than bill date</div>
+      </div>
+    </div>
+
+
+    <div [ngClass]="isPanel ? 'field col-12' : 'field lg:col-3 xl:col-2 col-12 md:col-6 sm:col-6'">
+      <div>
+        <span>
+          <label class="label-wrapper" for="paymentAmount">Payment Amount*</label>
+          <input formControlName="amount" maxlength="19" id="paymentAmount" type="text" pInputText currencyMask
+                 (ngModelChange)="onAmountChange()"
+                 [options]="{ prefix: '', thousands: ',', decimal: '.', allowNegative: false }">
+        </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="billPaymentForm.get('amount').dirty && billPaymentForm.get('amount').errors">
+        Payment Amount is required
+      </div>
+    </div>
+
+
+    <div class="detail-field field col-12 mb-2">
+      <label>Discount Amount</label>
+      <div>{{commonUtil.detailViewIsDash(f.discountAmount.value, true) | number : '1.2-2'}}</div>
+    </div>
+
+
+    <div [ngClass]="isPanel ? 'field col-12' : 'field lg:col-3 xl:col-3 col-12 md:col-6 sm:col-6'">
+      <div class="p-inputgroup">
+        <input id="receipt" #recipt (change)="changeReceipt($event)" type="file" hidden accept="application/pdf">
+        <input readonly class="input-max-width file-input-vendor" placeholder="Upload Receipt" formControlName="receipt"
+               [value]="recipt.files[0] ? recipt.files[0].name : null"
+               (click)="fileUploadClick('receipt')" type="text" pInputText>
+        <button pButton label="Browse" type="button" class="p-button file-browse p-button-sm"
+                (click)="fileUploadClick('receipt')"></button>
+        <button pButton type="button" class="p-button p-button-sm p-button-outlined" *ngIf="recipt.files[0] != null"
+                icon="fa fa-close" (click)="recipt.value = null; billPaymentForm.get('receipt').reset()"></button>
+      </div>
+    </div>
+  </div>
+</form>
+
+
+<div class="grid panel-footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right ">
+      <button pButton type="button" (click)="resetPaymentForm()" label="Reset" [disabled]="btnLoading"
+              class="p-button-outlined p-button-sm" icon="fa-solid fa-rotate-right"></button>&nbsp;
+      <button pButton type="submit" class="p-button-sm" iconPos="left" (click)="createPayment()"
+              [icon]="btnLoading ? 'pi pi-spin pi-spinner': 'pi pi-plus'"
+              label="Create Bill Payment" [disabled]="btnLoading"></button>
+    </div>
+  </div>
+</div>

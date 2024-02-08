@@ -1,0 +1,20 @@
+
+    <p-tabView  styleClass="tabview-custom  p-0-tabview">
+      <p-messages severity="warn" *ngIf="showNoIntegrationSystems">
+        <ng-template pTemplate>
+        <i class="pi pi-exclamation-circle"></i>
+          <div class="ml-2">There are no integrated systems</div>
+        </ng-template>
+      </p-messages>
+
+      <p-tabPanel *ngIf="this.categoryList.length !== 0">
+        <ng-template pTemplate="header">
+          <span class="custom-span">{{tabName}}</span>
+        </ng-template>
+        <app-accounting-home [isDc]="isDc" [authTypeId]="authTypeId" [systemId]="systemId" [systemName]="tabName"
+                             [statusOfSystemButton]="isQbConnected"></app-accounting-home>
+        <ng-template pTemplate="content">
+        </ng-template>
+      </p-tabPanel>
+    </p-tabView>
+

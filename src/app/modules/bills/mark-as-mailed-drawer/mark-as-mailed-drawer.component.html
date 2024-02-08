@@ -1,0 +1,39 @@
+
+<div class="side-bar-drawer-content p-4">
+<form [formGroup]="markAsMailedForm" (ngSubmit)="onSubmit()">
+  <div class="grid p-fluid">
+
+    <div class="col-12">
+      <div [ngClass]="'field col-12'">
+            <span>
+               <label  class="label-wrapper" for="dateOfDelivery">Mailed Date*</label>
+              <p-calendar class="date-picker-width" formControlName="mailedDate" [showIcon]="true" id="dateOfDelivery" (onSelect)="onChangeDate($event)"></p-calendar>
+            </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="markAsMailedForm.get('mailedDate').dirty && markAsMailedForm.get('mailedDate').errors">
+        Check mailed date is required
+      </div>
+      <div class="p-invalid"
+           *ngIf="!isEarlyDate">
+        Mailed date can not be earlier than payment date
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" (click)="resetForm()" label="Reset"
+              class="p-button-outlined p-button-sm margin-right button-responsive-mobile"  icon="fa-solid fa-rotate-right"></button>&nbsp;
+      <button pButton type="button" (click)="onSubmit()" class="p-button-sm" iconPos="left" icon="pi pi-plus"  label="Save"></button>
+    </div>
+  </div>
+  </div>
+
+
+
+<!--Notification Messages-->
+<p-toast position="top-right" key="bc1"></p-toast>

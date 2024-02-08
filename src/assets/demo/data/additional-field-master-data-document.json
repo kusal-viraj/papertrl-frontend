@@ -1,0 +1,32 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "documentType": "Bill",
+      "section": "Additional Fields",
+      "fieldType": "Text Field",
+      "fieldName": "My Text",
+      "requiredStatus": "REQUIRED",
+      "activeStatus": "ACTIVE"
+    },
+    {
+      "id": 2,
+      "documentType": "Bill, Expense",
+      "section": "Additional Fields",
+      "fieldType": "Text Field",
+      "fieldName": "My Text",
+      "requiredStatus": "OPTIONAL",
+      "activeStatus": "I"
+    },
+    {
+      "id": 3,
+      "documentType": "Vendor",
+      "section": "Additional Fields",
+      "fieldType": "DropDown",
+      "fieldName": "My DropDown",
+      "requiredStatus": "REQUIRED",
+      "activeStatus": "ACTIVE"
+    }
+  ],
+  "totalRecords": 3
+}

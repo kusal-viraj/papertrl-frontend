@@ -1,0 +1,125 @@
+<div class="drawer-height p-3">
+  <form [formGroup]="formGroup" class="invoice-create" autocomplete="off">
+
+    <div class="field col-12">
+      <label class="label-wrapper" for="customerName">Invoice Number*</label>
+      <div class="p-inputgroup">
+        <input formControlName="invoiceNumber" id="invoiceNumber" type="text"
+               (keyup)="removeSpace.clearSpace(formGroup, 'invoiceNumber')"
+               pInputText>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="formGroup.get('invoiceNumber').dirty && formGroup.get('invoiceNumber').hasError('required')">
+        Invoice Number is required
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="formGroup.get('invoiceNumber').hasError('maxlength')">Invoice
+        Number must be less than 50 characters
+      </div>
+    </div>
+
+    <div class="field col-12">
+      <label class="label-wrapper" for="invoiceDate">Invoice Date*</label>
+      <div class="p-inputgroup p-fluid">
+        <p-calendar formControlName="invoiceDate" id="invoiceDate" readonlyInput="true"
+                    (onSelect)="formatDate($event)">
+        </p-calendar>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="formGroup.get('invoiceDate').dirty && formGroup.get('invoiceDate').hasError('required')">
+        Invoice Date is required
+      </div>
+    </div>
+
+    <div class="field col-12">
+      <label class="label-wrapper" for="customerName">Customer Name*</label>
+      <div class="p-inputgroup">
+        <input formControlName="customerName" id="customerName" type="text" maxlength="150"
+               (keyup)="removeSpace.clearSpace(formGroup, 'customerName')"
+               pInputText>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="formGroup.get('customerName').dirty && formGroup.get('customerName').hasError('required')">
+        Customer Name is required
+      </div>
+    </div>
+
+
+    <div class="field col-12">
+      <label class="label-wrapper" for="invoiceAmount">Invoice Amount*</label>
+      <div class="p-inputgroup">
+        <input formControlName="invoiceAmount" id="invoiceAmount" type="text"
+               maxlength="25" appNoNegativeValues
+               currencyMask [options]="{prefix: '', thousands: ',', decimal: '.'}"
+               (keyup)="removeSpace.clearSpace(formGroup, 'invoiceAmount')"
+               pInputText>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="formGroup.get('invoiceAmount').dirty && formGroup.get('invoiceAmount').hasError('required')">
+        Invoice Amount is required
+      </div>
+    </div>
+
+
+    <div class="field col-12">
+      <label class="label-wrapper" for="additionalNote">Additional Notes</label>
+      <div class="p-inputgroup">
+        <textarea formControlName="additionalNote" id="additionalNote" type="text"
+                  rows="2" maxlength="500"
+                  (keyup)="removeSpace.clearSpace(formGroup, 'additionalNote')"
+                  pInputTextarea>
+
+        </textarea>
+      </div>
+      <small class="block">Additional Notes must be less than 500 characters.</small>
+    </div>
+
+<!--    <div class="field col-12">-->
+<!--      <label class="label-wrapper" for="fileTextFromInbox">Attachment</label>-->
+<!--      <div class="p-inputgroup">-->
+<!--            <span class="p-float-label">-->
+<!--            <input #billAttachment id="fileUpload" formControlName="receipt1" accept="application/pdf"-->
+<!--                   (change)="onChangeInput($event)" type="file" hidden>-->
+<!--            <input id="fileTextFromInbox" formControlName="receipt1"-->
+<!--                   [value]="billAttachment.files[0] ? billAttachment.files[0].name : null"-->
+<!--                   accept="application/pdf"-->
+<!--                   onClick="document.getElementById('fileUpload').click()" type="text" pInputText>-->
+
+<!--            <button style="margin: 0 !important;height: 31px !important;" pButton type="button" label="Browse"-->
+<!--                    class="p-button browse-button-wrapper p-button-sm"-->
+<!--                    onClick="document.getElementById('fileUpload').click()">-->
+<!--            </button>-->
+
+<!--                 <button pButton [style]="{'height':'31px'}" icon="fa fa-close" class="p-button-borderless p-button-sm"-->
+<!--                         *ngIf="billAttachment.files[0]"-->
+<!--                         (click)="clearAttachment()">-->
+<!--                 </button>-->
+
+<!--           </span>-->
+<!--      </div>-->
+<!--    </div>-->
+
+
+  </form>
+</div>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+
+      <button pButton type="button" (click)="resetInvoice()" label="Reset"
+              class="p-button-borderless mr-3 p-button-sm">
+      </button>
+
+      <button pButton type="submit"  *ngIf="!isEditable" (click)="submitInvoice()"
+              class="p-button-sm p-primary" [disabled]="isSubmit"
+              label="Submit">
+      </button>
+
+      <button pButton type="button" *ngIf="isEditable" (click)="updateInvoiceData()"
+              class="p-button-sm p-primary" [disabled]="isUpdate"
+              label="Save">
+      </button>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,136 @@
+<!--<div [formGroup]="parentForm">-->
+<!--  <ng-container [formGroup]="costDistribution">-->
+<!--    <ng-container [formGroup]="additionalFieldFormGroup">-->
+<div [formGroup]="additionalFieldFormGroup">
+<!--  <div [formGroupName]="itemIndex">-->
+
+    <div
+      *ngIf="appFieldType.LABEL=== additionalFieldForCostDistributions[itemIndex]?.fieldTypeId && col.field == additionalLineItemField.fieldId">
+      <input type="text" class="form-control" pInputText readonly id="{{'addiLabel' + itemIndex}}"
+             [value]="additionalFieldForCostDistributions[itemIndex]?.value">
+    </div>
+
+    <div *ngIf="appFieldType.TEXT_BOX === additionalFieldForCostDistributions[itemIndex]?.fieldTypeId
+                      && col.field == additionalLineItemField.fieldId">
+      <div class="p-inputgroup">
+        <input  [formControl]="fieldValueControl" type="text" pInputText
+               id="input_{{itemIndex}}" maxlength="{{additionalFieldForCostDistributions[itemIndex]?.maxLength}}"
+               [pKeyFilter]="commonUtil.buildRegex(additionalFieldForCostDistributions[itemIndex]?.dataType)"
+               placeholder="{{additionalFieldForCostDistributions[itemIndex]?.fieldName}}" blockSpace>
+      </div>
+    </div>
+
+    <div *ngIf="appFieldType.TEXT_AREA === additionalFieldForCostDistributions[itemIndex]?.fieldTypeId
+                      && col.field == additionalLineItemField.fieldId">
+      <div class="p-inputgroup">
+    <span class="p-float-label">
+      <textarea [formControl]="fieldValueControl" id="notes_{{itemIndex}}" pInputTextarea
+                placeholder="{{additionalFieldForCostDistributions[itemIndex]?.fieldName}}"
+                rows="1" blockSpace [maxLength]="additionalFieldForCostDistributions[itemIndex]?.maxLength">
+      </textarea>
+    </span>
+      </div>
+    </div>
+
+    <div *ngIf="appFieldType.DROP_DOWN_FIELD === additionalFieldForCostDistributions[itemIndex]?.fieldTypeId &&
+                               additionalFieldForCostDistributions[itemIndex]?.multiple === 'A' && col.field == additionalLineItemField.fieldId">
+      <p-multiSelect [options]="additionalFieldForCostDistributions[itemIndex]?.optionsList.data" optionDisabled="inactive"
+                     id="multiselect_{{itemIndex}}" appendTo="body" [style]="{'width':'100%'}" #multiSelect2
+                     optionValue="id" inputId="multiselect_{{itemIndex}}" appMultiselectFocus
+                     placeholder="Select {{additionalFieldForCostDistributions[itemIndex]?.fieldName}}"
+                     (onChange)="addNewAdditionalDropDownOption($event,additionalFieldForCostDistributions[itemIndex],additionalLineItemField, multiSelect2)"
+                     (onClick)="addNewAdditionalDropDownOption($event,additionalFieldForCostDistributions[itemIndex],additionalLineItemField, multiSelect2)"
+                      [formControl]="fieldValueControl" optionLabel="name" [showToggleAll]="true" [filter]="true">
+
+        <ng-template pTemplate="footer" *ngIf="additionalFieldForCostDistributions[itemIndex]?.createNew === 'A'">
+          <div class="grid dp-footer">
+            <div class="col-12 button-wrapper">
+              <button pButton class="p-button-sm" label="Add New"
+                      (click)="addNewDropDown = true;
+                  setSelectedAdditionalField(additionalFieldForCostDistributions[itemIndex])"></button>
+            </div>
+          </div>
+        </ng-template>
+      </p-multiSelect>
+    </div>
+
+
+    <div *ngIf="appFieldType.DROP_DOWN_FIELD === additionalFieldForCostDistributions[itemIndex]?.fieldTypeId &&
+                              additionalFieldForCostDistributions[itemIndex]?.multiple != 'A' && col.field == additionalLineItemField.fieldId">
+      <p-dropdown [virtualScroll]="additionalFieldForCostDistributions[itemIndex]?.optionsList.data.length>20"
+                  virtualScrollItemSize="25" class="additional-field-dropdown" [autoDisplayFirst]="false" optionDisabled="inactive"
+                   [formControl]="fieldValueControl"
+                  [options]="additionalFieldForCostDistributions[itemIndex]?.optionsList.data"
+                  id="dropdown_{{itemIndex}}"
+                  [showClear]="true" #dropdown2 appendTo="body" [style]="{'width':'100%'}" optionValue="id"
+                  optionLabel="name"
+                  (onChange)="addNewAdditionalDropDownOption($event,additionalFieldForCostDistributions[itemIndex],additionalLineItemField, dropdown2);
+                commonUtil.isPressEnterInsideDropdown(dropdown2)" inputId="dropdown_{{itemIndex}}"
+                  [filter]="true"
+                  placeholder="Select {{additionalFieldForCostDistributions[itemIndex]?.fieldName}}">
+
+        <ng-template pTemplate="footer" *ngIf="additionalFieldForCostDistributions[itemIndex]?.createNew === 'A'">
+          <div class="grid dp-footer">
+            <div class="col-12 button-wrapper">
+              <button pButton class="p-button-sm" label="Add New"
+                      (click)="addNewDropDown = true;
+                  setSelectedAdditionalField(additionalFieldForCostDistributions[itemIndex])"></button>
+            </div>
+          </div>
+        </ng-template>
+      </p-dropdown>
+    </div>
+
+    <div
+      *ngIf="appFieldType.FILE_INPUT === additionalFieldForCostDistributions[itemIndex]?.fieldTypeId && col.field == additionalLineItemField.fieldId">
+      <div class="p-inputgroup" app-additional-file-upload [additionalField]="attachmentControl"
+           [index]="i" [additionalFieldProperties]="additionalFieldForCostDistributions[itemIndex]">
+      </div>
+    </div>
+
+    <div
+      *ngIf="appFieldType.DATE_FIELD=== additionalFieldForCostDistributions[itemIndex]?.fieldTypeId && col.field == additionalLineItemField.fieldId">
+      <div class="p-inputgroup">
+        <p-calendar [style]="{'width':'100%'}"  [formControl]="fieldValueControl"
+                    id="dateField_{{itemIndex}}" [showButtonBar]="true" [showIcon]="true" appendTo="body"
+                    (onSelect)="formatDateSection($event, fieldValueControl, additionalFieldForCostDistributions[itemIndex])"
+                    placeholder="Select {{additionalFieldForCostDistributions[itemIndex]?.fieldName}}"></p-calendar>
+      </div>
+    </div>
+
+    <div
+      *ngIf="appFieldType.CHECK_BOX === additionalFieldForCostDistributions[itemIndex]?.fieldTypeId && col.field == additionalLineItemField.fieldId">
+      <div class="p-inputgroup additional-field-checkbox-wrapper">
+        <div class="field-checkbox ml-2">
+          <p-checkbox name="checkBox"  [formControl]="fieldValueControl" id="binaryB1_{{itemIndex}}"
+                      binary="true"></p-checkbox>
+          <label>{{additionalFieldForCostDistributions[itemIndex]?.fieldName}}{{additionalFieldForCostDistributions[itemIndex]?.required ? '*' : ''}}</label>
+        </div>
+      </div>
+    </div>
+
+    <div
+      *ngIf="appFieldType.RADIO_BUTTON === additionalFieldForCostDistributions[itemIndex]?.fieldTypeId && col.field == additionalLineItemField.fieldId">
+      <div class="grid col-12" [style]="{'align-items': 'center'}">
+        <div class="radio-container"
+             *ngFor="let option of additionalFieldForCostDistributions[itemIndex]?.options">
+          <input id="expense" type="radio" value="{{option.optionValue}}" name="radioGroup_{{tableType}}{{i}}{{itemIndex}}"
+                 class="radioButton"  [formControl]="fieldValueControl">
+          <span for="expense">{{' ' + option.optionValue}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+<!--</div>-->
+<!--    </ng-container>-->
+<!--  </ng-container>-->
+<!--</div>-->
+<!--Create New DropDown-->
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" (onHide)="addNewDropDown = false" position="right" [modal]="true"
+           [dismissible]="true" *ngIf="addNewDropDown" [(visible)]="addNewDropDown">
+  <ng-template pTemplate="header">Create New DropDown Option</ng-template>
+  <app-additional-field-add-new [field]="selectedAdditionalField" *ngIf="addNewDropDown" [isCreate]="isCreate"
+                                (closedComponent)="addNewDropDown = false; updateAdditionalFieldDropDowns.emit(selectedAdditionalField)"></app-additional-field-add-new>
+</p-sidebar>
+
+

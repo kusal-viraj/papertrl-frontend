@@ -1,0 +1,260 @@
+@import "../../../../scss/color.scss";
+.product-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  width: 100%;
+  flex-wrap: nowrap;
+
+  .product-list-detail {
+    flex: 1 1 0;
+  }
+}
+
+.p-vertual-wrap {
+  margin-top: 1px;
+  margin-left: 1px;
+}
+
+.list-data-wrap {
+  padding: 5px;
+}
+
+.emailed-by {
+  font-size: 12px;
+  color: #555555;
+  font-weight: normal;
+  font-stretch: normal;
+  padding-top: 0.75rem!important;
+}
+
+.email-body {
+  font-size: 12px;
+  color: #555555;
+  font-weight: bold;
+}
+
+.email-body .expand-icon-wrap{
+  color: #000000;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.email-body-unread-text-wrapper .expand-icon-wrap{
+  color: #000000;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.active-recoard {
+  background: #EDF7FF 0% 0% no-repeat padding-box;
+}
+
+.costume-checkbox {
+  left: 0.5rem;
+  color: #b2b2b2;
+  transition-duration: 0.2s;
+  vertical-align: super !important;
+}
+
+.process-data-wrap {
+  width: 100%
+}
+
+.costume-checkbox-wrap {
+  align-self: self-end;
+  margin-top: 16px;
+}
+
+.custome-checkbox {
+  margin-top: -28px;
+}
+
+.ellipsis-icon-wrap {
+  margin-top: 13px !important;
+  float: right !important;
+}
+
+.ellipsis-icon-wrap .fa-eye {
+  width: 6px;
+  height: 23px;
+  font-weight: bold;
+  color: #666060;
+}
+
+.background-color {
+  background: #EDF7FF;
+  float: left;
+  padding: 0 15px 14px 15px;
+  position: relative;
+  width: 100%;
+  clear: left;
+}
+
+.background-color-wrap{
+  float: left;
+  position: relative;
+  width: 100%;
+  clear: left;
+}
+
+.unread-background{
+  background: $lightslategray;
+  float: left;
+  position: relative;
+  width: 100%;
+  clear: left;
+}
+
+.read-background{
+  background: white;
+  float: left;
+  padding: 0 15px 14px 15px;
+  position: relative;
+  width: 100%;
+  clear: left;
+}
+
+.background-color-expand {
+  background: #EDF7FF;
+  min-height: 200px !important;
+}
+
+.p-dialog-wrapper ::ng-deep .p-dialog-mask .p-dialog .p-dialog-content {
+  width: 340px !important;
+}
+
+.p-dialog-wrapper ::ng-deep .p-dialog-mask .p-dialog .p-dialog-header {
+  color: #768289 !important;
+  font: normal normal bold 16px/21px Roboto !important;
+}
+
+.attachments-style-default {
+  color: black;
+  background: #f5f5f5;
+  border: 1px solid #bcbcbc;
+}
+
+.attachments-style{
+  border-radius: 4px;
+  padding: 7px;
+  margin-left: 4px;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.attachments-style-click {
+  border: 1px solid #bcbcbc;
+  color: black;
+  background: #d2d2d2;
+}
+
+.inner-wrapper {
+  width: 100%;
+  position: relative;
+  float: left;
+  clear: left;
+
+  .costume-checkbox-wrap {
+    float: left;
+  }
+
+  .mail-item {
+    float: left;
+  }
+
+  .ellipsis-icon-wrap {
+    float: left;
+  }
+}
+
+.outer-wrapper{
+  width: 100%;
+  float: left;
+  clear: left;
+
+  .attachment-chips-wrap{
+    float: left;
+    width: 30vw;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: auto;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    .attachments-style-default{
+      float: left;
+      width: auto;
+    }
+  }
+}
+.total-record-wrapper{
+  font-size: 14px;
+  color: #999999;
+  bottom: 0;
+  text-align: center;
+}
+
+.email-body-unread-text-wrapper{
+  font-size: 14px;
+  font-weight: 700 !important;
+  color: #6297E6 !important;
+}
+
+.emailed-by-unread-text-wrapper{
+  color: #555555 !important;
+  flex-grow: 0;
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: italic;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  padding-top: 0.75rem!important;
+}
+
+.attached-to-heading-wrapper{
+  color: #768289;
+  font-size: 16px;
+}
+.attached-to-dialog-wrapper ::ng-deep .p-dialog .p-dialog-header {
+  padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+}
+
+.inactive-email-box .fa-envelope-open-o {
+  width: 6px;
+  height: 23px;
+  font-weight: normal;
+  color: #999999;
+}
+.active-email-box .fa-envelope-open-o {
+  width: 6px;
+  height: 23px;
+  font-weight: bold;
+  color: #202124;
+}
+.attachment-checkBox ::ng-deep .p-checkbox .p-checkbox-box{
+  border-color: #759DCB;
+  width: 13px !important;
+  height: 13px !important;
+  margin-top: 2px !important;
+  border-radius: 3px;
+}
+
+.check-mark-font ::ng-deep .p-checkbox .p-checkbox-box .p-checkbox-icon {
+  font-size: 9px !important;
+  font-weight: bold;
+}
+
+.selected-attachment-checkBox ::ng-deep .p-checkbox .p-checkbox-box{
+  width: 13px !important;
+  border-color: #759DCB;
+  height: 13px !important;
+  margin-top: 2px !important;
+  background: white;
+  border-radius: 3px;
+  &:hover{
+    background: white;
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "reportNumber": "Report No1",
+      "reportName": "Report Name-1",
+      "submitDate": "17/12/2020",
+      "approvalUser": "Smith",
+      "totalAmount": "1000.00",
+      "status": "A",
+      "exportStatus": "E"
+    },
+    {
+      "id": 2,
+      "reportNumber": "Report No2",
+      "reportName": "Report Name-2",
+      "submitDate": "17/12/2020",
+      "approvalUser": "John",
+      "totalAmount": "2000.00",
+      "status": "P",
+      "exportStatus": "E"
+    },
+    {
+      "id": 3,
+      "reportNumber": "Report No3",
+      "reportName": "Report Name-3",
+      "submitDate": "17/12/2020",
+      "approvalUser": "Michal",
+      "totalAmount": "3000.00",
+      "status": "R",
+      "exportStatus": "NE"
+    },
+    {
+      "id": 1,
+      "reportNumber": "Report No1",
+      "reportName": "Report Name-1",
+      "submitDate": "17/12/2020",
+      "approvalUser": "Smith",
+      "totalAmount": "1000.00",
+      "status": "A",
+      "exportStatus": "E"
+    },
+    {
+      "id": 2,
+      "reportNumber": "Report No2",
+      "reportName": "Report Name-2",
+      "submitDate": "17/12/2020",
+      "approvalUser": "John",
+      "totalAmount": "2000.00",
+      "status": "P",
+      "exportStatus": "E"
+    },
+    {
+      "id": 3,
+      "reportNumber": "Report No3",
+      "reportName": "Report Name-3",
+      "submitDate": "17/12/2020",
+      "approvalUser": "Michal",
+      "totalAmount": "3000.00",
+      "status": "R",
+      "exportStatus": "NE"
+    },
+    {
+      "id": 1,
+      "reportNumber": "Report No1",
+      "reportName": "Report Name-1",
+      "submitDate": "17/12/2020",
+      "approvalUser": "Smith",
+      "totalAmount": "1000.00",
+      "status": "A",
+      "exportStatus": "E"
+    },
+    {
+      "id": 2,
+      "reportNumber": "Report No2",
+      "reportName": "Report Name-2",
+      "submitDate": "17/12/2020",
+      "approvalUser": "John",
+      "totalAmount": "2000.00",
+      "status": "P",
+      "exportStatus": "E"
+    },
+    {
+      "id": 3,
+      "reportNumber": "Report No3",
+      "reportName": "Report Name-3",
+      "submitDate": "17/12/2020",
+      "approvalUser": "Michal",
+      "totalAmount": "3000.00",
+      "status": "R",
+      "exportStatus": "NE"
+    },
+    {
+      "id": 1,
+      "reportNumber": "Report No1",
+      "reportName": "Report Name-1",
+      "submitDate": "17/12/2020",
+      "approvalUser": "Smith",
+      "totalAmount": "1000.00",
+      "status": "A",
+      "exportStatus": "E"
+    },
+    {
+      "id": 2,
+      "reportNumber": "Report No2",
+      "reportName": "Report Name-2",
+      "submitDate": "17/12/2020",
+      "approvalUser": "John",
+      "totalAmount": "2000.00",
+      "status": "P",
+      "exportStatus": "E"
+    },
+    {
+      "id": 3,
+      "reportNumber": "Report No3",
+      "reportName": "Report Name-3",
+      "submitDate": "17/12/2020",
+      "approvalUser": "Michal",
+      "totalAmount": "3000.00",
+      "status": "R",
+      "exportStatus": "NE"
+    }
+  ],
+  "totalRecords": 12
+}

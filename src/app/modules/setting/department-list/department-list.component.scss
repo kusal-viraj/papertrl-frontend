@@ -1,0 +1,9 @@
+@import 'src/scss/table-responsive';
+
+.table-wrapper{
+  height: calc(100vh - 150px);
+}
+
+.department-detail-view .p-dialog .p-dialog-content {
+  padding: 8px 1.5rem 1.5rem 1.5rem !important;
+}

@@ -1,0 +1,33 @@
+<form [formGroup]="noteForm" (ngSubmit)="addNote(noteForm)">
+  <div class="p-fluid">
+    <div class="grid">
+      <div class="col-12">
+
+
+        <br><h6 class="subHeadingColour">Add Note</h6><br>
+
+        <div class="grid p-fluid">
+          <div class="field col-12">
+            <div class="p-inputgroup">
+        <span class="p-float-label">
+           <textarea formControlName="note" maxlength="300" id="note" autoResize="autoResize"
+                     pInputTextarea></textarea>
+          <label for="note">Enter Note* </label>
+        </span>
+            </div>
+            <div class="p-invalid text-align-left" *ngIf="noteForm.get('note').dirty && noteForm.get('note').errors">
+              Note is required
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12" style="margin-top: 3%">
+    <div class="pull-right">
+      <button pButton type="button" label="Reset" (click)="noteForm.reset()"
+              class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+      <button pButton type="submit" class="p-button-sm" iconPos="left" icon="pi pi-plus" label="Add Note"></button>
+    </div>
+  </div>
+</form>

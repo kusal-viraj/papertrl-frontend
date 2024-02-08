@@ -1,0 +1,328 @@
+
+<p-dialog [(visible)]="editView" class="summary-dialog-addi-field" styleClass="reminder-configuration" position="center" [draggable]="false"  styleClass="reminder-configuration"
+          [closable]="false" [modal]="true">
+  <div class="field grid" style="position: fixed;width: 100%; top: 10px;">
+    <div class="col-6 pl-4">
+      <h5 class="module-header-label popup-header-label" *ngIf="editView">Edit Additional
+        Field</h5>
+      <h6 class="module-header-label4 popup-header-label" *ngIf="!editView">Additional Field Information</h6>
+
+    </div>
+    <div class="col-6 text-right">
+      <div class="fa fa-close side-drawer-icon"
+           (click)="closeEditMode()"></div>
+    </div>
+
+
+  </div>
+
+  <div class="drawer-content p-3">
+  <form [formGroup]="additionalFieldForm" (ngSubmit)="additionalFieldSubmit(false)">
+
+    <div class="grid p-fluid" [ngClass]="editView? 'mt-3': 'p-mt-0'">
+
+      <div class="field col-12 xl:col-4 lg:col-4 md:col-12 sm:col-12">
+        <label class="label-wrapper" for="section">Select Document Type And Section</label>
+      <span class="p-float-label p-fluid">
+        <p-multiSelect [options]="sections" [group]="true" optionValue="value" [maxSelectedLabels]="1"
+                       formControlName="documentRelation" optionDisabled="inactive" optionLabel="label"
+                       id="section" optionGroupChildren="items" class="responsive-multiselect" appendTo="body">
+          <ng-template let-group pTemplate="group">
+            <div class="flex p-ai-center">
+              <span class="m-2 font-bold">{{group.label}}</span>
+            </div>
+          </ng-template>
+        </p-multiSelect>
+        </span>
+        <div class="p-invalid text-align-left"
+             *ngIf="additionalFieldForm.get('documentRelation').dirty && additionalFieldForm.get('documentRelation').errors">
+          Section is required
+        </div>
+      </div>
+
+      <div class="field col-12 xl:col-2 lg:col-3 md:col-4 sm:col-12">
+        <label class="label-wrapper" for="fieldTypeId">Select Field Type* </label>
+      <span class="p-float-label">
+          <p-dropdown inputId="dropdown" formControlName="fieldTypeId" id="fieldTypeId"
+                      [autoDisplayFirst]="false" appendTo="body"
+                      [options]="additionalFieldUtility.fieldType" #me readonly="true"
+                      (onChange)="viewFieldTypeProperty($event,me)"
+                      optionLabel="name" optionValue="id"></p-dropdown>
+        </span>
+        <div class="p-invalid text-align-left"
+             *ngIf="additionalFieldForm.get('fieldTypeId').dirty && additionalFieldForm.get('fieldTypeId').errors">
+          Field Type is required
+        </div>
+      </div>
+
+      <div class="field col-12 xl:col-3 lg:col-3 md:col-4 sm:col-12"
+           *ngIf="isAvailableValidations(fieldProperty.VALIDATION_NAME)">
+        <label class="label-wrapper" for="fieldName">Field Name (Display Name)* </label>
+      <span class="p-float-label">
+          <input formControlName="fieldName" id="fieldName" type="text" pInputText
+                 (keyup)="removeSpaces.clearSpace(additionalFieldForm, 'fieldName'); checkMaxLength();"
+                 (change)="checkMaxLength()"
+                 [ngClass]="{ 'ng-invalid ng-dirty':f1.fieldName.dirty && f1.fieldName.errors || isFieldNameLengthExceeds}">
+        </span>
+        <div class="p-invalid text-align-left"
+             *ngIf="additionalFieldForm.get('fieldName').dirty && additionalFieldForm.get('fieldName').errors">
+          Field Name is required
+        </div>
+        <div *ngIf="isFieldNameLengthExceeds">
+          <div class="p-invalid text-align-left">Field Name length should be lower than 20</div>
+        </div>
+      </div>
+
+      <!--      <div class="field col-12 xl:col-1 lg:col-1  md:col-4 sm:col-12" style="display: flex; text-align: center"-->
+      <!--           *ngIf="isAvailableValidations(fieldProperty.VALIDATION_REQUIRED)">-->
+      <!--        <p-checkbox class="costume-checkbox " formControlName="required" [disabled]="true" [binary]="true" label="Required"></p-checkbox>-->
+      <!--      </div>-->
+
+
+    </div>
+
+
+    <div class="grid p-fluid" *ngIf="additionalFieldProperties.length>0 && fieldId != fieldTypeId.DATE_FIELD">
+      <div class="col-12">
+        <hr>
+        <h6 class="subHeading">{{fieldType}} Properties</h6>
+      </div>
+    </div>
+
+    <div class="grid p-fluid">
+      <div class="field col-12 col-3 xl:col-2 lg:col-3 p-inputgroup datasource-edit-field"
+           *ngIf="isAvailableValidations(fieldProperty.VALIDATION_DATA_SOURCE)">
+        <span>
+           <label class="label-wrapper" for="datasource">Select Data Source</label>
+          <p-dropdown #selectedDatasourceName [options]="additionalFieldUtility.dataSources"
+                      id="datasource" [autoDisplayFirst]="false" [group]="true"
+                      inputId="dropdown" formControlName="dataSourceId" optionLabel="label"
+                      [readonly]="true"
+                      optionValue="id" appendTo="body" [filter]="true" (onChange)="changedDatasourceSelection($event)">
+
+            <ng-template pTemplate="selectedItem">
+                  {{selectedDatasourceName.selectedOption.label}}
+            </ng-template>
+
+             <ng-template let-property pTemplate="item">
+                 <div class="grid">
+                     <div class="dropdown-list p-px-4"
+                          [ngClass]="property.id == 0 ? ' dropdown-add': null">{{property.label}}</div>
+                     <em *ngIf="property.id == 0" class="pi pi-plus dropdown-icon dropdown-add"></em>
+                 </div>
+             </ng-template>
+           </p-dropdown>
+        </span>
+        <button type="button" pButton (click)="openDatasourceEditDrawer()" icon="fa fa-pencil"
+                class="p-button-sm p-button-borderless mt-3 ml-4"></button>
+        <div class="p-invalid text-align-left"
+             *ngIf="additionalFieldForm.get('dataSourceId').dirty && additionalFieldForm.get('dataSourceId').errors">
+          Data Source is required
+        </div>
+      </div>
+
+
+      <div class="field col-12 xl:col-2 lg:col-3 md:col-4 sm:col-12"
+           *ngIf="isAvailableValidations(fieldProperty.VALIDATION_MAX_LENGTH)">
+        <label class="label-wrapper" for="maxLength">Enter Max Length* </label>
+         <span class="p-float-label">
+          <p-inputNumber formControlName="maxLength" id="maxLength" pInputText [min]="maxLength" [max]="50"
+                         (keyup)="checkMaxLength();" (change)="checkMaxLength()"
+                         [ngClass]="{ 'ng-invalid ng-dirty':f1.maxLength.dirty && f1.maxLength.errors || isMaxlengthExceeds || isMaxlengthZero}"
+                         mode="decimal" inputId="withoutgrouping" [useGrouping]="false">
+          </p-inputNumber>
+
+
+           <!--          <input formControlName="maxLength" id="maxLength" type="number" pInputText [min]="maxLength"-->
+           <!--                 (keyup)="checkMaxLength();" (change)="checkMaxLength()"-->
+           <!--                 [ngClass]="{ 'ng-invalid ng-dirty':f1.maxLength.dirty && f1.maxLength.errors || isMaxlengthExceeds || isMaxlengthZero}">-->
+        </span>
+        <div class="p-invalid text-align-left"
+             *ngIf="additionalFieldForm.get('maxLength').dirty && additionalFieldForm.get('maxLength').errors">
+          Max Length is required
+        </div>
+        <div *ngIf="isMaxlengthExceeds">
+          <div class="p-invalid text-align-left">Max Length should be lower than 300</div>
+        </div>
+        <div *ngIf="isMaxlengthZero">
+          <div class="p-invalid text-align-left">Max Length should be greater than zero</div>
+        </div>
+      </div>
+
+      <!--      <div class="field col-12 xl:col-2 lg:col-3 md:col-4 sm:col-12"-->
+      <!--           *ngIf="isAvailableValidations(fieldProperty.VALIDATION_DISPLAY_ORDER)">-->
+      <!--         <span class="p-float-label">-->
+      <!--          <input formControlName="displayOrder" id="displayOrder" type="number" pInputText-->
+      <!--                 (keyup)="checkMaxLength();" (change)="checkMaxLength()"-->
+      <!--                 [ngClass]="{ 'ng-invalid ng-dirty':f1.displayOrder.dirty && f1.displayOrder.errors || isDisplayOrderZero}">-->
+      <!--          <label for="maxLength">Display Order* </label>-->
+      <!--        </span>-->
+      <!--        <div class="p-invalid text-align-left"-->
+      <!--             *ngIf="additionalFieldForm.get('displayOrder').dirty && additionalFieldForm.get('displayOrder').errors">-->
+      <!--          Display Order is required-->
+      <!--        </div>-->
+      <!--        <div *ngIf="isDisplayOrderZero">-->
+      <!--          <div class="p-invalid text-align-left">Display order should be greater than zero</div>-->
+      <!--        </div>-->
+      <!--      </div>-->
+
+      <div class="field col-12 xl:col-2 lg:col-3 md:col-4 sm:col-12" style="padding-top: 13px;"
+           *ngIf="isAvailableValidations(fieldProperty.VALIDATION_DATA_TYPE)">
+        <label class="label-wrapper" for="dataType">Select Data Type*</label>
+      <span class="p-float-label">
+        <p-dropdown inputId="dropdown" formControlName="dataType" id="dataType" [autoDisplayFirst]="false"
+                    [options]="additionalFieldUtility.fieldDataType" readonly="true"
+                    optionValue="id" optionLabel="label"></p-dropdown>
+      </span>
+        <div class="p-invalid text-align-left"
+             *ngIf="additionalFieldForm.get('dataType').dirty && additionalFieldForm.get('dataType').errors">
+          Data Type is required
+        </div>
+      </div>
+
+      <div class="field col-12 xl:col-3 lg:col-4 md:col-4 sm:col-12"
+           *ngIf="isAvailableValidations(fieldProperty.VALIDATION_MULTIPLE_CREATE_NEW)">
+        <label class="label-wrapper" for="dataType">Select Additional Options</label>
+       <span class="p-float-label">
+        <p-multiSelect inputId="dropdown" formControlName="dropdownProperty" id="dropdownProperty"
+                       [options]="additionalFieldUtility.dropdownProperties" appendTo="body"
+                       (onChange)="changeDropDownProperty($event)"
+                       optionValue="id" optionLabel="label"></p-multiSelect>
+      </span>
+        <div class="p-invalid text-align-left"
+             *ngIf="additionalFieldForm.get('dropdownProperty').dirty && additionalFieldForm.get('dropdownProperty').errors">
+          Additional Option is required
+        </div>
+      </div>
+
+      <div class="field col-12 xl:col-2 lg:col-3 md:col-4 sm:col-12"
+           *ngIf="isAvailableValidations(fieldProperty.VALIDATIONS_ROWS)">
+        <label class="label-wrapper" for="rowCount">Enter Row Count* </label>
+         <span class="p-float-label">
+          <input formControlName="rowCount" id="rowCount" type="number" pInputText
+                 (keyup)="checkMaxLength();" (change)="checkMaxLength()" [readOnly]="true"
+                 [ngClass]="{ 'ng-invalid ng-dirty':f1.rowCount.dirty && f1.rowCount.errors || isRowCountExceeds || isRowCountZero}">
+        </span>
+        <div class="p-invalid text-align-left"
+             *ngIf="additionalFieldForm.get('rowCount').dirty && additionalFieldForm.get('rowCount').errors">
+          Row Count is required
+        </div>
+        <div *ngIf="isRowCountExceeds">
+          <div class="p-invalid text-align-left">Row Count should be lower than 10</div>
+        </div>
+        <div *ngIf="isRowCountZero">
+          <div class="p-invalid text-align-left">Row Count should be greater than zero</div>
+        </div>
+      </div>
+
+      <div class="field col-12 xl:col-2 lg:col-3 md:col-4 sm:col-12"
+           *ngIf="isAvailableValidations(fieldProperty.VALIDATIONS_VALUE)">
+        <label class="label-wrapper" for="rowCount">Enter Value* </label>
+         <span class="p-float-label">
+          <input formControlName="value" id="value" type="text" pInputText
+                 (keyup)="removeSpaces.clearSpace(additionalFieldForm, 'value')"
+                 [ngClass]="{ 'ng-invalid ng-dirty':f1.value.dirty && f1.value.errors}">
+        </span>
+        <div class="p-invalid text-align-left"
+             *ngIf="additionalFieldForm.get('value').dirty && additionalFieldForm.get('value').errors">
+          Value is required
+        </div>
+      </div>
+
+      <div class="field col-12 xl:col-2 lg:col-3 md:col-4 sm:col-12"
+           *ngIf="isAvailableValidations(fieldProperty.VALIDATIONS_ACCEPT)">
+        <label class="label-wrapper" for="dataType">Select File Type*</label>
+      <span class="p-float-label">
+        <p-multiSelect inputId="dropdown" formControlName="fileTypes" id="fileType"
+                       [options]="additionalFieldUtility.fileTypes"
+                       optionValue="id" optionLabel="label"></p-multiSelect>
+      </span>
+        <div class="p-invalid text-align-left"
+             *ngIf="additionalFieldForm.get('fileTypes').dirty && additionalFieldForm.get('fileTypes').errors">
+          File Type is required
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="grid p-fluid" *ngIf="isAvailableValidations(fieldProperty.VALIDATION_OPTION)">
+      <div class="col-12">
+        <hr>
+        <h6 class="subHeadingColour">Add Option</h6>
+      </div>
+
+      <div class="field col-12 xl:col-3 lg:col-3 md:col-4 sm:col-12">
+
+        <div formArrayName="options" *ngIf=" dataOption.length>0">
+          <div class="grid p-fluid"
+               *ngFor="let option of dataOption.controls; let  optionIndex =index"
+               [formGroupName]="optionIndex">
+
+            <div class="field col-12 col-8 xl:col-8 lg:col-8">
+              <label class="label-wrapper" for="optionValue">Option* </label>
+          <span class="p-float-label">
+            <input id="optionValue" maxlength="50" formControlName="optionValue" type="text" pInputText/>
+          </span>
+              <div class="p-invalid text-align-left"
+                   (keyup)="removeSpaces.clearSpace(additionalFieldForm, 'optionValue')"
+                   *ngIf="option.get('optionValue').dirty && option.get('optionValue').errors">
+                Option is required
+              </div>
+              <div class="p-invalid text-align-left"
+                   *ngIf="checkOptionAvailability(option, dataOption.controls, optionIndex)">
+                Option Cannot be Duplicated
+              </div>
+            </div>
+
+            <div class="col-4 ">
+              <div class="grid">
+                <div *ngIf="dataOption.controls.length > 1" class="col-6" [style]="{'padding-right': 0}">
+
+                  <button pButton type="button" class="p-button-sm btn-trash" iconPos="left" icon="fa fa-trash"
+                          *ngIf="dataOption.controls.length > 1"
+                          (click)="removeOption(optionIndex, option)">
+                  </button>
+                </div>
+                <div *ngIf="optionIndex === (dataOption.controls.length-1)" class=" col-6"
+                     [style]="{'padding-left': 0}">
+                  <button pButton type="button" class="p-button-sm p-button-margin" iconPos="left" icon="pi pi-plus"
+                          [disabled]="dataOption.invalid"
+                          *ngIf="optionIndex === (dataOption.controls.length-1)"
+                          (click)="addOptionFormController()"></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  </div>
+
+  <div   class="grid panel-footer footer">
+    <div class="col-12 button-set-wrapper form-footer-button">
+      <div class="pull-right">
+        <button pButton type="button" label="Reset" (click)="reset()"
+                class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+        <button pButton type="button" (click)="additionalFieldSubmit(false)"
+                [icon]="!isProgressUpdateEvent ? 'pi pi-save': 'pi pi-spinner'"
+                [disabled]="isProgressUpdateEvent"
+                class="p-button-sm" iconPos="left" label="Save"></button>
+
+      </div>
+    </div>
+  </div>
+
+</p-dialog>
+
+
+
+
+<p-sidebar styleClass="p-sidebar-md" [modal]="false" position="right" *ngIf="dataSourceDrawer"
+           [(visible)]="dataSourceDrawer">
+  <ng-template pTemplate="header">Edit Data Source</ng-template>
+  <app-additional-field-dropdown-datasource [additionalFieldID]="additionalFieldID" (closeModal)="closeModal()" [isEditView]="true"
+                                            [selectedDatasourceId]="selectedDataSourceId"
+                                            *ngIf="dataSourceDrawer"></app-additional-field-dropdown-datasource>
+</p-sidebar>

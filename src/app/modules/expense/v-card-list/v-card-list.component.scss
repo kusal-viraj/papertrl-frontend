@@ -1,0 +1,35 @@
+@import '../../../../scss/table-responsive';
+
+.table-wrapper {
+  height: calc(100vh - 199px);
+}
+
+
+.scrollable-content {
+  max-height: 150px;
+  overflow-y: auto;
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    border: none;
+    font-size: 12px;
+
+    th, td {
+      border: none;
+      padding: 8px;
+      text-align: left;
+      line-height: 1;
+
+      &.amount {
+        text-align: right;
+      }
+    }
+
+    th {
+      background-color: $tertiary-light-gray;
+      position: sticky;
+      top: 0;
+    }
+  }
+}

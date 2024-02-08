@@ -1,0 +1,50 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "vendorName": "Vendor 1",
+      "contactName": "Mark",
+      "emailAddress": "abc.c@papertrl.com",
+      "invitedBy": "Admin",
+      "invitedDate": "17/20/2020",
+      "status": "P"
+    },
+    {
+      "id": 2,
+      "vendorName": "Vendor 2",
+      "contactName": "Max Pane",
+      "emailAddress": "max.p@papertrl.com",
+      "invitedBy": "Admin",
+      "invitedDate": "17/20/2020",
+      "status": "A"
+    },
+    {
+      "id": 3,
+      "vendorName": "Vendor 3",
+      "contactName": "Tony",
+      "emailAddress": "mora.r@papertrl.com",
+      "invitedBy": "Admin",
+      "invitedDate": "17/20/2020",
+      "status": "R"
+    },
+    {
+      "id": 4,
+      "vendorName": "Vendor 3231",
+      "contactName": "Tony",
+      "emailAddress": "mora.r@papertrl.com",
+      "invitedBy": "Admin",
+      "invitedDate": "17/20/2020",
+      "status": "R"
+    },
+    {
+      "id": 5,
+      "vendorName": "Vendor 35",
+      "contactName": "Tony",
+      "emailAddress": "mora.r@papertrl.com",
+      "invitedBy": "Admin",
+      "invitedDate": "17/20/2020",
+      "status": "R"
+    }
+  ],
+  "totalRecords": 5
+}

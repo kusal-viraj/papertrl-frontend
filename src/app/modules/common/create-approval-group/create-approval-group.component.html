@@ -1,0 +1,38 @@
+<div class="side-bar-drawer-content p-3">
+<form [formGroup]="approvalGroupForm" class="mt-3" (ngSubmit)="createApprovalGroup(approvalGroupForm.value)" autocomplete="off">
+  <div class="grid p-fluid">
+
+    <div [ngClass]="!panel ? 'field col-12 lg:col-3' : 'field col-12'">
+      <div>
+            <span>
+              <label  class="label-wrapper" for="name">Approval Group Name* </label>
+                     <input formControlName="name" id="name" autocomplete="true" type="text"
+                            (paste)="checkAvailability(approvalGroupForm.value)"
+                            (keyup)="checkAvailability(approvalGroupForm.value); removeSpaces.clearSpace(approvalGroupForm, 'name')"
+                            pInputText>
+                   </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="approvalGroupForm.get('name').dirty && approvalGroupForm.get('name').hasError('required')">
+        Approval Group Name is required
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="!isNameAvailable">
+        Approval group name already exist, Please enter new one
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="approvalGroupForm.get('name').hasError('maxlength')">Approval Group Name must be less than 75 characters</div>
+    </div>
+  </div>
+</form>
+</div>
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" label="Reset" (click)="formReset()"
+              class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+      <button pButton type="button" (click)="createApprovalGroup(approvalGroupForm.value)" class="p-button-sm" iconPos="left" icon="pi pi-plus"
+              label="Create Approval Group"></button>
+    </div>
+  </div>
+</div>
+
+

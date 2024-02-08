@@ -1,0 +1,120 @@
+@import '../../../../../scss/color';
+
+.download-link{
+  text-align: center;
+  color: #70a8dc;
+  font-weight: bolder;
+  cursor:pointer;
+}
+.download-link span {
+  text-decoration: underline;
+}
+
+.margin-top {
+  margin-top: 20px !important;
+}
+
+.margin-top-grid{
+  margin-top: 1% !important;
+}
+.infoUpload{
+  color: #555555
+}
+
+.back-drop{
+  backdrop-filter: blur(10px);
+}
+
+.exception-body{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.border-hide ::ng-deep .p-panel .p-panel-header{
+  display: none;
+}
+
+.border-hide ::ng-deep .p-panel .p-panel-content{
+  border: none;
+  padding: 0 19px 0 21px !important;
+}
+
+.height{
+  min-height: calc(100vh - 214px);
+}
+
+//DropZone Styles
+
+.drop-zone-style{
+  width: 697px !important;
+  height: 196px !important;
+}
+
+$heightWithNotification: 316px;
+$heightWithOutNotification: 227px;
+
+.side-bar-drawer-content {
+  min-height: calc(100% - #{$heightWithOutNotification});
+
+  &.has-notification {
+    min-height: calc(100% - #{$heightWithNotification}) !important;
+  }
+}
+
+
+.text-left{
+  height: 96px;
+}
+
+.item-type{
+  color: $secondary-black-grey;
+  font-size: 12px;
+}
+
+.introduction{
+  margin-bottom: 12px !important;
+}
+
+.payment-fields-invalid{
+  margin: 0 !important;
+  margin-bottom: 25px !important;
+  display: flex !important;
+  align-items: center!important;
+  height: 64px !important;
+  min-height: 64px;
+}
+
+.fa-question-circle {
+  margin: 4px 17px 18px 0;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+}
+
+.item-type-heading{
+  font-size: 12px;
+  font-weight: bold;
+  color: $secondary-black-grey;
+  span {
+    /* Styles for the inner span */
+    font-weight: normal !important;
+  }
+}
+
+.upload-field{
+  margin-top: 15px !important;
+}
+
+.hyperlink{
+  font-weight: bold !important;
+}
+
+
+.item-detail-header{
+  font-size: 14px;
+  font-weight: normal !important;
+  color: $secondary-black-grey;
+}

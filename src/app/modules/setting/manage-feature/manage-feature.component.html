@@ -1,0 +1,72 @@
+<div class="grid">
+  <div class="col-12 ml-2 feature-table-wrapper">
+
+    <p-table responsiveLayout="scroll" scrollHeight="465px" [value]="featureList" [scrollable]="true" [lazy]="false" [loading]="false" [paginator]="false"
+             styleClass="p-datatable-gridlines p-datatable-striped p-datatable-sm"
+             [style]="{width:'900px'}">
+
+      <ng-template pTemplate="colgroup">
+        <colgroup>
+          <col style="width:500px">
+          <col style="width:150px">
+        </colgroup>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="text-center" id="fName">Feature
+          </th>
+          <th class="text-center" id="aStatus">Active Status
+          </th>
+
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-feature let-i="rowIndex">
+        <tr>
+          <td (click)="selectFeature(feature)">
+            {{feature.name}}
+            <span (click)="conformationInFeature(false)">
+              <i class="pi pi-info-circle" style="font-size: 12px;margin-left: 3px;"></i>
+            </span>
+          </td>
+
+          <td class="text-center">
+            <p-inputSwitch (onChange)="changeFeatureToggle(feature, feature.status)" [(ngModel)]="feature.status"></p-inputSwitch>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td [attr.colspan]="featureList.length + 2">No Data found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+
+  </div>
+</div>
+
+
+
+  <p-dialog header="Header" [(visible)]="isConfirmation" [position]="position" [modal]="true" [style]="{ width: '36vw', 'margin': '0' }">
+    <ng-template pTemplate="header">
+      <span class="text-xl font-bold">
+        {{selectedFeatureName}}</span>
+    </ng-template>
+
+    <ng-container *ngIf="selectedFeature">
+      <p class="pt-4">
+      {{selectedFeature.description}}
+      </p>
+    </ng-container>
+
+    <ng-template pTemplate="footer">
+      <div class="pull-right">
+        <button pButton type="button" label="Close"
+                class="p-button-outlined p-button-sm margin-right" (click)="isConfirmation = false"></button>&nbsp;
+      </div>
+    </ng-template>
+  </p-dialog>
+

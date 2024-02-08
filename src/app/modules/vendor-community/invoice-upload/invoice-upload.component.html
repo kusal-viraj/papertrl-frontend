@@ -1,0 +1,96 @@
+<div style="text-align: -webkit-center;" *ngIf="!fromProcess">
+  <div style="padding: 170px">
+    <div class="card upload-bill-content">
+      <div class="grid mb-4">
+        <div class="col-6 text-left">
+          <h5 class="subHeadingColour ">Process Invoice</h5>
+        </div>
+        <div class="col-6 text-right">
+          <p>
+            <span class="back-btn p-text-normal subHeadingGreen" (click)="backToList()">
+              <em class="fa fa-arrow-circle-o-left back-btn"></em> Back To List
+            </span>
+          </p>
+        </div>
+      </div>
+      <ng-template [ngTemplateOutlet]="upload_fields"></ng-template>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="fromProcess">
+  <ng-template [ngTemplateOutlet]="upload_fields"></ng-template>
+</ng-container>
+
+
+<ng-template #upload_fields>
+<div class="p-fluid">
+  <form [formGroup]="submitBillForm" autocomplete="off">
+    <div class="grid p-fluid">
+      <div class="field col-12 xl:col-6 md:col-6 pt-0 pb-0">
+        <label class="label-wrapper" for="vendor">Customer*</label>
+        <span class="p-float-label">
+             <p-dropdown [options]="customers.data" id="vendor" inputId="vendor" #vendorName appendTo="body"
+                         formControlName="tenantId" class="text-left" optionLabel="name" optionValue="id"
+                         [showClear]="false"
+                         [autoDisplayFirst]="false" [filter]="true">
+           </p-dropdown>
+        </span>
+        <div class="p-invalid text-left text-align-left"
+             *ngIf="submitBillForm.get('tenantId').dirty && submitBillForm.get('tenantId').errors">
+          Customer is required
+        </div>
+      </div>
+      <div class="field col-12 xl:col-6 md:col-6 pt-0 pb-0">
+        <label  for="selectTemplate" class="label-responsive label-wrapper">Select Template </label>
+        <span class="p-float-label">
+          <p-dropdown [options]="templateList.data" id="selectTemplate" #templateName appendTo="body"
+                      formControlName="templateId" optionValue="id" optionLabel="name" [showClear]="true"
+                      [autoDisplayFirst]="false" (onChange)="changeTemplateList(templateName.selectedOption.id)"
+                      [filter]="true" class="text-left">
+             <ng-template pTemplate="selectedItem">
+               <div>{{templateName.selectedOption.name}}</div>
+             </ng-template>
+
+             <ng-template let-option pTemplate="item">
+               <div class="grid">
+                 <div class="dropdown-list"
+                      [ngClass]="option.id == 0 ? ' dropdown-add': null">{{option.name}}</div>
+                 <i *ngIf="option.id == 0" class="pi pi-plus dropdown-icon  dropdown-add"></i>
+               </div>
+             </ng-template>
+           </p-dropdown>
+        </span>
+      </div>
+      <div class="col-12 xl:col-12 pt-0 pb-0" *ngIf="!loading">
+        <ngx-dropzone accept="application/pdf,image/png,image/jpeg,image/jpg" (change)="changeFileList($event)"
+                      class="drop-zone-style">
+          <ngx-dropzone-label class="subHeadingColour p-text-normal">Drop File(s) Here To Upload <br><br>
+           <span class="dp-zone-small-text-wrapper p-text-normal">(We only accept PDF, JPG JPEG and PNG formats, all the other formats will be ignored)</span>
+          </ngx-dropzone-label>
+          <ngx-dropzone-preview class="preview-file" *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+            <ngx-dropzone-label class="uploaded-file-name">{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+          </ngx-dropzone-preview>
+        </ngx-dropzone>
+      </div>
+      <div class="col-12 xl:col-12  pt-0 pb-0" *ngIf="loading">
+        <ngx-dropzone [disabled]="true" class="drop-zone-style1" style="background-color: #ededed">
+          <ngx-dropzone-label>
+            <p-progressSpinner [style]="{width: '70px', height: '70px'}" styleClass="custom-spinner" strokeWidth="4"
+                               fill="transparent" animationDuration=".8s"></p-progressSpinner>
+            <br>
+            <ngx-dropzone-label class="subHeadingColour p-text-normal">Please wait, We are processing your file(s)</ngx-dropzone-label>
+          </ngx-dropzone-label>
+        </ngx-dropzone>
+      </div>
+    </div>
+  </form>
+</div>
+</ng-template>
+
+<!--Create New Template-->
+<p-sidebar appendTo="body" [showCloseIcon]="false" [fullScreen]="true" [modal]="false"
+           class="overflow-side-bar" *ngIf="addNewTemplate" [(visible)]="addNewTemplate">
+  <app-add-template *ngIf="addNewTemplate" (closeTemplateCreateView)="addNewTemplate=false; getTemplateList()"
+                    [fromTemplateManagement]="true"></app-add-template>
+</p-sidebar>

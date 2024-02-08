@@ -1,0 +1,88 @@
+<form [formGroup]="attachedBillDetailForm" class="form-outer-padding">
+
+  <div class="grid attached-bill-detail-wrapper">
+
+    <div class="field col-3" *ngIf="!isFromVendor">
+      <label>Vendor</label>
+      <div>{{attachedBillDetailForm.get('vendorName').value}}</div>
+    </div>
+
+    <div class="field col-3" *ngIf="isFromVendor">
+      <label>Customer</label>
+      <div>{{attachedBillDetailForm.get('tenantId').value}}</div>
+    </div>
+
+    <div class="field  col-3">
+      <label>Credit Note No</label>
+      <div>{{attachedBillDetailForm.get('creditNoteNo').value}}</div>
+    </div>
+
+    <div class="field  col-3">
+      <label>Credit Total</label>
+      <div>{{attachedBillDetailForm.get('creditTotal').value}}</div>
+    </div>
+
+    <div class="field col-3">
+      <label>Remaining Credit</label>
+      <div>{{attachedBillDetailForm.get('amountToCredit').value}}</div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <p-table responsiveLayout="scroll" [value]="lineItemMainTable.controls" scrollable="true" scrollHeight="256px"
+             [style]="{width:'auto'}"  scrollDirection="both"
+             styleClass="p-datatable-md p-datatable-striped detail-table">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width:20px"  class="thead-style detail-table-header-center" id="no">#</th>
+          <th style="min-width:100px" class="thead-style detail-table-header-left" id="itemNumber1">Bill Number</th>
+          <th style="min-width:100px" class="thead-style detail-table-header-right" id="itemName1">Remaining Balance</th>
+          <th style="min-width:100px" class="thead-style detail-table-header-right" id="sku">Applied Amount</th>
+          <th style="min-width:20px"  class="thead-style detail-table-header-left" id="delete" *ngIf="!isFromVendor"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-i="rowIndex" let-item formArrayName="creditNoteBillDetails">
+        <tr id="tr_{{i}}" [formGroupName]="i" [pEditableRow]="item">
+          <td style="text-align: center; width:20px"><label>{{i + 1}}</label></td>
+
+          <td style="width:100px">
+            <div>{{f.creditNoteBillDetails.value[i].billNo}}</div>
+          </td>
+
+          <td style="width:100px" class="text-right">
+            <div>{{f.creditNoteBillDetails.value[i].billRemainingBalance | number : '1.2-2'}}</div>
+          </td>
+
+          <td style="width:100px" class="text-right">
+            <div>{{f.creditNoteBillDetails.value[i].appliedCreditAmount | number : '1.2-2'}}</div>
+          </td>
+
+          <td style="width:20px" class="text-center" *ngIf="!isFromVendor">
+            <em class="fa fa-trash item-remove-button"
+                (click)="removeBill(i, item)"></em>
+          </td>
+
+        </tr>
+
+      </ng-template>
+    </p-table>
+  </div>
+
+  <div class="grid pull-right alignment-with-item-table">
+    <div id="appliedTotal" [class]="!isFromVendor? 'align-amount':'align-amount-vendor'"><span class="subHeadingColour"><b>Total Amount:
+    </b></span> {{f.appliedTotal.value | number : '1.2-2'}}</div>
+  </div>
+
+</form>
+
+
+<p-confirmDialog #cd key="attBill" appendTo="body" header="Are you sure?"
+                 icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cd.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, Remove it!"
+            (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

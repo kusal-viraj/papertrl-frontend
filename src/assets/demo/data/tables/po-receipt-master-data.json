@@ -1,0 +1,41 @@
+{
+  "data": [
+    {
+      "id": 3,
+      "receiptNo": "SFF655",
+      "vendor": "Bamboo Watch",
+      "poNumber": "PO-1",
+      "poDate": "30/12/2020",
+      "createdBy": "SMITH",
+      "createdDate": "17/12/2020",
+      "amount": "1523.00",
+      "submitDate": "17/12/2020",
+      "status": "Active"
+    },
+    {
+      "id": 1,
+      "receiptNo": "SFF655",
+      "vendor": "Bamboo Watch",
+      "poNumber": "PO-1",
+      "poDate": "30/12/2020",
+      "createdBy": "SMITH",
+      "createdDate": "17/12/2020",
+      "amount": "1523.00",
+      "submitDate": "17/12/2020",
+      "status": "Active"
+    },
+    {
+      "id": 2,
+      "receiptNo": "SFF655",
+      "vendor": "Bamboo Watch",
+      "poNumber": "PO-1",
+      "poDate": "30/12/2020",
+      "createdBy": "SMITH",
+      "createdDate": "17/12/2020",
+      "amount": "1523.00",
+      "submitDate": "17/12/2020",
+      "status": "CL"
+    }
+  ],
+  "totalRecords": 3
+}

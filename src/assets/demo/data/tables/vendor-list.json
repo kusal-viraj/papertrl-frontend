@@ -1,0 +1,113 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "vendor.id": "Sdc Inc",
+      "venpay.noOfBills": "10",
+      "venpay.paidAmount": "1000.00",
+      "venpay.dueAmount": "25000.00",
+      "venpay.totalDiscount": "10000.00",
+      "venpay.latestPaymentAmount": "5000.00",
+      "venpay.latestPaymentDate": "06/09/2021",
+      "payments": [
+        {
+          "txn.batchId": "NO1000",
+          "txn.paymentReferenceNo": "TXN-100",
+          "txn.paymentDate": "5/5/2020",
+          "txn.paymentAmount": "1000.00",
+          "txn.paymentType": "VMC",
+          "txn.status": "P"
+        },
+        {
+          "txn.batchId": "NO1000",
+          "txn.paymentReferenceNo": "TXN-100",
+          "txn.paymentDate": "5/5/2020",
+          "txn.paymentAmount": "1000.00",
+          "txn.paymentType": "VMC",
+          "txn.status": "P"
+        },
+        {
+          "txn.batchId": "NO1000",
+          "txn.paymentReferenceNo": "TXN-100",
+          "txn.paymentDate": "5/5/2020",
+          "txn.paymentAmount": "1000.00",
+          "txn.paymentType": "VMC",
+          "txn.status": "P"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "vendor.id": "Sdc Inc",
+      "venpay.noOfBills": "10",
+      "venpay.paidAmount": "1000.00",
+      "venpay.dueAmount": "25000.00",
+      "venpay.totalDiscount": "10000.00",
+      "venpay.latestPaymentAmount": "5000.00",
+      "venpay.latestPaymentDate": "06/09/2021",
+      "payments": [
+        {
+          "txn.batchId": "NO1000",
+          "txn.paymentReferenceNo": "TXN-100",
+          "txn.paymentDate": "5/5/2020",
+          "txn.paymentAmount": "1000.00",
+          "txn.paymentType": "VMC",
+          "txn.status": "P"
+        },
+        {
+          "txn.batchId": "NO1000",
+          "txn.paymentReferenceNo": "TXN-100",
+          "txn.paymentDate": "5/5/2020",
+          "txn.paymentAmount": "1000.00",
+          "txn.paymentType": "VMC",
+          "txn.status": "P"
+        },
+        {
+          "txn.batchId": "NO1000",
+          "txn.paymentReferenceNo": "TXN-100",
+          "txn.paymentDate": "5/5/2020",
+          "txn.paymentAmount": "1000.00",
+          "txn.paymentType": "VMC",
+          "txn.status": "P"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "vendor.id": "Sdc Inc",
+      "venpay.noOfBills": "10",
+      "venpay.paidAmount": "1000.00",
+      "venpay.dueAmount": "25000.00",
+      "venpay.totalDiscount": "10000.00",
+      "venpay.latestPaymentAmount": "5000.00",
+      "venpay.latestPaymentDate": "06/09/2021",
+      "payments": [
+        {
+          "txn.batchId": "NO1000",
+          "txn.paymentReferenceNo": "TXN-100",
+          "txn.paymentDate": "5/5/2020",
+          "txn.paymentAmount": "1000.00",
+          "txn.paymentType": "VMC",
+          "txn.status": "P"
+        },
+        {
+          "txn.batchId": "NO1000",
+          "txn.paymentReferenceNo": "TXN-100",
+          "txn.paymentDate": "5/5/2020",
+          "txn.paymentAmount": "1000.00",
+          "txn.paymentType": "VMC",
+          "txn.status": "P"
+        },
+        {
+          "txn.batchId": "NO1000",
+          "txn.paymentReferenceNo": "TXN-100",
+          "txn.paymentDate": "5/5/2020",
+          "txn.paymentAmount": "1000.00",
+          "txn.paymentType": "VMC",
+          "txn.status": "P"
+        }
+      ]
+    }
+  ]
+}
+

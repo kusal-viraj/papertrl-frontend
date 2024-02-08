@@ -1,0 +1,26 @@
+@import "../../../../scss/color.scss";
+
+.create-expenses{
+  //overflow-y: auto;
+  //height: calc(100vh - 72px);
+
+}
+.menu-expense-home {
+  size: 16px;
+  color: $green;
+  cursor: pointer;
+  font-weight: 600;
+
+}
+
+::ng-deep .card-panels {
+  padding-bottom: 0 !important;
+
+}
+
+::ng-deep .tabview-custom > ul >
+  .p-disabled {
+    display: none;
+  }
+
+

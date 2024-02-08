@@ -1,0 +1,46 @@
+<div class="grid mt-2">
+  <div class="col-6">
+    <app-table-header-action-buttons
+      [hidden]="showViewAutomationList" *ngIf="automationListComponent && privilegeService.isAuthorizedMultiple(
+          [appAuthorities.AUTOMATION_INACTIVATE, appAuthorities.AUTOMATION_ACTIVATE,
+           appAuthorities.AUTOMATION_DELETE, appAuthorities.AUTOMATION_DETAIL_VIEW, appAuthorities.AUTOMATION_EDIT])"
+      [tableSupportBase]="automationListComponent?.tableSupportBase"
+      (refresh)="automationListComponent?.loadData(automationListComponent?.tableSupportBase.searchFilterDto)"
+      (delete)="automationListComponent?.deleteApprovalGroupList()" [componentInstance]="automationListComponent"
+      (inactive)="automationListComponent?.inactiveApprovalGroupList()"
+      (active)="automationListComponent?.activeApprovalGroupList()"
+      (showFilters)="automationListComponent.showFilter = !automationListComponent.showFilter;
+      automationListComponent.showFilterColumns = false"
+      (showColumns)="automationListComponent.showFilterColumns = !automationListComponent.showFilterColumns; automationListComponent.showFilter = false"
+      [visibleActions]="automationListComponent?.availableHeaderActions"
+      [moduleName]="AppAnalyticsConstants.MODULE_NAME_AUTOMATION"
+    ></app-table-header-action-buttons>
+  </div>
+
+  <div class="col-6 text-right">
+    <button pButton class="p-button-sm mr-2" [label]="'Create Automation'"
+            *ngIf="!showCreateAutomation && privilegeService.isAuthorized(appAuthorities.AUTOMATION_CREATE)"
+            (click)="changeAutomationAction('CREATE')"></button>
+    <button pButton class="p-button-outlined mr-2" [label]="'View Automation List'"
+            *ngIf="showViewAutomationList && privilegeService.isAuthorizedMultiple([appAuthorities.AUTOMATION_INACTIVATE,
+              appAuthorities.AUTOMATION_ACTIVATE, appAuthorities.AUTOMATION_DELETE, appAuthorities.AUTOMATION_DETAIL_VIEW,
+               appAuthorities.AUTOMATION_EDIT])" (click)="changeAutomationAction('SHOW_LIST')"></button>
+  </div>
+</div>
+
+
+
+<p-sidebar [showCloseIcon]="false"  [fullScreen]="true" [modal]="false"
+           [(visible)]="showCreateAutomation" appendTo="body" (onHide)="changeAutomationAction('SHOW_LIST');"
+           (onShow)="changeAutomationAction('SHOW_LIST');">
+  <app-workflow-create *ngIf="privilegeService.isAuthorized(appAuthorities.AUTOMATION_CREATE) && showCreateAutomation"
+                       (backToAutomationList)="refreshAutomationGrid()" (isClickCloseButton)="showCreateAutomation = false"
+                        ></app-workflow-create>
+</p-sidebar>
+
+<div class="col-12 p-0">
+  <app-automation-list [hidden]="showViewAutomationList" #automationListComponent
+                       *ngIf="privilegeService.isAuthorizedMultiple([appAuthorities.AUTOMATION_INACTIVATE,
+              appAuthorities.AUTOMATION_ACTIVATE, appAuthorities.AUTOMATION_DELETE, appAuthorities.AUTOMATION_DETAIL_VIEW,
+               appAuthorities.AUTOMATION_EDIT])"></app-automation-list>
+</div>

@@ -1,0 +1,35 @@
+<div class="grid" [class]="receiptIds.length == appConstant.ONE ? 'view-one':'view-multiple'">
+
+  <ng-container *ngIf="receiptIds.length > appConstant.ONE">
+    <div *ngFor="let receiptId of receiptIds; let i = index">
+
+      <div class="receipt-attachment-wrapper" (click)="loadSelectedAttachment(receiptId); currentIndex = i">
+        <div class="selected-item-wrapper" *ngIf="currentIndex === i">
+          <em
+            class="fa fa-check-square check-box-wrapper">
+          </em>
+        </div>
+
+        <span class="fa fa-file-pdf pdf-icon-wrapper"></span>
+
+      </div>
+
+    </div>
+  </ng-container>
+
+
+  <div class="col-12" [class]="receiptIds.length > appConstant.ONE ? 'attachment-view':'single-attachment-view'">
+
+    <div class="attachment-wrapper" [class]="receiptIds.length > 1 ? 'attachment-wrapper':'single-attachment-wrapper'"
+         *ngIf="!receiptUrl">
+      <img class="progress-gif" alt="card" src="../../../../assets/images/progress-gif.gif">
+    </div>
+
+    <iframe [src]="receiptUrl" allowfullscreen *ngIf="receiptUrl"
+            style="border: none"
+            width="100%" height="100%" title="Bill">
+    </iframe>
+
+  </div>
+
+</div>

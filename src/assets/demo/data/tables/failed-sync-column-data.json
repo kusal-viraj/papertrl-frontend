@@ -1,0 +1,58 @@
+{
+  "advancedFilters": [],
+  "columns": [
+    {
+      "field": "referenceNo",
+      "header": "Reference No",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "left",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Name"
+    },
+    {
+      "field": "objectType",
+      "header": "Object Type",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "dropdown",
+      "canHide": true,
+      "placeholder": "Object Type"
+    },
+    {
+      "field": "date",
+      "header": "Date",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "date",
+      "canHide": true,
+      "placeholder": "Date"
+    },
+    {
+      "field": "message",
+      "header": "Message",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "left",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Message"
+    }
+  ],
+  "state": {
+    "first": 0,
+    "rows": 10,
+    "columnWidths": "210,210,210,210"
+  }
+}

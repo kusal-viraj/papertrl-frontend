@@ -1,0 +1,112 @@
+<div class="side-bar-drawer-content p-3">
+<form [formGroup]="payProviderForm" (ngSubmit)="onSubmitForm(payProviderForm.value)">
+  <h6 *ngIf="!isEditView" class="subHeadingColour">Payment Provider Information</h6>
+
+  <div class="grid p-fluid">
+    <div
+      [ngClass]="isEditView ? 'field img-fluid-remover  ml-2  grid sm:col-12 md:col-12 lg:col-2' : 'field p-fluid grid col-2 ml-2 mb-5 logo-image-col'">
+
+      <div class="square upload-img-wrapper" *ngIf="!imageUrl" (click)="fileInput.click()"
+           Style="background-color: #efefef">
+        <div class="pi pi-image upload-img">
+        </div>
+        <span class="upload-text">Upload Logo</span>
+      </div>
+
+      <div class="avatar-upload">
+        <div class="avatar-edit">
+          <input formControlName="img" type='file' id="imageUpload" accept="image/*" #fileInput
+                 (change)="uploadFile($event)"/>
+        </div>
+        <div *ngIf="imageUrl" class="avatar-preview image-border-avt">
+          <div id="imagePreview" [style.backgroundImage]="'url('+ imageUrl +')'">
+          </div>
+          <div *ngIf="imageUrl">
+            <span class="addImage" *ngIf="imageUrl"
+                  (click)="deleteFile(); fileInput.value = null"><strong>Delete</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div [ngClass]="isEditView ? 'field col-12' : 'field col-12 sm:col-6 md:col-6 xl:col-6 lg:col-6'">
+      <br *ngIf="isEditView">
+      <div class="grid p-fluid">
+
+        <div [ngClass]="isEditView ? 'field col-12' : 'field col-12 sm:col-12 md:col-6 xl:col-6 lg:col-6'">
+          <label class="label-wrapper" for="name">Name* </label>
+          <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input id="name" maxlength="100" (keyup)="removeSpace('name')"
+                            type="text" pInputText formControlName="name">
+                   </span>
+          </div>
+          <div class="p-invalid text-align-left"
+               *ngIf="payProviderForm.get('name').dirty && payProviderForm.get('name').errors">
+            Payment Provider Name is required
+          </div>
+        </div>
+
+        <div [ngClass]="!isEditView ? 'field col-12 lg:col-6' : 'field col-12'">
+          <label class="label-wrapper" for="payProvider">Payment Types* </label>
+        <span class="p-float-label">
+           <p-multiSelect [options]="paymentTypeList.data" id="payProvider" optionValue="id" display="chip"
+                          appendTo="body"
+                          inputId="payProvider" [(ngModel)]="providerDto.paymentTypes" #select
+                          formControlName="paymentTypeList" optionLabel="name" [showToggleAll]="true"
+                          [filter]="true">
+             <ng-template pTemplate="selectedItem">
+                <div>{{payProviderForm.get('paymentTypeList').value.name}}</div>
+             </ng-template>
+
+             <ng-template let-approvalGroups pTemplate="item">
+                 <div class="grid">
+                     <div class="role-dropdown-list"
+                          [ngClass]="approvalGroups.id == 0 ? ' role-dropdown-add': null">{{approvalGroups.name}}</div>
+                     <em *ngIf="approvalGroups.name == 'Add New'"
+                         class="pi pi-plus role-dropdown-icon role-dropdown-add"></em>
+                 </div>
+             </ng-template>
+           </p-multiSelect>
+        </span>
+          <div class="p-invalid text-align-left"
+               *ngIf="payProviderForm.get('paymentTypeList').dirty && payProviderForm.get('paymentTypeList').errors">
+            Payment Type is required
+          </div>
+        </div>
+
+        <div [ngClass]="isEditView ? 'field col-12':'field col-12 sm:col-12 md:col-12 xl:col-12 lg:col-12'">
+          <label class="label-wrapper" for="descriptionId">Description </label>
+          <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <textarea id="descriptionId" rows="2" maxlength="1000" (keyup)="removeSpace('description')"
+                               type="text" pInputText formControlName="description"></textarea>
+                   </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div [ngClass]="isEditView ? 'field col-12' : 'field col-12 sm:col-4 md:col-4 xl:col-4 lg:col-4'"></div>
+
+  </div>
+</form>
+</div>
+
+
+<div class="grid  panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" (click)="resetForm()" label="Reset"
+              [disabled]="isLoadingCreateAction || isLoadingEditAction"
+              class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+      <button *ngIf="!isEditView" pButton type="button" (click)="onSubmitForm(payProviderForm.value)" class="p-button-sm" [disabled]="isLoadingCreateAction"
+              iconPos="left" [icon]="isLoadingEditAction ? 'pi pi-spin pi-spinner': 'pi pi-save'"
+              label="Create"></button>
+      <button *ngIf="isEditView" pButton type="button" class="p-button-sm" [disabled]="isLoadingEditAction"
+              (click)="updatePaymentProvider()"
+              iconPos="left" [icon]="isLoadingEditAction ? 'pi pi-spin pi-spinner': 'pi pi-save'"
+              label="Save"></button>
+    </div>
+  </div>
+</div>

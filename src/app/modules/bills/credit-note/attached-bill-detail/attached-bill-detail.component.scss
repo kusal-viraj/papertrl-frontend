@@ -1,0 +1,87 @@
+@import '../../../../../scss/color';
+
+.form-outer-padding {
+  padding: 20px 20px 5px 20px;
+}
+
+.item-remove-button {
+  color: #9c9c9c;
+  cursor: pointer;
+}
+
+.btn-behaviour:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: bold !important;
+}
+
+.alignment-with-item-table {
+  margin-top: 22px;
+  font-size: 14px !important;
+}
+
+.amount-label-wrapper {
+  text-align: right;
+  align-self: center;
+}
+
+.attached-bill-detail-wrapper {
+  .field {
+    label {
+      font-size: 11px;
+      color: $grey;
+      margin-bottom: 1px;
+    }
+
+    div {
+      font-size: 13px;
+    }
+  }
+}
+
+.bill-heading-detail-wrapper {
+  color: #73828a;
+  margin-left: -12px;
+}
+
+.credit-note-detail-section-heading-wrapper {
+  color: #73828a;
+}
+
+.credit-note-wrapper ::ng-deep .p-dialog .p-dialog-header {
+  border-bottom: 0 none;
+  background: #ffffff;
+  color: #73828A !important;
+  padding: 0.5rem 1rem 0 1rem !important;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+}
+
+.credit-note-wrapper ::ng-deep .p-dialog .p-dialog-header .p-dialog-title {
+  font-size: 14px !important;
+}
+
+.credit-note-wrapper ::ng-deep .p-dialog .p-dialog-content {
+  padding: 0 1rem 0 1rem !important;
+}
+
+
+.credit-note-wrapper ::ng-deep .p-dialog .p-dialog-header .p-dialog-header-icon:last-child {
+  margin-right: 0;
+  margin-left: 5px !important;
+}
+
+.credit-note-wrapper ::ng-deep .p-dialog-mask .p-dialog .p-dialog-content {
+  width: 750px !important;
+  height: 427px !important;
+}
+
+.align-amount {
+  margin-bottom: 10px;
+  margin-right: 14px;
+}
+
+.align-amount-vendor {
+  margin-right: 24px;
+}
+

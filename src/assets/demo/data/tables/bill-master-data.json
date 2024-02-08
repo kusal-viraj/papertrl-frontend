@@ -1,0 +1,59 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "billNo" : "2345678",
+      "billDate": "17/12/2020",
+      "billAmount": 1375.50,
+      "terms": "Net 10",
+      "dueDate": "27/12/2020",
+      "vendor": "Bamboo Watch",
+      "poNo": "PO00012",
+      "poReceipt": "PR00012",
+      "submittedBy": "Admin",
+      "submittedDate": "17/12/2020",
+      "remainingBalance": 1375.50,
+      "discountAmount": 0.0,
+      "approvalUser": "",
+      "approvalDate": "",
+      "status": "P"
+    },
+    {
+      "id": 2,
+      "billNo" : "2345890",
+      "billDate": "17/12/2020",
+      "billAmount": 2000.50,
+      "terms": "Net 10",
+      "dueDate": "27/12/2020",
+      "vendor": "Bamboo Watch",
+      "poNo": "PO00013",
+      "poReceipt": "PR00013",
+      "submittedBy": "Admin",
+      "submittedDate": "17/12/2020",
+      "remainingBalance": 2000.50,
+      "discountAmount": 10.0,
+      "approvalUser": "",
+      "approvalDate": "",
+      "status": "A"
+    },
+    {
+      "id": 3,
+      "billNo" : "2342390",
+      "billDate": "17/12/2020",
+      "billAmount": 200.50,
+      "terms": "Net 5",
+      "dueDate": "27/12/2020",
+      "vendor": "Bamboo",
+      "poNo": "PO00313",
+      "poReceipt": "PR00313",
+      "submittedBy": "Admin",
+      "submittedDate": "17/12/2020",
+      "remainingBalance": 2000.50,
+      "discountAmount": 10.0,
+      "approvalUser": "",
+      "approvalDate": "",
+      "status": "R"
+    }
+  ],
+  "totalRecords": 3
+}

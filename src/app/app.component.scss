@@ -1,0 +1,19 @@
+.notification-message {
+  display: none;
+}
+
+.notification-message h5 {
+  text-align: center;
+}
+
+@media only screen and (max-device-height: 450px) and (max-device-width: 800px) and (orientation: landscape) {
+  .notification-message {
+    display: flex;
+    background-color: black;
+    opacity: 0.5;
+  }
+}
+
+.search-container {
+  background: #c7dcf0;
+}

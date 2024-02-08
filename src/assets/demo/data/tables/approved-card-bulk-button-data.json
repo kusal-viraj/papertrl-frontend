@@ -1,0 +1,9 @@
+[
+  {
+    "action": "BUTTON_PROCESS",
+    "label": "Generate Bill",
+    "icon": "pi pi-plus",
+    "active": false,
+    "authCode": "CREDIT_CARD_APPROVED_TRANSACTIONS_GENERATE_BILL"
+  }
+]

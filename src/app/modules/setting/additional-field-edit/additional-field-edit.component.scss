@@ -1,0 +1,113 @@
+@import '../../../../scss/table-responsive';
+@import "../../../../scss/color.scss";
+@import '../../../../scss/common-styles';
+
+@media only screen and (max-width: 600px) {
+  .screen-change-btn {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .heading-responsive {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.heading {
+  size: 16px;
+  color: $green;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.subHeading {
+  color: #73828A;
+}
+
+.dropdown-list {
+  padding-top: 10px;
+  margin-right: 25px;
+  padding-left: 5px;
+}
+
+.dropdown-icon {
+  right: 10px;
+  padding-top: 10px;
+  position: absolute;
+  z-index: 1;
+}
+
+.dropdown-icon:hover {
+  color: $green;
+  z-index: 1;
+}
+
+.dropdown-add {
+  color: $green;
+}
+
+.btn-trash {
+  background-color: #D0D5D8;
+  opacity: 1;
+}
+
+.btn-trash:hover {
+  background-color: #8c8e91;
+  opacity: 1;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 10px;
+  right: 0;
+  width: 98%;
+  //background-color: #ffffff;
+}
+
+.edit-additional-field{
+    size: 16px;
+    color: $green;
+    font-weight: 600;
+}
+
+.summary-dialog-addi-field ::ng-deep .p-dialog .p-dialog-header {
+  padding: 0;
+  padding-top: 34px !important
+}
+
+
+::ng-deep .summary-dialog-addi-field > div > .ng-trigger {
+  margin: 20px 0px 0px 0px !important;
+  width: 80%;
+}
+::ng-deep .summary-dialog-addi-field .p-dialog-content{
+  min-height: 500px ;
+}
+
+
+.footer-btns {
+  margin-top: 50px;
+}
+
+p-inputNumber{
+  padding-left: 0;
+  padding-right: 0;
+  border: none;
+}
+
+.datasource-edit-ico {
+  position: absolute;
+  right: 30px;
+  text-align: right;
+}
+
+.drawer-content {
+  height: calc(100vh - 177px);
+}
+
+.datasource-edit-field{
+  min-width: fit-content;
+}

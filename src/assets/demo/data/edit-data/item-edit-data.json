@@ -1,0 +1,17 @@
+{
+  "assetAccount": {"label": "Asset 2", "id": "RM"},
+  "category":{"label": "Category 1", "id": "NY"},
+  "expenseAccount": {"label": "Expense 2", "id": "RM"},
+  "incomeAccount": {"label": "Income 1", "id": "NY"},
+  "itemName": "SAMPLE ITEM",
+  "itemNumber": "ITEM-1",
+  "taxable":true,
+  "itemType": {"label": "Inventory", "id": "inventory"},
+  "parentItem": {"label": "Service", "id": "RM"},
+  "purchasingDescription": "2500.00",
+  "purchasingPrice": "5000.00",
+  "salesDescription": "15000.00",
+  "sellingPrice": "10000.00",
+  "uom": {"label": "Account One", "id": "NY"},
+  "vendor": {"label": "Vendor 1", "id": "NY"}
+}

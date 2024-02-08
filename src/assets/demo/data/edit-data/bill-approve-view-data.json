@@ -1,0 +1,10 @@
+{
+  "billNumber": "12354AD",
+  "billDate": "01/05/2013",
+  "vendor": "Vendor 1",
+  "totalAmount": 1800,
+  "costDistributionTotal": "2000",
+  "remainingCeiling": "0.00",
+  "comment": "Comment 1",
+  "pdfUrl": "../assets/sampleInvoice.pdf"
+}

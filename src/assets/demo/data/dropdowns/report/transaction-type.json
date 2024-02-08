@@ -1,0 +1,14 @@
+[
+  {
+    "id": "BILLS_AWAITING_APPROVAL",
+    "name": "Bill"
+  },
+  {
+    "id": "PO_AWAITING_APPROVAL",
+    "name": "Purchase Order"
+  },
+  {
+    "id": "EXPENSE_AWAITING_APPROVAL",
+    "name": "Expense"
+  }
+]

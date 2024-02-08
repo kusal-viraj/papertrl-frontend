@@ -1,0 +1,32 @@
+{
+  "documentType": [
+    1,
+    3
+  ],
+  "section": 1,
+  "fieldType": 1,
+  "fieldName": "Field Name 1",
+  "required": true,
+  "maxLength": 10,
+  "displayOrder": 2,
+  "dataType": 2,
+  "datasource": 1,
+  "dropdownProperty": [
+    1,
+    2
+  ],
+  "rowCount": 2,
+  "value": "Label 1",
+  "fileType": 1,
+  "options": [
+    {
+      "optionValue": "Option 1"
+    },
+    {
+      "optionValue": "Option 2"
+    },
+    {
+      "optionValue": "Option 3"
+    }
+  ]
+}

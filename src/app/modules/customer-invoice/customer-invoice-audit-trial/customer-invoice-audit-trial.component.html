@@ -1,0 +1,29 @@
+<p-sidebar styleClass="p-sidebar-lg" [modal]="true" [dismissible]="true" appendTo="body" (onHide)="closeDrawer.emit()"
+           position="right" baseZIndex="1011"
+           [(visible)]="panelShow">
+  <ng-template pTemplate="header">Audit Trail <span class="heading subHeadingColour" *ngIf="heading">({{heading}}
+    )</span></ng-template>
+
+  <p-timeline [value]="auditTrial" align="alternate" styleClass="customized-timeline mb-4">
+    <ng-template pTemplate="marker" let-event>
+			<span class="custom-marker p-shadow-2" [style.backgroundColor]="'#3bb2ac'">
+                <i [ngClass]="event.status.icon"></i>
+            </span>
+    </ng-template>
+    <ng-template pTemplate="content" let-event>
+      <p-card>
+        <div class="grid">
+          <div class="col-12 pb-0 audit-topic">
+            {{event.status.name}} <b> {{event.header}} {{event.userName}} </b></div>
+          <br>
+          <div
+            class="col-12 p-text-italic audit-date">{{event.actionDate | date:dateFormatter.DATE_TIME_FORMAT}}</div>
+        </div>
+        <br>
+        <ng-container *ngIf="event.comment">
+          <p class="audit-cmt" *ngFor="let singleComment of event?.comment.split('</br>')">{{singleComment}}<br></p>
+        </ng-container>
+      </p-card>
+    </ng-template>
+  </p-timeline>
+</p-sidebar>

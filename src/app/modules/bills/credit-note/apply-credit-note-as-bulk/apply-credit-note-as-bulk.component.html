@@ -1,0 +1,122 @@
+<form [formGroup]="applyCreditNoteBulkForm" class="form-outer-padding">
+
+  <div *ngIf="warningForIgnoredBill" class="grid notify-days-msg">
+    <p>{{warningForIgnoredBill}}</p>
+  </div>
+
+  <div>
+    <p-table responsiveLayout="scroll" [value]="lineItemMainTable.controls" scrollable="true" scrollHeight="160px"
+             [style]="{width:'auto'}"  scrollDirection="both"
+             styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width:50px"  class="thead-style detail-table-header-left" id="no">#</th>
+          <th style="min-width:200px" class="thead-style detail-table-header-left" id="vendorId">Vendor</th>
+          <th style="min-width:200px" class="thead-style detail-table-header-left" id="billNumber">Bill Number</th>
+          <th style="min-width:200px" class="thead-style detail-table-header-left" id="billRemainingBalance">Balance to be
+            Paid
+          </th>
+          <th style="min-width:200px" class="thead-style detail-table-header-left" id="creditNoteNo">Credit Note No</th>
+          <th style="min-width:200px" class="thead-style detail-table-header-left" id="remainingCredit">Available Credit</th>
+          <th style="min-width:200px" class="thead-style detail-table-header-left" id="appliedAmount">Amount to Apply</th>
+          <th style="min-width:50px"  class="thead-style detail-table-header-left" id="empty1"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-i="rowIndex" let-item formArrayName="applyCreditNoteDetails">
+
+        <tr id="tr_{{i}}" [formGroupName]="i" [pEditableRow]="item">
+
+          <td style="text-align: center; width:50px"><label>{{i + 1}}</label></td>
+
+          <td style="width:200px">
+            <div class="p-inputgroup">
+              <input formControlName="vendorName" [readOnly]="true"
+                     placeholder="Vendor" name="vendorName" id="{{'vendorName' + i}}"
+                     type="text" pInputText>
+            </div>
+          </td>
+
+          <td style="width:200px">
+            <div class="p-inputgroup">
+              <input formControlName="billNumber" [readOnly]="true"
+                     placeholder="Bill Number" name="billNumber" id="{{'billNumber' + i}}"
+                     type="text" pInputText>
+            </div>
+          </td>
+
+          <td style="width:200px">
+            <div class="p-inputgroup">
+              <input formControlName="remainingBillBalance" [readOnly]="true"
+                     placeholder="Balance to be Paid" class="text-right" name="remainingBillBalance" id="{{'remainingBillBalance' + i}}"
+                     type="text" pInputText>
+            </div>
+          </td>
+
+          <td style="width:200px">
+            <p-dropdown [virtualScroll]="vendorRelatedCreditNoteList[i] ? vendorRelatedCreditNoteList[i].data.length>20 :
+          false" virtualScrollItemSize="25"
+                        formControlName="creditNoteId" [autoDisplayFirst]="false" id="{{'creditNoteId01' + i}}"
+                        name="productId1" class="number-column-table-dropdown" #dropdown (onChange)="getRemainingCredit(item)"
+                        appendTo="body" optionValue="id" optionLabel="name" placeholder="Select Credit Note Number"
+                        [filter]="true" [options]="vendorRelatedCreditNoteList[i].data" [showClear]="true"
+                        optionDisabled="inactive" [style]="{'width':'100%'}">
+
+              <ng-template pTemplate="selectedItem">
+                <div>{{dropdown.selectedOption.name}}</div>
+              </ng-template>
+
+              <ng-template let-item pTemplate="item">
+                <div class="grid">
+                  <div class="dropdown-list"
+                       [ngClass]="item.id == 0 ? ' dropdown-add': null">{{item.name}}</div>
+                  <em *ngIf="item.id == 0" class="pi pi-plus dropdown-icon dropdown-add"></em>
+                </div>
+              </ng-template>
+            </p-dropdown>
+          </td>
+
+          <td style="width:200px">
+            <div class="p-inputgroup">
+              <input formControlName="remainingCredit" [readOnly]="true"
+                     currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                     placeholder="Available Credit" name="remainingCredit" id="{{'remainingCredit' + i}}"
+                     type="text" pInputText>
+            </div>
+          </td>
+
+          <td style="width:200px">
+            <div class="p-inputgroup">
+              <input formControlName="appliedCreditAmount"
+                     currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                     placeholder="Amount to Apply" name="appliedAmount" id="{{'appliedAmount' + i}}"
+                     type="text" pInputText>
+            </div>
+          </td>
+
+          <td style="width:50px" class="text-center">
+            <em class="fa fa-trash item-remove-button"
+                (click)="removeBill(i)"></em>
+          </td>
+
+        </tr>
+
+      </ng-template>
+
+    </p-table>
+  </div>
+
+  <div class="grid">
+    <div class="col-12 mt-4">
+      <div class="pull-right">
+
+        <button pButton type="button" class="p-button-sm ml-2" iconPos="left" [disabled]="btnLoading"
+                [icon]="btnLoading ? 'pi pi-spin pi-spinner': 'fa fa-share'" (click)="applyCreditNoteBulk()"
+                label="Apply">
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+</form>

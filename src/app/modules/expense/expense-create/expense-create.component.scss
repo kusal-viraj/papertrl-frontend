@@ -1,0 +1,292 @@
+@import "../../../../scss/color.scss";
+
+p-calendar {
+  width: 100%
+}
+
+.amount-net {
+  color: $green;
+  text-align: end;
+}
+
+.amountsNet {
+  width: 100%;
+  background-color: #CDECEA;
+  color: $green;
+}
+
+.amount-text-input {
+  width: 250px;
+}
+
+.subHeading {
+  color: #73828A;
+}
+
+td {
+  vertical-align: middle;
+}
+
+@media screen and (max-width: 570px) {
+  .order-amount-fields {
+    order: 1;
+  }
+
+  .order-notes {
+    order: 2;
+  }
+
+}
+
+.create-expenses {
+  size: 16px;
+  color: $green;
+  font-weight: 600;
+
+}
+
+@media screen and (max-width: 450px) {
+  .amount-label {
+    width: 100%;
+    text-align: end;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .amount-input {
+    margin-left: -72px;
+  }
+}
+
+@media screen and (max-width: 570px) {
+  .order-amount-fields {
+    order: 1;
+  }
+
+  .order-drop-zone {
+    order: 2;
+  }
+
+  .amount-text-input {
+    margin-left: 48%;
+  }
+}
+
+.margin-top {
+  margin-top: -13px;
+}
+
+.amount-text-alignment {
+  color: $green;
+}
+
+.text-style {
+  text-align: center;
+  color: #A1ACB1;
+  opacity: 1;
+}
+
+
+.index-style {
+  color: #b2b2b2;
+  font-weight: 500;
+}
+
+
+.amounts {
+  width: 100%;
+  background-color: #f8f9fa
+}
+
+.scroll-fields {
+  min-width: 230px;
+  display: inline-block;
+}
+
+@media only screen and (max-width: 1100px) {
+  .condition-resize {
+    white-space: nowrap;
+    overflow: auto
+  }
+}
+
+@media screen and (max-width: 570px) {
+  .order-amount-fields {
+    order: 1;
+  }
+
+  .order-drop-zone {
+    order: 2;
+  }
+
+  .amount-text-input {
+    margin-left: 48%;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .order-amount-fields {
+    order: 1;
+  }
+
+  .order-drop-zone {
+    order: 2;
+  }
+
+
+  .amount-text-input {
+    margin-left: 48%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .menu-Item {
+    width: 100%;
+    text-align: center;
+  }
+  .screen-change-btn {
+    width: 100%;
+  }
+}
+
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 1px !important;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-inputtext {
+  border: none;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td p-autocomplete {
+  width: 100%;
+
+  .p-autocomplete {
+    width: 100%;
+  }
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-inputtext:focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown {
+  border: none;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown:focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown:not(.p-disabled).p-focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown.p-dropdown-open {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-footer {
+  padding: 0.5rem 0.5rem !important;
+}
+
+.calender-width ::ng-deep .p-calendar {
+  width: 100%;
+}
+
+.max-name-length {
+  max-width: 200px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.item-remove-button {
+  color: #9c9c9c;
+}
+
+.item-remove-button:hover {
+  cursor: pointer;
+}
+
+.clear-button:hover {
+  background-color: #D0D5D8;
+  opacity: 1;
+}
+
+.clear-button {
+  background-color: #D0D5D8;
+  opacity: 1;
+}
+
+.btn-behaviour:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: bold !important;
+}
+
+.form-wrapper {
+  margin-top: -13px;
+}
+
+.show-draft-wrapper {
+  width: 15%;
+}
+
+.add-remove-item-wrapper {
+  width: 85%;
+}
+
+@media only screen and (max-width: 1440px) {
+  .show-draft-wrapper {
+    width: 13% !important;
+  }
+  .add-remove-item-wrapper {
+    width: 87% !important;
+  }
+}
+
+@media only screen and (max-width: 1366px) {
+  .show-draft-wrapper {
+    width: 14% !important;
+  }
+  .add-remove-item-wrapper {
+    width: 86% !important;
+  }
+}
+
+
+@media only screen and (max-width: 1024px) {
+  .show-draft-wrapper {
+    width: 19% !important;
+  }
+  .add-remove-item-wrapper {
+    width: 81% !important;
+  }
+}
+
+.table-footer-amount {
+  color: #656060;
+  font-weight: 400;
+}
+
+.footer {
+  width: 100.4%;
+}
+
+.file-browse {
+  min-width: 69px;
+}
+
+.expense-table-dropdown ::ng-deep .p-dropdown .p-inputtext .ng-star-inserted {
+  width: 150px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+
+.p-dialog .p-dialog-content {
+  padding: 0 0 2rem 0 !important;
+}
+li{
+  list-style-type: none;
+}

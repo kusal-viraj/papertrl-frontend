@@ -1,0 +1,64 @@
+{
+  "advancedFilters": [],
+  "columns": [
+    {
+      "field": "tenantId",
+      "header": "Tenant Id",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Tenant Id"
+    },
+    {
+      "field": "userName",
+      "header": "User Name",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "User Name"
+    },
+    {
+      "field": "ipAddress",
+      "header": "IP Address",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "IP Address"
+    },
+    {
+      "field": "loggedDateTime",
+      "header": "Logged Date Time",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": null,
+      "canHide": true,
+      "placeholder": "Logged Date Time"
+    }
+  ],
+  "state": {
+    "first": 0,
+    "rows": 10,
+    "columnWidths": "210,210,210,210",
+    "columnOrder": [
+      "tenantId",
+      "userName",
+      "ipAddress",
+      "loggedDateTime"
+    ]
+  }
+}

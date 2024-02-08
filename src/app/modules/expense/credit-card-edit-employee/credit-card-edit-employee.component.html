@@ -1,0 +1,54 @@
+<div class="side-bar-drawer-content p-3 mb-2">
+<div class="grid change-employee" [formGroup]="formGroup">
+  <div class="grid col-12 header">
+    <div class="col-1 font-bold text-center">#</div>
+    <div class="col-3 font-bold text-center">Card No.</div>
+    <div class="col-2 font-bold text-center">No. of Transactions</div>
+    <div class="col-3 font-bold text-center">No. of Processed Transactions</div>
+    <div class="col-3 font-bold text-center">Employee</div>
+  </div>
+  <div class="data-list">
+    <div class="grid data col-12" formArrayName="groupedCardList" *ngFor="let group of groupFormArray.controls; let
+         i=index">
+      <ng-container [formGroupName]="i">
+        <div class="col-1 text-center">
+          <div>{{i + 1}}</div>
+        </div>
+        <div class="col-3 text-center">
+          <div>{{f.groupedCardList.value[i].cardNoStr}}</div>
+        </div>
+        <div class="col-2 text-center">
+          <div>{{f.groupedCardList.value[i].detailList.length}}
+          </div>
+        </div>
+        <div class="col-3 text-center">
+          <div>{{getProcessedCount(f.groupedCardList.value[i])}}
+          </div>
+        </div>
+        <div class="col-3 p-fluid">
+          <p-dropdown [virtualScroll]="employeeList.data.length > 20" virtualScrollItemSize="25" optionDisabled="inactive"
+                      [options]="employeeList.data" id="employees" appendTo="body" [showClear]="true"
+                      formControlName="employeeId" placeholder="Select Employee" optionLabel="name" optionValue="id"
+                      [filter]="true" [autoDisplayFirst]="false"
+                      [disabled]="getProcessedCount(f.groupedCardList.value[i]) !== 0">
+          </p-dropdown>
+        </div>
+      </ng-container>
+
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="grid mt-2 fixed panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" (click)="resetForm()" label="Reset" [disabled]="loading"
+              class="p-button-outlined resetBtn p-fluid p-button-sm" icon="fa-solid fa-rotate-right">
+      </button>
+      <button pButton type="button" class="p-button-sm ml-2" iconPos="left"
+              [icon]="!loading ? 'pi pi-save': 'pi pi-spinner'" (click)="submit()"
+              [disabled]="loading" label="Save"></button>
+    </div>
+  </div>
+  </div>

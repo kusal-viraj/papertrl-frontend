@@ -1,0 +1,51 @@
+<div class="col-12">
+  <form [formGroup]="createRoleForm" autocomplete="off">
+    <h5 class="subHeadingColour">Clone Role</h5><br>
+    <div class="grid p-fluid">
+      <div class="col-5">
+        <label class="label-wrapper" for="roleName">Role Name*</label>
+        <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input formControlName="roleName" (keyup)="checkRoleNameAvailability()"
+                            id="roleName" type="text"
+                            pInputText>
+                   </span>
+        </div>
+        <div class="p-invalid text-align-left"
+             *ngIf="createRoleForm.get('roleName').dirty && createRoleForm.get('roleName').hasError('required')">
+          Role Name is required
+        </div>
+        <div class="p-invalid text-align-left"
+             *ngIf="createRoleForm.get('roleName').hasError('maxlength')">
+          Role Name must be less than 50 characters
+        </div>
+        <div class="p-invalid text-align-left" *ngIf="isRoleNameAvailable">
+          Role name already exist, Please enter new one
+        </div>
+      </div>
+    </div>
+    <div class="grid">
+      <div [ngClass]="'col-12'">
+        <p-fieldset [style]="{'height': '70vh', 'overflow-y': 'auto'}" class="overflowCustom"
+                    legend="System Privileges">
+          <p-tree [value]="privilegeFiles" [filter]="true" selectionMode="checkbox"
+                  [(selection)]="privilegeNode"></p-tree>
+        </p-fieldset>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+    <button pButton type="button" icon="fa-solid fa-rotate-right" (click)="resetRoleCreation()" label="Reset"
+            class="p-button-outlined p-button-sm" [disabled]="btnLoading"></button>&nbsp;&nbsp;
+    <button pButton type="submit" class="p-button-sm" label="Create Role" (click)="onSubmit()"
+            [icon]="btnLoading ? 'pi pi-spin pi-spinner': 'pi pi-plus'" [disabled]="btnLoading"></button>
+    </div>
+  </div>
+</div>
+
+<!--Notification Messages-->
+<p-toast position="bottom-right" key="rm"></p-toast>

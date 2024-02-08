@@ -1,0 +1,58 @@
+.percentage-wrapper ::ng-deep .p-inputnumber .p-inputtext {
+  text-align: right !important;
+}
+
+@media screen and (max-width: 1366px) {
+  //.percentage-wrapper {
+  //  width: 15% !important;
+  //}
+}
+
+@media screen and (max-width: 1024px) {
+  .amount-wrapper {
+    width: 15% !important;
+  }
+  .button-set-wrapper {
+    width: 35% !important;
+  }
+  .button-set-wrapper-without-type {
+    width: 100% !important;
+    text-align: right !important;
+  }
+}
+
+@media screen and (max-width: 1440px) {
+  //.percentage-wrapper {
+  //  width: 15% !important;
+  //}
+}
+
+@media screen and (max-width: 768px) {
+  .amount-wrapper {
+    width: 50% !important;
+  }
+  .button-set-wrapper {
+    text-align: right;
+    width: 50% !important;
+  }
+  .percentage-wrapper {
+    width: 50% !important;
+  }
+  .button-set-wrapper-without-type {
+    width: 100% !important;
+    text-align: right !important;
+  }
+}
+
+.drawer-content {
+  height: calc(100vh - 103px) !important;
+}
+
+.side-bar-drawer-content {
+  //min-height: calc(100vh - 116px);
+}
+
+
+.button_content{
+  padding-top: 24px;
+}

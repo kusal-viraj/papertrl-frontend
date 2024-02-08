@@ -1,0 +1,56 @@
+<div class="grid mt-1">
+
+  <div class="col-6" *ngIf="isShowCustomerInvoiceList()">
+    <app-table-header-action-buttons
+      [componentInstance]="customerInvoiceListComponent" *ngIf="customerInvoiceListComponent"
+      [tableSupportBase]="customerInvoiceListComponent?.tableSupportBase"
+      (delete)="customerInvoiceListComponent?.bulkDelete()"
+      (export)="customerInvoiceListComponent.bulkExportAll()"
+      (refresh)="customerInvoiceListComponent?.loadData(customerInvoiceListComponent.tableSupportBase.searchFilterDto)"
+      (showFilters)="customerInvoiceListComponent.showFilter = !customerInvoiceListComponent?.showFilter;
+                                                customerInvoiceListComponent.showFilterColumns = false"
+      (showColumns)="customerInvoiceListComponent.showFilterColumns =
+      !customerInvoiceListComponent?.showFilterColumns; customerInvoiceListComponent.showFilter = false"
+      [visibleActions]="customerInvoiceListComponent?.availableHeaderActions">
+    </app-table-header-action-buttons>
+  </div>
+
+  <div class="col-6 pr-2 text-right">
+    <button pButton class="p-button-outlined mr-2"
+            *ngIf="privilegeService.isAuthorized(appAuthorities.IMPORT_INVOICE)"
+            label="Upload Invoice" (click)="toggleAction('u')"
+            ></button>
+    <button pButton class="p-button-sm mr-2"
+            label="Create Invoice" (click)="toggleAction('c')"
+            *ngIf="privilegeService.isAuthorized(appAuthorities.CREATE_INVOICE)"></button>
+  </div>
+
+  <div class="col-12 p-0">
+    <app-customer-invoice-list #customerInvoiceListComponent  *ngIf="isShowCustomerInvoiceList()">
+    </app-customer-invoice-list>
+  </div>
+
+
+</div>
+
+<!--Create Invoice-->
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           (onHide)="isCreateInvoice= false" [fullScreen]="false" [(visible)]="isCreateInvoice"
+           transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)">
+  <ng-template pTemplate="header">Create Invoice</ng-template>
+  <app-create-customer-invoice *ngIf="isCreateInvoice"
+                               (emitAfterSuccess)="refreshInvoiceList(); isCreateInvoice= false">
+  </app-create-customer-invoice>
+</p-sidebar>
+
+<!--Upload Invoice-->
+<p-sidebar appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           (onHide)="isUploadInvoice= false" [fullScreen]="false" [(visible)]="isUploadInvoice"
+           styleClass="p-sidebar-sm remove-invoice-upload-padding"
+           transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)">
+  <ng-template pTemplate="header">Upload Invoices</ng-template>
+  <app-upload-customer-invoice *ngIf="isUploadInvoice"
+                               (successEmitter)="refreshInvoiceList(); isUploadInvoice = false">
+  </app-upload-customer-invoice>
+</p-sidebar>
+

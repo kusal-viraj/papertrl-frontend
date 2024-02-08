@@ -1,0 +1,82 @@
+<form class="side-drawer-form-margin" (ngSubmit)="onSubmit(approvalGroupEditForm.value)" autocomplete="off"
+      [class]="!isEditForm  ? ' ' : 'side-bar-drawer-content pt-5'" [formGroup]="approvalGroupEditForm">
+  <h6 *ngIf="!isEditForm" class="subHeadingColour mb-4">Create Approval Group</h6>
+
+
+
+
+  <div class="grid p-fluid">
+    <div [ngClass]=" !panel ? 'field p-fluid lg:col-4 xl:col-3 md:col-4 col-12' : 'col-12'">
+      <label class="label-wrapper" for="apName">Approval Group Name* </label>
+      <div class="p-input">
+        <span class="p-float-label">
+          <input formControlName="name" id="apName" type="text" (keyup)="checkAvailability(approvalGroupEditForm.value);
+          removeSpaces.clearSpace(approvalGroupEditForm, 'name')" pInputText>
+        </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="approvalGroupEditForm.get('name').dirty && approvalGroupEditForm.get('name').hasError('required')">
+        Approval Group Name is required
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="!isNameAvailable">
+        Approval group name already exist, Please enter new one
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="approvalGroupEditForm.get('name').hasError('maxlength')">Approval
+        Group Name must be less than 75 characters
+      </div>
+    </div>
+
+   <ng-container *ngIf="!panel">
+  <div [ngClass]="!panel ? 'xl:col-1 lg:col-2 md:col-3 col-12 ': 'col-6'" class="reset-button-responsive "
+       style="padding-top: 1.8rem !important;">
+    <button pButton type="button" (click)="resetForm()" label=" " [disabled]="loading"
+            class="p-button-outlined resetBtn p-fluid p-button-sm" [class]="!panel ? 'createScreen-resetBtn':''">
+      <div style="width: 100%"><span class="fa-solid fa-rotate-right"></span> &nbsp; Reset</div>
+    </button>&nbsp;
+  </div>
+  <div  *ngIf="!isEditForm" class="xl:col-3  lg:col-4 md:col-4 col-12 " style="padding-top: 1.8rem !important;">
+    <button pButton type="submit" [style]="{'max-width': '200px'}" class="p-button-sm createBtn" label=" "
+            [disabled]="loading" [class]="!panel ? 'createScreen-createBtn':''">
+      <div style="width: 100%"><span [ngClass]="loading ? 'pi pi-spin pi-spinner':'pi pi-plus'"></span> &nbsp; Create
+        Approval Group
+      </div>
+
+    </button>
+  </div>
+  <div  *ngIf="isEditForm" class="col-6">
+    <button pButton type="submit" class="p-button-sm" label=" ">
+      <div style="width: 100%"><span class="pi pi-save"></span> &nbsp; Save</div>
+    </button>
+  </div>
+     </ng-container>
+
+  </div>
+
+
+
+</form>
+
+<ng-container *ngIf="panel">
+  <div class="grid panel-footer footer">
+    <div class="col-12 button-set-wrapper form-footer-button">
+      <div class="pull-right">
+        <button pButton type="button" (click)="resetForm()" label=" " [disabled]="loading"
+                class="p-button-outlined resetBtn p-button-sm">
+          <div style="width: 100%"><span class="fa-solid fa-rotate-right"></span> &nbsp; Reset</div>
+        </button>&nbsp;
+        <button  *ngIf="!isEditForm" (click)="onSubmit(approvalGroupEditForm.value)" pButton type="button"  class="p-button-sm createBtn" label=" "
+                 [disabled]="loading">
+          <div style="width: 100%"><span [ngClass]="loading ? 'pi pi-spin pi-spinner':'pi pi-plus'"></span> &nbsp; Create
+            Approval Group
+          </div>
+        </button>
+        <button *ngIf="isEditForm" (click)="onSubmit(approvalGroupEditForm.value)"  pButton type="button" class="p-button-sm" label=" ">
+          <div style="width: 100%"><span class="pi pi-save"></span> &nbsp; Save</div>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<!--Notification Messages-->
+<p-toast position="bottom-right" key="apCreate"></p-toast>
+

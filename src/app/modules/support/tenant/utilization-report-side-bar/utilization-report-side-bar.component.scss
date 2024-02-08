@@ -1,0 +1,23 @@
+.footer-side-drawer{
+  position: absolute;
+  bottom: -500px;
+}
+
+.tenantList{
+  width: 100%;
+}
+
+@media screen and (max-width: 1280px) {
+  .footer-side-drawer{
+    bottom: -590px;
+  }
+}
+
+.utilization-report{
+    min-height: calc(100% - 549px);
+}
+
+
+.side-bar-drawer-content{
+  height: calc(100% - 105px);
+}

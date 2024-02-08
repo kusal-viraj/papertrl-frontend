@@ -1,0 +1,134 @@
+<p-table responsiveLayout="scroll" id="columnSelect" #dt [columns]="selectedColumns"
+         [hidden]="tableSupportBase.isVisibleTable" (onFilter)="tableSupportBase.onFilter(dt)"
+         (onSort)="tableSupportBase.onSort(dt)"
+         [value]="tableSupportBase.dataSource" columnResizeMode="expand"
+         dataKey="id" [reorderableColumns]="true" [rowHover]="true" [lazy]="true" (onLazyLoad)="loadData($event)"
+         [responsive]="false" selectionMode="multiple" scrollHeight="320px" [scrollable]="true"
+         stateStorage="session" stateKey="{{tableKeyEnum.DASHBOARD_APPROVAL_TABLE_KEY}}" [rows]="25"
+         [showCurrentPageReport]="true"
+         [rowsPerPageOptions]="[25, 50, 75]" [loading]="tableSupportBase.loading" [resizableColumns]="false" [tableStyle]="{'min-width': tableSupportBase.minWidth}"
+         styleClass="p-datatable-md p-datatableResponsive p-datatable-striped p-datatable-gridlines"
+         [totalRecords]="tableSupportBase.totalRecords" [paginator]="true"
+         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [filterDelay]="0">
+
+  <ng-template pTemplate="caption">
+    <h4 class="subHeadingColour">Pending Approvals</h4>
+    <div class="grid" hidden [style]="{'align-items': 'center'}">
+      <div class="col-12 p-p-0">
+        <p-multiSelect hidden #columnSelect [options]="tableSupportBase.hiddenInOptions"
+                       [defaultLabel]="tableSupportBase.selectedColumnCount" [showHeader]="false"
+                       [(ngModel)]="selectedColumns" optionLabel="header" [displaySelectedLabel]="false"
+                       class="table-column-dropdown"></p-multiSelect>
+        <button pButton icon="pi pi-refresh" type="button" label="Refresh"
+                (click)="loadData(tableSupportBase.searchFilterDto)"
+                class="p-button-outlined pull-right p-button-sm"></button>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template *ngIf="tableSupportBase.isTableInResponsive" pTemplate="colgroup" let-columns>
+    <colgroup *ngIf="tableSupportBase.isTableInResponsive">
+      <col *ngFor="let col of columns">
+    </colgroup>
+  </ng-template>
+
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th id="expenseColumnID" *ngFor="let col of columns" pResizableColumn
+          [pResizableColumnDisabled]="!col.isReSizable"
+          [ngStyle]="{'text-align': col.align}"
+          [pReorderableColumnDisabled]="!col.isReOrderable" pReorderableColumn pSortableColumn="{{col.sortableField}}">
+        {{col.header}}
+        <p-sortIcon *ngIf="col.isSortable" field="{{col.sortableField}}"></p-sortIcon>
+      </th>
+    </tr>
+
+  </ng-template>
+
+  <ng-template pTemplate="body" let-customer let-columns="columns">
+    <tr>
+      <td *ngFor="let col of columns" [ngStyle]="{'text-align': col.align}"
+          [class.freeze-right]="col.frozenDirection == 'right'" [ngClass]="col.searchType == enums.ACTION_BUTTON ? 'vendor-table-action-btn' : null">
+        <span class="p-column-title">{{col.header}}</span>
+
+        <span *ngIf="col.field == enums.CHECKBOX">
+          <p-tableCheckbox [value]="customer"></p-tableCheckbox>
+        </span>
+
+        <span *ngIf="col.searchType ==  enums.ACTION_BUTTON" class="td-actionButton">
+          <button type="button" pButton class="table-action-btn" icon="pi pi-chevron-down" iconPos="right"
+                  label="Action" (click)="menu.toggle($event); actionButtonClick(customer)"></button>
+          <p-menu #menu [popup]="true" appendTo="body"
+                  [model]="tableSupportBase.actionButtonList(customer['status'])"></p-menu>
+        </span>
+        <span *ngIf="col.field == 'status'"
+              [class]="'customer-badge status-'  + tableSupportBase.getStatus(customer[col.field])">{{tableSupportBase.getStatus(customer[col.field])}}</span>
+
+        <span *ngIf="col.field == 'exportStatus'"
+              [class]="'customer-badge status-'  + tableSupportBase.getStatus(customer[col.field])">{{tableSupportBase.getStatus(customer[col.field])}}</span>
+
+        <span class="table-data" *ngIf="col.field !== 'status' && col.field !== 'exportStatus'">{{customer[col.field]}}</span>
+      </td>
+    </tr>
+  </ng-template>
+
+  <p-overlayPanel #filterOp appendTo="body" [dismissable]="false" [showCloseIcon]="true">
+    <ng-template pTemplate>
+      <div *ngFor="let col of tableSupportBase.filterArray">
+
+        <div *ngIf="col.searchType == enums.MULTISELECT">
+          <span class="advancedSearchFilterName">{{col.header}}</span>
+
+          <p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false"
+                          [showOperator]="false" [showAddButton]="false">
+            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+              <p-multiSelect [ngModel]="value" [options]="col.multiSelectValues" placeholder="Any"
+                             (onChange)="filter($event.value)" optionLabel="name">
+                <ng-template let-option pTemplate="item">
+                  <div class="p-multiselect-representative-option">
+                    <span class="ml-1">{{option.name}}</span>
+                  </div>
+                </ng-template>
+              </p-multiSelect>
+            </ng-template>
+          </p-columnFilter>
+        </div>
+
+        <div *ngIf="col.searchType == enums.INPUT">
+          <span class="advancedSearchFilterName">{{col.header}}</span>
+          <p-columnFilter type="text" [field]="col.field" display="menu"></p-columnFilter>
+        </div>
+
+        <div *ngIf="col.searchType == enums.NUMERIC">
+          <span class="advancedSearchFilterName">{{col.header}}</span>
+          <p-columnFilter type="numeric" [field]="col.field" display="menu"></p-columnFilter>
+        </div>
+
+        <div *ngIf="col.searchType == enums.DATE">
+          <span class="advancedSearchFilterName">{{col.header}}</span>
+          <p-columnFilter type="date" [field]="col.field" display="menu"></p-columnFilter>
+        </div>
+
+        <div *ngIf="col.searchType == enums.DROPDOWN">
+          <span class="advancedSearchFilterName">{{col.header}}</span>
+          <p-columnFilter matchMode="equals" [field]="col.field" display="menu">
+            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+              <p-dropdown [ngModel]="value" [options]="col.dropdownValues" (onChange)="filter($event.value)"
+                          placeholder="Any"></p-dropdown>
+            </ng-template>
+          </p-columnFilter>
+        </div>
+
+      </div>
+    </ng-template>
+  </p-overlayPanel>
+
+    <ng-template pTemplate="emptymessage">
+      <div class="text-center grid table-empty-data">
+          <div class="col-12">
+            <i class="fa-solid fa-magnifying-glass"></i><br>
+            <p>There are no records found</p>
+          </div>
+      </div>
+    </ng-template>
+</p-table>

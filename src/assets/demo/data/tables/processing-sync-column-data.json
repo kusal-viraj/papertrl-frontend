@@ -1,0 +1,70 @@
+{
+  "advancedFilters": [],
+  "columns": [
+    {
+      "field": "name",
+      "header": "Name",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "left",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Name"
+    },
+    {
+      "field": "number",
+      "header": "Number",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "left",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Number"
+    },
+    {
+      "field": "amount",
+      "header": "Amount",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "numeric",
+      "canHide": true,
+      "placeholder": "Amount"
+    },
+    {
+      "field": "date",
+      "header": "Date",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "date",
+      "canHide": true,
+      "placeholder": "Date"
+    },
+    {
+      "field": "objectType",
+      "header": "Object Type",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "dropdown",
+      "canHide": true,
+      "placeholder": "Object Type"
+    }
+  ],
+  "state": {
+    "first": 0,
+    "rows": 10,
+    "columnWidths": "210,210,210,210,210"
+  }
+}

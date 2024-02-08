@@ -1,0 +1,29 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "approvalGroup": "Project Manager",
+      "poNumberPattern": "#PO1212112CCCC",
+      "createdBy": "admin",
+      "createdDate": "20/5/2020",
+      "activeStatus": "A"
+    },
+    {
+      "id": 2,
+      "approvalGroup": "Project Manager",
+      "poNumberPattern": "#PO1212112CCCC",
+      "createdBy": "james",
+      "createdDate": "20/5/2020",
+      "activeStatus": "A"
+    },
+    {
+      "id": 3,
+      "approvalGroup": "Project Manager",
+      "poNumberPattern": "#PO1212112CCCC",
+      "createdBy": "smith",
+      "createdDate": "20/5/2020",
+      "activeStatus": "A"
+    }
+  ],
+  "totalRecords": 3
+}

@@ -1,0 +1,63 @@
+{
+  "poNumber": "AS54AD",
+  "submitDate": "1/1/2021",
+  "vendor": "Vendor 1",
+  "projectTask": "Task one",
+  "dateOfDelivery": "1/1/2021",
+  "contactPerson": "Paul",
+  "contactNumber": 125864782,
+  "shippingAddress": "111 / Address Address2",
+  "billingAddress": "111 / Address Address2",
+  "grossAmount":  1000 ,
+  "taxAmount": 1500,
+  "discountAmount": 500,
+  "netAmount": 2000,
+  "pdfUrl": "../assets/sampleInvoice.pdf",
+  "items": [
+    {
+      "itemNumber": "123",
+      "uom": "uom 1",
+      "itemName": "item 1",
+      "qty": 10,
+      "price": 100,
+      "discount": 120,
+      "amount": 500
+    },
+    {
+      "itemNumber": "456",
+      "uom": "uom 2",
+      "itemName": "item 2",
+      "qty": 20,
+      "price": 1000,
+      "discount": 150,
+      "amount": 1000
+    },
+    {
+      "itemNumber": "456",
+      "uom": "uom 2",
+      "itemName": "item 2",
+      "qty": 20,
+      "price": 1000,
+      "discount": 150,
+      "amount": 1000
+    },
+    {
+      "itemNumber": "456",
+      "uom": "uom 2",
+      "itemName": "item 2",
+      "qty": 20,
+      "price": 1000,
+      "discount": 150,
+      "amount": 1000
+    },
+    {
+      "itemNumber": "456",
+      "uom": "uom 2",
+      "itemName": "item 2",
+      "qty": 20,
+      "price": 1000,
+      "discount": 150,
+      "amount": 1000
+    }
+  ]
+}

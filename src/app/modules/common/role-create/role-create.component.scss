@@ -1,0 +1,20 @@
+.button-alignment{
+  text-align: right;
+}
+.overflowCustom{
+  overflow-y: auto!important;
+}
+
+.role-edit-view{
+  height: 80vh;
+  overflow-y: auto;
+}
+
+.role-create-view{
+  height: calc(100vh - 328px);
+  overflow-y: auto;
+}
+
+.height{
+  min-height: calc(100vh - 119px);
+}

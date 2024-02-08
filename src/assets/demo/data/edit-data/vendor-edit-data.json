@@ -1,0 +1,37 @@
+{
+  "id": "1000",
+  "fatcaReportingCode": "2323",
+  "businessName": "Fabric",
+  "ccEmail": "abc@papertrl.com",
+  "contactPerson": "SMITH",
+  "contactNumber": "232323232323",
+
+  "email": "abc@papertrl.com",
+  "empIdNo": "EMP-1000",
+  "exemptPayeeCode": "323232",
+  "fax": "23232323222222222",
+  "taxClassification": {
+    "label": "C Corporation",
+    "id": "NY"
+  },
+  "socialSecNo": "SOL-1000",
+  "vendorCode": "VEN1",
+  "name": "Jhone",
+  "w9Form": "",
+  "remitAddress": {
+    "country": 1,
+    "address_state": "China",
+    "city": "Colombo",
+    "zipcode": "zip",
+    "address_line_1": "address 1",
+    "address_line_2": "address 2"
+  },
+  "permenantAddress": {
+    "country": 1,
+    "address_state": "India",
+    "city": "Angola",
+    "zipcode": "asda",
+    "address_line_1": "raddress 1",
+    "address_line_2": "raddress 2"
+  }
+}

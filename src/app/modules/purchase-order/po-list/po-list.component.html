@@ -1,0 +1,368 @@
+<div class="grid">
+  <div class="col-8">
+    <app-table-header-action-buttons
+      [tableSupportBase]="tableSupportBase" [componentInstance]="this"
+      (delete)="bulkDelete()"
+      (reject)="bulkReject()"
+      (quickApprove)="bulkQuickApprove()"
+      (sendToVendorApproval)="bulkSendVendor()"
+      (emailToVendor)="isBulkPOAttachmentSend = true; this.isOpenSendPOAttachmentView = true;"
+      (reOpen)="openPoList()"
+      (close)="closePoList()"
+      (export)="bulkExportAll()"
+      (download)="bulkDownloadAll()"
+      (refresh)="loadData(tableSupportBase.searchFilterDto)"
+      (showFilters)="showFilter = !showFilter; showFilterColumns = false"
+      (showColumns)="showFilterColumns = !showFilterColumns; showFilter = false"
+      [visibleActions]="availableHeaderActions"
+      [moduleName]="AppAnalyticsConstants.MODULE_NAME_PURCHASE_ORDER"
+    ></app-table-header-action-buttons>
+  </div>
+
+
+  <div class="col-4 text-right">
+    <button class="pull-right p-button-sm mr-2" (click)="createPurchase()"
+            *ngIf="privilegeService.isAuthorizedMultiple([appAuthorities.PURCHASE_ORDER_CREATE, appAuthorities.PURCHASE_ORDER_SAVE_AS_APPROVED])"
+            label="Create Purchase Order" pButton></button>
+  </div>
+</div>
+<div class="table-wrapper">
+  <p-table responsiveLayout="scroll" id="columnSelect" #dt [columns]="selectedColumns" (onColResize)="onTableChanged()"
+           [hidden]="tableSupportBase.isVisibleTable" (onFilter)="tableSupportBase.onFilter(dt)"
+           (onSort)="tableSupportBase.onSort(dt)"
+           [(contextMenuSelection)]="tableSupportBase.selectedContextActionData" [contextMenu]="cm"
+           (onRowSelect)="tableSupportBase.rowSelected(dt,null); patchEmailAddressToModalSelect()"
+           (onRowUnselect)="tableSupportBase.rowSelected(dt,null); patchEmailAddressToModalSelect()"
+           (onColReorder)="onTableChanged()" [(selection)]="tableSupportBase.rows"
+           [value]="tableSupportBase.dataSource" columnResizeMode="expand" (selectionChange)="getSelection($event)"
+           dataKey="id" [reorderableColumns]="true" [rowHover]="true" [lazy]="true" (onLazyLoad)="loadData($event)"
+           [responsive]="false" selectionMode="multiple" scrollHeight="flex" [scrollable]="true"
+           stateStorage="session" stateKey="{{tableKeyEnum.PO_TABLE_KEY}}" [rows]="25" [showCurrentPageReport]="true"
+           [rowsPerPageOptions]="[25, 50, 75]" [loading]="tableSupportBase.loading" [resizableColumns]="true"
+           styleClass="p-datatable-sm p-datatable-striped no-grid-lines" *ngIf="tableSupportBase.minWidth && isPoTable()"
+           [totalRecords]="tableSupportBase.totalRecords" [paginator]="true"
+           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [filterDelay]="0">
+
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns" pResizableColumn [pResizableColumnDisabled]="!col.isReSizable"
+            [ngStyle]="{'text-align': col.align}"
+            [pReorderableColumnDisabled]="!col.isReOrderable" pReorderableColumn
+            [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn
+            [pSortableColumnDisabled]="!col.isSortable" pSortableColumn="{{col.sortableField}}" class="sort-icon-wrapper">
+          <div class="grid">
+            <div class="col-12">
+              <div *ngIf="col.searchType == enums.CHECKBOX">
+                <p-tableHeaderCheckbox (click)="tableSupportBase.rowSelected(dt,null)"></p-tableHeaderCheckbox>
+              </div>
+              <span *ngIf="col.searchType !== enums.CHECKBOX">{{col.header}}</span>
+              <p-sortIcon class="grid-sort-icon" *ngIf="col.isSortable" field="{{col.sortableField}}"></p-sortIcon>
+            </div>
+            <div class="col-12">
+               <span app-table-inline-column-filters [tableSupportBase]="tableSupportBase" [dt]="dt"
+                     [columns]="columns" [col]="col"></span>
+            </div>
+          </div>
+
+
+        </th>
+      </tr>
+<!--      <tr>-->
+<!--        <th *ngFor="let col of columns" [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn>-->
+<!--          <span app-table-inline-column-filters [tableSupportBase]="tableSupportBase" [dt]="dt"-->
+<!--                [columns]="columns" [col]="col"></span>-->
+<!--        </th>-->
+<!--      </tr>-->
+
+    </ng-template>
+
+    <ng-template pTemplate="body" let-customer let-columns="columns">
+
+    <tr (wheel)="tableSupportBase.scrollHideActionMenu(cm)" [pContextMenuRow]="customer" (contextmenu)="actionButtonClick(customer);
+     tableSupportBase.setContextMenuActionBtnList(
+    actionButtonList(customer['po.status'], customer, customer['po.vendorApprovalStatus'],
+       customer['po.poStatus'], customer['remainingCeiling'], customer['remainingPriceVariance']))">
+      <td  *ngFor="let col of columns; let in=index" [ngStyle]="{'text-align': col.align}"
+          [class.td-border]="in === 0" [class.td-border-selected]="customer.selected && in === 0" [style]="'width:' + col.columnWidth  + 'px'"
+          [class.freeze-right]="col.frozenDirection == 'right'" [ngClass]="col.searchType == enums.ACTION_BUTTON ? 'vendor-table-action-btn' : null"
+          pFrozenColumn [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection">
+        <span class="p-column-title">{{col.header}}</span>
+
+        <span *ngIf="col.field == enums.CHECKBOX">
+            <p-tableCheckbox [value]="customer"></p-tableCheckbox>
+        </span>
+
+          <span *ngIf="col.searchType ==  enums.ACTION_BUTTON">
+
+
+
+          <button type="button" pButton class="grid-action-btn p-button-text" icon="pi pi-ellipsis-v"
+                  [disabled]="actionButtonList(customer['po.status'], customer, customer['po.vendorApprovalStatus'],
+                  customer['po.poStatus'], customer['remainingCeiling'], customer['remainingPriceVariance']).length === 0"
+                  (click)="menu.toggle($event); actionButtonClick(customer)"></button>
+         <p-menu #menu [popup]="true" appendTo="body"
+                 [model]="actionButtonList(customer['po.status'], customer, customer['po.vendorApprovalStatus'],
+                  customer['po.poStatus'], customer['remainingCeiling'], customer['remainingPriceVariance'])"></p-menu>
+        </span>
+
+
+
+          <span [ngClass]="isClassHover(col.field,customer) ? 'selectedHover': null"
+                (click)="tdClick(col.field, customer, $event)"
+                (mouseover)="tdHover(col.field, customer, $event)" (scroll)="hideOverlays()"
+                (mouseout)="hideOverlays()">
+
+        <span class="white-space-normal break-word"
+              *ngIf="col.field !== 'po.status' &&
+              col.field !== 'po.vendorApprovalStatus' &&
+              col.field !== 'po.exportStatus'">{{customer[col.field]}}</span>
+
+          <span *ngIf="col.field == 'po.status'" class="capitalize">
+            <li [class]="'mr-2 status-style status-'  + tableSupportBase.getStatus(customer[col.field])"></li>
+            {{tableSupportBase.getStatus(customer[col.field]) | titlecase}}
+          </span>
+
+          <span *ngIf="col.field == 'po.exportStatus'" class="capitalize">
+            <li [class]="'mr-2 status-style status-'  + tableSupportBase.getStatus(customer[col.field])"></li>
+            {{tableSupportBase.getStatus(customer[col.field]) | titlecase}}
+          </span>
+
+          <span *ngIf="col.field == 'po.vendorApprovalStatus'" class="capitalize">
+            <li [class]="'mr-2 status-style status-'  + tableSupportBase.getStatus(customer[col.field])"></li>
+            {{tableSupportBase.getStatus(customer[col.field]) | titlecase}}
+          </span>
+        </span>
+
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <div class="text-center grid table-empty-data">
+          <div class="col-12">
+            <i class="fa-solid fa-magnifying-glass"></i><br>
+            <p>There are no records found</p>
+          </div>
+      </div>
+    </ng-template>
+  </p-table>
+</div>
+<p-overlayPanel appendTo="body" #vendorOverlay>
+  <ng-template pTemplate>
+    <app-table-vendor-overlay [vendorId]="overlayId"></app-table-vendor-overlay>
+  </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel appendTo="body" #projectOverlay>
+  <ng-template pTemplate>
+    <app-table-project-task-overlay [id]="overlayId"></app-table-project-task-overlay>
+  </ng-template>
+</p-overlayPanel>
+
+<div class="no-data-show" *ngIf="tableSupportBase.isVisibleTable == true">
+  <span class="fa fa-search"></span>
+  <div style="margin-top: 1%">There are no transactions matching the criteria</div>
+</div>
+
+<!--Approve Purchase Order-->
+<p-sidebar [showCloseIcon]="false" [fullScreen]="true" [modal]="false" [(visible)]="approvePoView">
+  <app-po-approve [isDetailView]="false" [isApproveView]="approvePoView"
+                  [tableSearchResults]="tableSupportBase.searchFilterDto"
+                  (closePOApprove)="closePOApproval()" *ngIf="approvePoView"
+                  [poNumber]="poNumber"
+                  [poId]="poId"></app-po-approve>
+</p-sidebar>
+
+<!--Po Detail view-->
+<p-sidebar [showCloseIcon]="false" [fullScreen]="true" [modal]="false" [(visible)]="detailView">
+  <app-po-detail-view [tableSearchResults]="tableSupportBase.searchFilterDto" (closePOApprove)="loadData(tableSupportBase.searchFilterDto); detailView = false"
+                       [tableSupportBase]="tableSupportBase" [hasUserInApprovalGroupOrAssignee]="isValidApproveAccess(activeAction)"
+                      *ngIf="detailView" [poNumber]="poNumber" [poId]="poId"
+                      (isCloseApproveView)="loadData(tableSupportBase.searchFilterDto); detailView = false"
+                      (deletedPOEmitter)="loadData(tableSupportBase.searchFilterDto)" [poStatusFromList]="this.activeAction['po.status']">
+  </app-po-detail-view>
+</p-sidebar>
+
+<!--Create / Edit Purchase Order-->
+<p-sidebar [showCloseIcon]="false" [fullScreen]="true" [modal]="false" [(visible)]="createPo"
+           styleClass="remove-p-sidebar-inner-padding">
+<!--  <ng-template  pTemplate="header">Edit Purchase Order</ng-template>-->
+  <app-po-create [editView]="isEditView" (closePo)="closePOCreateAndEdit($event)" *ngIf="createPo"
+                 [poID]="poId" [poStatusFromList]="poStatus"></app-po-create>
+</p-sidebar>
+
+<!--PO AuditTrail-->
+<app-audit-trial *ngIf="auditTrialPanel" [auditTrial]="auditTrial" [heading]="'Purchase Order# ' + poNumber"
+                 (closeDrawer)="auditTrialPanel = false" [panelShow]="auditTrialPanel"></app-audit-trial>
+
+<!--Change Assignee-->
+<p-sidebar [(visible)]="viewChangeAssignee" position="right" styleClass="p-sidebar-sm" *ngIf="viewChangeAssignee">
+  <ng-template pTemplate="header">Change Assignee</ng-template>
+  <app-change-assignee *ngIf="viewChangeAssignee" [heading]="poNumber" [poId]="poId" [isFromTenantPO]="true"
+                       [vendorId]="activeAction.vendorId"
+                       (refreshGridAfterChangedAssignee)="refreshGridAfterChangedAssignee(); viewChangeAssignee = false"></app-change-assignee>
+</p-sidebar>
+
+<!--Assign Bill to Po-->
+<p-sidebar [showCloseIcon]="false" [fullScreen]="true" [modal]="false" *ngIf="billAssign" [(visible)]="billAssign">
+  <app-bill-assign (closePoReceipt)="billAssign = false; loadData(tableSupportBase.searchFilterDto)"
+                   *ngIf="billAssign" [fromPo]="true"
+                   [poId]="poId"></app-bill-assign>
+</p-sidebar>
+
+<p-toast position="bottom-right"></p-toast>
+
+<!--Delete-->
+<p-confirmDialog #cd key="poL" appendTo="body" header="Are you sure?"
+                 icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cd.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, Delete it"
+            (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<!--Reject-->
+<p-confirmDialog #cdA key="poLA" appendTo="body" header="Are you sure?" icon="subHeadingGreen pi pi-check">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cdA.reject()"></button>
+    <button type="button" pButton icon="pi pi-check" label="Yes, Approve it"
+            (click)="cdA.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<!--Approve-->
+<p-confirmDialog #cdR key="poLR" appendTo="body" header="Are you sure?"
+                 icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cdR.reject()"></button>
+    <button type="button" pButton class="conf-reject-btn" icon="pi pi-check" label="Yes, Reject it"
+            (click)="cdR.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<!--Create Purchase Order Receipt-->
+<p-sidebar [showCloseIcon]="false" [fullScreen]="true" [modal]="false" *ngIf="viewPoReceiptCreate"
+           [(visible)]="viewPoReceiptCreate">
+  <app-po-receipt-create (closePoReceipt)="viewPoReceiptCreate = false" [fromPo]="true" [vendorId]="vendorId"
+                         [poId]="poId" *ngIf="viewPoReceiptCreate"></app-po-receipt-create>
+</p-sidebar>
+
+<!--PO Attachment send modal-->
+
+<p-dialog *ngIf="isOpenSendPOAttachmentView" styleClass="reminder-configuration" [style]="{width: '20vw'}"  header="Enter email address" (onShow)="resetPOAttachmentForm()"
+          (onHide)="resetPOAttachmentForm()" [draggable]="false" [resizable]="false"
+          class="po-send-attachment-wrapper" [modal]="true"
+          [(visible)]="isOpenSendPOAttachmentView">
+
+  <form [formGroup]="sendPOAttachmentForm" class="p-4">
+
+    <div [ngClass]="'field col-12 pl-0 pr-0 mt-4'">
+      <div class="p-inputgroup">
+        <input formControlName="email" id="emailAddress" maxlength="100" #emailInputValue
+               (keyup)="keyUpValue(emailInputValue.value); removeSpaces.clearSpace(sendPOAttachmentForm, 'email')"
+               type="text" pInputText placeholder="Email Address">
+      </div>
+      <div class="p-invalid  text-align-left"
+           *ngIf="sendPOAttachmentForm.get('email').dirty && sendPOAttachmentForm.get('email').errors">
+        <div *ngIf="sendPOAttachmentForm.get('email').errors.required">Email Address is required</div>
+        <div *ngIf="sendPOAttachmentForm.controls['email'].hasError('emailValidate')">Email must be a valid
+          email address
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="grid panel-footer footer">
+    <div class="col-12">
+      <div class="pull-right">
+        <button pButton type="button" *ngIf="!detailView" (click)="resetPOAttachmentForm()" label="Reset"
+                class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+        <button pButton type="button" (click)="sendPOAttachment()" class="p-button-sm"
+                iconPos="left" [disabled]="btnLoading || sendPOAttachmentForm.invalid"
+                [icon]="btnLoading ? 'pi pi-spin pi-spinner': 'fa-solid fa-paper-plane'"
+                label="Email To Vendor"></button>
+      </div>
+    </div>
+  </div>
+</p-dialog>
+
+<!--Undo-->
+<p-confirmDialog #cdRU key="poUA" appendTo="body" header="Are you sure?"
+                 icon="subHeadingGreen pi pi-check">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cdRU.reject()"></button>
+    <button type="button" pButton icon="pi pi-check" label="Yes, Undo it"
+            (click)="cdRU.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<!--view attached credit note details-->
+
+<p-dialog *ngIf="isViewAttachedCreditNote" header="Credit Note(s) applied for PO #{{activeAction['po.poNumber']}}"
+          [draggable]="false" [resizable]="false"
+          class="attached-crn-wrapper attached-bill-detail-popup" [modal]="true"
+          [(visible)]="isViewAttachedCreditNote">
+  <app-attached-credit-note-detail
+    *ngIf="isViewAttachedCreditNote" [activeAction]="creditNote"></app-attached-credit-note-detail>
+</p-dialog>
+
+<!--Create Credit note-->
+<p-sidebar [showCloseIcon]="false" [fullScreen]="true" [modal]="false" *ngIf="isCreateCreditNote"
+           [(visible)]="isCreateCreditNote">
+  <app-credit-note-create [isEdit]="false" (emitSuccess)="isCreateCreditNote = false;
+  loadData(tableSupportBase.searchFilterDto)" [vendorId]="activeAction['vendorId']"
+                          [purchaseOrderId]="activeAction['id']"
+                          [isCreate]="true" [isFromPoList]="true"
+                          *ngIf="isCreateCreditNote"></app-credit-note-create>
+</p-sidebar>
+
+<!--Delete draft-->
+
+<p-confirmDialog #draft key="poDraftDeleteKey" header="Are you sure?"
+                 icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="draft.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, delete it"
+            (click)="draft.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+
+<!---->
+
+
+<!--Action Buttons-->
+
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" [modal]="true" [dismissible]="true" position="right" (onHide)="showFilter= false"
+           [fullScreen]="false" [(visible)]="showFilter" transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)">
+  <ng-template pTemplate="header">Advance Filter</ng-template>
+  <app-table-column-filters [dt]="table" [columns]="tableSupportBase.filterEnabledColumns" (closeDrawer)="showFilter = false"
+                            [tableSupportBase]="tableSupportBase"></app-table-column-filters>
+</p-sidebar>
+
+<p-sidebar styleClass="p-sidebar-sm table-column-sidebar" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           (onHide)="showFilterColumns= false" transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)"
+           [fullScreen]="false" [(visible)]="showFilterColumns">
+    <ng-template pTemplate="header">Columns</ng-template>
+  <app-table-column-toggle [cols]="selectedColumns" (selectionsUpdated)="selectedColumns = $event"
+                           [tableInstance]="table" (restoreTable)="loadTableData()"
+                           [tableKey]="tableKeyEnum.PO_TABLE_KEY"
+                           [gridName]="appConstant.GRID_PO_LIST"
+                           [hiddenOptions]="tableSupportBase.hiddenInOptions"
+                           (updateColOrder)="onTableChanged($event)"></app-table-column-toggle>
+</p-sidebar>
+
+
+<!--Context Menu-->
+<p-contextMenu #cm appendTo="body" (onShow)="tableSupportBase.hideActionMenu(menu)" [model]="tableSupportBase.contextMenuActionList"></p-contextMenu>
+
+<p-sidebar styleClass="p-sidebar-md" [dismissible]="true" [modal]="true" position="right"
+           class="overflow-side-bar" *ngIf="createCard" [(visible)]="createCard">
+  <ng-template pTemplate="header">Create Digital  Card</ng-template>
+  <app-d-card-create [poId]="poId" (updateGrid)="loadData(tableSupportBase.searchFilterDto); createCard = false"></app-d-card-create>
+</p-sidebar>

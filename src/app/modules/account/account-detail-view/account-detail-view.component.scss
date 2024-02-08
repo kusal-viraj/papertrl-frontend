@@ -1,0 +1,13 @@
+@import '../../../../scss/color';
+
+.topic {
+  color: $green;
+}
+
+.top-button-wrapper{
+  text-align-last: end;
+  .top-button-color{
+    color: #A3ACB0;
+    border-color: #A3ACB0;
+  }
+}

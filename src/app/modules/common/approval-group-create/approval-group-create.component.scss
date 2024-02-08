@@ -1,0 +1,58 @@
+@import "../../../../scss/color.scss";
+
+.remove-icon {
+  color: $green;
+  margin-right: 1%;
+  cursor: pointer;
+}
+
+.name-label {
+  margin-left: 5px;
+  font-size: 16px;
+}
+
+@media only screen and (max-width: 768px) {
+  .createBtn {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 1400px) and (min-width: 1200px) {
+  .resetBtn {
+    width: 100px;
+    padding: 0;
+  }
+
+  .createBtn {
+    margin-left: 1rem !important;
+  }
+}
+
+@media only screen and (max-width: 1366px){
+  .resetBtn {
+    width: 125px !important;
+  }
+  .reset-button-responsive{
+    margin-right: 28px;
+  }
+
+  .createBtn {
+    margin-left: 1rem !important;
+  }
+}
+
+.side-bar-drawer-content{
+  min-height: calc(100vh - 135px);
+}
+
+.resetBtn{
+  padding: 8px;
+}
+
+.createScreen-resetBtn{
+  height: 33px;
+}
+
+.createScreen-createBtn{
+  height: 32px;
+}

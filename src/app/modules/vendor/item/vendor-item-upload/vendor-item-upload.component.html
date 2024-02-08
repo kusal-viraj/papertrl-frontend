@@ -1,0 +1,201 @@
+<div class="height">
+  <p-blockUI class="boarder-hide" *ngIf="responsePercentage !== 0" [blocked]="responsePercentage > 0" [target]="pnl">
+    <div class="exception-body" *ngIf="responsePercentage">
+      <div class="exception-content">
+        <circle-progress
+          [percent]="[responsePercentage]"
+          [radius]="70"
+          [outerStrokeWidth]="10"
+          [innerStrokeWidth]="100"
+          [outerStrokeColor]="'#95fdff'"
+          [innerStrokeColor]="'transparent'"
+          [showUnits]=true
+          [titleFontWeight]="600"
+          [showSubtitle]=false
+          [backgroundGradient]=false
+          [animation]="false">
+        </circle-progress>
+      </div>
+    </div>
+  </p-blockUI>
+
+  <p-panel class="border-hide" #pnl>
+
+    <div class="col-12 grid payment-fields-invalid"
+         *ngIf="response?.totalRecords > 0">
+      <div class="content">
+        <i class="fa fa-question-circle"></i>
+        <div>
+          Vendor item list upload completed with warnings. Please review the upload results and address any errors or
+          discrepancies found. Total records processed: {{response.totalRecords}}.
+          <span class="m-0" *ngIf="response.scceeded > 0"> Successfully updated records:<strong> {{response.scceeded}}
+            .</strong></span>
+
+          <span class="m-0" *ngIf="response.errors?.length > 0"> and <strong class="hyperlink"
+                                                                             (click)="isViewErrorContent = true">Errors
+            encountered during mapping:</strong> {{response.errors?.length}}.</span>
+
+          <span class="m-0" *ngIf="response.itemVendorWiseList?.length > 0"> and <strong class="hyperlink"
+                                                                                         (click)="viewItemDetailPopUp = true">Records
+            allowed to map:</strong> {{response.itemVendorWiseList?.length}}.</span>
+
+        </div>
+      </div>
+    </div>
+
+
+    <div class="text-left introduction">
+      <p class="infoUpload"><b>Step 1. </b> <span (click)="downloadItemUploadTemplate()"
+                                                  class="download-link"><i class="fa fa-download"></i>&nbsp;
+        <span>Download</span></span> the template.</p>
+      <p class="margin-top infoUpload"><b>Step 2. </b> Fill in all fields and save.</p>
+      <p class="margin-top infoUpload"><b>Step 3. </b> Upload the completed template.</p>
+    </div>
+    <br>
+
+    <div class="side-bar-drawer-content" [ngClass]="response? 'has-notification':'side-bar-drawer-content'">
+      <form [formGroup]="uploadVendorItemForm">
+
+        <span
+          class="item-type-heading">Select Item Type* <span>(Each Item Type requires a separate item file upload.)</span></span>
+        <div class="grid p-fluid manage-item-type col-12">
+          <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12 pl-0" *ngFor="let type of itemTypeList.data">
+            <label class="item-type">
+              <input type="radio" [value]="type.id" formControlName="itemTypeId"
+                     name="itemTypeId" (change)="itemTypeChange(type.id)">
+              {{type.name}}
+            </label>
+          </div>
+        </div>
+        <div class="p-invalid text-align-left mb-3"
+             *ngIf="uploadVendorItemForm.get('itemTypeId').dirty && uploadVendorItemForm.get('itemTypeId').errors">
+          Item Type is required
+        </div>
+
+
+        <div class="grid margin-top-grid">
+          <div class="col-12 xl:col-8 md:col-8 lg:col-6 upload-field mt-1">
+
+            <div class="p-inputgroup">
+
+              <div class="col-12 xl:col-12 p-0">
+
+                <div class="p-inputgroup">
+
+                 <span class="p-float-label inner-text-position">
+
+                  <input id="itemListController" formControlName="itemListController" #userList
+                         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                         (change)="changeFileList($event)" type="file" hidden>
+
+                    <input id="fileText" [value]="userList.files[0] ? userList.files[0].name : null" readonly
+                           formControlName="itemListController" class="input-max-width"
+                           onClick="document.getElementById('itemListController').click()" type="text" pInputText>
+                     <label for="fileText">Browse a file to upload* </label>
+
+                     <button pButton label="Browse" class="p-button file-browse  p-button-sm"
+                             onClick="document.getElementById('itemListController').click()"></button>
+
+                 </span>
+                </div>
+
+                <div class="p-invalid text-align-left"
+                     *ngIf="uploadVendorItemForm.get('itemListController').dirty &&
+                     uploadVendorItemForm.get('itemListController').errors">
+                  File is required
+                </div>
+
+              </div>
+
+
+            </div>
+
+          </div>
+
+
+        </div>
+      </form>
+    </div>
+  </p-panel>
+
+</div>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+
+      <button pButton class="p-button-sm p-button-outlined upload-button ml-2" type="button"
+              icon="fa-solid fa-rotate-right" label="Reset" [disabled]="isDisabled"
+              (click)="uploadVendorItemForm.reset(); response = null">
+      </button>
+
+      <button pButton class="p-button-sm upload-button ml-2" type="submit" icon="fa fa-cloud-upload"
+              label="Upload" [disabled]="isDisabled" (click)="uploadItemList()">
+      </button>
+
+    </div>
+  </div>
+</div>
+
+<!--this is a vendor item detail screen -->
+
+<p-sidebar [showCloseIcon]="false" [fullScreen]="true" [modal]="false"
+           *ngIf="viewItemDetailPopUp" styleClass="vendor-item-detail"
+           [(visible)]="viewItemDetailPopUp" appendTo="body">
+
+  <ng-template pTemplate="header">
+
+    <div class="col-12 grid">
+
+      <div class="col-6">
+        <h5>{{vendorName}}- Item Upload <span class="item-detail-header">
+      ( Bellow Vendor item(s) not have matching Item in the system. Select one of the bellow to
+      proceed.)</span></h5><br>
+
+      </div>
+
+      <div class="col-6">
+        <div class="fa fa-close side-drawer-icon pull-right"
+             (click)="vendorItemDetailComponent?.cancel()">
+        </div>
+      </div>
+
+    </div>
+
+
+  </ng-template>
+
+  <app-vendor-item-detail [responseData]="response" #vendorItemDetailComponent
+                          [vendorId]="vendorId" [itemTypeId]="itemTypeId"
+                          (emptyRemainingList)="response = $event"
+                          (emptyItemList)="refreshList(); viewItemDetailPopUp = false;">
+  </app-vendor-item-detail>
+</p-sidebar>
+
+
+<!--this is a errors content -->
+
+<p-dialog position="center" [(visible)]="isViewErrorContent" (onHide)="isViewErrorContent = false"
+          [resizable]="false" [closable]="true" class="dialog-box-common-wrapper" appendTo="body"
+          [header]="'Upload Summary'"
+          [style]="{width: '50%',contentStyle: {'max-height': '500px', overflow: 'auto'}}"
+          closeOnEscape="false" [modal]="true" [draggable]="false" [baseZIndex]="1000">
+
+  <app-vendor-item-error *ngIf="isViewErrorContent" [responseData]="response">
+  </app-vendor-item-error>
+
+</p-dialog>
+
+
+<!--Confirmation of close drawer-->
+<p-confirmDialog key="itemTypeChangeKey" #itemTypeChangeKey header="Are you sure you want to process?"
+                 icon="confirmation-msg-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="itemTypeChangeKey.reject()">
+    </button>
+    <button type="button" pButton icon="pi pi-check" label="Yes, Continue"
+            (click)="itemTypeChangeKey.accept()">
+    </button>
+  </p-footer>
+</p-confirmDialog>

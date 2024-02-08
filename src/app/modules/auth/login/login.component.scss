@@ -1,0 +1,295 @@
+@import "../../../../scss/color.scss";
+
+.card-custom {
+  width: 484px;
+  margin-left: 22%;
+}
+
+::ng-deep .card-custom.p-card {
+  border-radius: 12px;
+}
+
+.learn-more{
+  border-color: white !important;
+  color: white !important;
+  &:hover{
+    color: #26464a!important;
+  }
+}
+
+
+@media only screen and (max-width: 991px) {
+  .login-side-bar {
+    display: none;
+  }
+  .card-custom {
+    width: 450px;
+    margin-left: 25%;
+    height: 100%;
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  .flex {
+    display: block !important;
+  }
+  .bgImg {
+    background-image: none !important;
+  }
+  .card-custom {
+    width: 100%;
+    margin-left: 0 !important;
+  }
+}
+
+@media only screen and (max-width: 720px) {
+  .bgImg {
+    height: 120%
+  }
+  .flex {
+    display: block !important;
+  }
+  .card-custom {
+    margin-left: 20%;
+  }
+}
+
+
+.margin-between-fields-headers {
+  margin-top: 5%;
+}
+
+.margin-between-fields {
+  margin-top: 2%;
+}
+
+.margin-between-fields-input {
+  margin-top: 2%;
+}
+
+.margin-between-buttons {
+  margin-top: 2%;
+}
+
+
+.login-logo {
+  height: 42px;
+  width: auto;
+  margin-top: 5%;
+}
+
+.login-header {
+  font-weight: bold;
+  color: $green;
+  text-align: center;
+}
+
+.card-header-custom {
+  text-align: center;
+}
+
+.forgot-password-link {
+  text-align: right;
+  color: $green;
+  font-weight: bold;
+}
+
+.forgot-password-link:hover {
+  cursor: pointer;
+  color: #009688;
+  text-align: right;
+}
+
+.bgImg {
+  background-image: url("../../../../assets/images/bg-img-login.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.p-button-outlined {
+  font: normal normal medium 112px/24px Roboto;
+}
+
+hr.solid {
+  border-top: 0.5px solid #D6D7D8;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+
+.card-custom-padding {
+  padding: 0 1rem 1rem 1rem;
+}
+
+.login-side-bar {
+  background-color: #4E6164;
+  height: 100%;
+  width: 18%;
+  opacity: 0.9;
+}
+
+.login-side-bar-inner {
+  margin-left: 12%;
+  margin-right: 12%;
+}
+
+.login-side-bar-logo {
+  margin-top: 18%;
+  margin-bottom: 8%;
+  width: 55%;
+}
+
+.login-side-bar-inner h5 {
+  color: white;
+  text-align: left;
+  font-size: 24px;
+  line-height: 36px;
+  margin-bottom: 8%;
+}
+
+.login-side-bar-inner p {
+  color: white;
+  text-align: left;
+  font-size: 20px;
+  font-weight: 100 !important;
+  font-family: 'system-ui';
+  line-height: 30px;
+  margin-bottom: 15%;
+}
+
+.login-side-bar-inner button {
+  color: white;
+  text-align: center;
+  font-size: 18px;
+  font-weight: normal;
+  line-height: 32px;
+  width: 100%;
+}
+
+.login-side-bar-inner button:hover {
+  color: #009688;
+  border-color: #009688;
+}
+
+.links {
+  margin-top: 20%;
+}
+
+.links-a {
+  color: white;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 100;
+  font-family: 'system-ui';
+  line-height: 35px;
+}
+
+.links-a:hover {
+  color: #009688;
+}
+
+.align-right {
+  display: block !important;
+}
+
+.btn-free-trial {
+  margin-bottom: -25px;
+}
+
+.vendor-link {
+  color: #b2b2b2;
+  text-align: center;
+}
+
+.vendor-link a {
+  color: $green;
+}
+
+.vendor-link span {
+  color: $green;
+}
+
+.vendor-link span:hover {
+  color: $green;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.vendor-link a:hover {
+  color: $green;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.passwordShow:hover {
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 1440px) {
+  .login-side-bar-inner h5 {
+    font-size: 20px;
+    line-height: 30px;
+    margin-bottom: 8%;
+  }
+
+  .login-side-bar-inner p {
+    font-size: 16px;
+    line-height: 24px;
+    margin-bottom: 15%;
+  }
+
+  .login-side-bar-inner button {
+    font-size: 14px;
+    line-height: 26px;
+  }
+  .links {
+    margin-top: 20%;
+  }
+  .links-a {
+    font-size: 16px;
+    line-height: 35px;
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .login-side-bar-inner h5 {
+    font-size: 16px;
+    line-height: 25px;
+    margin-bottom: 8%;
+  }
+
+  .login-side-bar-inner p {
+    font-size: 14px;
+    line-height: 24px;
+    margin-bottom: 15%;
+  }
+
+  .login-side-bar-inner button {
+    font-size: 14px;
+    line-height: 20px;
+  }
+  .links {
+    margin-top: 16%;
+  }
+  .links-a {
+    font-size: 14px;
+    line-height: 30px;
+  }
+}
+
+.tag-size {
+  padding: 2px 2px 2px 2px;
+  line-height: 18px;
+}
+
+.inactive-msg {
+  .login-header {
+    font-size: 26px;
+    margin-top: 16px;
+    margin-bottom: -5px;
+  }
+
+  p {
+    font-size: 16px;
+  }
+;
+}

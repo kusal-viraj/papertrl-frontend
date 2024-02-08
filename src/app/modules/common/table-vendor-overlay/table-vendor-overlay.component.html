@@ -1,0 +1,32 @@
+<div class="overlay-panel" *ngIf="vendorDto">
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Email</label></div>
+     <div class="col-6 ml-2 break-word">{{commonUtil.detailViewIsDash(vendorDto.email, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Contact Name</label></div>
+    <div class="col-6 ml-2 break-word">{{commonUtil.detailViewIsDash(vendorDto.contactName, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Contact Number</label></div>
+    <div class="col-6 ml-2 break-word">{{commonUtil.detailViewIsDash(vendorDto.contactNumber, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Country</label></div>
+    <div class="col-6 ml-2 break-word">{{commonUtil.detailViewIsDash(vendorDto.country, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Payment Type</label></div>
+    <div class="col-6 ml-2 break-word">{{commonUtil.detailViewIsDash(vendorDto.paymentType, false)}}</div>
+  </div>
+
+</div>
+<div class="overlay-panel" *ngIf="!vendorDto">
+  <div *ngIf="!vendorDto" class="loading-wrapper">
+    <em class="fa fa-spinner fa-pulse"></em>
+  </div>
+</div>

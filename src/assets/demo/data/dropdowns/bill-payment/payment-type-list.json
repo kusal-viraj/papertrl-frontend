@@ -1,0 +1,34 @@
+[
+  {
+    "id": "1",
+    "label": "Cash"
+  },
+  {
+    "id": "2",
+    "label": "Check"
+  },
+  {
+    "id": "3",
+    "label": "Credit Card"
+  },
+  {
+    "id": "4",
+    "label": "ACH"
+  },
+  {
+    "id": "5",
+    "label": "EFT"
+  },
+  {
+    "id": "6",
+    "label": "Wire"
+  },
+  {
+    "id": "7",
+    "label": "Credit Memo"
+  },
+  {
+    "id": "8",
+    "label": "Other"
+  }
+]

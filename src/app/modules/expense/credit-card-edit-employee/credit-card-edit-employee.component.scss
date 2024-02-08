@@ -1,0 +1,29 @@
+
+@import '../../../../scss/table-responsive';
+
+.line {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 1) 15%, rgb(194, 194, 194) 50%, rgba(255, 255, 255, 1) 85%);
+  height: 1px;
+  margin-top: 1px;
+  width: 100%;
+  margin-bottom: 1px
+}
+
+
+.change-employee {
+  width: 900px;
+  .customer-badge{
+    width: 115px;
+  }
+  .data-list{
+    max-height: 250px !important;
+    width: 100%;
+    overflow: auto;
+  }
+}
+
+
+.panel-footer {
+  left: 7px;
+  width: 100%;
+}

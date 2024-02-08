@@ -1,0 +1,892 @@
+<div class="field  pt-2 pl-2 pr-3 form-header grid">
+  <div class="col-6">
+    <h5 class="subHeadingColour">Purchase Order Details</h5>
+  </div>
+  <div class="col-6 text-right">
+    <span class="subHeadingColour po-no"> PO# {{createPurchaseOrderForm.get('poNumber').value}}</span> &nbsp;&nbsp;&nbsp;&nbsp;
+    <div class="pull-right fa fa-close side-drawer-icon"
+         (click)="close()"></div>
+  </div>
+</div>
+<form id="po" [formGroup]="createPurchaseOrderForm" autocomplete="off"
+      style="margin: 30px">
+  <div class="grid p-fluid">
+
+    <div *ngIf="createPurchaseOrderForm.get('poNumber').value" class="field col-12 xl:col-3 lg:col-3 md:col-4">
+      <label class="label-wrapper" for="poNo">PO Number</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input formControlName="poNumber" id="poNo" type="text" pInputText
+                     [readOnly]="true">
+            </span>
+      </div>
+    </div>
+
+    <div *ngIf="createPurchaseOrderForm.get('projectNo').value" class="field col-12 xl:col-3 lg:col-3 md:col-4">
+      <label class="label-wrapper" for="poNo">Project/Task</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input formControlName="projectNo" id="projectCodeId" type="text" pInputText
+                     [readOnly]="true">
+            </span>
+      </div>
+    </div>
+
+
+    <div *ngIf="createPurchaseOrderForm.get('poDate').value" class="field col-12 lg:col-3 xl:col-3 md:col-4">
+      <label class="label-wrapper" for="poDate">Purchase Order Date</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+              <p-calendar class="po-form-calandar" formControlName="poDate" id="poDate"></p-calendar>
+            </span>
+      </div>
+    </div>
+
+    <div *ngIf="createPurchaseOrderForm.get('deliveryDate').value" class="field col-12 lg:col-3 xl:col-3 md:col-4">
+      <label class="label-wrapper" for="deliveryDate">Delivery Date</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+              <p-calendar formControlName="deliveryDate"
+                          class="po-form-calandar" id="deliveryDate"></p-calendar>
+            </span>
+      </div>
+    </div>
+
+
+    <div *ngIf="createPurchaseOrderForm.get('pocPhone').value" class="field col-12 lg:col-3 xl:col-3 md:col-4">
+      <label class="label-wrapper" for="pocPhone">Contact Number</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input formControlName="pocPhone" id="pocPhone" [readOnly]="true" type="text" pInputText>
+            </span>
+      </div>
+    </div>
+
+
+    <div *ngIf="createPurchaseOrderForm.get('pocName').value" class="field col-12 lg:col-3 xl:col-3 md:col-4">
+      <label class="label-wrapper" for="pocName">Contact Person</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input formControlName="pocName" [readOnly]="true" maxlength="150" id="pocName" type="text" pInputText>
+            </span>
+      </div>
+    </div>
+
+
+    <div [style]="'padding:0'" class="col-12"></div>
+
+    <div *ngIf="createPurchaseOrderForm.get('billingAddress').value" class="field col-12  lg:col-4 xl:col-4 md:col-6">
+      <label class="label-wrapper" for="billingAddress">Billing Address</label>
+      <div class="p-inputgroup">
+          <span class="p-float-label">
+            <textarea formControlName="billingAddress" id="billingAddress" rows="2" pInputTextarea
+                      [readOnly]="true"></textarea>
+          </span>
+      </div>
+    </div>
+
+    <div *ngIf="createPurchaseOrderForm.get('shippingAddress').value" class="field col-12 lg:col-4 xl:col-4 md:col-6">
+      <label class="label-wrapper" for="shippingAddress">Shipping Address</label>
+      <div class="p-inputgroup">
+          <span class="p-float-label">
+            <textarea formControlName="shippingAddress" id="shippingAddress" rows="2" pInputTextarea
+                      [readOnly]="true"></textarea>
+          </span>
+      </div>
+    </div>
+
+
+    <div *ngIf="createPurchaseOrderForm.get('notes').value" class="field col-12 lg:col-4 xl:col-4 md:col-6">
+      <label  class="label-wrapper" for="notes">Notes</label>
+      <div class="p-inputgroup">
+          <span class="p-float-label">
+            <textarea formControlName="notes" id="notes" rows="2" pInputTextarea [readOnly]="true"></textarea>
+          </span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="grid p-fluid" formArrayName="additionalData" *ngIf="headerAdditionalFieldDetails.length>0">
+
+    <ng-container *ngFor="let additionalField of headingSectionArray.controls; let i=index" [formGroupName]="i">
+       <span class="field mt-2 col-12 xl:col-3 md:col-3"
+             *ngIf="commonUtil.checkUndefinedValues(additionalField.get('fieldValue').value,headerAdditionalFieldDetails[i].docStatus, detailView)">
+
+      <div
+        *ngIf="appFieldType.LABEL === headerAdditionalFieldDetails[i].fieldTypeId && additionalField.get('fieldValue').value">
+           <label class="label-wrapper">{{headerAdditionalFieldDetails[i].fieldName}}</label>
+      <span class="p-float-label">
+            <input type="text" class="form-control" pInputText
+                   [readonly]="true" readonly [value]="headerAdditionalFieldDetails[i].value">
+        </span>
+      </div>
+
+      <div
+        *ngIf="appFieldType.TEXT_BOX === headerAdditionalFieldDetails[i].fieldTypeId && additionalField.get('fieldValue').value">
+          <label class="label-wrapper"
+            for="input1_{{i}}">{{headerAdditionalFieldDetails[i].fieldName}}</label>
+        <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input formControlName="fieldValue" type="text" pInputText id="input1_{{i}}" class="place-holder-width"
+                     [readonly]="true">
+            </span>
+        </div>
+      </div>
+
+      <div>
+        <div
+          *ngIf="appFieldType.TEXT_AREA === headerAdditionalFieldDetails[i].fieldTypeId && additionalField.get('fieldValue').value">
+           <label class="label-wrapper"
+             for="notes1_{{i}}">{{headerAdditionalFieldDetails[i].fieldName}}</label>
+      <div class="p-inputgroup">
+          <span class="p-float-label">
+            <textarea formControlName="fieldValue" id="notes1_{{i}}" rows="{{headerAdditionalFieldDetails[i].rowCount}}"
+                      pInputTextarea [readonly]="true"
+                      class="place-holder-width"></textarea>
+          </span>
+      </div>
+    </div>
+      </div>
+
+
+      <div
+        *ngIf="appFieldType.DROP_DOWN_FIELD === headerAdditionalFieldDetails[i].fieldTypeId && headerAdditionalFieldDetails[i].multiple === 'A'">
+         <label class="vendor-dropdown-place-holder label-wrapper"
+                for="multiselect1_{{i}}">Select {{headerAdditionalFieldDetails[i].fieldName}}</label>
+      <span class="p-float-label">
+           <p-multiSelect [options]="headerAdditionalFieldDetails[i].optionsList.data" id="multiselect1_{{i}}"
+                          optionValue="id" inputId="multiselect1_{{i}}"
+                          [optionDisabled]="'id'"
+                          class="vendor-dropdown disabled-true" #multiSelect
+                          [formControl]="additionalField.controls['fieldValue']"
+                          selectedItemsLabel="{0} items selected"
+                          optionLabel="name" [showToggleAll]="true" [filter]="true">
+             <ng-template pTemplate="selectedItem">
+                <div>{{additionalField.get('fieldValue').value.name}}</div>
+             </ng-template>
+
+             <ng-template let-multiselect pTemplate="item">
+                 <div class="grid">
+                     <div class="dropdown-list"
+                          [ngClass]="multiselect.id == 0 ? ' dropdown-add visible-checkbox': null">{{multiselect.name}}</div>
+                     <em *ngIf="multiselect.name == 'Add New'"
+                         [ngClass]="multiselect.id == 0 ? 'visible-checkbox': null"
+                         class="pi pi-plus dropdown-icon dropdown-add"></em>
+                 </div>
+             </ng-template>
+           </p-multiSelect>
+        </span>
+      </div>
+
+      <div
+        *ngIf="appFieldType.DROP_DOWN_FIELD === headerAdditionalFieldDetails[i].fieldTypeId && headerAdditionalFieldDetails[i].multiple != 'A'">
+          <label class="vendor-dropdown-place-holder label-wrapper"
+                 for="dropdown1_{{i}}">Select {{headerAdditionalFieldDetails[i].fieldName}}</label>
+      <span class="p-float-label">
+           <p-dropdown [virtualScroll]="headerAdditionalFieldDetails[i].optionsList.data.length>20" virtualScrollItemSize="25"
+                       [options]="headerAdditionalFieldDetails[i].optionsList.data" [showClear]="false" #dropdown
+                       class="vendor-dropdown" optionDisabled="inactive"
+                       [readonly]="true"
+                       id="dropdown1_{{i}}" optionValue="id" optionLabel="name" [autoDisplayFirst]="false"
+                       formControlName="fieldValue" inputId="dropdown_{{i}}" [filter]="true">
+
+             <ng-template pTemplate="selectedItem">
+                <div>{{dropdown.selectedOption.name}}</div>
+             </ng-template>
+
+             <ng-template let-multiselect pTemplate="item">
+                 <div class="grid">
+                     <div class="dropdown-list"
+                          [ngClass]="multiselect.id == 0 ? ' dropdown-add': null">{{multiselect.name}}</div>
+                     <em *ngIf="multiselect.name == 'Add New'"
+                         class="pi pi-plus dropdown-icon dropdown-add"></em>
+                 </div>
+             </ng-template>
+           </p-dropdown>
+        </span>
+      </div>
+
+      <div
+        *ngIf="appFieldType.DATE_FIELD=== headerAdditionalFieldDetails[i].fieldTypeId && additionalField.get('fieldValue').value">
+           <label class="label-wrapper" for="dateField1_{{i}}">{{headerAdditionalFieldDetails[i].fieldName}}</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+              <p-calendar formControlName="fieldValue" id="dateField1_{{i}}"
+                          class="place-holder-width disabled-true" [showIcon]="true"></p-calendar>
+            </span>
+      </div>
+    </div>
+
+          <div *ngIf="appFieldType.RADIO_BUTTON === headerAdditionalFieldDetails[i].fieldTypeId ">
+                <div class="grid col-12" [style]="{'align-items': 'center'}">
+                    <div>
+            <span>{{headerAdditionalFieldDetails[i].fieldName}}{{headerAdditionalFieldDetails[i].required ? '*' : ''}}</span>
+          </div>
+                  <div *ngFor="let option of headerAdditionalFieldDetails[i].options">
+                      <input id="male1" type="radio" value="{{option.optionValue}}" [readOnly]="true"
+                             class="radioButton" [attr.disabled]="true"
+                             formControlName="fieldValue">
+                     <span for="male1">{{' ' + option.optionValue}}</span>
+                  </div>
+                </div>
+              </div>
+
+
+                 <div
+                   *ngIf="appFieldType.CHECK_BOX === headerAdditionalFieldDetails[i].fieldTypeId && additionalField.get('fieldValue').value">
+                     <label class="label-wrapper" for="binary1">{{headerAdditionalFieldDetails[i].fieldName}}</label>
+               <div class="p-inputgroup" style="position:relative; padding: 0">
+            <div class="field-checkbox  ml-2 mt-1">
+                  <p-checkbox name="checkBox" [readonly]="true" formControlName="fieldValue" id="binary1"
+                              binary="true"></p-checkbox>
+                 </div>
+              </div>
+            </div>
+        </span>
+    </ng-container>
+
+  </div>
+
+  <!--Both tables tab-->
+  <p-tabView id="item-table-in-panel" styleClass="tabview-custom">
+
+    <p-tabPanel *ngIf="lineItemMainTable.controls.length > 0">
+      <ng-template pTemplate="header">
+        <span class="custom-span">Item Information</span>
+      </ng-template>
+      <ng-template [ngTemplateOutlet]="item_table"></ng-template>
+    </p-tabPanel>
+
+    <p-tabPanel *ngIf="accountDetails.controls.length > 0">
+      <ng-template pTemplate="header">
+        <span class="custom-span">Account Information</span>
+      </ng-template>
+      <ng-template [ngTemplateOutlet]="account_table"></ng-template>
+    </p-tabPanel>
+
+  </p-tabView>
+
+  <!--  Account table tab-->
+  <p-tabView id="item-table-in-tab-1" styleClass="tabview-custom">
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <span class="custom-span">Account Information</span>
+      </ng-template>
+      <ng-template [ngTemplateOutlet]="account_table"></ng-template>
+    </p-tabPanel>
+  </p-tabView>
+
+  <!--  Item table tab-->
+  <p-tabView id="item-table-in-tab-2" styleClass="tabview-custom">
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <span class="custom-span">Item Information</span>
+      </ng-template>
+      <ng-template [ngTemplateOutlet]="item_table"></ng-template>
+    </p-tabPanel>
+  </p-tabView>
+
+  <!--  Account table-->
+  <ng-template #account_table>
+    <div>
+      <p-table responsiveLayout="scroll" scrollDirection="both" [value]="accountDetails.controls" scrollable="true" scrollHeight="210px"
+               [style]="{width:'auto'}"
+               styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="min-width:190px" class="thead-style detail-table-header-left" id="description">Description</th>
+            <th style="min-width:250px" class="thead-style detail-table-header-left"
+                *ngFor="let additionalField of accountAdditionalFieldDetails; let i=index">
+              {{additionalField.fieldName}} {{additionalField.required ? '*' : ''}}
+            </th>
+            <th style="min-width:170px" class="thead-style detail-table-header-right" id="amount">Line Amount*</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-i="rowIndex" let-item
+                     formArrayName="purchaseOrderAccountDetails">
+          <tr [formGroupName]="i">
+
+            <td style="width:190px">
+              <div class="p-inputgroup">
+                <textarea formControlName="description"
+                          placeholder="Description" name="description" [readOnly]="true"
+                          pInputTextarea type="text" pInputText></textarea>
+              </div>
+            </td>
+
+            <ng-container formArrayName="additionalData"
+                          *ngIf="accountAdditionalFieldDetails.length > 0">
+              <td style="width:250px"
+                *ngFor="let additionalLineItemField of accountAdditionalField(i).controls; let itemIndex = index"
+                [formGroupName]="itemIndex">
+
+                <div
+                  *ngIf="appFieldType.LABEL=== accountAdditionalFieldDetails[itemIndex].fieldTypeId">
+                  <input
+                    type="text" class="form-control" pInputText
+                    readonly [value]="accountAdditionalFieldDetails[itemIndex].value">
+                </div>
+
+                <div
+                  *ngIf="appFieldType.TEXT_BOX === accountAdditionalFieldDetails[itemIndex].fieldTypeId">
+                  <div class="p-inputgroup">
+                    <input formControlName="fieldValue" type="text" pInputText
+                           id="input2_{{itemIndex}}" [readOnly]="true"
+                           maxlength="{{accountAdditionalFieldDetails[itemIndex].maxLength}}"
+                           [pKeyFilter]="commonUtil.buildRegex(accountAdditionalFieldDetails[itemIndex].dataType)"
+                           placeholder="{{accountAdditionalFieldDetails[itemIndex].fieldName}}"
+                           (keyup)="removeFieldSpace(additionalLineItemField.get('fieldValue'));">
+                  </div>
+                </div>
+
+                <div
+                  *ngIf="appFieldType.TEXT_AREA === accountAdditionalFieldDetails[itemIndex].fieldTypeId">
+                  <div class="p-inputgroup">
+                     <span class="p-float-label">
+                          <textarea formControlName="fieldValue" id="notes2_{{itemIndex}}" rows="1" pInputTextarea
+                                    [readOnly]="true"
+                                    placeholder="{{accountAdditionalFieldDetails[itemIndex].fieldName}}"
+                                    (keyup)="removeFieldSpace(additionalLineItemField.get('fieldValue'))">
+                          </textarea>
+                     </span>
+                  </div>
+                </div>
+
+                <div
+                  *ngIf="appFieldType.DROP_DOWN_FIELD === accountAdditionalFieldDetails[itemIndex].fieldTypeId &&
+                               accountAdditionalFieldDetails[itemIndex].multiple === 'A'">
+                  <p-multiSelect
+                    [options]="accountAdditionalFieldDetails[itemIndex].optionsList.data" [optionDisabled]="'id'"
+                    id="multiselect2_{{itemIndex}}" appendTo="body" [style]="{'width':'100%'}"
+                    optionValue="id" inputId="multiselect_{{itemIndex}}" #multiSelect2
+                    placeholder="Select {{accountAdditionalFieldDetails[itemIndex].fieldName}}"
+                    formControlName="fieldValue" optionLabel="name" [showToggleAll]="true"
+                    [filter]="true">
+                    <ng-template pTemplate="selectedItem">
+                      <div>{{additionalLineItemField.get('fieldValue').value.name}}</div>
+                    </ng-template>
+
+                    <ng-template let-multiselect pTemplate="item">
+                      <div class="grid">
+                        <div class="dropdown-list"
+                             [ngClass]="multiselect.id == 0 ? ' dropdown-add': null">{{multiselect.name}}</div>
+                        <em *ngIf="multiselect.name == 'Add New'"
+                            class="pi pi-plus dropdown-icon dropdown-add"></em>
+                      </div>
+                    </ng-template>
+                  </p-multiSelect>
+                </div>
+
+                <div
+                  *ngIf="appFieldType.DROP_DOWN_FIELD === accountAdditionalFieldDetails[itemIndex].fieldTypeId &&
+                              accountAdditionalFieldDetails[itemIndex].multiple != 'A'">
+                  <p-dropdown
+                    [virtualScroll]="accountAdditionalFieldDetails[itemIndex].optionsList.data.length>20"
+                    virtualScrollItemSize="25" class="additional-field-dropdown disabled-true"
+                    [options]="accountAdditionalFieldDetails[itemIndex].optionsList.data"
+                    [showClear]="true" #dropdown2 optionDisabled="inactive"
+                    appendTo="body" [style]="{'width':'100%'}"
+                    id="dropdown2_{{itemIndex}}" optionValue="id" optionLabel="name"
+                    [autoDisplayFirst]="false"
+                    formControlName="fieldValue" inputId="dropdown_{{itemIndex}}"
+                    [filter]="true"
+                    placeholder="Select {{accountAdditionalFieldDetails[itemIndex].fieldName}}">
+                    <ng-template pTemplate="selectedItem">
+                      <div>{{dropdown2.selectedOption.name}}</div>
+                    </ng-template>
+
+                    <ng-template let-multiselect pTemplate="item">
+                      <div class="grid">
+                        <div class="dropdown-list"
+                             [ngClass]="multiselect.id == 0 ? ' dropdown-add': null">{{multiselect.name}}</div>
+                        <em *ngIf="multiselect.name == 'Add New'"
+                            class="pi pi-plus dropdown-icon dropdown-add"></em>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+
+                <div
+                  *ngIf="appFieldType.DATE_FIELD=== accountAdditionalFieldDetails[itemIndex].fieldTypeId">
+                  <div class="p-inputgroup">
+                    <p-calendar [style]="{'width':'100%'}" formControlName="fieldValue"
+                                id="dateField2_{{itemIndex}}"
+                                [showIcon]="true" appendTo="body" class="disabled-true"
+                                placeholder="Select {{accountAdditionalFieldDetails[itemIndex].fieldName}}"></p-calendar>
+                  </div>
+                </div>
+
+                <div
+                  *ngIf="appFieldType.RADIO_BUTTON === accountAdditionalFieldDetails[itemIndex].fieldTypeId ">
+                  <div class="grid col-12" [style]="{'align-items': 'center'}">
+                    <div
+                      *ngFor="let option of accountAdditionalFieldDetails[itemIndex].options">
+                      <input id="expense" type="radio" value="{{option.optionValue}}"
+                             class="radioButton" [attr.disabled]="true"
+                             formControlName="fieldValue">
+                      <span for="expense">{{' ' + option.optionValue}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="appFieldType.CHECK_BOX === accountAdditionalFieldDetails[itemIndex].fieldTypeId">
+                  <div class="p-inputgroup" style="position:relative">
+                    <div class="field-checkbox">
+                      <p-checkbox name="checkBox" formControlName="fieldValue" id="binary3"
+                                  [readonly]="true" binary="true"></p-checkbox>
+                      <label for="binary3">{{accountAdditionalFieldDetails[itemIndex].fieldName}}</label>
+                    </div>
+                  </div>
+                </div>
+
+              </td>
+            </ng-container>
+
+            <td style="width:170px">
+              <div class="p-inputgroup">
+                <input pInputText type="text"
+                       name="amount" id="{{'amount_' + i}}" [readOnly]="true"
+                       [options]="{ prefix: '', thousands: ',', decimal: '.' }" currencyMask
+                       value="{{accountDetails.controls[i].value.amount | currency: '':''}}"
+                       placeholder="Line Amount"
+                       formControlName="amount">
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </ng-template>
+
+  <!--  Item table-->
+  <ng-template #item_table>
+    <div>
+      <p-table responsiveLayout="scroll" [value]="lineItemMainTable.controls" scrollable="true" scrollHeight="210px"
+               [style]="{width:'auto'}" scrollDirection="both"
+               styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+        <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+            <col style="width:50px">
+            <col style="width:190px">
+            <col style="width:220px">
+            <col style="width:220px">
+            <col style="width:250px">
+            <col style="width:170px">
+            <col style="width:250px">
+            <col style="width:120px">
+            <col style="width:170px">
+            <col style="width:150px">
+            <col style="width:250px" *ngFor="let additionalField of lineItemAdditionalFieldDetails;">
+            <col style="width:210px">
+          </colgroup>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="thead-style detail-table-header-left" id="sno">#</th>
+            <th class="thead-style detail-table-header-left" id="sitemNumber1">Item Number</th>
+            <th class="thead-style detail-table-header-left" id="sitemName1">Item Name</th>
+            <th class="thead-style detail-table-header-left" id="sku">Vendor Part Number</th>
+            <th class="thead-style detail-table-header-left" id="sdescription">Description</th>
+            <th class="thead-style detail-table-header-left" id="suom1">UOM</th>
+<!--            <th class="thead-style detail-table-header-left" id="sdepartmentItem">Department</th>-->
+            <th class="thead-style detail-table-header-left" id="sqty1">Quantity*</th>
+            <th class="thead-style detail-table-header-left" id="sprice1">Cost*</th>
+            <th class="thead-style detail-table-header-right" id="sdiscount1">Discount</th>
+            <th class="thead-style detail-table-header-left"
+                *ngFor="let additionalField of lineItemAdditionalFieldDetails; let i=index">
+              {{additionalField.fieldName}} {{additionalField.required ? '*' : ''}}
+            </th>
+            <th class="thead-style detail-table-header-right">Line Amount</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-i="rowIndex" let-item formArrayName="purchaseOrderDetails">
+          <tr [formGroupName]="i" [pEditableRow]="item">
+            <td style="text-align: center"><label>{{i + 1}}</label></td>
+
+            <td>
+              <div class="p-inputgroup">
+                <input formControlName="itemNumber"
+                       placeholder="Item Number" name="itemNumber1" [readOnly]="true"
+                       type="text" pInputText>
+              </div>
+            </td>
+
+            <td>
+              <div class="p-inputgroup">
+                <input formControlName="itemName" maxlength="500"
+                       placeholder="Item Name" name="itemName1" [readOnly]="true"
+                       type="text" pInputText>
+              </div>
+            </td>
+
+            <td>
+              <div class="p-inputgroup">
+                <input formControlName="vendorItemNumber"
+                       placeholder="Vendor Part Number" name="sku" [readOnly]="true"
+                       type="text" pInputText>
+              </div>
+            </td>
+
+            <td>
+              <div class="p-inputgroup">
+                <textarea formControlName="description"
+                       placeholder="Description" name="description" [readOnly]="true"
+                          pInputTextarea type="text" pInputText></textarea>
+              </div>
+            </td>
+
+            <td>
+              <div class="p-inputgroup">
+                <input formControlName="uomId"
+                       placeholder="UOM" name="uomId" [readOnly]="true"
+                       type="text" pInputText>
+              </div>
+
+            </td>
+
+
+            <td>
+              <div class="p-inputgroup">
+                <input formControlName="qty" name="qty" placeholder="Qty" type="text" currencyMask
+                       autocomplete="off" [readOnly]="true" [options]="{prefix: '', thousands: ',', decimal: '.'}"
+                       pInputText appDecimalNumber>
+              </div>
+            </td>
+
+
+            <td>
+              <div class="p-inputgroup">
+                <input formControlName="unitPrice" name="unitPrice" placeholder="Unit price"
+                       type="text" [options]="{prefix: '', thousands: ',', decimal: '.'}" currencyMask
+                       autocomplete="off" [readOnly]="true"
+                       pInputText appDecimalNumber>
+              </div>
+            </td>
+
+            <td>
+              <div class="p-inputgroup">
+                <input formControlName="discountAmount" name="discountAmount" placeholder="Discount"
+                       type="text" autocomplete="off" [readOnly]="true"
+                       [options]="{prefix: '', thousands: ',', decimal: '.'}" currencyMask
+                       pInputText appDecimalNumber>
+
+              </div>
+            </td>
+
+            <ng-container formArrayName="additionalData" *ngIf="lineItemAdditionalFieldDetails.length > 0">
+              <td
+                *ngFor="let additionalLineItemField of lineItemAdditionalField(i).controls; let itemIndex = index"
+                [formGroupName]="itemIndex">
+
+                <div *ngIf="appFieldType.LABEL=== lineItemAdditionalFieldDetails[itemIndex].fieldTypeId">
+                  <input
+                    type="text" class="form-control" pInputText
+                    readonly [value]="lineItemAdditionalFieldDetails[itemIndex].value">
+                </div>
+
+                <div *ngIf="appFieldType.TEXT_BOX === lineItemAdditionalFieldDetails[itemIndex].fieldTypeId">
+                  <div class="p-inputgroup">
+                    <input formControlName="fieldValue" type="text" pInputText
+                           maxlength="{{lineItemAdditionalFieldDetails[itemIndex].maxLength}}"
+                           [readOnly]="true"
+                           [pKeyFilter]="commonUtil.buildRegex(lineItemAdditionalFieldDetails[itemIndex].dataType)"
+                           placeholder="{{lineItemAdditionalFieldDetails[itemIndex].fieldName}}"
+                           (keyup)="removeFieldSpace(additionalLineItemField.get('fieldValue'));">
+                  </div>
+                </div>
+
+                <div *ngIf="appFieldType.TEXT_AREA === lineItemAdditionalFieldDetails[itemIndex].fieldTypeId">
+                  <div class="p-inputgroup">
+                     <span class="p-float-label">
+                          <textarea formControlName="fieldValue" rows="1" pInputTextarea
+                                    [readOnly]="true"
+                                    placeholder="{{lineItemAdditionalFieldDetails[itemIndex].fieldName}}"
+                                    (keyup)="removeFieldSpace(additionalLineItemField.get('fieldValue'))">
+                          </textarea>
+                     </span>
+                  </div>
+                </div>
+
+                <div
+                  *ngIf="appFieldType.DROP_DOWN_FIELD === lineItemAdditionalFieldDetails[itemIndex].fieldTypeId && lineItemAdditionalFieldDetails[itemIndex].multiple === 'A'">
+                  <p-multiSelect [options]="lineItemAdditionalFieldDetails[itemIndex].optionsList.data"
+                                 appendTo="body" [style]="{'width':'100%'}"
+                                 [optionDisabled]="'id'"
+                                 optionValue="id" inputId="multiselect_{{itemIndex}}" #multiSelect1
+                                 placeholder="Select {{lineItemAdditionalFieldDetails[itemIndex].fieldName}}"
+                                 formControlName="fieldValue" optionLabel="name" [showToggleAll]="true"
+                                 [filter]="true">
+                    <ng-template pTemplate="selectedItem">
+                      <div>{{additionalLineItemField.get('fieldValue').value.name}}</div>
+                    </ng-template>
+
+                    <ng-template let-multiselect pTemplate="item">
+                      <div class="grid">
+                        <div class="dropdown-list"
+                             [ngClass]="multiselect.id == 0 ? ' dropdown-add': null">{{multiselect.name}}</div>
+                        <em *ngIf="multiselect.name == 'Add New'"
+                            class="pi pi-plus dropdown-icon dropdown-add"></em>
+                      </div>
+                    </ng-template>
+                  </p-multiSelect>
+                </div>
+
+                <div
+                  *ngIf="appFieldType.DROP_DOWN_FIELD === lineItemAdditionalFieldDetails[itemIndex].fieldTypeId && lineItemAdditionalFieldDetails[itemIndex].multiple != 'A'">
+                  <p-dropdown
+                    [virtualScroll]="lineItemAdditionalFieldDetails[itemIndex].optionsList.data.length>20"
+                    virtualScrollItemSize="25" optionDisabled="inactive"
+                    [options]="lineItemAdditionalFieldDetails[itemIndex].optionsList.data" [showClear]="true"
+                    appendTo="body" [style]="{'width':'100%'}" #dropdown2
+                    optionValue="id" optionLabel="name" [autoDisplayFirst]="false"
+                    class="disabled-true"
+                    formControlName="fieldValue" inputId="dropdown_{{itemIndex}}" [filter]="true"
+                    placeholder="Select {{lineItemAdditionalFieldDetails[itemIndex].fieldName}}">
+                    <ng-template pTemplate="selectedItem">
+                      <div>{{dropdown2.selectedOption.name}}</div>
+                    </ng-template>
+
+                    <ng-template let-multiselect pTemplate="item">
+                      <div class="grid">
+                        <div class="dropdown-list"
+                             [ngClass]="multiselect.id == 0 ? ' dropdown-add': null">{{multiselect.name}}</div>
+                        <em *ngIf="multiselect.name == 'Add New'"
+                            class="pi pi-plus dropdown-icon dropdown-add"></em>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+
+                <div *ngIf="appFieldType.DATE_FIELD=== lineItemAdditionalFieldDetails[itemIndex].fieldTypeId">
+                  <div class="p-inputgroup">
+                    <p-calendar [style]="{'width':'100%'}" formControlName="fieldValue"
+                                [showIcon]="true" appendTo="body"
+                                placeholder="Select {{lineItemAdditionalFieldDetails[itemIndex].fieldName}}"></p-calendar>
+                  </div>
+                </div>
+
+                <div *ngIf="appFieldType.RADIO_BUTTON === lineItemAdditionalFieldDetails[itemIndex].fieldTypeId ">
+                  <div class="grid col-12" [style]="{'align-items': 'center'}">
+                    <div *ngFor="let option of lineItemAdditionalFieldDetails[itemIndex].options">
+                      <input type="radio" value="{{option.optionValue}}" class="radioButton"
+                             [attr.disabled]="true"
+                             formControlName="fieldValue">
+                      <span
+                        for="male1">{{' ' + option.optionValue}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="appFieldType.CHECK_BOX === lineItemAdditionalFieldDetails[itemIndex].fieldTypeId">
+                  <div class="p-inputgroup" style="position:relative">
+                    <div class="field-checkbox">
+                      <p-checkbox name="checkBox" formControlName="fieldValue"
+                                  [readonly]="true" binary="true"></p-checkbox>
+                      <label for="binary2">{{lineItemAdditionalFieldDetails[itemIndex].fieldName}}</label>
+                    </div>
+                  </div>
+                </div>
+
+              </td>
+            </ng-container>
+
+            <td>
+              <div class="p-inputgroup">
+                <input pInputText type="text"
+                       name="amount" currencyMask [autocomplete]="false"
+                       [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                       [disabled]="true"
+                       value="{{lineItemMainTable.controls[i].value.amount | currency: '':''}}"
+                       placeholder="0.00" class="amounts"
+                       formControlName="amount">
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </ng-template>
+
+
+  <br>
+
+  <hr>
+
+
+  <div class="grid">
+    <div class="order-drop-zone col-12 xl:col-7 top-marging">
+      <br>
+      <br>
+      <div id="comments" class="field col-12 ">
+        <label class="label-wrapper" for="notes">Comments</label>
+        <div class="p-inputgroup" *ngIf="!detailView">
+          <span class="p-float-label">
+            <textarea formControlName="remarks" id="comment" rows="2" pInputTextarea maxlength="300"
+                      (keyup)="removeFieldSpace(po.remarks); isRejectError = false"></textarea>
+          </span>
+        </div>
+        <div class="p-invalid text-align-left" *ngIf="isRejectError">
+          Comment is required to reject
+        </div>
+      </div>
+    </div>
+
+    <div class="order-amount-fields col-12 col-offset-1 xl:col-4">
+      <div class="col-12"></div>
+
+      <div class="grid">
+        <span
+          class="col-6 lg:col-8 md:col-6 sm:col-6  xl:col-5 text-right amount-text-alignment amount-label">Item Gross Amount</span>
+        <div class="col-6 lg:col-4 sm:col-6 md:col-6 xl:col-7">
+          <div class="field p-fluid">
+            <input pInputText class="text-right amounts" formControlName="itemGrossAmount"
+                   currencyMask placeholder="0.00"
+                   [options]="{ prefix: '', thousands: ',', decimal: '.' }" readonly>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <span
+          class="col-6 lg:col-8 md:col-6 sm:col-6  xl:col-5 text-right amount-text-alignment amount-label">Account Gross Amount</span>
+        <div class="col-6 lg:col-4 sm:col-6 md:col-6 xl:col-7">
+          <div class="field p-fluid">
+            <input pInputText class="text-right amounts" formControlName="accountGrossAmount"
+                   currencyMask placeholder="0.00"
+                   [options]="{ prefix: '', thousands: ',', decimal: '.' }" readonly>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <span
+          class="col-6 lg:col-8 md:col-6 sm:col-6  xl:col-5 text-right amount-text-alignment amount-label">Tax Amount</span>
+        <div class="col-6 lg:col-4 sm:col-6 md:col-6 xl:col-7">
+          <div class="field p-fluid">
+            <input pInputText class="text-right"  placeholder="0.00"
+                   formControlName="taxPercentageStr" readonly>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <span class="col-6 lg:col-8 md:col-6 sm:col-6  xl:col-5 text-right amount-text-alignment amount-label">Discount Amount</span>
+        <div class="col-6 lg:col-4 sm:col-6 md:col-6 xl:col-7">
+          <div class="field p-fluid">
+            <input pInputText currencyMask placeholder="0.00"
+                   [options]="{prefix: '', thousands: ',', decimal: '.' }"
+                   formControlName="discountAmount" class="text-right amounts" readonly>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="grid">
+        <span
+          class="col-6 lg:col-8 md:col-6 sm:col-6  xl:col-5 text-right amount-text-alignment amount-label">Net Amount</span>
+        <div class="col-6 lg:col-4 sm:col-6 md:col-6 xl:col-7">
+          <div class="field p-fluid">
+            <input pInputText currencyMask placeholder="0.00"
+                   [options]="{prefix: '', thousands: ',', decimal: '.'}"
+                   class="text-right amountsNet"
+                   formControlName="netAmount" readonly>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div *ngIf="actualAttachments.length>0" id="attachments" class="grid">
+    <div class="col-6">
+      <h6 class="subHeadingColour">Files Attached</h6>
+      <div>
+        <p-table responsiveLayout="scroll" [value]="actualAttachments" scrollable="true" scrollHeight="150px"
+                 styleClass="p-datatable-md p-datatable-striped detail-table">
+
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col style="width:250px">
+              <col style="width:50px">
+            </colgroup>
+          </ng-template>
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="thead-style detail-table-header-left" id="rName">File Name</th>
+              <th class="thead-style detail-table-header-left" id="action">Action</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-i="rowIndex" let-item>
+            <tr>
+
+              <td [style]="'height : 30px'">
+                <label> {{item.fileName}}</label>
+              </td>
+
+              <td class="text-center">
+                <i (click)="downloadAttachments(item)" class="fa fa-download download-icon"></i> &nbsp;
+              </td>
+
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+
+  <br> <br>
+
+  <div class="grid footer" id="btns">
+    <div class="col-12 " style="margin-top: 3%">
+      <div class="pull-right">
+
+        <button pButton type="button" (click)="close()" label="Back" [disabled]="btnLoading"
+                class="p-button-outlined p-button-sm" icon="pi pi-arrow-left"></button>
+
+        <button pButton type="button" (click)="downloadFromBackend()" label="Download Report" [disabled]="btnLoading"
+                class="p-button-outlined ml-1 p-button-sm" icon="fa fa-download"></button>
+
+        <button pButton type="button" *ngIf="!detailView &&
+         privilegeService.isAuthorizedMultiple([appAuthorities.PO_APPROVE, appAuthorities.PO_OVERRIDE_APPROVAL])"
+                (click)="markAsApproved()"
+                class="mr-1  ml-2 p-button-sm" iconPos="left" [disabled]="btnLoading"
+                [icon]="saveAsApprovedLoading ? 'pi pi-spin pi-spinner': 'fa fa-check'"
+                label="Approve"></button>
+
+        <button pButton type="button" *ngIf="!detailView && !isUnderDiscussion &&
+        privilegeService.isAuthorizedMultiple([appAuthorities.PO_UNDER_DISCUSSION, appAuthorities.PO_OVERRIDE_APPROVAL])"
+                (click)="markAsUnderDiscussion()"
+                class="mr-1 p-button-sm" iconPos="left" [disabled]="btnLoading"
+                [icon]="underDiscussionLoading ? 'pi pi-spin pi-spinner': 'fa fa-users'"
+                label="Under Discussion"></button>
+
+        <button pButton type="button" *ngIf="!detailView &&
+        privilegeService.isAuthorizedMultiple([appAuthorities.PO_REJECT, appAuthorities.PO_OVERRIDE_APPROVAL])"
+                (click)="markAsRejected()"
+                class="mr-1 p-button-sm reject-btn" iconPos="left" [disabled]="btnLoading"
+                [icon]="rejectLoading ? 'pi pi-spin pi-spinner': 'fa fa-minus-circle'"
+                label="Reject"></button>
+
+      </div>
+    </div>
+  </div>
+
+</form>
+
+
+<p-confirmDialog #cd key="poS" appendTo="body" header="Are you sure?"
+                 icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cd.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, Delete it!"
+            (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+

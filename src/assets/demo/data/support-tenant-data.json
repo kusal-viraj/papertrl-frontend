@@ -1,0 +1,20 @@
+{
+  "data": [
+    {
+      "tenantId": 1,
+      "ownerName": "Owner Name",
+      "ownerEmail": "Owner Email"
+    },
+    {
+      "tenantId": 2,
+      "ownerName": "Owner Name2",
+      "ownerEmail": "Owner Email2"
+    },
+    {
+      "tenantId": 3,
+      "ownerName": "Owner Name3",
+      "ownerEmail": "Owner Email3"
+    }
+  ],
+  "totalRecords": 3
+}

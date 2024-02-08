@@ -1,0 +1,236 @@
+
+<div class="side-bar-drawer-content p-3 mt-7">
+<div class="col-12">
+
+    <form [formGroup]="trialForm" (ngSubmit)="onSubmitForm(trialForm.value)">
+
+      <div class="grid p-fluid">
+
+        <div [ngClass]="'field col-12 sm:col-12 md:col-6 xl:col-4 lg:col-4'">
+          <label class="label-wrapper" for="dbms">DBMS* </label>
+        <span class="p-float-label">
+            <p-dropdown inputId="status" formControlName="dbDriverClassName" id="dbms" optionValue="id"
+                        [autoDisplayFirst]="false" (onChange)="getAvailableDBServers($event)" [options]="supportUtility.driverClassList.data" [filter]="true"
+                        optionLabel="name"></p-dropdown>
+        </span>
+
+          <div class="p-invalid text-align-left"
+               *ngIf="trialForm.get('dbDriverClassName').dirty && trialForm.get('dbDriverClassName').errors">
+            DBMS is required
+          </div>
+        </div>
+        <div [ngClass]="'field col-12 sm:col-12 md:col-6 xl:col-4 lg:col-4'">
+          <label class="label-wrapper" for="db-host">DB Host* </label>
+        <span class="p-float-label">
+            <p-dropdown inputId="status" formControlName="dbServerId" id="db-host" optionValue="id"
+                        [autoDisplayFirst]="false" [options]="supportDBServers" [filter]="true"
+                        optionLabel="name"></p-dropdown>
+        </span>
+
+          <div class="p-invalid text-align-left"
+               *ngIf="trialForm.get('dbServerId').dirty && trialForm.get('dbServerId').errors">
+            DB Host is required
+          </div>
+        </div>
+        <div [ngClass]="'field col-12 sm:col-12 md:col-6 xl:col-4 lg:col-4'">
+          <label class="label-wrapper" for="sftp">SFTP Host* </label>
+        <span class="p-float-label">
+            <p-dropdown inputId="status" formControlName="sftpServerId" id="sftp" optionValue="id"
+                        [autoDisplayFirst]="false" [options]="supportSftpServers" [filter]="true"
+                        optionLabel="name"></p-dropdown>
+        </span>
+
+          <div class="p-invalid text-align-left"
+               *ngIf="trialForm.get('sftpServerId').dirty && trialForm.get('sftpServerId').errors">
+            SFTP Host is required
+          </div>
+        </div>
+
+        <div [ngClass]="'field col-12 sm:col-12 md:col-6 xl:col-4 lg:col-4'">
+          <label class="label-wrapper" for="dbCache">DB Cache Prepare Statement* </label>
+        <span class="p-float-label">
+            <p-dropdown inputId="status" formControlName="dbCachePrepStmts" id="dbCache" optionValue="id"
+                        [autoDisplayFirst]="false" [options]="supportUtility.cachePrepStmtsList.data" [filter]="true"
+                        optionLabel="name"></p-dropdown>
+        </span>
+
+          <div class="p-invalid text-align-left"
+               *ngIf="trialForm.get('dbCachePrepStmts').dirty && trialForm.get('dbCachePrepStmts').errors">
+            DB Cache Prepare Statement is required
+          </div>
+        </div>
+
+
+        <div [ngClass]="'field col-12 sm:col-12 md:col-6 xl:col-4 lg:col-4'">
+          <label class="label-wrapper" for="dbCacheSize">DB Prepare Statement Cache Size* </label>
+          <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input pKeyFilter="money" id="dbCacheSize" maxlength="150"
+                            type="number" pInputText formControlName="dbPrepStmtCacheSize">
+                   </span>
+          </div>
+          <div class="p-invalid text-align-left"
+               *ngIf="trialForm.get('dbPrepStmtCacheSize').dirty && trialForm.get('dbPrepStmtCacheSize').errors">
+            DB Prepare Statement Cache Size is required
+          </div>
+        </div>
+
+        <div [ngClass]="'field col-12 sm:col-12 md:col-6 xl:col-4 lg:col-4'">
+          <label class="label-wrapper" for="dbCacheLimit">DB Prepare Statement Cache Sql Limit* </label>
+          <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input pKeyFilter="money" formControlName="dbPrepStmtCacheSqlLimit" id="dbCacheLimit"
+                            maxlength="150"
+                            type="number" pInputText>
+                   </span>
+          </div>
+          <div class="p-invalid text-align-left"
+               *ngIf="trialForm.get('dbPrepStmtCacheSqlLimit').dirty && trialForm.get('dbPrepStmtCacheSqlLimit').errors">
+            DB Prepare Statement Cache Sql Limit is required
+          </div>
+        </div>
+
+        <div [ngClass]="'field col-12 sm:col-12 md:col-6 xl:col-4 lg:col-4'">
+          <label class="label-wrapper" for="dbTimeOut">DB Connection Time Out* </label>
+          <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input pKeyFilter="money" formControlName="dbConnectionTimeOut" id="dbTimeOut" maxlength="150"
+                            type="number" pInputText>
+                   </span>
+          </div>
+          <div class="p-invalid text-align-left"
+               *ngIf="trialForm.get('dbConnectionTimeOut').dirty && trialForm.get('dbConnectionTimeOut').errors">
+            DB Connection Time Out is required
+          </div>
+        </div>
+
+        <div [ngClass]="'field col-12 sm:col-12 md:col-6 xl:col-4 lg:col-4'">
+          <label class="label-wrapper" for="dbIdleTimeout">DB Idle Time Out* </label>
+          <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input pKeyFilter="money" formControlName="dbIdleTimeOut" id="dbIdleTimeout" maxlength="150"
+                            type="number" pInputText>
+                   </span>
+          </div>
+          <div class="p-invalid text-align-left"
+               *ngIf="trialForm.get('dbIdleTimeOut').dirty && trialForm.get('dbIdleTimeOut').errors">
+            DB Idle Time Out is required
+          </div>
+        </div>
+
+        <div [ngClass]="'field col-12 sm:col-12 md:col-6 xl:col-4 lg:col-4'">
+          <label class="label-wrapper" for="dbFailTimeOut">DB Init Fail Time Out* </label>
+          <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input pKeyFilter="money" formControlName="dbInitFailTimeout" id="dbFailTimeOut" maxlength="150"
+                            type="number" pInputText>
+                   </span>
+          </div>
+          <div class="p-invalid text-align-left"
+               *ngIf="trialForm.get('dbInitFailTimeout').dirty && trialForm.get('dbInitFailTimeout').errors">
+            DB Init Fail Time Out is required
+          </div>
+        </div>
+
+        <div [ngClass]="'field col-12 sm:col-12 md:col-6 xl:col-4 lg:col-4'">
+          <label class="label-wrapper" for="dbLeak">DB Leak Detection Threshold* </label>
+          <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input pKeyFilter="money" formControlName="dbLeakDetectionThreadshold" id="dbLeak" maxlength="150"
+                            type="number" pInputText>
+                   </span>
+          </div>
+          <div class="p-invalid text-align-left"
+               *ngIf="trialForm.get('dbLeakDetectionThreadshold').dirty && trialForm.get('dbLeakDetectionThreadshold').errors">
+            DB Leak Detection Threshold is required
+          </div>
+        </div>
+
+        <div [ngClass]="'field col-12 sm:col-12 md:col-6 xl:col-4 lg:col-4'">
+          <label class="label-wrapper" for="dbPool">DB Pool Size* </label>
+          <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input pKeyFilter="money" formControlName="dbPoolSize" id="dbPool" maxlength="150"
+                            type="number" pInputText>
+                   </span>
+          </div>
+          <div class="p-invalid text-align-left"
+               *ngIf="trialForm.get('dbPoolSize').dirty && trialForm.get('dbPoolSize').errors">
+            DB Pool Size is required
+          </div>
+        </div>
+
+
+        <div [ngClass]="'field col-12 sm:col-12 md:col-6 xl:col-4 lg:col-4'">
+          <label class="label-wrapper" for="dbMaxLife">DB Max Life* </label>
+          <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input pKeyFilter="money" formControlName="dbMaxLife" id="dbMaxLife" maxlength="150"
+                            type="number" pInputText>
+                   </span>
+          </div>
+          <div class="p-invalid text-align-left"
+               *ngIf="trialForm.get('dbMaxLife').dirty && trialForm.get('dbMaxLife').errors">
+            DB Max Life is required
+          </div>
+        </div>
+
+        <div [ngClass]="'field col-12 sm:col-12 md:col-6 xl:col-4 lg:col-4'">
+          <label class="label-wrapper" for="dbMinIdle">DB Min Idle* </label>
+          <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input pKeyFilter="money" id="dbMinIdle" maxlength="150"
+                            type="number" pInputText formControlName="dbMinIdle">
+                   </span>
+          </div>
+          <div class="p-invalid text-align-left"
+               *ngIf="trialForm.get('dbMinIdle').dirty && trialForm.get('dbMinIdle').errors">
+            DB Min Idle is required
+          </div>
+        </div>
+
+
+        <div [ngClass]="'field col-12 sm:col-12 md:col-6 xl:col-4 lg:col-4'">
+          <label class="label-wrapper" for="dbCommit">DB Default Auto Commit* </label>
+        <span class="p-float-label">
+            <p-dropdown inputId="status" formControlName="dbDefaultAutoCommit" id="dbCommit" optionValue="id"
+                        [autoDisplayFirst]="false" [options]="supportUtility.dbDefaultAutoCommitList.data"
+                        [filter]="true"
+                        optionLabel="name"></p-dropdown>
+        </span>
+
+          <div class="p-invalid text-align-left"
+               *ngIf="trialForm.get('dbDefaultAutoCommit').dirty && trialForm.get('dbDefaultAutoCommit').errors">
+            DB Default Auto Commit is required
+          </div>
+        </div>
+
+        <div [ngClass]="'field col-12 sm:col-12 md:col-6 xl:col-4 lg:col-4'">
+          <label class="label-wrapper" for="auth">User Auth Type* </label>
+        <span class="p-float-label">
+            <p-dropdown inputId="status" formControlName="userAuthType" id="auth" optionValue="id"
+                        [autoDisplayFirst]="false" [options]="supportUtility.authTypeList.data" [filter]="true"
+                        optionLabel="name"></p-dropdown>
+        </span>
+
+          <div class="p-invalid text-align-left"
+               *ngIf="trialForm.get('userAuthType').dirty && trialForm.get('userAuthType').errors">
+            User Auth Type is required
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" (click)="resetForm()" label="Reset"
+              class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+      <button pButton type="button" (click)="onSubmitForm(trialForm.value)" class="p-button-sm"
+              iconPos="left" icon="pi pi-save"
+              label="Save"></button>
+    </div>
+  </div>
+</div>

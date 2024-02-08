@@ -1,0 +1,97 @@
+{
+  "advancedFilters": [
+    {
+      "field": "approvalGroup",
+      "header": "Account Type",
+      "searchType": "dropdown"
+    },
+    {
+      "field": "poNumberPattern",
+      "header": "PO Number Pattern",
+      "searchType": "input"
+    },
+    {
+      "field": "createdBy",
+      "header": "Created By",
+      "searchType": "input"
+    },
+    {
+      "field": "createdDate",
+      "header": "Created Date",
+      "searchType": "date"
+    }
+  ],
+  "columns": [
+    {
+      "field": "action",
+      "header": "Action",
+      "isSortable": false,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "actionButton",
+      "canHide": false
+    },
+    {
+      "field": "approvalGroup",
+      "header": "Approval Group",
+      "searchType": "dropdown",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "left",
+      "canHide": true,
+      "placeholder": "Account Type"
+    },
+    {
+      "field": "poNumberPattern",
+      "header": "PO Number Pattern",
+      "searchType": "input",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "left",
+      "canHide": true,
+      "placeholder": "PO Number Pattern"
+    },
+    {
+      "field": "createdBy",
+      "header": "Created By",
+      "searchType": "input",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "left",
+      "canHide": true,
+      "placeholder": "Created By"
+    },
+    {
+      "field": "createdDate",
+      "header": "Created Date",
+      "searchType": "date",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "left",
+      "canHide": true,
+      "placeholder": "Created Date"
+    }
+  ],
+  "state": {
+    "first": 0,
+    "rows": 10,
+    "columnWidths": "50,102,257,257,257",
+    "columnOrder": [
+      "action",
+      "approvalGroup",
+      "poNumberPattern",
+      "createdBy",
+      "createdDate"
+    ]
+  }
+}

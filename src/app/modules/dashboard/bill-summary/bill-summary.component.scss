@@ -1,0 +1,16 @@
+@import "../../../../scss/color.scss";
+@import '../../../../scss/table-responsive';
+@import '../../../../scss/common-styles';
+
+
+.no-data-show {
+  text-align: center;
+  margin-top: 15%;
+  font-size: 16px;
+  color: $green;
+}
+
+.table-wrapper {
+  min-height: 250px;
+  max-height: calc(100vh - 45rem);
+}

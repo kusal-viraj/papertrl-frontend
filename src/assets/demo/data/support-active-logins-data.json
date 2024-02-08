@@ -1,0 +1,41 @@
+{
+  "data": [
+    {
+      "tenantId":  "qa-app114",
+      "userName": "admin",
+      "ipAddress":  "10.22.21.81",
+      "loggedDateTime": "03/16/2021 8:26:34"
+    },
+    {
+      "tenantId":  "qa-app114",
+      "userName": "pm",
+      "ipAddress":  "10.22.21.81",
+      "loggedDateTime": "03/16/2021 8:26:34"
+    },
+    {
+      "tenantId":  "qa-app114",
+      "userName": "admin",
+      "ipAddress":  "10.22.21.81",
+      "loggedDateTime": "03/16/2021 8:26:34"
+    },
+    {
+      "tenantId":  "qa-app114",
+      "userName": "pm",
+      "ipAddress":  "10.22.21.81",
+      "loggedDateTime": "03/16/2021 8:26:34"
+    },
+    {
+      "tenantId":  "qa-app114",
+      "userName": "pm",
+      "ipAddress":  "10.22.21.81",
+      "loggedDateTime": "03/16/2021 8:26:34"
+    },
+    {
+      "tenantId":  "qa-app114",
+      "userName": "admin",
+      "ipAddress":  "10.22.21.81",
+      "loggedDateTime": "03/16/2021 8:26:34"
+    }
+  ],
+  "totalRecords": 5
+}

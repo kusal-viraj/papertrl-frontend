@@ -1,0 +1,43 @@
+<div class="overlay-panel" *ngIf="expenseDto">
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Amount</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(expenseDto.amount, true)| number : '1.2-2'}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Report Name</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(expenseDto.reportName, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Created By</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(expenseDto.createdByName, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Created Date</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(expenseDto.dateString, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Approval Status</label></div>
+    <div class="col-6 ml-2 capitalize">
+      <li [class]="'mr-2 status-style status-'  + tableSupportBase.getStatus(expenseDto.status)"></li>
+      {{tableSupportBase.getStatus(expenseDto.status) | titlecase}}
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Payment Status</label></div>
+    <div class="col-6 ml-2 capitalize">
+      <li [class]="'mr-2 status-style status-'  + getStatus(expenseDto.paymentStatus)"></li>
+      {{getStatus(expenseDto.paymentStatus) | titlecase}}
+    </div>
+  </div>
+
+</div>
+<div class="overlay-panel" *ngIf="!expenseDto">
+  <div *ngIf="!expenseDto" class="loading-wrapper">
+    <em class="fa fa-spinner fa-pulse"></em>
+  </div>
+</div>

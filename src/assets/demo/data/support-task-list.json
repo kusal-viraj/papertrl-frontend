@@ -1,0 +1,128 @@
+{
+  "advancedFilters": [
+    {
+      "field": "taskName",
+      "header": "Task Name",
+      "searchType": "input"
+    },
+    {
+      "field": "description",
+      "header": "Description",
+      "searchType": "input"
+    },
+    {
+      "field": "url",
+      "header": "URL",
+      "searchType": "input"
+    },
+    {
+      "field": "createdBy",
+      "header": "Created By",
+      "searchType": "input"
+    },
+    {
+      "field": "createdDate",
+      "header": "Created Date",
+      "searchType": "date"
+    }
+  ],
+  "columns": [
+    {
+      "field": "action",
+      "header": "Action",
+      "isSortable": false,
+      "isReOrderable": false,
+      "isReSizable": false,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "actionButton",
+      "canHide": false
+    },
+    {
+      "field": "tenantId",
+      "header": "Tenant Id",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "dropdown",
+      "canHide": true,
+      "placeholder": "Tenant Id"
+    },
+    {
+      "field": "taskName",
+      "header": "Task Name",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Task Name"
+    },
+    {
+      "field": "description",
+      "header": "Description",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Description"
+    },
+    {
+      "field": "url",
+      "header": "URL",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "URL"
+    },
+    {
+      "field": "createdBy",
+      "header": "Created By",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Created By"
+    },
+    {
+      "field": "createdDate",
+      "header": "Created Date",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "date",
+      "canHide": true,
+      "placeholder": "Created Date"
+    }
+  ],
+  "state": {
+    "first": 0,
+    "rows": 10,
+    "columnWidths": "100,220,220,550,250,220,220",
+    "columnOrder": [
+      "action",
+      "tenantId",
+      "taskName",
+      "description",
+      "url",
+      "createdBy",
+      "createdDate"
+    ]
+  }
+}

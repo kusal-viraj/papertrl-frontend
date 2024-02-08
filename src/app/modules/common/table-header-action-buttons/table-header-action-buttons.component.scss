@@ -1,0 +1,14 @@
+.custom-label-button {
+  border-radius: 4px !important;
+  font-weight: bold !important;
+  padding: 7px 10px !important;
+
+  &:hover {
+    background-color: #bcbcbc !important;
+  }
+
+  &:disabled {
+    background-color: #fff0 !important;
+  }
+
+}

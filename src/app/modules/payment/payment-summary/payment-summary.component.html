@@ -1,0 +1,117 @@
+<div class="pl-4 mb-3 pr-4">
+  <div class="field grid mb-5">
+    <div class="col-6">
+      <h5 class="module-header-label mb-0">Payment Summary</h5>
+      <p class="sub-topic">Confirm your payment details here</p>
+    </div>
+
+    <div class="col-6 text-right">
+      <div class="fa fa-close side-drawer-icon " (click)="onClose.emit()"></div>
+    </div>
+  </div>
+
+  <div class="grid payment-info">
+    <div class="col-12 md:col-12 sm:col-12 transaction-wrapper"
+         [class]="isWorkFlow ? 'xl:col-8 lg:col-8' : 'xl:col-12 lg:col-12'">
+      <div *ngFor="let data of paymentDetails.payeeWiseTransactionList" class="transaction-info shadow-1 p-4 mb-5">
+        <div class="grid mb-4 header">
+          <div class="col-6 payee">
+            {{data.transactionList[0].payee}}
+          </div>
+          <div class="col-6 text-right p-type">
+            {{getPaymentTypeName(data.txnType)}}
+          </div>
+        </div>
+
+        <div class="col-12 transactions" *ngFor="let transaction of data.transactionList; let i = index">
+          <div class="grid">
+            <div class="col-3 pt-0 pb-0">
+              <div class="mb-3 bold-text" *ngIf="i == 0">Document No.</div>
+              {{transaction.docNo}}
+            </div>
+            <div class="col-3 pt-0 pb-0">
+              <div class="mb-3 bold-text" *ngIf="i == 0">Due Date</div>
+              {{transaction.dueDate}}
+            </div>
+            <div class="col-3 text-right pt-0 pb-0">
+              <div class="mb-3 bold-text" *ngIf="i == 0">Discount</div>
+              {{commonUtil.detailViewIsDash(transaction.disc, true) | number : '1.2-2'}}
+            </div>
+            <div class="col-3 text-right pt-0 pb-0">
+              <div class="mb-3 bold-text" *ngIf="i == 0">Amount</div>
+              {{transaction.amount | number : '1.2-2'}}
+            </div>
+            <div *ngIf="i == data.transactionList.length - 1" class="col-12 bold-text amount text-right pt-0 pb-0">
+              <hr>
+              {{getTotalOfLine(data.transactionList) | number : '1.2-2'}}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 inline-flex align-items-center"
+             *ngIf="data.transactionList.length > 1 && data.txnType === appConstant.PAYMENT_TYPE_VIRTUAL_CARD">
+          <p-inputSwitch class="input-switch-custom" [(ngModel)]="data.singleCardForBatch"></p-inputSwitch>
+          <div class="ml-2 switch-description">Pay Total Amount as Single Payment
+            <i class="pl-2 info-icon pi pi-info-circle" [pTooltip]="'Disabling this toggle will create a' +
+             ' separate virtual card for each transaction processed.'"></i></div>
+        </div>
+
+<!--        <div class="col-5 mt-2 p-fluid"-->
+<!--             *ngIf="data.txnType === appConstant.PAYMENT_TYPE_VIRTUAL_CARD">-->
+<!--          <label class="label-wrapper">Select Preferred Virtual Card*</label>-->
+<!--          <p-dropdown appendTo="body" [(ngModel)]="data.cardId" [options]="data.vcardList" optionLabel="name"-->
+<!--                      optionValue="id" [showClear]="false" [autoDisplayFirst]="false"></p-dropdown>-->
+<!--        </div>-->
+      </div>
+    </div>
+
+    <div class="col-12 xl:col-4 lg:col-4 md:col-12 sm:col-12" *ngIf="isWorkFlow">
+      <div class="approvers-info shadow-1 p-4">
+        <div class="col-12 ">
+          <h6 class="mb-4">Approvers</h6>
+          <div class="grid" *ngFor="let workFlow of paymentForm.adHocWorkflowDetails; let i = index">
+            <div class="col-1">
+              <div class="mb-3 bold-text" *ngIf="i == 0">&nbsp;</div>
+              {{i + 1}}
+            </div>
+            <div class="col-5">
+              <div class="mb-3 bold-text" *ngIf="i == 0">Approval Group</div>
+              {{getApprovalGroupName(workFlow?.approvalGroup)}}
+            </div>
+            <div class="col-6">
+              <div class="mb-3 bold-text" *ngIf="i == 0">Approval User</div>
+              {{getApprovalUserName(workFlow?.approvalUser)}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="grid footer fixed m-0">
+  <div class="col-12 xl:col-3 lg:col-3 md:col-6 sm:col-12 pl-4 text-left">
+    <img *ngIf="paymentDetails.providerLogo" [src]="getLogo(paymentDetails.providerLogo)"/>
+  </div>
+  <div class="col-12 xl:col-3 lg:col-3 md:col-6 sm:col-12">
+    <div class="col-12 topic" *ngIf="isSchedule">
+      <p>Scheduled Time</p>
+    </div>
+    <div class="col-12 data" *ngIf="isSchedule">
+      {{paymentForm.scheduledDateStr}}<span *ngIf="paymentForm.time"> - {{paymentForm.time}}</span>
+    </div>
+  </div>
+
+  <div class="col-12 xl:col-3 lg:col-3 md:col-6 sm:col-12">
+    <div class="col-12 topic ">
+      <p class="text-right">Total</p>
+    </div>
+    <div class="col-12 data text-right">
+      {{paymentDetails.totalAmount | number : '1.2-2'}}
+    </div>
+  </div>
+  <div class="col-12 xl:col-3 lg:col-3 md:col-6 sm:col-12 btn">
+    <button pButton (click)="submit()" [icon]="buttonDetails.icon" [label]="'Confirm & '+ buttonDetails.label"
+            class="p-button-sm" [loading]="loadingConfirm"></button>
+  </div>
+</div>

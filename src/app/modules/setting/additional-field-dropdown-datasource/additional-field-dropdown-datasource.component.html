@@ -1,0 +1,144 @@
+<div class="edit-additional-field p-3">
+  <div class="grid">
+    <div class="col-12">
+      <form [formGroup]="dropdownDatasourceForm">
+
+        <div class="grid p-fluid">
+
+          <div class="col-12 lg:col-10 xl:col-10 md:col-10 sm:col-10">
+            <label class="label-wrapper" for="dataSourceName">Data Source Name*</label>
+        <span class="p-float-label">
+          <input formControlName="name" id="dataSourceName" type="text" pInputText
+                 (keyup)="removeAdditionalFieldSpace(f1.name);" maxlength="100"
+                 [ngClass]="{ 'ng-invalid ng-dirty':f1.name.dirty && f1.name.errors || isDataSourceNameAvailable }">
+        </span>
+            <div class="p-invalid text-align-left"
+                 *ngIf="dropdownDatasourceForm.get('name').dirty && dropdownDatasourceForm.get('name').errors">
+              Data source name is required
+            </div>
+            <div *ngIf="isDataSourceNameAvailable">
+              <div class="p-invalid text-align-left">Data Source Name already exist, Please enter new one</div>
+            </div>
+          </div>
+
+        </div>
+
+        <h6 class="subHeadingColour">Add Option</h6><br>
+
+        <div class="sequence-resize" formArrayName="optionValues" *ngIf=" dataSourceOption.length>0">
+
+          <div class="grid p-fluid"
+               *ngFor="let option of dataSourceOption.controls; let  optionIndex =index"
+               [formGroupName]="optionIndex">
+
+            <div class="scroll-fields pt-5 col-2 xl:col-2 lg:col-2 pl-0 pr-0">
+              <div class="p-input p-input-custom">
+                <input id="disabled-input" style="text-align: center;" type="text" pInputText [disabled]="true"
+                       [value]="getOptionNumber(optionIndex)"/>
+              </div>
+            </div>
+
+            <div class="field custom-field col-7 xl:col-7 lg:col-7">
+              <label class="label-wrapper" for="optionValue">Option Value* </label>
+          <span class="p-float-label">
+            <input id="optionValue"
+                   formControlName="optionValue" (focus)="validateFiled(option, optionIndex)"
+                   maxlength="100"
+                   type="text" pInputText/>
+          </span>
+              <div class="p-invalid text-align-left"
+                   *ngIf="option.get('optionValue').dirty && option.get('optionValue').errors">
+                Option Value is required
+              </div>
+              <div class="p-invalid text-align-left"
+                   *ngIf="checkOptionAvailability(option, dataSourceOption.controls, optionIndex)">
+                Option Cannot be Duplicated
+              </div>
+            </div>
+
+            <div class="field custom-btn-column col-3 pt-5 xl:col-3 lg:col-3">
+              <div>
+                <button pButton type="button" class="p-button-sm p-button-borderless btn-trash" iconPos="left" icon="fa fa-trash"
+                        *ngIf="dataSourceOption.controls.length > 1"
+                        (click)="deleteDataSourceOption(option.get('id').value, optionIndex)">
+                </button>
+              </div>
+              <div>
+                <p-inputSwitch *ngIf="isEditView && option.get('id').value != null"
+                               pTooltip="{{option.get('isActive').value ? 'Inactivate' : 'Activate'}}"
+                               tooltipPosition="top" class="active-inactive-switch"
+                               (onChange)=" setStatus(option); dataSourceOptionActiveInactive(option.get('id').value, option.get('dataSourceId').value, option.get('isActive').value)"
+                               formControlName="isActive"></p-inputSwitch>
+              </div>
+              <div>
+                <button pButton type="button" class="p-button-sm p-button-borderless p-button-margin" iconPos="left" icon="pi pi-plus"
+                        [disabled]="dataSourceOption.invalid || (dropdownDatasourceForm.get('fileName').value !== null)"
+                        *ngIf="optionIndex == (dataSourceOption.controls.length-1)"
+                        (click)="addDataSourceFormController()"></button>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+
+        <ng-container *ngIf="!isEditView">
+          <div class="grid p-fluid">
+            <div class="col-5">
+              <hr>
+            </div>
+            <div class="col-2"><h6 class="subHeadingColour" style="text-align: center">Or</h6></div>
+            <div class="col-5">
+              <hr>
+            </div>
+          </div>
+
+          <h6 class="subHeadingColour">Upload Data Source List</h6><br>
+
+          <p class="margin-top infoUpload"><b>Step 1: </b> <span class="download-link"
+                                                                 (click)="downloadTemplate()">Download</span> the
+            template.</p>
+          <p class="margin-top infoUpload"><b>Step 2: </b> Fill in all fields and save.</p>
+          <p class="margin-top infoUpload"><b>Step 3: </b> Upload the completed template.</p>
+          <br>
+          <div class="grid p-fluid">
+            <div class="field col-12 xl:col-8 md:col-8 lg:col-8">
+              <label class="label-wrapper" for="fileText">Browse a file to upload* </label>
+              <div class="p-inputgroup">
+            <span class="p-float-label inner-text-position">
+            <input id="fileUpload" formControlName="fileName" #me type="file" hidden (change)="fileUpload($event)">
+            <input id="fileText" formControlName="fileName"
+                   [value]="me.files[0] ? me.files[0].name : null" readonly class="input-max-width"
+                   onClick="document.getElementById('fileUpload').click()" type="text" pInputText>
+            <button pButton type="button" label="Browse" class="p-button file-browse p-button-sm"
+                    onClick="document.getElementById('fileUpload').click()"></button>
+           </span>
+              </div>
+              <div class="p-invalid text-align-left"
+                   *ngIf="dropdownDatasourceForm.get('fileName').dirty && dropdownDatasourceForm.get('fileName').errors">
+                File is required
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+      </form>
+    </div>
+
+  </div>
+</div>
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" label="Reset" (click)="reset()" [disabled]="btnLoading"
+              class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+
+      <button pButton type="submit" [disabled]="btnLoading" (click)="createDataSource()"
+              [icon]="!btnLoading ? 'pi pi-plus': 'pi pi-spinner'"
+              class="p-button-sm" iconPos="left" label="{{isEditView ? 'Edit' : 'Create'}} Data Source"></button>
+
+    </div>
+  </div>
+</div>
+
+<p-toast position="bottom-right" key="bc"></p-toast>

@@ -1,0 +1,176 @@
+<div class="m-3">
+  <p-table responsiveLayout="scroll" [value]="dataSource.splitCreditCardStatementDetails" scrollable="true"
+           scrollHeight="210px" [style]="{width:'auto'}" styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="max-width:50px" class="detail-table-header-left" id="no">#</th>
+        <th style="max-width:180px" class="detail-table-header-left" id="itemService">Expense Account*</th>
+        <th style="max-width:180px" class="detail-table-header-left" id="itemQty">Project / Task</th>
+        <th style="max-width:200px" class="detail-table-header-left" id="itemRate">Description</th>
+        <th style="max-width:180px" class="detail-table-header-left" id="department">Department</th>
+        <th style="max-width:150px" class="detail-table-header-right" id="amt">Line Amount</th>
+        <th style="max-width:50px" class="detail-table-header-left" id="empty3"></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-i="rowIndex" let-item>
+      <tr id="tr_{{i}}" (click)="onLItemClick(i)">
+        <td style="text-align: center; max-width:30px"><label>{{i + 1}}</label></td>
+        <td style="max-width:180px">
+          <p-dropdown [virtualScroll]="expenseAccountList.data.length > 20" virtualScrollItemSize="25" [filter]="true"
+                      [options]="expenseAccountList.data" id="{{'account' + i}}" [autoDisplayFirst]="false"
+                      [(ngModel)]="item.accountId" class="expense-table-dropdown" [showClear]="true"
+                      [class.ng-invalid]="item.isAccountInvalid" [class.ng-dirty]="item.isAccountInvalid"
+                      optionDisabled="inactive" optionLabel="name" optionValue="id" placeholder="Select Account"
+                      [style]="{'width':'100%'}" (onChange)="accountChanged($event, item); validateFieldsColors()"
+                      appendTo="body">
+
+            <ng-template pTemplate="footer">
+              <div class="grid dp-footer">
+                <div class="col-12 button-wrapper">
+                  <button pButton class="p-button-sm" label="Add New"
+                          *ngIf="privilegeService.isAuthorized(appAuthorities.ACCOUNTS_CREATE)"
+                          (click)="isAddNewAccount = true;"></button>
+                </div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </td>
+        <td style="max-width:180px">
+          <p-dropdown [virtualScroll]="projectCodeList.data.length > 20" virtualScrollItemSize="25" [filter]="true"
+                      [options]="projectCodeList.data" id="{{'code' + i}}" [autoDisplayFirst]="false"
+                      [(ngModel)]="item.projectCodeId" class="expense-table-dropdown" [showClear]="true"
+                      optionDisabled="inactive" optionLabel="name" optionValue="id" placeholder="Select Project Task"
+                      [style]="{'width':'100%'}" (onChange)="projectChanged($event, item);" appendTo="body">
+
+            <ng-template pTemplate="footer">
+              <div class="grid dp-footer">
+                <div class="col-12 button-wrapper">
+                  <button pButton class="p-button-sm" label="Add New"
+                          *ngIf="privilegeService.isAuthorized(appAuthorities.PROJECT_CODES_CREATE)"
+                          (click)="isAddNewProject = true;"></button>
+                </div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </td>
+
+        <td class="p-fluid" style="max-width:200px">
+        <textarea rows="1" pInputTextarea class="max-width" [(ngModel)]="item.description" maxlength="300"
+                  blockSpace placeholder="Description"></textarea>
+        </td>
+
+        <td style="max-width:180px">
+          <p-dropdown [virtualScroll]="department.data.length>20" virtualScrollItemSize="25" [filter]="true"
+                      [options]="department.data" id="{{'department' + i}}" [autoDisplayFirst]="false"
+                      [(ngModel)]="item.departmentId" class="department-dropdown" [showClear]="true"
+                      optionDisabled="inactive" optionLabel="name" optionValue="id" placeholder="Select Department"
+                      [style]="{'width':'100%'}" appendTo="body">
+
+            <ng-template pTemplate="footer">
+              <div class="grid dp-footer">
+                <div class="col-12 button-wrapper">
+                  <button pButton class="p-button-sm" label="Add New"
+                          *ngIf="privilegeService.isAuthorized(appAuthorities.DEPARTMENT_CREATE)"
+                          (click)="isAddNewDepartment = true;"></button>
+                </div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </td>
+
+        <td style="max-width:150px">
+          <div class="p-inputgroup">
+            <input pInputText type="text" name="rate" placeholder="Amount" autocomplete="off"
+                   [class.ng-invalid]="item.isAmountInvalid" [class.ng-dirty]="item.isAmountInvalid"
+                   id="{{'cost' + i}}" (keyup)="calculateTotal(); validateFieldsColors()" maxlength="19"
+                   [(ngModel)]="item.amount"
+                   currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.', allowNegative: false }">
+          </div>
+        </td>
+
+        <td style="max-width:50px" class="text-center">
+          <i class="fa fa-trash item-remove-button" *ngIf="dataSource.splitCreditCardStatementDetails.length > 2"
+             (click)="removeItem(i); calculateTotal()"></i>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <div class="grid align-table-footer">
+        <div style="width: 44%"></div>
+        <div style="width: 55%; margin-top: 5px" class=" text-right">
+          <span class="hyperlink text-right p-text-normal" (click)="addItem()">Add Line</span>
+        </div>
+      </div>
+    </ng-template>
+  </p-table>
+</div>
+
+<div class="grid m-3">
+  <div class="col-7">
+
+  </div>
+  <div class="col-5">
+    <div class="grid amounts text-right">
+      <div class="col-8">Original Amount:</div>
+      <div class="col-4">{{dataSource.amount | number : '1.2-2'}}</div>
+      <div class="col-8">Split Amount:</div>
+      <div class="col-4">{{splitAmount | number : '1.2-2'}}</div>
+      <div class="col-8 amounts" [class.p-invalid]="!isValidCalculation()">Balance:</div>
+      <div class="col-4 amounts" [class.p-invalid]="!isValidCalculation()">{{balanceAmount | number : '1.2-2'}}</div>
+    </div>
+  </div>
+</div>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" (click)="reset()" label="Reset" class="p-button-outlined p-button-sm"
+              [disabled]="isLoading ||isLoadingRevoke" icon="fa-solid fa-rotate-right"></button>
+
+      <button pButton class="p-button-outlined  p-button-sm ml-2" [disabled]="isLoading || isLoadingRevoke"
+              (click)="revoke()" type="button" [icon]="isLoadingRevoke ? 'pi pi-spin pi-spinner':
+              'fa fa-ban'" iconPos="left" label="Remove Split" *ngIf="dataSource.split"></button>
+
+      <button pButton class="p-button-sm ml-2"
+              [disabled]="isLoading|| isLoadingRevoke || !isValidCalculation() || !isValidLineCount() || !checkConditions()"
+              (click)="submit()" type="button" [icon]="isLoading ? 'pi pi-spin pi-spinner':
+              'pi pi-save'" iconPos="left" label="Save"></button>
+    </div>
+  </div>
+</div>
+
+
+<!--Add New Account-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" appendTo="body" [modal]="true" position="right"
+           class="overflow-side-bar" *ngIf="isAddNewAccount" [(visible)]="isAddNewAccount">
+  <ng-template pTemplate="header">Account Information</ng-template>
+  <app-add-account (updatedAccountList)="getAccounts()"
+                   [detailView]="false" [editView]="false" [panel]="true" *ngIf="isAddNewAccount"></app-add-account>
+</p-sidebar>
+
+<!--Add New Project Code-->
+<p-sidebar styleClass="p-sidebar-sm" *ngIf="isAddNewProject" [dismissible]="true" appendTo="body" [modal]="true"
+           position="right" class="overflow-side-bar" [(visible)]="isAddNewProject">
+  <ng-template pTemplate="header">Create Project</ng-template>
+  <app-create-new-project-code (updatedParentCodeList)="getProjectTaskList()" *ngIf="isAddNewProject">
+  </app-create-new-project-code>
+</p-sidebar>
+
+<!--Create New Department-->
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           class="overflow-side-bar"
+           *ngIf="isAddNewDepartment" [(visible)]="isAddNewDepartment">
+  <ng-template pTemplate="header">Create Department</ng-template>
+  <app-add-department (updateDepartments)="getDepartment(); isAddNewDepartment = false"
+                      *ngIf="isAddNewDepartment"></app-add-department>
+</p-sidebar>
+
+<p-confirmDialog #cdD key="revoke-tran" appendTo="body" header="Are you sure?" icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cdD.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, Remove it"
+            (click)="cdD.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

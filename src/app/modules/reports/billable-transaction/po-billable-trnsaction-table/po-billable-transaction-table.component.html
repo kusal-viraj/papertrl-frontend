@@ -1,0 +1,248 @@
+<h5 class="subHeadingColour mb-0" *ngIf="this.reportUtility.poBillableList.length > 0">Purchase Orders</h5>
+<p-table responsiveLayout="scroll" class="t-payment-rev approved-bill-table-style" id="poBillableTransaction" #poBillableTransactionTable
+         [value]="reportUtility.poBillableList" dataKey="vendorId" styleClass="p-datatable-sm p-datatable-striped detail-table"
+         *ngIf="this.reportUtility.poBillableList.length > 0"
+         [scrollHeight]="reportUtility.innerHeightOfPOBillableTransactionTable + 'px'" [scrollable]="true">
+
+  <ng-template pTemplate="colgroup">
+    <colgroup>
+      <col style="width:50px">
+      <col style="width:150px">
+      <col style="width:120px">
+      <col style="width:100px">
+      <col style="width:100px">
+      <col style="width:150px">
+      <col style="width:75px">
+      <col style="width:75px">
+      <col style="width:75px">
+      <col style="width:75px">
+    </colgroup>
+  </ng-template>
+
+  <ng-template pTemplate="header">
+
+    <tr>
+
+      <th id="toggleButton"></th>
+
+      <th id="vendor" class="text-center">Vendor</th>
+
+      <th id="noOfTransaction" class="text-center">No. of Transactions</th>
+
+      <th id="noOfProjects" class="text-center">No. of Projects</th>
+
+      <th id="noOfPo" class="text-center">No. of POs</th>
+
+      <th id="totalAmount" class="text-center">Total Amount</th>
+
+      <th id="empty01"></th>
+
+      <th id="empty02"></th>
+
+      <th id="empty03"></th>
+
+      <th id="empty04"></th>
+
+
+    </tr>
+
+    <tr>
+
+      <th class="filter-header" id="id01"></th>
+
+      <th class="filter-header" id="id02">
+        <div class="p-fluid">
+
+          <p-columnFilter field="vendorId" matchMode="in" [showMenu]="false">
+            <ng-template pTemplate="filter" let-filter="filterCallback">
+              <p-multiSelect [options]="vendorList.data" placeholder="Any"
+                             appendTo="body" optionLabel="name" virtualScrollItemSize="25"
+                             optionValue="id" optionDisabled="inactive"
+                             [virtualScroll]="vendorList.data.length>20"
+                             (onChange)="filter($event.value)">
+                <ng-template let-option pTemplate="item">
+                  <div class="p-multiselect-representative-option">
+                    <span class="ml-1">{{option.name}}</span>
+                  </div>
+                </ng-template>
+              </p-multiSelect>
+            </ng-template>
+          </p-columnFilter>
+
+        </div>
+      </th>
+
+      <th class="filter-header" id="id03"></th>
+      <th class="filter-header" id="id04"></th>
+      <th class="filter-header" id="id05"></th>
+      <th class="filter-header" id="id06"></th>
+      <th class="filter-header" id="id07"></th>
+      <th class="filter-header" id="id08"></th>
+      <th class="filter-header" id="id09"></th>
+      <th class="filter-header" id="id10"></th>
+
+    </tr>
+
+  </ng-template>
+
+  <ng-template pTemplate="body" let-poBillableItem let-expanded="expanded" let-ind="rowIndex">
+
+    <tr>
+      <td>
+        <button *ngIf="(poBillableItem.billablePoDetailList.length > 0)" type="button" pButton
+                pRipple [pRowToggler]="poBillableItem"
+                class="p-button-text p-button-rounded p-button-plain"
+                [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'">
+
+        </button>
+      </td>
+
+      <td>{{poBillableItem.vendorName}}</td>
+
+      <td class="text-center">{{poBillableItem.noOfTransactions}}</td>
+
+      <td class="text-center">{{poBillableItem.noOfProjects}}</td>
+
+      <td class="text-center">{{poBillableItem.noOfPos}}</td>
+
+      <td class="text-right">{{poBillableItem.totalAmount | number : '1.2-2'}}</td>
+
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+
+    </tr>
+
+  </ng-template>
+
+  <ng-template pTemplate="rowexpansion" let-poBillableData #expandedRow>
+    <tr>
+      <td colspan="1"></td>
+      <td [attr.colspan]="9">
+        <div class="p-3">
+
+          <p-table responsiveLayout="scroll" class="t-txn-tbl batch-payment-child-table" id="poBillableItem" #poDetailTable
+                   [value]="poBillableData.billablePoDetailList" dataKey="id">
+
+            <ng-template pTemplate="header">
+    <tr>
+
+      <th class="text-center" id="poNo">PO Number</th>
+
+      <th class="text-center" id="itemAccount">Item / Account</th>
+
+      <th class="text-center" id="desc">Description</th>
+
+      <th class="text-center" id="project">Project/Task</th>
+
+      <th class="text-center" id="department">Department</th>
+
+      <th class="text-center" id="qty">Qty</th>
+
+      <th class="text-center" id="cost">Cost</th>
+
+      <th class="text-center" id="lineAmount">Line Amount</th>
+
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-poDetail>
+    <tr>
+      <td>
+        <span [maxCharacters]="19" app-read-more-text [fieldValue]="poDetail.poNumber"
+              (mouseout)="reportUtility.hideOverlay(poOverlay)" (scroll)="reportUtility.hideOverlay(poOverlay)"
+              (mouseover)="reportUtility.viewOverlayPanel(poDetail.poId, $event, poOverlay,
+              privilegeService.isAuthorized(appAuthorities.PURCHASE_ORDER_DETAIL_VIEW))"
+              [class]="reportUtility.selectClass('poId') ? 'selected-item-wrapper':''"
+              (click)="reportUtility.clickTableData(poDetail, 'poId')">
+        </span>
+      </td>
+
+      <td>
+        <span [maxCharacters]="19" app-read-more-text [fieldValue]="poDetail.itemOrAccountNo"
+              (mouseover)="poDetail.productId ? reportUtility.viewOverlayPanel(poDetail.productId, $event, itemOverlay,
+              privilegeService.isAuthorized(appAuthorities.ITEMS_DETAIL_VIEW)) :
+              reportUtility.viewOverlayPanel(poDetail.accountId, $event, accountOverlay,
+              privilegeService.isAuthorized(appAuthorities.ACCOUNTS_DETAIL_VIEW))"
+              (mouseout)="poDetail.productId? reportUtility.hideOverlay(itemOverlay) : reportUtility.hideOverlay(accountOverlay)"
+              (scroll)="poDetail.productId? reportUtility.hideOverlay(itemOverlay) : reportUtility.hideOverlay(accountOverlay)"
+              [class]="(reportUtility.selectClass('productId') && poDetail.productId) ?  'item-data-wrapper':
+              (reportUtility.selectClass('accountId') && poDetail.accountId) ? 'account-data-wrapper' :
+              poDetail.productId?  'item-default-color-non-privilege' : 'account-default-color-non-privilege'"
+              (click)="reportUtility.clickTableData(poDetail, poDetail.productId ? 'productId':'accountId')">
+        </span>
+      </td>
+
+      <td [maxCharacters]="19" app-read-more-text [fieldValue]="poDetail.description"></td>
+
+      <td [maxCharacters]="19" app-read-more-text [fieldValue]="poDetail.projectCode"></td>
+
+      <td [maxCharacters]="19" app-read-more-text [fieldValue]="poDetail.departmentName"></td>
+
+      <td class="text-right">{{poDetail.qty}}</td>
+
+      <td class="text-right">{{poDetail.cost | number : '1.2-2'}}</td>
+
+      <td class="text-right">{{poDetail.lineAmount | number : '1.2-2'}}</td>
+
+    </tr>
+  </ng-template>
+
+</p-table>
+
+</div>
+</td>
+</tr>
+</ng-template>
+<ng-template pTemplate="emptymessage">
+  <tr>
+    <td [attr.colspan]="reportUtility.poBillableList.length">No Data found.</td>
+  </tr>
+</ng-template>
+</p-table>
+
+<p-overlayPanel appendTo="body" #poOverlay>
+  <ng-template pTemplate>
+    <app-table-po-overlay [poId]="reportUtility.overlayId"></app-table-po-overlay>
+  </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel appendTo="body" #itemOverlay>
+  <ng-template pTemplate>
+    <app-table-item-overlay [productId]="reportUtility.overlayId"></app-table-item-overlay>
+  </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel appendTo="body" #accountOverlay>
+  <ng-template pTemplate>
+    <app-table-account-overlay [accountId]="reportUtility.overlayId"></app-table-account-overlay>
+  </ng-template>
+</p-overlayPanel>
+
+
+<!--Po Detail view-->
+<p-sidebar [showCloseIcon]="false" [fullScreen]="true" [modal]="false" [(visible)]="reportUtility.isViewPO">
+  <app-po-detail-view [fromNotification]="true"
+                      (closePOApprove)="reportUtility.isViewPO = false" *ngIf="reportUtility.isViewPO"
+                      [poNumber]="reportUtility.poNumber" [isFromReport]="true"
+                      [poId]="reportUtility.poId"></app-po-detail-view>
+</p-sidebar>
+
+<!--Item Detail View-->
+<p-dialog position="center" [(visible)]="reportUtility.isViewItem" (onHide)="reportUtility.isViewItem = false"
+          [resizable]="false" [closable]="false" class="credit-note-details-wrapper"
+          [style]="{width: '65vw', minWidth: '600px'}" closeOnEscape="false" [modal]="true" [draggable]="false"
+          [baseZIndex]="1000">
+  <app-item-detail-view [fromReport]="true" [itemId]="reportUtility.productId"
+                        (closeEditView)="reportUtility.isViewItem = false"
+                        *ngIf="reportUtility.isViewItem"></app-item-detail-view>
+</p-dialog>
+
+<!--Account Detail View-->
+<p-sidebar styleClass="p-sidebar-sm" [modal]="true" [dismissible]="true" position="right"
+           [(visible)]="reportUtility.isViewAccount">
+  <ng-template pTemplate="header">Account Detail View</ng-template>
+  <app-account-create [panel]="true" [detailView]="true" [accountID]="reportUtility.accountId" [editView]="false"
+                      *ngIf="reportUtility.isViewAccount"></app-account-create>
+</p-sidebar>

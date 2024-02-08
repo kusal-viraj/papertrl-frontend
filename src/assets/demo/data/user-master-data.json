@@ -1,0 +1,32 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "email": "user@gmail.com",
+      "name": "Pathum Vidaanz",
+      "nicPassportNo": "0001",
+      "roleId": "System Administrator",
+      "approvalGroups": "Project Manager",
+      "status": "A"
+    },
+    {
+      "id": 2,
+      "emailAddress": "madhusha@co.com",
+      "name": "Indraguptha Ekanayaka",
+      "employeeNo": "0002",
+      "role": "Account Payable",
+      "approvalGroups": "Account Payable",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 3,
+      "emailAddress": "user@gmail.com",
+      "name": "Avishka Perera",
+      "employeeNo": "0003",
+      "role": "Account Receivable",
+      "approvalGroups": "Account Receivable",
+      "status": "I"
+    }
+  ],
+  "totalRecords": 3
+}

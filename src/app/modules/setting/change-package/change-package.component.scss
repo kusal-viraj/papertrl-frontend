@@ -1,0 +1,30 @@
+.customer-badge {
+  border-radius: 2px;
+  padding: .25em .5rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+  text-align: center;
+  display: inline-block;
+  width: 100px;
+  letter-spacing: .3px;
+
+  &.status-ACTIVE {
+    background: #C8E6C9;
+    color: #256029;
+  }
+
+  &.status-INACTIVE {
+    background: #FFCDD2;
+    color: #C63737;
+  }
+  &.status-REQUESTED {
+    background: #FEEDAF;
+    color: #8A5340;
+  }
+}
+
+.profile-table-action-btn{
+  padding: 3px;
+  font-size: 13px;
+}

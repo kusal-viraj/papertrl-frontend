@@ -1,0 +1,159 @@
+<div class="layout-dashboard">
+  <div class="grid">
+    <div *ngIf="showToDo" class="col-12">
+      <div class="card card-task-list" *ngIf="taskList.length > 0">
+        <p-carousel [value]="taskList" [indicatorsContentClass]="'none-hide'" [numVisible]="noOfTasksOnPage"
+                    [numScroll]="1"
+                    [circular]="false">
+          <ng-template let-product pTemplate="item">
+            <div class="product-item">
+              <div class="product-item-content task-box">
+                <div class="card task-card">
+                  <i class="{{product.icon}} task-icon"></i>
+                  <h5 class="mb-1 card-header-custom">{{product.title}}</h5>
+                  <p class="mb-1 card-subheader-custom">{{product.description}}</p>
+                  <div class="col-12 md:col-12">
+                    <button pButton class="button-screen-change"
+                            (click)="navigateToSpecificUrl(product.url, product.title)" type="submit"
+                            label="Continue"></button>
+                    <button pButton class="button-screen-change" (click)="markAsDone(product.id)" type="button"
+                            label="Mark as Done"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </p-carousel>
+      </div>
+    </div>
+
+    <div class="col-12 md:col-6 xl:col-3"
+         *ngIf="privilegeService.isAuthorized(appAuthorities.DASHBOARD_SHOW_VENDOR_REQUEST_CARD)"
+         style="cursor: pointer" (click)="isVendorModule() ? router.navigateByUrl('home/vendor') : null">
+      <div class="card no-gutter widget-overview-box widget-overview-box-1">
+                            <span class="overview-icon">
+                                <i class="{{appIcons.VENDOR_ICON}}"></i>
+                            </span>
+        <span class="overview-title">Vendors</span>
+        <div class="grid overview-detail">
+          <div class="col-12">
+            <div class="overview-number">{{infoCards.vendorRequest}}</div>
+            <div class="overview-subtext">Requests</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 md:col-6 xl:col-3"
+         *ngIf="privilegeService.isAuthorized(appAuthorities.DASHBOARD_SHOW_PENDING_AND_REJECTED_BILLS_CARD)"
+         style="cursor: pointer" (click)="isBillModule() ? router.navigateByUrl('home/bills') : null">
+      <div class="card no-gutter widget-overview-box widget-overview-box-2">
+                            <span class="overview-icon">
+                                <i class="{{appIcons.BILL_ICON}}"></i>
+                            </span>
+        <span class="overview-title">Bills</span>
+        <div class="grid overview-detail">
+          <div class="col-6">
+            <div class="overview-number">{{infoCards.billsPending}}</div>
+            <div class="overview-subtext">Pending</div>
+          </div>
+          <div class="col-6">
+            <div class="overview-number">{{infoCards.billsRejected}}</div>
+            <div class="overview-subtext">Rejected</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 md:col-6 xl:col-3"
+         *ngIf="privilegeService.isAuthorized(appAuthorities.DASHBOARD_SHOW_PENDING_AND_REJECTED_PO_CARD)"
+         style="cursor: pointer" (click)="isPoModule() ? router.navigateByUrl('home/purchase-order') : null">
+      <div class="card no-gutter widget-overview-box widget-overview-box-3">
+                            <span class="overview-icon">
+                                <i class="{{appIcons.PURCHASE_ORDER_ICON}}"></i>
+                            </span>
+        <span class="overview-title">Purchase Orders</span>
+        <div class="grid overview-detail">
+          <div class="col-6">
+            <div class="overview-number">{{infoCards.poPending}}</div>
+            <div class="overview-subtext">Pending</div>
+          </div>
+          <div class="col-6">
+            <div class="overview-number">{{infoCards.poRejected}}</div>
+            <div class="overview-subtext">Rejected</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 md:col-6 xl:col-3"
+         *ngIf="privilegeService.isAuthorized(appAuthorities.DASHBOARD_SHOW_PENDING_AND_REJECTED_EXPENSE_CARD)"
+         style="cursor: pointer" (click)="isExpenseModule() ? router.navigateByUrl('home/expense'): null">
+      <div class="card no-gutter widget-overview-box widget-overview-box-4">
+                            <span class="overview-icon">
+                                <i class="{{appIcons.EXPENSE_ICON}}"></i>
+                            </span>
+        <span class="overview-title">Expense Reports</span>
+        <div class="grid overview-detail">
+          <div class="col-6">
+            <div class="overview-number">{{infoCards.expensesPending}}</div>
+            <div class="overview-subtext">Pending</div>
+          </div>
+          <div class="col-6">
+            <div class="overview-number">{{infoCards.expensesRejected}}</div>
+            <div class="overview-subtext">Rejected</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-12 xl:col-12 md:col-12 lg:col-12"
+         *ngIf="privilegeService.isAuthorized(appAuthorities.DASHBOARD_SHOW_DISCOUNT_APPLICABLE_TABLE)">
+      <div class="card">
+        <h5 class="centerText subHeadingGreen">Discount Applicable Bills</h5>
+        <app-discount-table (updateCards)="getInfoCardData()"></app-discount-table>
+      </div>
+    </div>
+
+    <div class="col-12 xl:col-12 md:col-12 lg:col-12"
+         *ngIf="privilegeService.isAuthorized(appAuthorities.SHOW_BILLS_AWAITING_YOUR_APPROVAL_TABLE)">
+      <div class="card">
+        <h5 class="centerText subHeadingGreen">Bills - awaiting your approval</h5>
+        <app-bill-summary (updateCards)="getInfoCardData()"></app-bill-summary>
+      </div>
+    </div>
+
+    <div class="col-12 xl:col-12 md:col-12 lg:col-12"
+         *ngIf="privilegeService.isAuthorized(appAuthorities.SHOW_PO_AWAITING_YOUR_APPROVAL_TABLE)">
+      <div class="card">
+        <h5 class="centerText subHeadingGreen">Purchase Orders - awaiting your approval</h5>
+        <app-po-summary (updateCards)="getInfoCardData()"></app-po-summary>
+      </div>
+    </div>
+
+    <div class="col-12 xl:col-12 md:col-12 lg:col-12"
+         *ngIf="privilegeService.isAuthorized(appAuthorities.SHOW_EXPENSES_AWAITING_YOUR_APPROVAL_TABLE)">
+      <div class="card">
+        <h5 class="centerText subHeadingGreen">Expense Reports - awaiting your approval</h5>
+        <app-expense-summary (updateCards)="getInfoCardData()"></app-expense-summary>
+      </div>
+    </div>
+
+
+    <div class="col-12 lg:col-6"
+         *ngIf="privilegeService.isAuthorized(appAuthorities.DASHBOARD_SHOW_MONTHLY_TRANSACTION_SUMMARY_CHART)">
+      <div class="card">
+        <h5 class="centerText subHeadingGreen">Monthly Transactions Summary </h5>
+        <p-chart type="line" [data]="lineData"></p-chart>
+      </div>
+    </div>
+
+    <div class="col-12 lg:col-6"
+         *ngIf="privilegeService.isAuthorized(appAuthorities.DASHBOARD_SHOW_MONTHLY_BILLS_AND_PAYMENT_SUMMARY_CHART)">
+      <div class="card">
+        <h5 class="centerText subHeadingGreen">Monthly Bills Summary </h5>
+        <p-chart type="bar" [data]="barData"></p-chart>
+      </div>
+    </div>
+
+
+  </div>
+</div>

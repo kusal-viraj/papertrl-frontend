@@ -1,0 +1,40 @@
+<div class="overlay-panel" *ngIf="poReceiptDto">
+  <div class="grid">
+    <div class="col-5 font-bold"><label>PO Number</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(poReceiptDto.poNumber, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>PO Date</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(poReceiptDto.poDate, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Receipt Date</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(poReceiptDto.poReceiptDate, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Vendor</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(poReceiptDto.vendorName, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Amount</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(poReceiptDto.poReceiptAmount, true) | number : '1.2-2'}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Status</label></div>
+    <div class="col-6 ml-2 capitalize">
+      <li [class]="'mr-2 status-style status-'  + tableSupportBase.getStatus(poReceiptDto.statusString)"></li>
+      {{tableSupportBase.getStatus(poReceiptDto.statusString) | titlecase}}
+    </div>
+  </div>
+
+</div>
+<div class="overlay-panel" *ngIf="!poReceiptDto">
+  <div *ngIf="!poReceiptDto" class="loading-wrapper">
+    <em class="fa fa-spinner fa-pulse"></em>
+  </div>
+</div>

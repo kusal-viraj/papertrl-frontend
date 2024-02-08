@@ -1,0 +1,62 @@
+<div class="side-bar-drawer-content p-3">
+
+  <form [formGroup]="createUserForm" class="mt-3" (ngSubmit)="onSubmitForm(createUserForm.value)">
+    <div class="grid p-fluid">
+      <div class="field col-12">
+        <label class="label-wrapper" for="emailAddress">Email Address* </label>
+        <input formControlName="email" id="emailAddress" maxlength="100" blockSpace
+               type="text" pInputText>
+        <div class="p-invalid  text-align-left"
+             *ngIf="createUserForm.get('email').dirty && createUserForm.get('email').errors">
+          <div *ngIf="createUserForm.get('email').errors.required">Email Address is required</div>
+          <div *ngIf="createUserForm.controls['email'].hasError('emailValidate')">Email must be a valid
+            email address
+          </div>
+        </div>
+      </div>
+
+      <div class="field col-12">
+        <label class="label-wrapper" for="firstLastName">Name* </label>
+        <input formControlName="name" id="firstLastName" maxlength="150"
+               blockSpace type="text" pInputText>
+        <div class="p-invalid text-align-left"
+             *ngIf="createUserForm.get('name').dirty && createUserForm.get('name').errors">
+          Name is required
+        </div>
+      </div>
+      <div class="field col-12">
+        <label class="label-wrapper" for="employeeNumber">Employee Number </label>
+        <input formControlName="nicPassportNo" blockSpace id="employeeNumber"
+               type="text" pInputText>
+        <div class="p-invalid text-align-left" *ngIf="createUserForm.get('nicPassportNo').hasError('maxlength')">
+          Employee
+          Number must be less than 50 characters
+        </div>
+      </div>
+
+      <div class="field col-12">
+
+        <label class="label-wrapper" for="employeeNumber">Contact Number*</label>
+        <app-country-code-validation  [telephoneFormControl]="createUserForm.get('telephoneNo')"></app-country-code-validation>
+        <div *ngIf="createUserForm.get('telephoneNo').touched && createUserForm.get('telephoneNo').hasError('required')"
+             class="p-invalid text-align-left">
+          Contact Number is required
+        </div>
+        <div *ngIf="createUserForm.get('telephoneNo').hasError('validatePhoneNumber')" class="p-invalid text-align-left">
+          Invalid Contact Number
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" (click)="resetUserForm()" label="Reset" [disabled]="loading"
+              class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+      <button pButton type="button" (click)="onSubmitForm(createUserForm.value)"
+              class="p-button-sm" iconPos="left" icon="pi pi-plus" [loading]="loading" label="Create User"></button>
+    </div>
+  </div>
+</div>

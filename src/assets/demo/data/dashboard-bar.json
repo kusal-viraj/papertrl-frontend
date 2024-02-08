@@ -1,0 +1,42 @@
+[
+  {
+    "sender": 0,
+    "name": "John",
+    "message": "Hi"
+  },
+  {
+    "sender": 1,
+    "name": "Paul",
+    "message": "Hi"
+  },
+  {
+    "sender": 0,
+    "name": "John",
+    "message": "How are you?"
+  },
+  {
+    "sender": 1,
+    "name": "Paul",
+    "message": "I'm fine thank you."
+  },
+  {
+    "sender": 0,
+    "name": "John",
+    "message": "Can you change the due date in this invoice date to December 14th"
+  },
+  {
+    "sender": 0,
+    "name": "John",
+    "message": "And also change the Approval Group to Admin"
+  },
+  {
+    "sender": 1,
+    "name": "Paul",
+    "message": "Okay"
+  },
+  {
+    "sender": 0,
+    "name": "John",
+    "message": "Thank You"
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {"id":1,  "value":"Accounts receivable (A/R)"},
+  {"id":2,  "value":"Other Current Assets"},
+  {"id":3,  "value":"Bank"},
+  {"id":4,  "value":"Fixed Assets"},
+  {"id":5,  "value":"Other Assets"},
+  {"id":6,  "value":"Accounts payable (A/P)"},
+  {"id":7,  "value":"Credit Card"},
+  {"id":8,  "value":"Other Current Liabilities"},
+  {"id":9,  "value":"Long Term Liabilities"},
+  {"id":10, "value":"Equity"},
+  {"id":11, "value":"Income"},
+  {"id":12, "value":"Other Income"},
+  {"id":13, "value":"Cost of Goods Sold"},
+  {"id":14, "value":"Expenses"},
+  {"id":15, "value":"Other Expense"},
+  {"id":16, "value":"Non Posting"}
+]

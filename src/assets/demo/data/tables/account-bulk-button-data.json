@@ -1,0 +1,23 @@
+[
+  {
+    "action": "DELETE",
+    "label": "Delete",
+    "icon": "fa fa-trash",
+    "active": false,
+    "authCode": "ACCOUNTS_DELETE"
+  },
+  {
+    "action": "INACTIVATE",
+    "label": "Inactivate",
+    "icon": "fa fa-toggle-off",
+    "active": false,
+    "authCode": "ACCOUNTS_INACTIVATE"
+  },
+  {
+    "action": "ACTIVATE",
+    "label": "Activate",
+    "icon": "fa fa-toggle-on",
+    "active": false,
+    "authCode": "ACCOUNTS_ACTIVATE"
+  }
+]

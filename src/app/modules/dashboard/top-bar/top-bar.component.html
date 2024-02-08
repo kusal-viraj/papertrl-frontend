@@ -1,0 +1,167 @@
+<div class="layout-topbar">
+  <div class="topbar-left">
+    <a tabindex="0" class="menu-button" (click)="app.onMenuButtonClick($event)">
+      <i class="pi pi-chevron-left"></i>
+    </a>
+    <span class="topbar-separator"></span>
+
+    <img alt="Card" class="logo" (click)="navigateDashboard()"
+         src="../../../../assets/images/logo.png">
+
+    <i *ngIf="responsive" class="pi pi-angle-right breadcrumb-icon"></i>
+    <p-breadcrumb [hidden]="!responsive" [style]="{'color': '#adb7bb', 'font-weight':'500'}"
+                  [model]="breadcrumbs"></p-breadcrumb>
+  </div>
+
+  <div class="topbar-right">
+    <ul class="topbar-menu">
+
+      <li *ngIf="showUsBankLogo" class="us-bank">
+        <div class="grid m-0">
+          <div class="col-8 pb-0">
+            <p>Payment Solution Powered By</p>
+          </div>
+          <div class="col-4 pb-0">
+            <a href="https://www.usbank.com/" target="_blank">  <img src="../../assets/images/us-bank-logo.png" /> </a>
+          </div>
+        </div>
+      </li>
+
+      <li *ngIf="isVendor">
+        <p-autoComplete placeholder="Find Customers" [multiple]="true" [(ngModel)]="customers" field="name"
+                        forceSelection="true" autoHighlight="true" [suggestions]="filteredCustomers"
+                        (completeMethod)="filterVendorPortalCustomers($event)">
+          <ng-template let-cus pTemplate="item">
+            <div class="subHeadingColour">{{cus.name}}</div>
+          </ng-template>
+        </p-autoComplete>&nbsp;
+      </li>
+
+      <li *ngIf="customers">
+        <button *ngIf="customers" pButton class="p-button-sm" label="Send Request"></button>
+      </li>
+
+      <li *ngIf="isPortal">
+        <p-dropdown class="customer-min-width ellipsis-text" [options]="subAccountList.data" id="subAccounts" inputId="role"
+                    optionLabel="name" optionValue="id" placeholder="Select Customer"
+                    (onChange)="onSubClientListChange($event)"
+                    [autoDisplayFirst]="false" appendTo="body" [filter]="true"
+                    [(ngModel)]="subAccountId">
+
+        </p-dropdown>
+      </li>
+
+      <li *ngIf="subAccountId && !nonPortalPrivilegeUser">
+        <button pButton class="p-button-sm p-button-outlined go-back-to-portal" (click)="goToAgencyPortal()"
+                icon="fa fa-home" label="Go Back to Portal"></button>
+      </li>
+
+      <li *ngIf="!privilegeService.isVendor() && (!isPortal || subAccountId)" class="help-icon" tooltipPosition="bottom"
+          pTooltip="Support">
+        <a (click)="supportTicket()">
+          <i class="fa-solid fa-headset"></i>
+        </a>
+      </li>
+
+      <li class="help-icon" tooltipPosition="bottom" pTooltip="Help">
+        <a (click)="goToHelp()">
+          <i class="pi pi-question-circle"></i>
+        </a>
+      </li>
+
+      <li class='notifications-item' tooltipPosition="left" pTooltip="Notifications" [ngClass]="{'active-menuitem ': app.topbarNotificationMenuActive}"
+          [isPortal]="isPortal" [subAccountId]="subAccountId" app-notification
+          *ngIf="!privilegeService.isSupport() && (!isPortal || subAccountId)"></li>
+
+
+      <li class="profile-item" tooltipPosition="bottom" pTooltip="Profile" [ngClass]="{'active-menuitem fadeInDown': app.topbarUserMenuActive}">
+        <a href="#" (click)="app.onTopbarUserMenuButtonClick($event)">
+          <div class="person-item top-menu" *ngIf="!showInitials">
+            <img class="top-menu-image" [src]="sessionUser.proficServerPath" alt="profile"/>
+          </div>
+          <div class="top-menu-circle " *ngIf="showInitials">
+            <div class="top-menu-initials" tooltip="{{sessionUser.name}}"> {{ initials }}</div>
+          </div>
+          &nbsp;<span class="profile-name"> {{ userName }}</span>
+        </a>
+        <ul class="profile-menu fade-in-up">
+          <li>
+            <a (click)="profileItemClicked('profile')">
+              <i class="pi pi-user"></i>
+              <span>Profile</span>
+            </a>
+          </li>
+          <li>
+            <a (click)="profileItemClicked('reset')">
+              <i class="pi pi-shield"></i>
+              <span>Password Reset</span>
+            </a>
+          </li>
+          <li *ngIf="!privilegeService.isSupport() && (!isPortal || subAccountId)">
+            <a (click)="profileItemClicked('notification')">
+              <i class="pi pi-bell"></i>
+              <span>Subscribe To Notifications</span>
+            </a>
+          </li>
+          <li>
+            <a (click)="profileItemClicked('theme')">
+              <i class="pi pi-palette"></i>
+              <span>Personalize</span>
+            </a>
+          </li>
+          <li>
+            <a (click)="loginLogoutService.logOut(false)">
+              <i class="pi pi-power-off"></i>
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+<p-dialog (onHide)="modalClose()" [(visible)]="profile"
+          [styleClass]="isNotificationTable ? 'notification-table-modal' : 'profile-modal'">
+  <ng-template pTemplate="header">
+    <h5 class="subHeadingColour">Profile Information</h5>
+  </ng-template>
+  <p-tabView [(activeIndex)]="tabIndex" (onChange)="panelChanged()"
+             styleClass="tabview-custom">
+    <p-tabPanel>
+      <ng-template class="profileTab" pTemplate="header">
+        <span class="custom-span">Profile</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-profile-edit *ngIf="profile" [userName]="userName" [sessionUser]="sessionUser"
+                          [showInitials]="showInitials" [initials]="initials"></app-profile-edit>
+      </ng-template>
+    </p-tabPanel>
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <span class="custom-span">Password Reset</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-password-reset *ngIf="profile"></app-password-reset>
+      </ng-template>
+    </p-tabPanel>
+    <p-tabPanel *ngIf="!privilegeService.isSupport() && (!isPortal || subAccountId)">
+      <ng-template pTemplate="header">
+        <span class="custom-span">Subscribe To Notifications</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-notification-table *ngIf="profile"></app-notification-table>
+      </ng-template>
+    </p-tabPanel>
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <span class="custom-span">Personalize</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-personalize></app-personalize>
+      </ng-template>
+    </p-tabPanel>
+
+  </p-tabView>
+</p-dialog>
+<p-toast position="bottom-right" key="myKey1"></p-toast>
+

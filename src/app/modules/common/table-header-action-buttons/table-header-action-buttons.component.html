@@ -1,0 +1,221 @@
+<div class="grid ml-2" [style]="{'align-items': 'center'}">
+  <div class="col-12 pb-0">
+    <ng-container *ngFor="let action of visibleActions">
+
+      <span class="mr-3" pTooltip="Refresh" tooltipPosition="bottom" *ngIf="action == appTableHeaderActions.REFRESH">
+        <button pButton icon="fa-solid fa-rotate-right" type="button"
+                (click)="refreshClicked('Refresh')"
+                class="grid-icon-only-btn  p-button-sm p-button-rounded"></button>
+      </span>
+
+      <span class="mr-3" pTooltip="Filters" tooltipPosition="bottom" *ngIf="action == appTableHeaderActions.FILTER">
+          <button pButton icon="fa-solid fa-filter" type="button" pTooltip="Filters" tooltipPosition="bottom"
+                  (click)="showFiltersClicked('Filters')"
+                  class="grid-icon-only-btn  p-button-sm p-button-rounded"></button>
+      </span>
+
+
+      <span class="mr-3" pTooltip="Columns" tooltipPosition="bottom" *ngIf="action == appTableHeaderActions.COLUMNS">
+         <button pButton icon="fa-solid fa-table-columns" type="button"
+                 (click)="showColumnsClicked('Columns')"
+                 class="grid-icon-only-btn p-button-sm  p-button-rounded"></button>
+
+      </span>
+
+      <span class="mr-3" pTooltip="Cancel" tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.PAYMENT_CANCEL">
+        <button pButton icon="fa-solid fa-ban" type="button"
+                (click)="cancelClicked('Cancel')"
+                [disabled]="tableSupportBase?.rows.length === 0"
+                class="grid-icon-only-btn  p-button-sm p-button-rounded"></button>
+      </span>
+
+
+      <span class="mr-3" [pTooltip]="tableSupportBase.rows.length == 0 ? 'Export All' : 'Export Selected'"
+            tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.EXPORT">
+         <button pButton icon="fa-solid fa-share-from-square" type="button"
+                 (click)="exportClicked( 'Export All')" [disabled]="tableSupportBase?.totalRecords === 0"
+                 class="grid-icon-only-btn  p-button-sm  p-button-rounded"></button>
+      </span>
+
+      <span class="mr-3" [pTooltip]="tableSupportBase.rows.length == 0 ? 'Download All' : 'Download Selected'"
+            tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.DOWNLOAD">
+        <button pButton icon="fa fa fa-download" type="button"
+                (click)="downloadClicked('Download All')" [disabled]="tableSupportBase?.totalRecords === 0"
+                class="grid-icon-only-btn p-button-sm  p-button-rounded"></button>
+      </span>
+
+      <span class="mr-3" pTooltip="Delete" tooltipPosition="bottom" *ngIf="action == appTableHeaderActions.DELETE">
+         <button pButton icon="fa fa-trash" type="button"
+                 (click)="deleteClicked('Delete')" [disabled]="tableSupportBase?.rows.length === 0"
+                 class="grid-icon-only-btn p-button-sm p-button-rounded"></button>
+       </span>
+
+
+      <span class="mr-3" pTooltip="Reject" tooltipPosition="bottom" *ngIf="action == appTableHeaderActions.REJECT">
+         <button pButton icon="fa fa-minus-circle" type="button"
+                 (click)="rejectClicked('Reject')" [disabled]="tableSupportBase?.rows.length === 0"
+                 class="grid-icon-only-btn p-button-sm  p-button-rounded"></button>
+      </span>
+
+      <span class="mr-3" pTooltip="Quick Approve" tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.QUICK_APPROVE">
+         <button pButton icon="fa-solid fa-check" type="button"
+                 (click)="quickApproveClicked('Quick Approve')" [disabled]="tableSupportBase?.rows.length === 0"
+                 class="grid-icon-only-btn p-button-sm  p-button-rounded"></button>
+      </span>
+
+      <span class="mr-3" pTooltip="Send to Vendor Approval" tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.SEND_TO_VENDOR_APPROVAL">
+         <button pButton icon="pi pi-reply" type="button"
+                 (click)="sendToVendorApprovalClicked('Send to Vendor Approval')" [disabled]="tableSupportBase?.rows.length === 0"
+                 class="grid-icon-only-btn p-button-sm  p-button-rounded"></button>
+      </span>
+
+
+      <span class="mr-3" pTooltip="Email To Vendor" tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.EMAIL_TO_VENDOR">
+        <button pButton icon="fa-solid fa-paper-plane" type="button"
+                (click)="emailToVendorClicked('Email To Vendor')" [disabled]="tableSupportBase?.rows.length === 0"
+                class="grid-icon-only-btn p-button-sm  p-button-rounded"></button>
+      </span>
+
+
+      <span class="mr-3" pTooltip="Reopen" tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.RE_OPEN">
+           <button pButton icon="fa-regular fa-circle-check" type="button"
+                   (click)="re_OpenClicked('Reopen')" [disabled]="tableSupportBase?.rows.length === 0"
+                   class="grid-icon-only-btn p-button-sm  p-button-rounded"></button>
+      </span>
+
+
+      <span class="mr-3" pTooltip="Close" tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.CLOSE">
+         <button pButton icon="fa fa-times" type="button"
+                 (click)="closeClicked('Close')" [disabled]="tableSupportBase?.rows.length === 0"
+                 class="grid-icon-only-btn p-button-sm  p-button-rounded"></button>
+      </span>
+
+      <span class="mr-3" pTooltip="Apply Credit Note" tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.APPLY_CREDIT_NOTE">
+         <button pButton icon="fa fa-share" type="button"
+                 (click)="applyCreditNoteClicked('Apply Credit Note')" [disabled]="tableSupportBase?.rows.length === 0"
+                 class="grid-icon-only-btn p-button-sm  p-button-rounded"></button>
+      </span>
+
+
+      <span class="mr-3" pTooltip="Download Detailed Reports" tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.DOWNLOAD_BILL_DETAILED_REPORTS">
+          <button pButton icon="fa-solid fa-file-arrow-down" type="button"
+                  (click)="downloadDetailedReportsClicked('Download Detailed Reports')"
+                  [disabled]="!componentInstance.isAllowedToDownload || componentInstance.isDetailReportDownloading"
+                  class="grid-icon-only-btn p-button-sm  p-button-rounded"></button>
+      </span>
+
+
+      <span class="mr-3" pTooltip="Mark As Offline Payment Processing" tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.PAYMENT_PROCESSING">
+        <button pButton icon="fa fa-link" type="button"
+                (click)="paymentProcessingClicked('Mark As Offline Payment Processing')" [disabled]="tableSupportBase?.rows.length === 0"
+                class="grid-icon-only-btn p-button-sm p-button-rounded"></button>
+      </span>
+
+      <span class="mr-3" pTooltip="Undo Offline Payment Processing" tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.PAYMENT_UN_PROCESSING">
+        <button pButton icon="fa fa-chain-broken" type="button"
+                (click)="paymentUnProcessingClicked('Undo Offline Payment Processing')" [disabled]="tableSupportBase?.rows.length === 0"
+                class="grid-icon-only-btn p-button-sm p-button-rounded"></button>
+      </span>
+
+
+      <span class="mr-3" pTooltip="Inactivate" tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.INACTIVE">
+         <button pButton icon="fa fa-toggle-off" type="button"
+                 (click)="inactiveClicked('Inactivate')" [disabled]="tableSupportBase?.rows.length === 0"
+                 class="grid-icon-only-btn p-button-sm  p-button-rounded"></button>
+      </span>
+
+
+      <span class="mr-3" pTooltip="Activate" tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.ACTIVE">
+        <button pButton icon="fa fa-toggle-on" type="button"
+                (click)="activeClicked('Activate')" [disabled]="tableSupportBase?.rows.length === 0"
+                class="grid-icon-only-btn p-button-sm  p-button-rounded"></button>
+      </span>
+
+
+      <span class="mr-3" pTooltip="ProcessTransactions" tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.PROCESS_TRANSACTIONS_EXPENSE">
+           <button pButton icon="pi pi-check" type="button"
+                   (click)="processTransactionsExpenseClicked('ProcessTransactions')" [disabled]="tableSupportBase?.rows.length === 0"
+                   class="grid-icon-only-btn p-button-sm  p-button-rounded"></button>
+      </span>
+
+
+      <span class="mr-3" pTooltip="Generate Bill" tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.EXPENSE_GENERATE_BIL">
+        <button pButton icon="pi pi-plus" type="button"
+                (click)="expenseGenerateBillClicked('Generate Bill')" [disabled]="tableSupportBase?.rows.length === 0"
+                class="grid-icon-only-btn p-button-sm  p-button-rounded"></button>
+
+      </span>
+
+      <span class="mr-3" pTooltip="Re-Send Invitations" tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.VENDOR_SEND_INVITATION">
+         <button pButton icon="fa fa-share" type="button"
+                 (click)="vendorSendInvitationClicked('Re-Send Invitations')" [disabled]="tableSupportBase?.rows.length === 0"
+                 class="grid-icon-only-btn p-button-sm  p-button-rounded"></button>
+      </span>
+
+
+      <span class="mr-3" pTooltip="Add To Local" tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.VENDOR_ADD_LOCAL">
+        <button pButton icon="pi pi-plus" type="button" pTooltip="Add To Local" tooltipPosition="bottom"
+                (click)="vendorAddLocalClicked('Add To Local')" [disabled]="tableSupportBase?.rows.length === 0"
+                class="grid-icon-only-btn p-button-sm  p-button-rounded"></button>
+      </span>
+
+
+      <span class="mr-3" pTooltip="Sync" tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.SYNC">
+        <button pButton icon="fa fa-refresh" type="button"
+                (click)="syncPendingPushBtnClicked('Sync')" [disabled]="tableSupportBase?.rows.length === 0"
+                class="grid-icon-only-btn p-button-sm  p-button-rounded"></button>
+      </span>
+
+
+      <span class="mr-3" pTooltip="Re Sync" tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.RE_SYNC">
+         <button pButton icon="fa fa-refresh" type="button"
+                 (click)="reSyncFailedClicked('Re Sync')" [disabled]="tableSupportBase?.rows.length === 0"
+                 class="grid-icon-only-btn p-button-sm  p-button-rounded"></button>
+      </span>
+
+
+      <span class="mr-3" pTooltip="Resend Request" tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.RE_SENT_REQUEST">
+        <button pButton icon="fa fa-share" type="button"
+                (click)="reSentClick('Resend Request')" [disabled]="tableSupportBase?.rows.length === 0"
+                class="grid-icon-only-btn p-button-sm  p-button-rounded"></button>
+      </span>
+
+
+      <span class="mr-3" pTooltip="Utilization Report" tooltipPosition="bottom"
+            *ngIf="action == appTableHeaderActions.UTILIZATION_REPORTS">
+         <button pButton icon="fa fa-pie-chart" type="button"
+                 (click)="showUtilizationReports('Utilization Report')"
+                 class="grid-icon-only-btn p-button-sm  p-button-rounded"></button>
+      </span>
+
+      <span class="mr-3" *ngIf="action == appTableHeaderActions.CLEAR_FILTER && isFilterButtonShown">
+        <button pButton label="Clear filters" type="button"
+          (click)="clearFilterClicked()" [disabled]="isResetButtonDisabled()"
+          class="grid-icon-only-btn p-button-sm p-button-rounded custom-label-button"></button>
+      </span>
+
+
+    </ng-container>
+  </div>
+</div>

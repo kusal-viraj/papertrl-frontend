@@ -1,0 +1,65 @@
+
+<p-treeTable id="columnSelect" #dt [value]="dataSource" [columns]="selectedColumns" [paginator]="false"
+             [(selection)]="selectedValues" [scrollable]="true" scrollHeight="350px"
+             [lazy]="true" styleClass="p-treetable-md p-treetable p-treetable-gridlines  p-treetable-tbody"
+             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+             (onLazyLoad)="loadData($event)" [totalRecords]="totalRecords" [loading]="loading">
+
+  <ng-template *ngIf="isTableInResponsive" pTemplate="colgroup" let-columns>
+    <colgroup *ngIf="isTableInResponsive">
+      <col *ngFor="let col of columns">
+    </colgroup>
+  </ng-template>
+
+  <ng-template pTemplate="header" let-columns>
+
+    <tr>
+      <th *ngFor="let col of columns" id="col1"
+          [ngStyle]="{'text-align': col.align}">
+        {{col.header}}
+        <p-treeTableSortIcon *ngIf="col.isSortable" field="{{col.sortableField}}"></p-treeTableSortIcon>
+      </th>
+    </tr>
+
+  </ng-template>
+
+  <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+    <tr>
+      <td *ngFor="let col of columns let i=index" [ngStyle]="{'text-align': col.align}">
+
+         <span *ngIf="col.field == 'section'">
+           <p-treeTableToggler class="text-left" [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+        </span>
+
+        <p-inputSwitch [disabled]="actionsDisable" *ngIf="col.field == 'enableNotification' && (rowData[col.field] === false || rowData[col.field] === true)"
+                       (onChange)="switchChanged(rowData)" [(ngModel)]="rowData[col.field]"></p-inputSwitch>
+
+<!--        <p-inputSwitch [disabled]="true" *ngIf="col.field == 'enableNotification' && (rowData[col.field] === false || rowData[col.field] === true)"-->
+<!--                        ></p-inputSwitch>-->
+
+        <p-inputSwitch [disabled]="actionsDisable" *ngIf="col.field == 'enableEmail' && (rowData[col.field] === false || rowData[col.field] === true) "
+                       (onChange)="switchChanged(rowData)" [(ngModel)]="rowData[col.field]"></p-inputSwitch>
+
+        <span *ngIf="col.field !== 'enableNotification' && col.field !== 'enableEmail'" [innerHTML]="rowData[col.field]"></span>
+
+      </td>
+    </tr>
+  </ng-template>
+
+</p-treeTable>
+
+
+<div class="no-data-show" *ngIf="tableSupportBase.isVisibleTable == true">
+  <span class="fa fa-search"></span>
+  <div style="margin-top: 1%">There are no transactions matching the criteria</div>
+</div>
+
+
+<p-confirmDialog key="prjCodeTable" #cd header="Are you sure?" icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cd.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, delete"
+            (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

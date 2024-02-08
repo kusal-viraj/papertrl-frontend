@@ -1,0 +1,16 @@
+[
+  {
+    "action": "RESEND_REQUEST",
+    "label": "Resend Request",
+    "icon": "fa fa-share",
+    "active": false,
+    "authCode": "CUSTOMERS_RESEND_REQUEST"
+  },
+  {
+    "action": "DELETE",
+    "label": "Delete",
+    "icon": "fa fa-trash",
+    "active": false,
+    "authCode": "CUSTOMERS_DELETE_REQUEST"
+  }
+]

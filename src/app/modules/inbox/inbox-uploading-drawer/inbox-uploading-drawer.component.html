@@ -1,0 +1,85 @@
+
+<div class="grid">
+  <div class="col-12 text-right">
+    <span (click)="backToList()" class="fa fa-close side-drawer-icon"></span>
+  </div>
+</div>
+
+
+<div class="grid">
+  <div class="col-12 text-center">
+    <div class="card grid mx-auto">
+      <div class="col-5">
+        <div class="col-12 xl:col-12 pt-0 pb-0">
+          <ngx-dropzone accept="application/pdf,image/png,image/jpeg,image/jpg"
+                        class="drop-zone-style"  (change)="uploadFiledList($event)">
+
+            <ngx-dropzone-label class="dp-zone-big-text-wrapper p-text-normal">
+              <div class="grid upload-image-wrapper p-col-12">
+                <img alt="card" src="../../../../assets/images/dropzone-bg-image-removebg-preview.png">
+              </div><br><br>
+              Drop File(s) Here To Upload <br><br>
+              <span class="dp-zone-small-text-wrapper p-text-normal">
+                (We only accept PDF, JPG JPEG and PNG formats, all the other formats will be ignored)
+               <br>
+              <b>Max file size : 5 MB</b></span>
+            </ngx-dropzone-label>
+            <!--            <ngx-dropzone-preview [removable]="true" >-->
+            <!--              <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>-->
+            <!--            </ngx-dropzone-preview>-->
+          </ngx-dropzone>
+        </div>
+      </div>
+      <div class="col-1">
+        <div class="v_line"></div>
+      </div>
+
+      <div class="col-6 upload-file-container">
+
+<ng-container>
+  <div class="grid mt-3 selected-card" *ngFor="let attachment of files">
+    <div class="col-1 mt-2">
+      <img src="assets/images/invoice.png">
+    </div>
+    <div class="col-9">
+        <div class="col-12 text-left">
+          <span style="font-size: 14px; font-weight:bold">{{attachment.fileName}}</span><br>
+          <span *ngIf="attachment.status === 'success'" class="status" >Success</span>
+          <span *ngIf="attachment.status === false" class="status" >In progress</span>
+          <span *ngIf="attachment.status === 'fail'" class="failure-status">Upload Failure</span>
+        </div>
+
+<!--      <p-progressBar [value]="progressValue">-->
+<!--        <ng-template pTemplate="content"  let-value>-->
+<!--          <span>{{value}}%</span>-->
+<!--        </ng-template>-->
+<!--      </p-progressBar>-->
+    </div>
+    <div class="col-2 icons-padding-top">
+<!--     <i class="fa-solid fa-check-circle" *ngIf="uploadingStatus"></i>-->
+<!--      <i class="fa-solid fa-rotate-right pr-2" style="cursor: pointer" (click)="refreshUploadedFile()" *ngIf="!uploadingStatus"></i>-->
+      <i class="fa-solid fa-close pl-3" *ngIf="attachment.status !== 'fail'" style="cursor: pointer" (click)="closeUploading(attachment.id)"></i>
+    </div>
+  </div>
+</ng-container>
+
+        <div class="footer-container">
+        <div class="footer form-footer-button ml-5">
+          <button pButton type="button" label="Cancel All" style="font-size:12px !important;
+          cursor: pointer" [disabled]="!uploadingStatus || this.files.length === 0 "
+                  (click)="cancelAllUploadedList()"
+                  class="p-button-outlined p-button-sm" ></button>
+          <button pButton type="button" style="font-size:12px !important; cursor: pointer"
+                  class="p-button-sm ml-2 submitBtn" iconPos="left"
+                  [disabled]="!uploadingStatus || this.files.length === 0 "
+                  (click)="sendToProcessUploadedFiles()"
+                  label="Add Uploaded Files to Processing Queue"></button>
+        </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,36 @@
+
+<div class="layout-dashboard">
+  <div class="grid">
+    <div class="col-12 sm:col-12 xl:col-6 md:col-6 lg:col-6"
+         *ngIf="privilegeService.isAuthorized(appAuthorities.DASHBOARD_SHOW_SUB_ACCOUNTS_BILL_SUMMARY)">
+      <div class="card card-height">
+        <h5 class="centerText subHeadingGreen">Bills</h5>
+        <app-bill-summary-table></app-bill-summary-table>
+      </div>
+    </div>
+
+    <div class="col-12 sm:col-12 xl:col-6 md:col-6 lg:col-6"
+         *ngIf="privilegeService.isAuthorized(appAuthorities.DASHBOARD_SHOW_SUB_ACCOUNTS_BILL_PAYMENT_SUMMARY)">
+      <div class="card card-height">
+        <h5 class="centerText subHeadingGreen">Bill Payments</h5>
+        <app-bill-payment-summary-table></app-bill-payment-summary-table>
+      </div>
+    </div>
+
+    <div class="col-12 sm:col-12 xl:col-6 md:col-6 lg:col-6"
+         *ngIf="privilegeService.isAuthorized(appAuthorities.DASHBOARD_SHOW_SUB_ACCOUNTS_PURCHASE_ORDERS_SUMMARY)">
+      <div class="card card-height">
+        <h5 class="centerText subHeadingGreen">Purchase Orders</h5>
+        <app-po-summary-table></app-po-summary-table>
+      </div>
+    </div>
+
+    <div class="col-12 sm:col-12 xl:col-6 md:col-6 lg:col-6"
+         *ngIf="privilegeService.isAuthorized(appAuthorities.DASHBOARD_SHOW_SUB_ACCOUNTS_EXPENSE_REPORTS_SUMMARY)">
+      <div class="card card-height">
+        <h5 class="centerText subHeadingGreen">Expense Reports</h5>
+        <app-expense-summary-table></app-expense-summary-table>
+      </div>
+    </div>
+  </div>
+</div>

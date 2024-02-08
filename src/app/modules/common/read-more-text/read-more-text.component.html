@@ -1,0 +1,9 @@
+
+<p-checkbox #field [binary]="true" hidden></p-checkbox>
+<div
+  *ngIf="characterCount(fieldValue) >= maxCharacters" class="break-word"> {{(!field.checked) ? fieldValue : fieldValue | slice:0:maxCharacters}}
+  <span *ngIf="field.checked">...</span>
+  <a href="javascript:"
+     (click)="field.checked = !field.checked; ">{{!field.checked ? '[Read Less]' : '[Read More]'}}</a>
+</div>
+<div  *ngIf="characterCount(fieldValue) < maxCharacters">{{fieldValue}}</div>

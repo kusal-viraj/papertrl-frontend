@@ -1,0 +1,73 @@
+<div class="p-fluid">
+  <div class="grid">
+
+    <div class="col-12 xl:col-9 lg:col-9 md:col-9 sm:col-12">
+      <div><h4 class="user-name">{{userName}}</h4></div>
+      <div class="subHeadingColour"><h6>{{sessionUser.email}}</h6></div>
+      <br>
+    </div>
+    <div class="col-12 xl:col-3 lg:col-3 md:col-3 sm:col-12">
+      <div class="person-item" *ngIf="!showInitials">
+        <img [style]="{'height': 'auto', 'width': '100px'}" [src]="sessionUser.proficServerPath" alt="profile"/>
+      </div>
+      <div class="circle" *ngIf="showInitials">
+        <div class="initials" tooltip="{{sessionUser.name}}"> {{ initials }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<form [formGroup]="profileForm">
+  <div class="grid">
+    <div class="field col-12">
+      <label class="label-wrapper" for="name">Name*</label>
+      <div class="p-inputgroup">
+                 <span class="p-float-label">
+                   <input formControlName="name" (keyup)="checkValidation('name')" maxlength="100" id="name" type="text"
+                          pInputText>
+                 </span>
+      </div>
+      <div class="p-invalid  text-align-left"
+           *ngIf="profileForm.get('name').dirty && profileForm.get('name').errors">
+        Name is required
+      </div>
+    </div>
+
+    <div class="field col-12">
+      <label class="label-wrapper" for="fileText">Profile Picture</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+            <input id="fileUpload" #image formControlName="proPic" accept="image/*"
+                   (change)="onFileChange($event)" type="file" hidden>
+            <input id="fileText" readonly [value]="image.files[0] ? image.files[0].name : null" accept="image/*"
+                   onClick="document.getElementById('fileUpload').click()" type="text" pInputText>
+            <button pButton type="button" label="Browse" class="p-button file-browse p-button-sm"
+                    onClick="document.getElementById('fileUpload').click()"></button>
+           </span>
+      </div>
+      <div class="p-invalid  text-align-left" *ngIf="dimensionError">
+        Invalid Image Dimensions
+      </div>
+      <div class="p-invalid  text-align-left" *ngIf="fileSizeError">
+        Invalid Image Size
+      </div>
+      <div class="p-invalid  text-align-left" *ngIf="invalidFileTypeError">
+        Invalid Image Type
+      </div>
+    </div>
+
+  </div>
+  <div class="grid">
+    <div class="col-12" style="margin-top: 2%">
+      <div class="pull-right">
+        <button pButton type="button" (click)="resetProfileForm()" label="Reset"
+                [disabled]="btnProfileUpdate"
+                class="p-button-outlined p-button-sm margin-right button-responsive-mobile"
+                icon="fa-solid fa-rotate-right"></button>&nbsp;
+        <button pButton type="submit" (click)="updateProfile()" class="p-button-sm" iconPos="left"
+                [disabled]="btnProfileUpdate" [icon]="btnProfileUpdate ? 'pi pi-spin pi-spinner': 'pi pi-save'"
+                label="Save"></button>
+      </div>
+    </div>
+  </div>
+</form>

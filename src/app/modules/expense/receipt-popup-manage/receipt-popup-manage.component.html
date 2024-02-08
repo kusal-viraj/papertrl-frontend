@@ -1,0 +1,37 @@
+<div class="grid receipt-select"
+     [hidden]="fromGrid ? item['transaction.missingReceiptAvailability'] :item.missingReceiptAvailabilityBln">
+  <div class="col-12">
+    <button class="p-button-sm p-button-outlined max-width" pButton
+            (click)="selectAction.emit(); selectedReceiptId = item.receiptId; showReceiptPopup = true"
+            label=" ">
+      <div class="max-width">
+        <span>{{!item.receiptId ? 'Select Receipt' : getReceiptNameForButton(item) | slice:0:15 }}</span>
+        <span [pTooltip]="getReceiptNameForButton(item)" *ngIf="item.receiptId &&
+        getReceiptNameForButton(item).length > 15" tooltipPosition="bottom">...</span>
+      </div>
+    </button>
+  </div>
+</div>
+<div
+  *ngIf="(fromGrid ? item['transaction.missingReceiptAvailability'] :item.missingReceiptAvailabilityBln) && !fromExpense"
+  class="link" (click)="missingFormClicked(item)">
+  <span *ngIf="!viewOnly">{{item.missingReceiptFormId ? 'Edit' : 'Fill'}} the Missing Receipt Form <i
+    class="fa fa-edit"></i></span>
+  <span *ngIf="viewOnly">Missing Receipt Form</span>
+</div>
+
+<p-dialog appendTo="body" [modal]="true" transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)" [draggable]="false"
+           [(visible)]="showReceiptPopup" *ngIf="showReceiptPopup || showMissingReceiptPopup" [resizable]="false"
+           [header]="showMissingReceiptPopup ? 'Missing Receipts' : 'Receipts'" (onHide)="showMissingReceiptPopup = false"
+           position="center" [style]="viewOnly ? {width: '50vw'} : {width: '80vw'}" styleClass="dialog-padding-zero">
+    <app-receipt-list-popup [selectedReceiptId]="item.receiptId" [viewDetail]="viewOnly" [receiptId]="item.receiptId"
+                            (attachMissingReceipt)="showMissingReceiptPopup = true" [fromExpense]="fromExpense"
+                            [expenseLineItems]="expenseLineItems" [prevReceiptId]="item.prevReceiptId"
+                            (receiptAttached)="attachReceipt($event)" [hidden]="showMissingReceiptPopup"></app-receipt-list-popup>
+
+    <app-missing-report-form (formFilled)="attachMissingReceiptData($event)" [transactionId]="item.id"
+                             (attachReceipt)="showMissingReceiptPopup = false" *ngIf="!fromExpense"
+                             #missingReportFormComponent  [hidden]="!showMissingReceiptPopup"
+                             [selectedMissingReceiptId]="item.missingReceiptFormId" [viewOnly]="viewOnly"
+    ></app-missing-report-form>
+</p-dialog>

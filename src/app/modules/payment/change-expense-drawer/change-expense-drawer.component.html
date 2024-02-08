@@ -1,0 +1,36 @@
+<form [formGroup]="formGroup" (ngSubmit)="changePayment()">
+
+  <div class="grid p-fluid">
+
+    <div class="col-12 field">
+      <span class="p-float-label">
+        <p-dropdown [virtualScroll]="expenseList.data.length>20" virtualScrollItemSize="25"
+                    inputId="dropdown" formControlName="expenseId" id="expenseId" [autoDisplayFirst]="false"
+                    [options]="expenseList.data" [filter]="true" optionLabel="name"
+                    optionValue="id" showClear="true">
+        </p-dropdown>
+        <label for="expenseId">Select Expense* </label>
+      </span>
+
+      <div class="p-invalid text-align-left"
+           *ngIf="formGroup.get('expenseId').dirty && formGroup.get('expenseId').errors">
+        Expense is required
+      </div>
+    </div>
+
+  </div>
+
+  <div class="grid">
+    <div class="col-12" style="margin-top: 3%">
+      <div class="pull-right">
+        <button pButton type="button" label="Reset" (click)="reset()"
+                class="p-button-outlined p-button-sm margin-right"></button>&nbsp;
+        <button pButton type="submit" class="p-button-sm" label="Save"></button>
+      </div>
+    </div>
+  </div>
+
+</form>
+
+<!--Notification Messages-->
+<p-toast position="top-right" key="bc5"></p-toast>

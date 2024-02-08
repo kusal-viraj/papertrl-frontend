@@ -1,0 +1,20 @@
+<div class="details" *ngIf="showFromInvitation">
+
+  <p class="question">Are you sure you want to send an invitation to the following vendor?</p>
+
+  <p>Vendor Name : <span>{{valuesObject.vendorName}}</span></p>
+  <p>Contact Name : <span>{{valuesObject.contactName}}</span></p>
+  <p>Email Address : <span>{{valuesObject.emailAddress}}</span></p>
+</div>
+
+
+<div class="grid mt-4">
+  <div class="col-12 text-right">
+    <button pButton type="button" (click)="close()" label="Close"
+            class="p-button-outlined buttons mr-2 conf-cancel-btn p-button-sm" icon="fa fa-times"></button>
+
+    <button pButton type="button" (click)="confirm()" label="Confirm"
+            class="p-button-sm buttons" icon="pi pi-check"></button>
+  </div>
+</div>
+

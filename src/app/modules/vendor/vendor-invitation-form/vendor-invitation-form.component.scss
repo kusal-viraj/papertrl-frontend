@@ -1,0 +1,54 @@
+@import "../../../../scss/color.scss";
+
+@media only screen and (max-width: 1366px) and (min-width: 1200px) {
+  .formButton {
+    padding-left: 2px;
+    padding-right: 0;
+  }
+  .formButton button {
+    padding-left: 2px;
+    padding-right: 0;
+  }
+}
+
+@media only screen and (max-width: 1522px) and (min-width: 1366px) {
+  .formButton {
+    padding-left: 2px;
+    padding-right: 0;
+
+  }
+  .formButton button {
+    padding-left: 2px;
+    padding-right: 0;
+  }
+  .reset-button-responsive {
+    padding: 0;
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 1780px) and (min-width: 1523px) {
+  .reset-button-responsive {
+    padding: 0;
+    width: 100%;
+  }
+}
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  text-align: left;
+  padding: 8px;
+  width: 100%;
+}
+.th-border{
+  //border-right: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd;
+  vertical-align: middle;
+}
+.td-border{
+  border-bottom: 1px solid #dddddd;
+}

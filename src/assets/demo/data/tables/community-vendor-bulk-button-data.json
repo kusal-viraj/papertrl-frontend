@@ -1,0 +1,9 @@
+[
+  {
+    "action": "ADD",
+    "label": "Add To Local",
+    "icon": "pi pi-plus",
+    "active": true,
+    "authCode": "VENDORS_ADD_TO_LOCAL_VENDOR_LIST"
+  }
+]

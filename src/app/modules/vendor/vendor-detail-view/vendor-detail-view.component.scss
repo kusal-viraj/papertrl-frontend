@@ -1,0 +1,13 @@
+@import '../../../../scss/color';
+
+.vendor-detail-form {
+  width: 100%;
+
+  .basic {
+    border-bottom: 1px solid $tertiary-light-grey;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    padding: 12px;
+  }
+}
+

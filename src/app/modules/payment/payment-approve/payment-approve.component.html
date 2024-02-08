@@ -1,0 +1,216 @@
+<div class="grid mr-2 ml-2">
+  <div class="col-12 text-right">
+
+    <button style="background: none; border: none;"
+            [disabled]="isPrevTransactions()" (click)="transactionsPrev()"
+            pTooltip="Previous" tooltipPosition="bottom" class="fa fa-chevron-left side-drawer-icon" ></button>
+
+    <button style="background: none; border: none;"
+            [disabled]="isNextTransactions()" (click)="transactionsNext()"
+            pTooltip="Next" tooltipPosition="bottom" class="fa fa-chevron-right side-drawer-icon" ></button>
+
+  </div>
+</div>
+
+
+<form class="side-bar-drawer-content" [formGroup]="form">
+  <div class="grid p-3">
+    <div class="col-6 font-bold">
+      Created Date
+    </div>
+    <div class="col-6 text-right">
+      <div>{{f.createdDateStr.value}}</div>
+    </div>
+    <div class="col-6 font-bold">
+      Created By
+    </div>
+    <div class="col-6 text-right">
+      <div>{{f.createdByName.value}}</div>
+    </div>
+    <div class="col-6 font-bold">
+      Payee
+    </div>
+    <div class="col-6 text-right">
+      <div>{{f.payeeName.value}}</div>
+    </div>
+    <div class="col-6 font-bold">
+      Balance To Be Paid
+    </div>
+    <div class="col-6 text-right">
+      <div>{{commonUtil.detailViewIsDash(f.balanceAmount.value, true) | number : '1.2-2'}}</div>
+    </div>
+    <div class="col-6 font-bold">
+      Document No.
+    </div>
+    <div class="col-6 text-right">
+      <div>
+        <span (click)="tdClick(f.documentType.value)"
+                  [ngClass]="isClassHover(f.documentType.value) ? 'selectedHover': null"
+                  (mouseover)="tdHover( f.documentType.value)" (scroll)="hideOverlays()"
+                  (mouseout)="hideOverlays()">{{f.documentNo.value}}
+        </span>
+      </div>
+    </div>
+    <div class="col-6 font-bold">
+      Payment Type
+    </div>
+    <div class="col-6 text-right">
+      <div>{{f.txnTypeName.value}}</div>
+    </div>
+    <div class="col-6 font-bold">
+      Reference No.
+    </div>
+    <div class="col-6 text-right">
+      <div>{{f.txnRef.value}}</div>
+    </div>
+    <div class="col-6 font-bold">
+      Payment Amount
+    </div>
+    <div class="col-6 text-right">
+      <div>{{f.txnAmount.value | number : '1.2-2'}}</div>
+    </div>
+<!--    <div class="col-6 font-bold">-->
+<!--      Applied Discount-->
+<!--    </div>-->
+<!--    <div class="col-6 text-right">-->
+<!--      <div>{{f.txnDiscount.value | number : '1.2-2'}}</div>-->
+<!--    </div>-->
+    <div class="col-6 font-bold">
+      Comment
+    </div>
+    <div class="col-6 text-right break-word">
+      <div>{{commonUtil.detailViewIsDash(f.comment.value, false)}}</div>
+    </div>
+
+    <ng-container *ngIf="adHocWorkflowDetails.length">
+      <div class="col-12 pb-0 mt-3 font-bold">Approvers ({{ adHocWorkflowDetails.length }})</div>
+      <div class="p-fluid col-12">
+        <div class="grid" style="padding-top: 25px">
+          <div class="col-12 pb-0 mb-0 pt-0 mt-0 approve-alignment" *ngFor="let adHoc of adHocWorkflowDetails; let adHocIndex = index">
+            <div class="col-6 bold-text text pb-0 mb-0 pt-0 mt-0"[ngClass]="{ 'approve-text': adHoc.completed }">
+              <span>{{ adHocIndex + 1 }}. </span>
+              {{ adHoc.approvalUserName || adHoc.pendingUserName || adHoc.approvalGroupName }}
+              <span *ngIf="adHoc.approvalGroupName && adHoc.approvalUserName">
+              ({{adHoc.approvalGroupName}})
+            </span>
+              <span *ngIf="adHoc.previousApprovalUserName && adHoc.previousApprovalUserName != adHoc.approvalUserName">
+              ({{adHoc.previousApprovalUserName}})
+            </span>
+              <span class="approve-icon" style="padding-left: 16px;" [ngClass]="commonUtil.getStatusIcon(adHoc)"></span>
+            </div>
+            <div [ngClass]="{ 'approve-text': adHoc.completed }" class="col-6 text text-right pb-0 mb-0 pt-0 mt-0">
+              {{ adHoc.actionDate | date:'MM/dd/yyyy' }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+
+    <ng-container *ngIf="(f.noOfLevels.value === f.workflowLevel.value)">
+      <div class="col-12 pb-0 mt-3 font-bold">Select Approver</div>
+      <div class="p-fluid col-12">
+        <p-dropdown [virtualScroll]="approvalUserList.data.length > 20" virtualScrollItemSize="25"
+                    formControlName="approvalUser"
+                    optionValue="id" optionLabel="name" appendTo="body" placeholder="Select Approver"
+                    [options]="approvalUserList.data" optionDisabled="inactive" [filter]="true"
+                    [showClear]="true">
+        </p-dropdown>
+      </div>
+    </ng-container>
+
+
+
+
+    <div class="col-12 pb-0 mt-3 font-bold">Comment</div>
+
+    <div class="p-fluid col-12">
+      <textarea id="remarks" formControlName="remarks" [rows]="2" blockSpace pInputTextarea></textarea>
+      <div class="p-invalid text-align-left"
+           *ngIf="form.get('remarks').dirty && form.get('remarks').errors">
+        Comment is required
+      </div>
+    </div>
+
+    <div class="flex pl-2 mt-3 pull-right align-items-center"
+         *ngIf="!f.approvalUser.value && (f.noOfLevels.value === f.workflowLevel.value) && f.isOnline.value">
+      <span class="mr-3 font-bold subHeadingColour">Schedule Payment</span>
+      <p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="schedule"></p-inputSwitch>
+    </div>
+
+    <ng-container *ngIf="schedule">
+      <div class="col-12 pb-0 mt-3 font-bold">Date</div>
+
+      <div class="p-fluid col-12">
+        <p-calendar appendTo="body" [minDate]="today" showIcon="true" showButtonBar="true" formControlName="scheduledDate"></p-calendar>
+      </div>
+
+      <div class="col-12 pb-0 mt-3 font-bold">Time (24 Hours)</div>
+
+      <div class="p-fluid col-12">
+        <p-calendar appendTo="body" formControlName="scheduledTime" #pc showIcon="true" [timeOnly]="true"
+                    showTime="true" icon="pi pi-clock" [iconAriaLabel]="'Now'" [hourFormat]="24">
+          <ng-template pTemplate="footer">
+            <div class="grid">
+              <div class="col-6">
+                <button pButton label="Now" class="p-button-outlined" (click)="getCurrentTime()"></button>
+              </div>
+              <div class="col-6 text-right">
+                <button pButton label="Clear" class="p-button-outlined" (click)="pc.onClearButtonClick($event)"></button>
+              </div>
+            </div>
+          </ng-template>
+        </p-calendar>
+      </div>
+    </ng-container>
+  </div>
+
+</form>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+
+      <button pButton (click)="reject()" *ngIf="isValidApproveAccess(appAuthorities.PAYMENT_REJECT)" [loading]="loadingReject"
+              type="button" label="Reject" class="conf-reject-btn mr-1 p-button-sm" icon="fa fa-minus-circle" [disabled]="loading">
+      </button>
+
+
+      <button pButton type="submit" *ngIf="schedule" (click)="submit(false)" class="p-button-sm"
+              label="Schedule" icon="pi pi-clock" [loading]="loading" [disabled]="loadingReject"></button>
+
+      <ng-container *ngIf="!schedule">
+        <button pButton class="p-button  p-p-0 p-button-sm" type="submit" label="Approve & Reassign"
+                (click)="submit(true)" [loading]="loading" [disabled]="loadingReject" icon="fa fa-check"
+                *ngIf="(f.noOfLevels.value === f.workflowLevel.value) && f.approvalUser.value
+                && isValidApproveAccess(appAuthorities.PAYMENT_APPROVE)">
+        </button>
+
+
+        <button pButton class="p-button p-p-0 p-button-sm" type="submit" label="Approve & Finalize" icon="fa fa-check"
+                (click)="submit(false)" [loading]="loading" [disabled]="loadingReject"
+                *ngIf="((f.noOfLevels.value === f.workflowLevel.value) && !(f.approvalUser.value)) &&
+              isValidApproveAccess(appAuthorities.BILL_APPROVE)">
+
+        </button>
+
+        <button pButton class="p-button p-p-0 p-button-sm" type="submit" label="Approve" [loading]="loading"
+                (click)="submit(true)" *ngIf="(f.noOfLevels.value !== f.workflowLevel.value) &&
+              isValidApproveAccess(appAuthorities.PAYMENT_APPROVE)" [disabled]="loadingReject" icon="fa fa-check">
+        </button>
+      </ng-container>
+
+    </div>
+  </div>
+</div>
+<p-overlayPanel appendTo="body" #billOverlay>
+  <ng-template pTemplate>
+    <app-table-bill-no-overlay [billId]="overlayId"></app-table-bill-no-overlay>
+  </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel appendTo="body" #expenseOverlay>
+  <ng-template pTemplate>
+    <app-table-expense-overlay [expenseId]="overlayId"></app-table-expense-overlay>
+  </ng-template>
+</p-overlayPanel>

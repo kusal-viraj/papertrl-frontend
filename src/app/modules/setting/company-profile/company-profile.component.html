@@ -1,0 +1,185 @@
+<form [formGroup]="companyProfileForm" class="side-bar-drawer-content ml-3">
+
+  <div class="grid p-fluid mt-3">
+    <div class="grid col-12 form-field-content">
+
+      <div class="field col-12 lg:col-6">
+        <label class="label-wrapper" for="companyName">Company Name* </label>
+        <input (keyup)="removeSpace('ownerName')" formControlName="ownerName" id="companyName" type="text"
+               pInputText>
+        <div class="p-invalid text-align-left"
+             *ngIf="companyProfileForm.get('ownerName').dirty && companyProfileForm.get('ownerName').errors">
+          Company Name is required
+        </div>
+      </div>
+
+      <div class="grid col-12">
+        <div class="field col-12 lg:col-3">
+        <span>
+          <label class="label-wrapper" for="firstName">First Name* </label>
+          <input (keyup)="removeSpace('firstName')" formControlName="firstName" id="firstName" type="text"
+                 pInputText>
+        </span>
+          <div class="p-invalid text-align-left"
+               *ngIf="companyProfileForm.get('firstName').dirty && companyProfileForm.get('firstName').errors">
+            First Name is required
+          </div>
+        </div>
+
+        <div class="field col-12 lg:col-3">
+        <span>
+          <label class="label-wrapper" for="lastName">Last Name*</label>
+          <input (keyup)="removeSpace('lastName')" formControlName="lastName" id="lastName" type="text"
+                 pInputText>
+        </span>
+          <div class="p-invalid text-align-left"
+               *ngIf="companyProfileForm.get('lastName').dirty && companyProfileForm.get('lastName').errors">
+            Last Name is required
+          </div>
+        </div>
+
+        <div class="field col-12 lg:col-3">
+        <span>
+          <label class="label-wrapper" for="ownerEmail">Owner's Email*</label>
+          <input (keyup)="removeSpace('ownerEmail')" formControlName="ownerEmail" id="ownerEmail" type="text"
+                 pInputText>
+
+        </span>
+          <div class="p-invalid  text-align-left"
+               *ngIf="companyProfileForm.get('ownerEmail').dirty && companyProfileForm.get('ownerEmail').errors">
+            <div *ngIf="companyProfileForm.get('ownerEmail').errors.required">Owner's Email is required</div>
+            <div *ngIf="companyProfileForm.controls['ownerEmail'].hasError('emailValidate')">Email must be a valid
+              email address
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-container formGroupName="masterTenantAddress">
+
+        <div class="grid col-12">
+        <div class="field col-6">
+          <span>
+            <label class="label-wrapper" for="addressLine1">Address Line1*</label>
+            <input formControlName="addressLine1" maxlength="300" id="addressLine1"
+                   (keyup)="removeSpace('addressLine1')" type="text" pInputText>
+          </span>
+          <div class="p-invalid text-align-left"
+               *ngIf="addressLine1.dirty && addressLine1.errors">
+            Address Line1 is required
+          </div>
+        </div>
+        </div>
+
+        <div class="grid col-12">
+        <div class="field col-6">
+          <span>
+              <label class="label-wrapper" for="addressLine2">Address Line2 </label>
+            <input formControlName="addressLine2" maxlength="300" (keyup)="removeSpace('addressLine2')"
+                   id="addressLine2" type="text" pInputText>
+          </span>
+        </div>
+        </div>
+
+        <div class="grid col-12">
+
+        <div class="field col-12 xl:col-3 lg:col-3">
+          <label class="label-wrapper" for="city">City</label>
+          <p-autoComplete delay="100" [minLength]="1" maxlength="200" (keyup)="removeSpace('city')"
+                          [style]="{'width':'100%'}" formControlName="city"
+                          [suggestions]="filteredGroups" [autoHighlight]="true" id="city"
+                          (completeMethod)="filterCities($event)"
+                          [multiple]="false" [dropdown]="false">
+          </p-autoComplete>
+        </div>
+
+        <div class="field col-12 xl:col-3 lg:col-3">
+          <label class="label-wrapper" for="state">State</label>
+          <p-autoComplete delay="100" [minLength]="1" maxlength="200" (keyup)="removeSpace('addressState')"
+                          [style]="{'width':'100%'}" formControlName="addressState"
+                          [suggestions]="filteredGroups" [autoHighlight]="true" id="state"
+                          (completeMethod)="filterStates($event)"
+                          [multiple]="false" [dropdown]="false">
+          </p-autoComplete>
+        </div>
+
+        <div class="field col-12 xl:col-3 lg:col-3">
+          <span>
+            <label class="label-wrapper" for="zipCode">Zip Code</label>
+            <input formControlName="zipcode" (keyup)="removeSpace('zipcode')" id="zipCode" type="text" pInputText>
+          </span>
+          <div class="p-invalid text-align-left" *ngIf="zipcode.hasError('maxlength')">
+            Zip Code must be less than 30 characters
+          </div>
+        </div>
+
+        </div>
+
+        <div class="grid col-12">
+
+        <div class=" field col-12 xl:col-3 lg:col-3">
+          <label class="label-wrapper" for="country">Select Country*</label>
+          <p-dropdown id="country" formControlName="country" showClear="true" [virtualScroll]="true"
+                      virtualScrollItemSize="25"
+                      [autoDisplayFirst]="false" [options]="countries.data" [filter]="true" appendTo="body"
+                      optionLabel="name" optionValue="id">
+          </p-dropdown>
+          <div class="p-invalid text-align-left"
+               *ngIf="country.dirty && country.errors">
+            Country is required
+          </div>
+        </div>
+
+        </div>
+
+      </ng-container>
+
+
+      <div class="field xl:col-3  col-12 lg:col-3">
+        <span>
+          <label class="label-wrapper" for="timeZone">Select Time Zone*</label>
+          <p-dropdown [virtualScroll]="timeZoneList.data.length > 20" virtualScrollItemSize="25" appendTo="body"
+                      [options]="timeZoneList.data" id="timeZone" styleClass="timeZone-dropdown-list"
+                      formControlName="timeZone" optionValue="id" optionLabel="name" [showClear]="true"
+                      [autoDisplayFirst]="false" [filter]="true">
+          </p-dropdown>
+        </span>
+        <div class="p-invalid text-align-left"
+             *ngIf="companyProfileForm.get('timeZone').dirty && companyProfileForm.get('timeZone').errors">
+          Time Zone is required
+        </div>
+      </div>
+
+      <div class="field xl:col-3  col-12 lg:col-3" *ngIf="isSubAccount">
+        <span>
+          <label class="label-wrapper" for="dateFormat">Select Date Format</label>
+          <p-dropdown [virtualScroll]="dateFormatList.data.length>20" virtualScrollItemSize="25"
+                      [options]="dateFormatList.data"
+                      id="dateFormat" inputId="dateFormat" #dateFormatLabel ngDefaultControl
+                      formControlName="dateFormat" optionValue="id" optionLabel="id" [showClear]="true" appendTo="body"
+                      [autoDisplayFirst]="false" [filter]="true">
+            <ng-template pTemplate="selectedItem">
+              <div>{{dateFormatLabel.selectedOption.id}}</div>
+            </ng-template>
+          </p-dropdown>
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="grid footers form-footer-button">
+    <div class="col-12">
+      <div class="pull-left">
+        <button pButton type="button" label="Reset" (click)="resetForm()" class="p-button-outlined p-button-sm">
+        </button>&nbsp;
+
+        <button pButton type="button" class="p-button-sm" iconPos="left" [disabled]="saveLoading"
+                (click)="editCompanyProfileData(companyProfileForm.value)"
+                label="Save"></button>
+      </div>
+    </div>
+  </div>
+</form>
+
+

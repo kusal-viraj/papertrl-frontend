@@ -1,0 +1,64 @@
+{
+  "advancedFilters": [],
+  "columns": [
+    {
+      "field": "section",
+      "header": "Document Type",
+      "isSortable": false,
+      "isReOrderable": false,
+      "isReSizable": false,
+      "columnShow": true,
+      "align": "left",
+      "searchType": null,
+      "canHide": true,
+      "placeholder": "Document Type"
+    },
+    {
+      "field": "event",
+      "header": "Event",
+      "isSortable": false,
+      "isReOrderable": false,
+      "isReSizable": false,
+      "columnShow": true,
+      "align": "left",
+      "searchType": null,
+      "canHide": true,
+      "placeholder": "Event"
+    },
+    {
+      "field": "enableNotification",
+      "header": "System Notification",
+      "isSortable": false,
+      "isReOrderable": false,
+      "isReSizable": false,
+      "columnShow": true,
+      "align": "center",
+      "searchType": null,
+      "canHide": true,
+      "placeholder": "System Notification"
+    },
+    {
+      "field": "enableEmail",
+      "header": "Email Notification",
+      "isSortable": false,
+      "isReOrderable": false,
+      "isReSizable": false,
+      "columnShow": true,
+      "align": "center",
+      "searchType": null,
+      "canHide": true,
+      "placeholder": "Email Notification"
+    }
+  ],
+  "state": {
+    "first": 0,
+    "rows": 10,
+    "columnWidths": "200,300,150,150",
+    "columnOrder": [
+      "section",
+      "event",
+      "enableNotification",
+      "enableEmail"
+    ]
+  }
+}

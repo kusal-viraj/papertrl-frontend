@@ -1,0 +1,27 @@
+<div class="grid col-12 mb-2 pl-0" [class]="fromProcessBill ? 'ml-2 mt-3':'mt-4'">
+  <div *ngFor="let action of matchingAutomation; let approvalActionIndex=index">
+
+                                    <span class="automated-workflow-config-preview">
+
+                                      <span class="level-number-style">{{approvalActionIndex + 1}}</span>
+
+                                      <span class="user-group-icon fa-solid fa-user-group"
+                                            *ngIf="action.approvalGroupName">
+                                      </span>
+                                        <span class="user-group-label">{{action.approvalGroupName}}
+                                        </span>
+
+
+                                      <span class="user-group-icon fa-solid fa-user" *ngIf="action.approvalUserName">
+                                      </span>
+                                       <span class="user-group-label">{{action.approvalUserName}}
+                                        </span>
+
+                                    </span>
+
+    <span class="fa-solid fa-arrow-right"
+          *ngIf="(matchingAutomation.length) !== (approvalActionIndex + 1)">
+    </span>
+
+  </div>
+</div>

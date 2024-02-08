@@ -1,0 +1,32 @@
+{
+  "approvalGroup": [
+    {
+      "label": "PM",
+      "id": "NY"
+    },
+    {
+      "label": "AP",
+      "id": "RM"
+    },
+    {
+      "label": "AR",
+      "id": "LDN"
+    }
+  ],
+  "confirmPassword": "Qwerty@123",
+  "emailAddress": "user@gmail.com",
+  "employeeNumber": "EMP-100",
+  "name": "Smith",
+  "password": "Qwerty@123",
+  "profile": "",
+  "role": {
+    "label": "Role Test",
+    "id": "RM"
+  },
+  "status": {
+    "label": "Active",
+    "id": "RM"
+  },
+  "userId": "User100",
+  "id": 1
+}

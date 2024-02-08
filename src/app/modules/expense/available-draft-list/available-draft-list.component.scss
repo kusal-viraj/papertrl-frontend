@@ -1,0 +1,23 @@
+.edit-button-wrapper ::ng-deep .p-button{
+  height: 24px;
+  width: 23px;
+  .p-button-icon{
+    font-size: 10px;
+  }
+}
+
+.button-table-data{
+  padding-top: 3px !important;
+  padding-bottom: 3px !important;
+}
+
+.item-remove-button {
+  color: #9c9c9c;
+}
+
+.item-remove-button:hover {
+  cursor: pointer;
+  &:hover{
+    cursor: pointer;
+  }
+}

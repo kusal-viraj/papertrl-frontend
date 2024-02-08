@@ -1,0 +1,18 @@
+@import "../../../../scss/color.scss";
+
+.btn-trash {
+  background-color: #D0D5D8;
+  opacity: 1;
+}
+
+.btn-trash:hover {
+  background-color: #8c8e91;
+  opacity: 1;
+}
+
+.more-info {
+  color: $green;
+  font-weight: normal;
+  text-align: left;
+  cursor: pointer;
+}

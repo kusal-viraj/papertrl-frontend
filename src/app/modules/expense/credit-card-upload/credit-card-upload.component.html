@@ -1,0 +1,331 @@
+<form [formGroup]="formGroup">
+  <div class="grid credit-card">
+    <div *ngIf="!attachment" class="col-12 xl:col-4 lg:col-5 md:col-12 sm:col-12 left-side file-attached"
+         (click)="fileUploadClick('creditCard')" (dragover)="dragOverHandler($event)" (drop)="fileDropped($event)">
+      <input id="creditCard" (change)="fileAdded($event)" type="file" hidden accept=".csv">
+      <div *ngIf="uploadLoading" class="loading-wrapper">
+        <em class="fa fa-spinner fa-pulse"></em>
+        <div class="subHeadingColour p-text-normal" style="font-size: 13px">Please wait, We are processing your
+          file
+        </div>
+      </div>
+
+
+      <div *ngIf="!uploadLoading" class="subHeadingColour drop-files p-text-normal">Drop File Here To Upload <br>
+        <span class="subHeadingColour p-text-normal" style="font-size: 13px"> (We only accept CSV format)</span>
+      </div>
+    </div>
+
+    <div *ngIf="attachment" class="col-12 xl:col-4 lg:col-5 md:col-12 sm:col-12 left-side">
+      <p-table responsiveLayout="scroll"  styleClass="p-datatable-sm p-datatable-striped detail-table" [columns]="headers" scrollHeight="600px" [scrollable]="true"
+               [value]="records">
+        <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+            <col style="width:150px" *ngFor="let col of columns">
+          </colgroup>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns">{{col}}</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product let-columns="columns">
+          <tr>
+            <td *ngFor="let col of columns"><span>{{product[col] ? product[col] : ''}}</span></td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <div class="col-12 xl:col-8 lg:col-7 md:col-12 sm:col-12 p-p-4 right-side">
+      <div *ngIf="!attachment" class="form-wrapper">
+      </div>
+      <div class="forms">
+        <div [@slideInOut] *ngIf="isSecondStep">
+          <ng-template [ngTemplateOutlet]="stepOneTwo"></ng-template>
+        </div>
+
+        <div [@slideInOut] *ngIf="isThirdStep">
+          <ng-template [ngTemplateOutlet]="stepThree"></ng-template>
+        </div>
+      </div>
+
+
+      <div class="footer text-right pr-5 pull-right">
+        <button pButton type="button" label="Reset" [disabled]="loadingFinalize" (click)="reset()"
+                class="p-button-outlined p-button-sm" icon="fa-solid fa-rotate-right"></button>
+
+        <button pButton type="button" label="{{isThirdStep ? 'Back' : 'Next'}}" [disabled]="loadingFinalize || loadNext"
+                class="p-button-outlined p-button-sm ml-2" *ngIf="isThirdStepVisible"
+                (click)="nextBackTrigger()"
+                [icon]="isThirdStep ? 'pi pi-arrow-left' : 'pi pi-arrow-right'"></button>
+
+        <button pButton type="button" class="p-button-sm ml-2" iconPos="left"
+                *ngIf="!isThirdStepVisible || isThirdStep" (click)="finalize()"
+                [icon]="loadingFinalize ? 'pi pi-spin pi-spinner': 'pi pi-check'"
+                label="Finalize" [disabled]="loadingFinalize || loadNext"></button>
+      </div>
+    </div>
+
+    <ng-template #stepOneTwo>
+
+      <div class="grid p-fluid">
+        <div class="col-12 ">
+          <h6 class="subHeadingColour mb-2">Step 1 : Tell us about the uploaded statement</h6>
+        </div>
+        <div class="col-12 ">
+          <p class="subHeadingColour mb-3">If you are uploading a statement related to a single employee Please
+            select the relevant employee from <b>'Select Employee'</b> dropdown or If you are uploading a statement
+            related to multiple employees, please select the respective column of the uploaded statement that
+            corresponds to <b>'Last 4 digits of the credit card'</b></p>
+        </div>
+
+        <div class="field col-12 xl:col-4 lg:col-4 md:col-12 sm:col-12">
+          <span class="p-float-label">
+            <p-dropdown [virtualScroll]="headerList.data.length > 20" virtualScrollItemSize="25" optionDisabled="inactive"
+                        [options]="headerList.data" id="header" appendTo="body" [filter]="true"
+                        formControlName="headerRow" optionLabel="name" optionValue="id" [autoDisplayFirst]="false">
+            </p-dropdown>
+            <label for="header">Select Header Row</label>
+          </span>
+        </div>
+
+        <div class="field col-12 xl:col-4 lg:col-4 md:col-12 sm:col-12">
+            <span class="p-float-label">
+              <p-dropdown [virtualScroll]="employeeList.data.length > 20" virtualScrollItemSize="25" optionDisabled="inactive"
+                          [options]="employeeList.data" id="employee" appendTo="body" [showClear]="true" [filter]="true"
+                          formControlName="employee" optionLabel="name" [autoDisplayFirst]="false">
+              </p-dropdown>
+              <label for="employee">Select Employee</label>
+            </span>
+        </div>
+
+        <div class="field col-12 xl:col-4 lg:col-4 md:col-12 sm:col-12">
+            <span class="p-float-label">
+              <p-dropdown [virtualScroll]="formatList.data.length > 20" virtualScrollItemSize="25" optionDisabled="inactive"
+                          [options]="formatList.data" id="format" appendTo="body" [filter]="true"
+                          formControlName="dateFormat" optionLabel="name" optionValue="id" [autoDisplayFirst]="false">
+              </p-dropdown>
+              <label for="format">Select Date Format</label>
+            </span>
+        </div>
+
+        <div class="field col-12 xl:col-4 lg:col-4 md:col-12 sm:col-12">
+            <span class="p-float-label">
+               <p-dropdown formControlName="cardNo"  maxlength="6" dataKey="id" pKeyFilter="pint" id="cardNo"
+                           appendTo="body" optionValue="id" optionLabel="name" [options]="cards.data" #cardDp
+                           (onChange)="cardChanged($event)" [autoDisplayFirst]="false" [filter]="true"
+                           [virtualScroll]="cards.data.length > 20" virtualScrollItemSize="25">
+
+                 <ng-template pTemplate="selectedItem">
+                    <div>{{cardDp.selectedOption.name}}</div>
+                 </ng-template>
+
+               <ng-template let-card pTemplate="item">
+                 <div class="grid">
+                   <div class="dropdown-list"
+                        [ngClass]="card.id == -1 ? ' dropdown-add': null">{{card.name}}</div>
+                   <i *ngIf="card.id == -1" class="pi pi-plus dropdown-icon  dropdown-add"></i>
+                 </div>
+               </ng-template>
+
+               </p-dropdown>
+              <label for="cardNo">Card Number (Last 4 - 6 digits)*</label>
+            </span>
+
+        </div>
+
+        <div class="col-12 mt-2 mb-3"><h6 class="subHeadingColour mb-0">Step 2 : Select the fields that
+          correspond to your file</h6></div>
+      </div>
+      <div class="p-grid" style="height: calc(100vh - 306px);">
+        <p-table responsiveLayout="scroll"  styleClass="p-datatable-sm p-datatable-striped detail-table" scrollDirection="both"
+                scrollHeight="350px" [scrollable]="true" [style]="{width:'500px'}" [value]="fields">
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width:200px" class="thead-style detail-table-header-left">System Defined Fields</th>
+              <th style="width:300px" class="thead-style detail-table-header-left">Columns From Your File</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-i='rowIndex'>
+            <tr>
+              <td>Transaction Date*</td>
+              <td class="p-fluid">
+                <p-dropdown [virtualScroll]="detectedFields.data.length > 20" virtualScrollItemSize="25" optionDisabled="inactive"
+                            [options]="detectedFields.data" id="transactionDate" appendTo="body" [showClear]="true"
+                            placeholder="Select Column*" optionLabel="name" optionValue="id" [filter]="true"
+                            formControlName="transactionDateColumn" [autoDisplayFirst]="false">
+                </p-dropdown>
+              </td>
+            </tr>
+            <tr>
+              <td>Posting Date</td>
+              <td class="p-fluid">
+                <p-dropdown [virtualScroll]="detectedFields.data.length > 20" virtualScrollItemSize="25" optionDisabled="inactive"
+                            [options]="detectedFields.data" id="postingDate" appendTo="body" [showClear]="true"
+                            placeholder="Select Column" optionLabel="name" optionValue="id" [filter]="true"
+                            formControlName="postingDateColumn" [autoDisplayFirst]="false">
+                </p-dropdown>
+              </td>
+            </tr>
+
+            <tr>
+              <td>Merchant</td>
+              <td class="p-fluid">
+                <p-dropdown [virtualScroll]="detectedFields.data.length > 20" virtualScrollItemSize="25" optionDisabled="inactive"
+                            [options]="detectedFields.data" id="merchant" appendTo="body" [showClear]="true"
+                            placeholder="Select Column" optionLabel="name" optionValue="id" [filter]="true"
+                            formControlName="merchantColumn" [autoDisplayFirst]="false">
+                </p-dropdown>
+              </td>
+            </tr>
+
+            <tr>
+              <td>Description</td>
+              <td class="p-fluid">
+                <p-dropdown [virtualScroll]="detectedFields.data.length > 20" virtualScrollItemSize="25" optionDisabled="inactive"
+                            [options]="detectedFields.data" id="description" appendTo="body" [showClear]="true"
+                            placeholder="Select Column" optionLabel="name" optionValue="id" [filter]="true"
+                            formControlName="descriptionColumn" [autoDisplayFirst]="false">
+                </p-dropdown>
+              </td>
+            </tr>
+
+            <tr>
+              <td>Amount*</td>
+              <td class="p-fluid">
+                <p-dropdown [virtualScroll]="detectedFields.data.length > 20" virtualScrollItemSize="25" optionDisabled="inactive"
+                            [options]="detectedFields.data" id="amount" appendTo="body" [showClear]="true"
+                            placeholder="Select Column*" optionLabel="name" optionValue="id" [filter]="true"
+                            formControlName="amountColumn" [autoDisplayFirst]="false">
+                </p-dropdown>
+              </td>
+            </tr>
+
+            <tr>
+              <td>Last 4 digits of the credit card</td>
+              <td class="p-fluid">
+                <p-dropdown [virtualScroll]="detectedFields.data.length > 20" virtualScrollItemSize="25" optionDisabled="inactive"
+                            [options]="detectedFields.data" id="fourDigits" appendTo="body" [showClear]="true"
+                            placeholder="Select Column" optionLabel="name" optionValue="id" [filter]="true"
+                            formControlName="fourDigitsColumn" [autoDisplayFirst]="false">
+                </p-dropdown>
+              </td>
+            </tr>
+
+          </ng-template>
+        </p-table>
+      </div>
+    </ng-template>
+
+
+    <ng-template #stepThree>
+      <div class="grid third-step">
+        <div class="col-12 "><h6 class="subHeadingColour mb-3">Step 3 : Select the employee the card number belongs to.</h6></div>
+
+        <div class="grid col-12 header">
+          <div class="col-1 text-center">#</div>
+          <div class="col-3 text-center">Card No.</div>
+          <div class="col-3 text-center">No. of Transactions</div>
+          <div class="col-4 p-fluid">Employee</div>
+        </div>
+        <div class="grid data col-12" formArrayName="groupedCardList" *ngFor="let group of groupFormArray.controls; let
+         i=index">
+          <ng-container [formGroupName]="i">
+            <div class="col-1 text-center">
+              <div>{{i + 1}}</div>
+            </div>
+            <div class="col-3 text-center">
+              <div>{{f.groupedCardList.value[i].cardNoStr}}</div>
+            </div>
+            <div class="col-3 icon text-center">
+              <div (click)="previewTransaction(group)">
+                <span *ngIf="!f.groupedCardList.value[i].loading">{{f.groupedCardList.value[i].recordCount}}</span>
+                <em *ngIf="f.groupedCardList.value[i].loading" class="pi pi-spin pi-spinner"></em>
+              </div>
+            </div>
+            <div class="col-4 p-fluid">
+              <p-dropdown [virtualScroll]="employeeList.data.length > 20" virtualScrollItemSize="25" optionDisabled="inactive"
+                          [options]="employeeList.data" id="employees" appendTo="body" [showClear]="true" optionValue="id"
+                          formControlName="employeeId" placeholder="Select Employee" optionLabel="name" #empDp
+                          (onChange)="employeeDpChanged(empDp.selectedOption, group)"
+                          [filter]="true" [autoDisplayFirst]="false">
+              </p-dropdown>
+            </div>
+          </ng-container>
+          <div class="line"></div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</form>
+
+
+<p-confirmDialog #cdR key="confirm" appendTo="body" header="Are you sure?"
+                 icon="subHeadingGreen pi pi-check">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cdR.reject()"></button>
+    <button type="button" pButton icon="pi pi-check" label="Ignore and Finalize"
+            (click)="cdR.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+
+<p-dialog position="center" [(visible)]="cardWiseTransactionList.length" closeOnEscape="false" [modal]="false"
+          [resizable]="false"
+          [closable]="false" *ngIf="cardWiseTransactionList.length" class="pdf-wrapper" [draggable]="true">
+  <ng-template pTemplate="header">
+    <div class="grid">
+      <div class="col-8">
+        <h5 class="subHeadingColour">Transactions for Card No.{{cardWiseTransactionList[0]?.cardNo}}</h5>
+      </div>
+      <div class="col-4 pr-0 text-right">
+        <button pButton (click)="clearCardWiseTransactions()" class="p-button-outlined p-button-sm" type="button"
+                icon="fa fa-times" label="Close" iconPos="left"></button>
+      </div>
+    </div>
+  </ng-template>
+
+  <p-table responsiveLayout="scroll"  styleClass="p-datatable-sm p-datatable-striped detail-table" scrollHeight="610px" [scrollable]="true"
+           [value]="cardWiseTransactionList" scrollable="true" [style]="{width:'800px'}">
+    <ng-template pTemplate="colgroup">
+      <colgroup>
+        <col style="width:100px">
+        <col style="width:100px">
+        <col style="width:100px">
+        <col style="width:100px">
+        <col style="width:100px">
+      </colgroup>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Transaction Date</th>
+        <th>Posting Date</th>
+        <th>Merchant</th>
+        <th>Description</th>
+        <th>Amount</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+      <tr>
+        <td>{{product.transactionDate}}</td>
+        <td>{{product.postingDate}}</td>
+        <td>{{product.merchant}}</td>
+        <td>{{product.description}}</td>
+        <td>{{product.amount}}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+</p-dialog>
+
+<!--Create-->
+<p-sidebar [(visible)]="addNewCard" position="right" styleClass="p-sidebar-sm" *ngIf="addNewCard">
+  <ng-template pTemplate="header">Add Credit Card</ng-template>
+
+  <app-create-credit-card-form (onComplete)="addNewCard = false; getExistingCards()"
+                               [createView]="true" [panel]="true"
+                               [editView]="true"></app-create-credit-card-form>
+</p-sidebar>

@@ -1,0 +1,16 @@
+[
+  {
+    "action": "PAY_NOW",
+    "label": "Pay Now",
+    "icon": "fa fa-usd",
+    "active": true,
+    "authCode": true
+  },
+  {
+    "action": "SUBMIT_FOR_APPROVAL",
+    "label": "Submit for Approval",
+    "icon": "fa fa-check",
+    "active": true,
+    "authCode": true
+  }
+]

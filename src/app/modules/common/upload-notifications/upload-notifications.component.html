@@ -1,0 +1,9 @@
+<p-card>
+  <p *ngIf="responseData.scceeded >= 0">{{responseData.scceeded}} records were successful, {{responseData.failed}} issue(s) found
+    from {{responseData.totalRecords}} of total records.</p>
+  <ul>
+    <li *ngFor="let error of responseData.errors; let i=index"  class="subHeadingColour text-left font-bold">{{getErrors(error)}}</li>
+  </ul>
+</p-card>
+
+

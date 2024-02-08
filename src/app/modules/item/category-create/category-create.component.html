@@ -1,0 +1,37 @@
+<form class="side-bar-drawer-content m-2" [formGroup]="createCategoryForm" (ngSubmit)="createNewCategory(createCategoryForm)" autocomplete="off">
+  <div class="grid mt-3 p-fluid">
+    <div [ngClass]="'field col-12'">
+      <div>
+        <span>
+          <label class="label-wrapper" for="categoryName">Category Name* </label>
+          <input formControlName="name" id="categoryName" type="text" pInputText
+                 (keyup)="checkCategoryAvailability(); removeSpace.clearSpace(createCategoryForm, 'name')" (paste)="checkCategoryAvailability()">
+
+        </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="createCategoryForm.get('name').dirty && createCategoryForm.get('name').hasError('required')">
+        Category Name is required
+      </div>
+      <div class="p-invalid text-align-left">
+        <div *ngIf="isCategoryAvailable">Category Name already exists, Please enter a new one</div>
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="createCategoryForm.get('name').hasError('maxlength')">Category Name must be less than 50 characters</div>
+    </div>
+  </div>
+</form>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" label="Reset" (click)="resetCategoryForm()"
+              [disabled]="loading"
+              class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+      <button pButton type="submit" class="p-button-sm" iconPos="left"
+              [disabled]="loading" [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-plus'"
+              label="Create Category" (click)="createNewCategory(createCategoryForm)"></button>
+    </div>
+  </div>
+</div>
+<!--Notification Messages-->
+<p-toast position="bottom-right" key="bs"></p-toast>

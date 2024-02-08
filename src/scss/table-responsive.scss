@@ -1,0 +1,646 @@
+@import "../scss/color.scss";
+/* Responsive */
+
+.p-datatableResponsive .p-datatable-tbody > tr > td .p-column-title {
+  display: none;
+}
+
+.p-column-title {
+  display: none;
+}
+
+.table-wrapper {
+  height: calc(100vh - 114px);
+}
+
+.no-data-show {
+  text-align: center;
+  margin-top: 15%;
+  font-size: 16px;
+  color: $green;
+}
+
+.freeze-right {
+  right: 0;
+}
+
+.table-empty-data {
+  position: absolute;
+  width: 100%;
+  height: -webkit-fill-available;
+  display: flex;
+  animation-delay: 2500ms;
+  animation: fadein 4s;
+  .col-12 {
+    align-self: center;
+  }
+
+  i {
+    font-size: 40px;
+    margin-bottom: 18px;
+  }
+}
+@keyframes fadein {
+  from {
+    opacity:0;
+  }
+  to {
+    opacity:1;
+  }
+}
+//th {
+//  display: inline !important;
+//}
+//
+//td {
+//  display: inline !important;
+//}
+
+.table-data {
+  white-space: pre;
+}
+
+th div input {
+  width: 100%;
+  font-size: 14px !important;
+}
+
+th div p-calendar {
+  width: 100%;
+}
+
+th div p-dropdown {
+  width: 100%;
+}
+
+th div p-multiSelect {
+  width: 100%;
+}
+
+.selectedHover {
+  cursor: pointer;
+  color: $green;
+  text-decoration: underline;
+
+  &:hover {
+    //text-decoration: underline;
+  }
+}
+
+.row-highlight {
+  background: $light-gray-2 !important;
+}
+
+.td-border {
+  border-left: 5px solid transparent !important;
+}
+
+.td-border-selected {
+  border-left: 5px solid $green !important;
+}
+
+.customer-badge {
+  border-radius: 2px;
+  padding: .25em .5rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+  text-align: center;
+  display: inline-block;
+  width: 100px;
+  letter-spacing: .3px;
+
+  &.status-APPROVED {
+    background: #C8E6C9;
+    color: #256029;
+  }
+
+  &.status-ACTIVE {
+    background: #C8E6C9;
+    color: #256029;
+  }
+
+  &.status-OPEN {
+    background: #C8E6C9;
+    color: #256029;
+    min-width: 106px;
+  }
+
+
+  &.status-REJECTED {
+    background: #FFCDD2;
+    color: #C63737;
+  }
+
+  &.status-CLOSED {
+    min-width: 106px;
+    background: #FFCDD2;
+    color: #C63737;
+  }
+
+  &.status-INACTIVE {
+    background: #FFCDD2;
+    color: #C63737;
+  }
+
+  &.status-VOID {
+    background: #FFCDD2;
+    color: #C63737;
+  }
+
+  &.status-DELETED {
+    background: #FFCDD2;
+    color: #C63737;
+  }
+
+  &.status-PENDING {
+    background: #FEEDAF;
+    color: #8A5340;
+  }
+
+  &.status-CANCELED {
+    background: #FEEDAF;
+    color: #8A5340;
+  }
+
+  &.status-PAID {
+    background: #B3E5FC;
+    color: #23547B;
+  }
+
+  &.status-PROCESSING {
+    background: #FFD8B2;
+    color: #805B36;
+  }
+
+  &.status-LOCKED {
+    background: #ECCFFF;
+    color: #694382;
+  }
+
+  &.status-MAILED {
+    background: #FFD8B2;
+    color: #805B36;
+  }
+
+  &.status-EXPORTED {
+    background: #FFD8B2;
+    color: #805B36;
+  }
+
+  &.status-NOT-ASSIGNED {
+    background: #ECEEEF;
+    color: #73828A;
+  }
+
+  &.status-NOT-EXPORTED {
+    background: #ECEEEF;
+    color: #73828A;
+  }
+
+  &.status-REQUIRED {
+    background: #FFCDD2;
+    color: #C63737;
+  }
+
+  &.status-OPTIONAL {
+    background: #C8E6C9;
+    color: #256029;
+  }
+
+  &.status-TAXABLE {
+    background: #FFD8B2;
+    color: #805B36;
+  }
+
+  &.status-UNDER-DISCUSSION {
+    background: #FFD8B2;
+    color: #805B36;
+    width: 150px;
+  }
+
+  &.status-NONTAXABLE {
+    background: #C8E6C9;
+    color: #256029;
+  }
+
+  &.status-NOT-PAID {
+    background: #FFCDD2;
+    color: #C63737;
+    min-width: 106px;
+  }
+
+  &.status-PAID {
+    background: #C8E6C9;
+    color: #256029;
+
+  }
+
+  &.status-PROCESSING {
+    background: #FEEDAF;
+    color: #8A5340;
+  }
+
+  &.status-EXPORTED {
+    background: #C8E6C9;
+    color: #256029;
+  }
+
+  &.status-NOT-EXPORTED {
+    background: #FFCDD2;
+    color: #C63737;
+  }
+
+  &.status-DRAFT {
+    background: #FEEDAF;
+    color: #8A5340;
+  }
+
+  &.status-SENT {
+    background: #C8E6C9;
+    color: #256029;
+  }
+
+  &.status-NOT-SENT {
+    background: #FFCDD2;
+    color: #C63737;
+  }
+
+  &.status-PARTIALLY-PAID {
+    background: #FEEDAF;
+    color: #8A5340;
+    min-width: 106px;
+  }
+
+  &.status-NO {
+    background: #FFCDD2;
+    color: #C63737;
+    min-width: 106px;
+  }
+
+  &.status-YES {
+    background: #C8E6C9;
+    color: #256029;
+    min-width: 106px;
+  }
+
+  &.status-COMPLETED {
+    background: #C8E6C9;
+    color: #256029;
+    min-width: 106px;
+  }
+
+  &.status-UNPAID {
+    background: #FFCDD2;
+    color: #C63737;
+    min-width: 106px;
+  }
+
+  &.status-FAILED {
+    background: #FFCDD2;
+    color: #C63737;
+    min-width: 106px;
+  }
+
+  &.status-CANCELED {
+    background: #ECEEEF;
+    color: #73828A;
+    min-width: 106px;
+  }
+
+  &.status-SUCCESS {
+    background: #C8E6C9;
+    color: #256029;
+    min-width: 106px;
+  }
+
+  &.status-PENDING {
+    background: #FEEDAF;
+    color: #8A5340;
+    min-width: 106px;
+  }
+
+  &.status-SUCCESS {
+    background: #C8E6C9;
+    color: #256029;
+    min-width: 106px;
+  }
+
+  &.status-FAILED {
+    background: #FFCDD2;
+    color: #C63737;
+    min-width: 106px;
+  }
+
+  &.status-PENDING {
+    background: #FEEDAF;
+    color: #8A5340;
+    min-width: 106px;
+  }
+
+  &.status-PUBLISHED {
+    background: #FEEDAF;
+    color: #8A5340;
+    min-width: 106px;
+  }
+
+  &.status-SUCCESS {
+    background: #C8E6C9;
+    color: #256029;
+    min-width: 106px;
+  }
+
+  &.status-FAILED {
+    background: #FFCDD2;
+    color: #C63737;
+    min-width: 106px;
+  }
+
+  &.status-PROCESSING {
+    background: #FEEDAF;
+    color: #8A5340;
+    min-width: 106px;
+  }
+
+  &.status-PROCESSED {
+    background: #C8E6C9;
+    color: #256029;
+    min-width: 106px;
+  }
+
+  &.status-UNPROCESSED {
+    background: #FEEDAF;
+    color: #8A5340;
+    width: 106px;
+  }
+
+  &.status-SUBMITTED {
+    background: #FEEDAF;
+    color: #8A5340;
+    width: 106px;
+  }
+
+  // Jira
+  &.status-WAITING-FOR-SUPPORT {
+    background: #ECEEEF;
+    color: #73828A;
+  }
+
+  &.status-DONE {
+    background: #ECEEEF;
+    color: #73828A;
+  }
+
+  &.status-ESCALATED {
+    background: #ECEEEF;
+    color: #73828A;
+  }
+
+  &.status-IN-PROGRESS {
+    background: #FFD8B2;
+    color: #805B36;
+  }
+
+  &.status-RE-OPENED {
+    background: #ECEEEF;
+    color: #73828A;
+  }
+
+  &.status-RESOLVED {
+    background: #B3E5FC;
+    color: #23547B;
+  }
+
+  &.status-WAITING-FOR-CUSTOMER {
+    background: #ECEEEF;
+    color: #73828A;
+  }
+
+}
+
+
+.status-style {
+  @extend .customer-badge;
+
+  padding: 5px !important;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+  text-align: left !important;
+  display: inline-block;
+  border-radius: 50% !important;
+  width: auto !important;
+  letter-spacing: 0.3px;
+
+  &.status-MAILED {
+    background: $tertiary-yellow !important;
+  }
+
+  &.status-PENDING {
+    background: $tertiary-yellow !important;
+    min-width: auto !important;
+  }
+
+  &.status-PROCESSING {
+    background: $tertiary-yellow !important;
+    min-width: auto !important;
+  }
+
+  &.status-IN-PROGRESS {
+    background: $tertiary-yellow !important;
+  }
+
+  &.status-FREEZE {
+    background: $tertiary-yellow !important;
+  }
+
+  &.status-VOID {
+    background: $red !important;
+  }
+
+  &.status-INACTIVE {
+    background: $red !important;
+  }
+
+  &.status-FAILED {
+    background: $red !important;
+    min-width: auto !important;
+  }
+
+  &.status-REJECTED {
+    background: $red !important;
+  }
+
+  &.status-CLOSED {
+    background: $red !important;
+    min-width: auto !important;
+  }
+
+  &.status-NOT-PAID {
+    background: $red !important;
+    min-width: auto !important;
+  }
+
+  &.status-NO {
+    background: $red !important;
+    min-width: auto !important;
+  }
+
+  &.status-TAXABLE {
+    background: $red !important;
+    min-width: auto !important;
+  }
+
+  &.status-CANCELED {
+    background: $red !important;
+    min-width: auto !important;
+  }
+
+  &.status-EXPORTED {
+    background: $tertiary-blue !important;
+  }
+
+  &.status-APPROVED {
+    background: $tertiary-blue !important;
+    min-width: auto !important;
+  }
+
+  &.status-RESOLVED {
+    background: $tertiary-blue !important;
+  }
+
+  &.status-PAID {
+    background: $green !important;
+  }
+
+  &.status-SUBMITTED {
+    background: $green;
+    min-width: auto !important;
+  }
+
+  &.status-SUCCESS {
+    background: $green;
+    min-width: auto !important;
+  }
+
+  &.status-ACTIVE {
+    background: $green;
+  }
+
+  &.status-OPEN {
+    background: $green;
+    min-width: auto !important;
+  }
+
+  &.status-YES {
+    background: $green;
+    min-width: auto !important;
+  }
+
+  &.status-NONTAXABLE {
+    background: $green;
+    min-width: auto !important;
+  }
+
+  &.status-CREATED {
+    background: $secondary-dark-yellow;
+    min-width: auto !important;
+  }
+
+
+  &.status-CANCELED {
+    background: $canceled-gray;
+    min-width: auto !important;
+  }
+
+  &.status-PARTIALLY-PAID {
+    background: $brown !important;
+    min-width: auto !important;
+  }
+
+  &.status-IN-PROGRESS {
+    background: $brown !important;
+  }
+
+  &.status-WAITING-FOR-SUPPORT {
+    background: $secondary-dark-gray;
+  }
+
+  &.status-ON-HOLD {
+    background: $secondary-dark-gray;
+  }
+
+  &.status-DONE {
+    background: $secondary-dark-gray;
+  }
+
+  &.status-ESCALATED {
+    background: $secondary-dark-gray;
+  }
+
+  &.status-RE-OPENED {
+    background: $secondary-dark-gray;
+  }
+
+  &.status-WAITING-FOR-CUSTOMER {
+    background: $secondary-dark-gray;
+  }
+}
+
+.grid-sort-icon {
+  float: right;
+}
+
+.p-highlight {
+  .grid-sort-icon {
+    visibility: visible;
+  }
+}
+
+
+.sort-icon-wrapper {
+  &:hover {
+    .grid-sort-icon {
+      visibility: visible;
+    }
+  }
+}
+
+@media screen and (max-width: 991px) {
+  :host ::ng-deep {
+    .p-datatable {
+      &.p-datatableResponsive {
+        .p-datatable-thead > tr > th,
+        .p-datatable-tfoot > tr > td {
+          display: none !important;
+        }
+
+        .p-datatable-tbody > tr {
+          border-bottom: 1px solid var(--layer-2);
+
+          > td {
+            text-align: left !important;
+            display: block;
+            border: 0 none !important;
+            width: 100% !important;
+            float: left;
+            clear: left;
+            border: 0 none;
+
+            .p-column-title {
+              padding: .4rem;
+              min-width: 30%;
+              display: inline-block;
+              margin: -.4rem 1rem -.4rem -.4rem;
+              font-weight: bold;
+            }
+
+            .p-progressbar {
+              margin-top: .5rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,256 @@
+@import '../../../../scss/color';
+@import '../../../../scss/common-styles';
+
+.create-e-invoice-heading{
+  size: 24px;
+  color: $green;
+  font-weight: 600;
+}
+
+.amount-text-alignment {
+  text-align: end;
+  color: $green;
+}
+
+.amountsNet {
+  width: 100%;
+  background-color: #CDECEA;
+  color: $green;
+}
+
+.drop-text-color{
+  size: 10px;
+  color: #b2b2b2;
+  font-weight: 400;}
+
+.drop-zone-style {
+  margin-top: 29px;
+  border-color: #ebebeb;
+  border-width: 3px;
+  height: 155px !important;
+  background-color: #f9f9f9;
+}
+
+.item-remove-button {
+  background-color: #D0D5D8;
+  opacity: 1;
+}
+
+.item-remove-button:hover {
+  background-color: #D0D5D8;
+  opacity: 1;
+}
+
+.text-style{
+  text-align: center;
+  color: #A1ACB1;
+  opacity: 1;
+}
+
+
+.index-style{
+  color: #b2b2b2;
+  font-weight: 500;
+}
+
+.amounts {
+  width: 100%;
+  background-color: #f8f9fa
+}
+@media only screen and (max-width: 800px) {
+  .condition-resize {
+    white-space: nowrap;
+    overflow: auto
+  }
+}
+
+.scroll-fields {
+  min-width: 220px;
+  display: inline-block;
+  padding-top: 25px;
+}
+.date-width{
+  width: 100% !important;
+}
+
+@media only screen and (max-width: 768px) {
+  .order-notes {
+    order: 2;
+  }
+  .order-net-amounts{
+    order: 1;
+  }
+}
+
+
+@media only screen and (max-width: 547px) {
+ .create-e-invoice-heading{
+   width: 100%;
+ }
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 1px !important;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-inputtext {
+  border: none;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-inputtext:focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown {
+  border: none;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown:focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown:not(.p-disabled).p-focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown.p-dropdown-open {
+  border: 1px solid;
+}
+.preview-file{
+  align-items: center;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+  max-width: -48px;
+  min-height: 99px !important;
+  min-width: 139px !important;
+  position: relative;
+  max-height: 78px !important;
+}
+
+.uploaded-file-name{
+  width: 100px;
+  height: 50px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: pre-line;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.audit-btn{
+  color: #73828A;
+  border-color: #A3ACB0;
+}
+
+.download-icon{
+  color: #73828A;
+  font-size: 20px;
+}
+.download-icon:hover{
+  color: black;
+  cursor: pointer;
+}
+
+p-calendar{
+  width: 100%;
+}
+
+.qty-border{
+  border: $green !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+}
+
+.amounts {
+  background-color: #f8f9fa !important;
+}
+.button-responsive {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #ffffff;
+}
+
+.clear-button:hover {
+  background-color: #D0D5D8;
+  opacity: 1;
+}
+
+.clear-button {
+  background-color: #D0D5D8;
+  opacity: 1;
+}
+
+.gap-with-draft-button{
+  margin-right: 1px;
+}
+
+::ng-deep .detail-table-wrapper .p-datatable-footer {
+  padding: 0.4rem 0.4rem !important;
+}
+
+::ng-deep .none-visible-available-draft-footer .p-datatable-footer {
+  display: none !important;
+}
+
+.btn-behaviour:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: bold !important;
+}
+
+.msg-content-wrapper{
+  width: 21%;
+}
+
+.button-wrapper{
+  width: 79%;
+}
+
+@media screen and (max-width: 1366px){
+  .msg-content-wrapper{
+    width: 29% !important;
+  }
+
+  .button-wrapper{
+    width: 71% !important;
+  }
+}
+
+.msg-content-wrapper{
+  .msg-wrapper{
+    width: 95% !important;
+  }
+  .alert-close-btn-wrapper{
+    cursor: pointer;
+  }
+  &:hover {
+    font-weight: bold;
+  }
+}
+
+.top-button-wrapper{
+  text-align-last: end;
+}
+.top-btn {
+  color: #A3ACB0;
+  border-color: #A3ACB0;
+}
+
+.height{
+  height: calc(100% - 63px);
+}
+
+.form-footer-button{
+  position: fixed;
+  z-index: 100;
+  width: calc(100% - 17px);
+}
+
+
+.button-set-wrapper{
+  width: 100.48% !important;
+}
+

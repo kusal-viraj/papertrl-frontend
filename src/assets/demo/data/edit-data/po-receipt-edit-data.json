@@ -1,0 +1,61 @@
+{
+  "grnNumber": "po number-1",
+  "grnDate": "5/10/2020",
+  "vendor": 1,
+  "poId": 1,
+  "id": 6,
+  "poDate": "5/10/2020",
+  "transporterName": "Smith",
+  "notes": "sample notes",
+  "netAmount": 20000,
+  "itemInformation": [
+    {
+      "receivedQty": 2,
+      "itemNumber": 34542,
+      "itemName": "name",
+      "remainingQty": 8,
+      "unitPrice": 40,
+      "description": "description",
+      "uom": 1,
+      "amount": 320
+    },
+    {
+      "receivedQty": 2,
+      "itemNumber": 34542,
+      "itemName": "name",
+      "remainingQty": 8,
+      "description": "description",
+      "unitPrice": 40,
+      "uom": 2,
+      "amount": 320
+    },
+    {
+      "receivedQty": 2,
+      "itemNumber": 34542,
+      "itemName": "name",
+      "remainingQty": 8,
+      "unitPrice": 40,
+      "description": "description",
+      "uom": 1,
+      "amount": 320
+    },
+    {
+      "receivedQty": 2,
+      "itemNumber": 34542,
+      "itemName": "name",
+      "remainingQty": 8,
+      "description": "description",
+      "unitPrice": 40,
+      "uom": 2,
+      "amount": 320
+    }
+  ],
+  "approverFormArray": [
+    {
+      "approver": {
+        "label": "Approver-2",
+        "id": "RM"
+      }
+    }
+  ]
+}

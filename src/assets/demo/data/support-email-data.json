@@ -1,0 +1,55 @@
+{
+  "data": [
+    {
+      "id": "",
+      "companyName": "Support",
+      "emailSubject": "Please verify your email address before start free trial",
+      "emailAddress": "steveweber@earthink.net",
+      "ccEmailAddress": "info@papertrl.com",
+      "attempts": 1,
+      "date": "04/03/2020",
+      "status": "Sent"
+    },
+    {
+      "id": "",
+      "companyName": "Support",
+      "emailSubject": "Please verify your email address before start free trial",
+      "emailAddress": "steveweber@earthink.net",
+      "ccEmailAddress": "info@papertrl.com",
+      "attempts": 1,
+      "date": "04/03/2020",
+      "status": "Sent"
+    },
+    {
+      "id": "",
+      "companyName": "Support",
+      "emailSubject": "Please verify your email address before start free trial",
+      "emailAddress": "steveweber@earthink.net",
+      "ccEmailAddress": "info@papertrl.com",
+      "attempts": 1,
+      "date": "04/03/2020",
+      "status": "Sent"
+    },
+    {
+      "id": "",
+      "companyName": "Support",
+      "emailSubject": "Please verify your email address before start free trial",
+      "emailAddress": "steveweber@earthink.net",
+      "ccEmailAddress": "info@papertrl.com",
+      "attempts": 1,
+      "date": "04/03/2020",
+      "status": "Not-Sent"
+    },
+    {
+      "id": "",
+      "companyName": "Support",
+      "emailSubject": "Please verify your email address before start free trial",
+      "emailAddress": "steveweber@earthink.net",
+      "ccEmailAddress": "info@papertrl.com",
+      "attempts": 1,
+      "date": "04/03/2020",
+      "status": "Not-Sent"
+    }
+  ],
+  "totalRecords": 5
+}

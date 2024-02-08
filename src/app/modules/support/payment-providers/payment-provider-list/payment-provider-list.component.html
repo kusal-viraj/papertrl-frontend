@@ -1,0 +1,127 @@
+<div class="table-wrapper">
+<p-table responsiveLayout="scroll" id="columnSelect" #dt [columns]="selectedColumns" (change)="onTableChanged()" (onColResize)="onTableChanged()"
+         [hidden]="tableSupportBase.isVisibleTable" (onFilter)="tableSupportBase.onFilter(dt)"
+         (onSort)="tableSupportBase.onSort(dt)"
+         [(contextMenuSelection)]="tableSupportBase.selectedContextActionData" [contextMenu]="cm"
+         (onRowSelect)="tableSupportBase.rowSelected(dt,null)" (onRowUnselect)="tableSupportBase.rowSelected(dt,null)"
+         (onColReorder)="onTableChanged()" [(selection)]="tableSupportBase.rows"
+         [value]="tableSupportBase.dataSource" columnResizeMode="expand"
+         dataKey="id" [reorderableColumns]="true" [rowHover]="true" [lazy]="true" (onLazyLoad)="loadData($event)"
+         [responsive]="false" selectionMode="multiple" scrollHeight="flex" [scrollable]="true"
+         stateStorage="session" stateKey="{{tableKeyEnum.PAYMENT_PROVIDER_TABLE_KEY}}" [rows]="25" [showCurrentPageReport]="true"
+         [rowsPerPageOptions]="[25, 50, 75]" [loading]="tableSupportBase.loading" [resizableColumns]="true"
+         styleClass="p-datatable-sm p-datatable-striped no-grid-lines"
+         [totalRecords]="tableSupportBase.totalRecords" [paginator]="true" *ngIf="tableSupportBase.minWidth"
+         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [filterDelay]="0">
+
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th *ngFor="let col of columns" pResizableColumn [pResizableColumnDisabled]="!col.isReSizable"
+          [ngStyle]="{'text-align': col.align}"
+          [pReorderableColumnDisabled]="!col.isReOrderable" pReorderableColumn
+          [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn
+          [pSortableColumnDisabled]="!col.isSortable" pSortableColumn="{{col.sortableField}}" class="sort-icon-wrapper">
+        <div class="grid">
+          <div class="col-12">
+            <div *ngIf="col.searchType == enums.CHECKBOX">
+              <p-tableHeaderCheckbox (click)="tableSupportBase.rowSelected(dt,null)"></p-tableHeaderCheckbox>
+            </div>
+            <span *ngIf="col.searchType !== enums.CHECKBOX">{{col.header}}</span>
+            <p-sortIcon class="grid-sort-icon" *ngIf="col.isSortable" field="{{col.sortableField}}"></p-sortIcon>
+          </div>
+          <div class="col-12">
+            <span app-table-inline-column-filters [tableSupportBase]="tableSupportBase" [dt]="dt"
+                  [columns]="columns" [col]="col"></span>
+          </div>
+        </div>
+      </th>
+    </tr>
+
+<!--    <tr>-->
+<!--      <th *ngFor="let col of columns" [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn>-->
+<!--          <span app-table-inline-column-filters [tableSupportBase]="tableSupportBase" [dt]="dt"-->
+<!--                [columns]="columns" [col]="col"></span>-->
+<!--      </th>-->
+<!--    </tr>-->
+  </ng-template>
+
+  <ng-template pTemplate="body" let-pay let-columns="columns">
+    <tr (wheel)="tableSupportBase.scrollHideActionMenu(cm)" [pContextMenuRow]="pay"  (contextmenu)="actionButtonClick(pay);
+tableSupportBase.setContextMenuActionBtnList(tableSupportBase.actionButtonList(pay['pay.status']))
+" >
+      <td *ngFor="let col of columns; let i=index" [ngStyle]="{'text-align': col.align}"
+          [class.freeze-right]="col.frozenDirection == 'right'" [ngClass]="col.searchType == enums.ACTION_BUTTON ? 'vendor-table-action-btn' : null"
+          [class.td-border]="i === 0" [class.td-border-selected]="pay.selected && i === 0" [style]="'width:' + col.columnWidth  + 'px'"
+          [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn>
+        <span class="p-column-title">{{col.header}}</span>
+
+        <span *ngIf="col.field == enums.CHECKBOX">
+          <p-tableCheckbox [value]="pay"></p-tableCheckbox>
+        </span>
+
+        <span *ngIf="col.searchType ==  enums.ACTION_BUTTON" class="td-actionButton">
+          <button type="button" pButton class="grid-action-btn p-button-text" icon="pi pi-ellipsis-v"
+                  (click)="menu.toggle($event); actionButtonClick(pay)"></button>
+          <p-menu #menu [popup]="true" appendTo="body"
+                  [model]="tableSupportBase.actionButtonList(pay['pay.status'])"></p-menu>
+        </span>
+
+        <span *ngIf="col.field == 'pay.status'" class="capitalize">
+        <li [class]="'mr-2 status-style status-'  + tableSupportBase.getStatus(pay[col.field])"></li>
+          {{tableSupportBase.getStatus(pay[col.field]) | titlecase}}
+        </span>
+
+
+        <span *ngIf="col.field !== 'pay.status'">{{pay[col.field]}}</span>
+      </td>
+    </tr>
+  </ng-template>
+
+
+    <ng-template pTemplate="emptymessage">
+      <div class="text-center grid table-empty-data">
+          <div class="col-12">
+            <i class="fa-solid fa-magnifying-glass"></i><br>
+            <p>There are no records found</p>
+          </div>
+      </div>
+    </ng-template>
+</p-table>
+</div>
+<p-confirmDialog #cd key="tenant" header="Are you sure?" appendTo="body"  icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel" (click)="cd.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, delete!" (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<!--Edit Payment Provider-->
+<p-sidebar styleClass="p-sidebar-sm" [modal]="true" [dismissible]="true" position="right" class="overflow-side-bar" *ngIf="editPaymentProvider" [(visible)]="editPaymentProvider">
+  <ng-template pTemplate="header">Edit Payment Provider</ng-template>
+  <app-payment-provider-create  [isEditView]="true" (refreshTable)="isRefreshTable($event); editPaymentProvider = false"
+                            [paymentTypeId]="id" *ngIf="editPaymentProvider"></app-payment-provider-create>
+</p-sidebar>
+
+<!--Action Buttons-->
+
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" [modal]="true" [dismissible]="true" position="right" (onHide)="showFilter= false"
+           [fullScreen]="false" [(visible)]="showFilter" transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)">
+  <ng-template pTemplate="header">Advance Filter</ng-template>
+  <app-table-column-filters [dt]="table" [columns]="tableSupportBase.filterEnabledColumns" (closeDrawer)="showFilter = false"
+                            [tableSupportBase]="tableSupportBase"></app-table-column-filters>
+</p-sidebar>
+
+<p-sidebar styleClass="p-sidebar-sm table-column-sidebar" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           (onHide)="showFilterColumns= false" transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)"
+           [fullScreen]="false" [(visible)]="showFilterColumns">
+    <ng-template pTemplate="header">Columns</ng-template>
+  <app-table-column-toggle [cols]="selectedColumns" (selectionsUpdated)="selectedColumns = $event"
+                           [tableInstance]="table" (restoreTable)="loadTableData()"
+                           [tableKey]="tableKeyEnum.PAYMENT_PROVIDER_TABLE_KEY"
+                           [gridName]="appConstant.GRID_NAME_PAYMENT_PROVIDER_LIST"
+                           [hiddenOptions]="tableSupportBase.hiddenInOptions"
+                           (updateColOrder)="onTableChanged($event)"></app-table-column-toggle>
+</p-sidebar>
+
+<!--Context Menu-->
+<p-contextMenu #cm appendTo="body"  (onShow)="tableSupportBase.hideActionMenu(menu)" [model]="tableSupportBase.contextMenuActionList"></p-contextMenu>

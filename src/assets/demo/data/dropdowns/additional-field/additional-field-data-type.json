@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "label": "Any"
+  },
+  {
+    "id": 2,
+    "label": "Numeric"
+  },
+  {
+    "id": 3,
+    "label": "Alphabetical"
+  },
+  {
+    "id": 4,
+    "label": "Alphanumeric"
+  },
+  {
+    "id": 5,
+    "label": "Numeric+Special"
+  },
+  {
+    "id": 6,
+    "label": "Alphabetical+Special"
+  }
+]

@@ -1,0 +1,48 @@
+.p-scrollpanel {
+  p {
+    padding: .5rem;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  &.custombar1 {
+    .p-scrollpanel-wrapper {
+      border-right: 9px solid var(--layer-1);
+    }
+
+    .p-scrollpanel-bar {
+      background-color: var(--primary-color);
+      opacity: 1;
+      transition: background-color .2s;
+
+      &:hover {
+        background-color: #007ad9;
+      }
+    }
+  }
+
+  &.custombar2 {
+    .p-scrollpanel-wrapper {
+      border-right: 9px solid var(--layer-1);
+      border-bottom: 9px solid var(--layer-1);
+    }
+
+    .p-scrollpanel-bar {
+      background-color: var(--layer-2);
+      border-radius: 0;
+      opacity: 1;
+      transition: background-color .2s;
+    }
+  }
+}
+
+.notification-count-wrapper ::ng-deep .p-badge.p-badge-danger {
+  background-color: #FFC923;
+  color: #ffffff;
+  margin-right: 38px !important;
+  padding: 0;
+}
+
+.notification-count-zero ::ng-deep .p-badge.p-badge-danger {
+ display: none;
+}

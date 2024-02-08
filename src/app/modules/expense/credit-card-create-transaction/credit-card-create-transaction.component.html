@@ -1,0 +1,134 @@
+
+<div class="side-bar-drawer-content p-3">
+  <form [formGroup]="formGroup">
+    <div class="grid p-fluid transactions">
+      <div class="col-12">
+        <h6 class="subHeadingColour">Add Transaction</h6>
+      </div>
+
+      <div class="col-12 xl:col-3 lg:col-2 md:col-6 sm:col-12 field">
+        <label  class="label-wrapper" for="cardNo">Card Number (Last 4 - 6 digits)*</label>
+      <span class="p-float-label">
+          <p-dropdown formControlName="cardNo" maxlength="6" dataKey="id" pKeyFilter="pint" id="cardNo"
+                      appendTo="body" optionValue="id" optionLabel="name" [options]="cards.data" #cardDp
+                      (onChange)="cardChanged($event)" [autoDisplayFirst]="false" [filter]="true"
+                      [virtualScroll]="cards.data.length > 20" virtualScrollItemSize="25">
+
+            <ng-template pTemplate="selectedItem">
+              <div>{{cardDp.selectedOption.name}}</div>
+            </ng-template>
+
+            <ng-template let-card pTemplate="item">
+              <div class="grid">
+                <div class="dropdown-list"
+                     [ngClass]="card.id == -1 ? ' dropdown-add': null">{{card.name}}</div>
+                <i *ngIf="card.id == -1" class="pi pi-plus dropdown-icon  dropdown-add"></i>
+              </div>
+            </ng-template>
+
+          </p-dropdown>
+      </span>
+
+
+        <div class="p-invalid text-align-left"
+             *ngIf="formGroup.get('cardNo').dirty && formGroup.get('cardNo').hasError('required')">
+          Card Number is required
+        </div>
+      </div>
+
+      <div class="col-12 xl:col-2 lg:col-2 md:col-6 sm:col-12 field">
+        <label class="label-wrapper" for="amount">Transaction Amount*</label>
+        <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input pInputText currencyMask formControlName="amount" id="amount" class="date"
+                     maxlength="19" [options]="{ prefix: '', thousands: ',', decimal: '.'}">
+            </span>
+        </div>
+        <div class="p-invalid text-align-left"
+             *ngIf="formGroup.get('amount').dirty && formGroup.get('amount').hasError('required')">
+          Transaction Amount is required
+        </div>
+        <div class="p-invalid text-align-left"
+             *ngIf="formGroup.get('amount').dirty && formGroup.get('amount').hasError('min')">
+          Transaction Amount must be greater than 0.00
+        </div>
+      </div>
+
+
+      <div class="col-3 xl:col-3 lg:col-3 md:col-6 sm:col-12">
+        <label class="label-wrapper" for="merchant">Merchant*</label>
+            <span class="p-float-label">
+                  <p-autoComplete formControlName="merchant" [suggestions]="merchantResults" minLength="2" id="merchant"
+                                  maxlength="100" (completeMethod)="searchMerchants($event)"></p-autoComplete>
+            </span>
+        <div class="p-invalid text-align-left"
+             *ngIf="formGroup.get('merchant').dirty && formGroup.get('merchant').hasError('required')">
+          Merchant is required
+        </div>
+      </div>
+
+
+      <div class="col-12 xl:col-2 lg:col-3 md:col-6 sm:col-12 field">
+        <label class="label-wrapper" for="transactionDate">Transaction Date*</label>
+        <div class="p-inputgroup">
+      <span class="p-float-label">
+         <p-calendar formControlName="transactionDate" appendTo="body" id="transactionDate"
+                     [showIcon]="true"> </p-calendar>
+      </span>
+        </div>
+        <div class="p-invalid text-align-left"
+             *ngIf="formGroup.get('transactionDate').dirty &&
+                   formGroup.get('transactionDate').hasError('required')">
+          Transaction Date is required
+        </div>
+      </div>
+
+
+      <div class="col-12 xl:col-2 lg:col-3 md:col-6 sm:col-12 field">
+        <label class="label-wrapper" for="postingDate">Posting Date</label>
+        <div class="p-inputgroup">
+      <span class="p-float-label">
+         <p-calendar formControlName="postingDate" appendTo="body" id="postingDate"
+                     [showIcon]="true"> </p-calendar>
+      </span>
+        </div>
+      </div>
+
+      <div class="col-3 xl:col-6 lg:col-6 md:col-12 sm:col-12">
+        <label class="label-wrapper" for="description">Description</label>
+      <span class="p-float-label">
+            <textarea id="description" formControlName="description" [rows]="1" pInputTextarea maxlength="300"
+                      (keyup)="removeSpaces.clearSpace(formGroup, 'description')"></textarea>
+
+      </span>
+        <small class="block">Description must be less than 300 characters.</small>
+        <div class="p-invalid text-align-left"
+             *ngIf="formGroup.get('description').dirty && formGroup.get('description').hasError('required')">
+          Description is required
+        </div>
+      </div>
+
+
+    </div>
+  </form>
+</div>
+
+<div class="grid panel-footer footer">
+  <div class=" button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" (click)="resetForm()" label="Reset" class="p-button-outlined p-button-sm"
+              [disabled]="isLoading" icon="fa-solid fa-rotate-right"></button>
+      <button pButton class="p-button-sm ml-2" [disabled]="isLoading" (click)="submitForm()" type="button"
+              [icon]="isLoading ? 'pi pi-spin pi-spinner': 'pi pi-plus'" iconPos="left"
+              label="Add Transaction"></button>
+    </div>
+  </div>
+</div>
+
+
+<!--Create-->
+<p-sidebar [(visible)]="addNewCard" position="right" styleClass="p-sidebar-sm" *ngIf="addNewCard">
+  <ng-template pTemplate="header">Add Credit Card</ng-template>
+  <app-create-credit-card-form (onComplete)="addNewCard = false; getExistingCards()" [panel]="true" [createView]="true"
+                               [editView]="true"></app-create-credit-card-form>
+</p-sidebar>

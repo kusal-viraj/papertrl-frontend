@@ -1,0 +1,19 @@
+<div class="p-card card-custom">
+  <div class="p-card-body grid">
+
+    <h5 class="menu-label menu-Item col-1">Task</h5>
+
+    <div  [ngClass]="isViewCreateTask? 'col-11': 'col-11'" class="screen-change-btn" style="text-align: right">
+      <button pButton class="button-screen-change" *ngIf="!isViewCreateTask" iconPos="left" icon="pi pi-plus"
+              label="Create Task" (click)="toggleCreateTask('create-task')"></button>
+      <button pButton class="button-screen-change" *ngIf="!isViewListTask" iconPos="left" icon="fa fa-list"
+              label="View Task List" (click)="toggleCreateTask('list-task')"></button>
+    </div>
+
+    <div class="col-12">
+      <app-task-create (refreshTable)="refreshTable($event)" *ngIf="isViewCreateTask" ></app-task-create>
+      <app-task-list [isRefreshTable]="isRefreshTable" *ngIf="isViewListTask"></app-task-list>
+    </div>
+
+  </div>
+</div>

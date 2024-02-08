@@ -1,0 +1,23 @@
+{
+  "data": [
+    {
+      "id": 102,
+      "accountType" : "Type 1",
+      "accountDetailType": "Detail Type 1",
+      "accountNo": "001AS",
+      "accountName": "Name 1",
+      "parentAccount": "Parent 1",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 2,
+      "accountType" : "Type 2",
+      "accountDetailType": "Detail Type 2",
+      "accountNo": "005ER",
+      "accountName": "Name 2",
+      "parentAccount":"Parent 2",
+      "status": "I"
+    }
+  ],
+  "totalRecords": 2
+}

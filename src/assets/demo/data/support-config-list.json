@@ -1,0 +1,63 @@
+{
+  "advancedFilters": [],
+  "columns": [
+    {
+      "field": "action",
+      "header": "Action",
+      "isSortable": false,
+      "isReOrderable": false,
+      "isReSizable": false,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "actionButton",
+      "canHide": false
+    },
+    {
+      "field": "cusName",
+      "header": "Customer Name",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Customer Name"
+    },
+    {
+      "field": "systemName",
+      "header": "System Name",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "System Name"
+    },
+    {
+      "field": "authType",
+      "header": "Auth Type",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "dropdown",
+      "canHide": true,
+      "placeholder": "Auth Type"
+    }
+  ],
+  "state": {
+    "first": 0,
+    "rows": 10,
+    "columnWidths": "100,210,210,210",
+    "columnOrder": [
+      "action",
+      "cusName",
+      "systemName",
+      "authType"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+<input #fileSelection [id]="'file' + randomId"
+       (change)="commonUtil.changeFileInput($event, additionalField, additionalFieldProperties,  false, fileSelection)"
+       type="file" accept="{{additionalFieldProperties.fileTypes}}" hidden>
+<input id="fileText_" readonly type="text" class="width"
+       (click)="commonUtil.fileUploadClick('file' + randomId)"
+       (keydown.enter)="commonUtil.fileUploadClick('file'+ ''+ randomId)"
+       placeholder="Upload {{additionalFieldProperties.fieldName}} Here"
+       [value]="fileSelection.files[0] ? fileSelection.files[0].name : null"
+       pInputText>
+
+<button tabindex="-1" type="button" pButton label="Browse" class="p-button-sm p-button-borderless file-browse"
+        (click)="commonUtil.fileUploadClick('file' + randomId)"></button>
+
+<button tabindex="-1" pButton type="button" class="p-button-borderless p-button-sm" *ngIf="showClear && fileSelection.files[0]"
+        icon="fa-solid fa-rotate-right"
+        (click)="fileSelection.value = null; commonUtil.changeFileInput(null, additionalField, null,true, fileSelection)"></button>

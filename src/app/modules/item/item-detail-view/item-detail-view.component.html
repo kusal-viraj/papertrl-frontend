@@ -1,0 +1,246 @@
+<div class="field pt-2  grid">
+  <h5 [class]="fromReport ?  'item-detail-label subHeadingColour' : 'subHeadingColour col-6'">Item Details</h5>
+
+  <div [class]="fromReport? 'item-close-button' : 'text-right col-6'"
+       class="item-detail-top-button">
+    <div  pTooltip="Delete" tooltipPosition="bottom" *ngIf="privilegeService.isAuthorized(appAuthorities.ITEMS_DELETE)"
+          class="mr-3 fa fa-trash side-drawer-icon" (click)="deleteItem()" ></div>
+    <div  pTooltip="Edit" tooltipPosition="bottom" *ngIf="privilegeService.isAuthorized(appAuthorities.ITEMS_EDIT) && itemStatus === 'Active'"
+          class="mr-3 fa fa-pencil side-drawer-icon"  (click)="editItem()" ></div>
+    <div class="mr-3  fa fa-close side-drawer-icon"
+         (click)="closeEditView.emit()"></div>
+  </div>
+
+</div>
+
+<form [formGroup]="itemDetailViewForm" autocomplete="off">
+
+
+
+  <div class="grid mt-1 mb-1">
+
+    <div class="col-6">
+      <div class="subHeadingColour">1. General Information</div>
+    </div>
+
+  </div>
+
+  <div [class]="'grid'">
+
+    <div *ngIf="imageUrl"
+         [ngClass]="'img-fluid-remover item-image-alignment grid sm:col-12 md:col-12 lg:col-12 mb-3 mt-2'">
+
+      <div class="avatar-upload">
+        <div class="avatar-preview">
+          <div id="imagePreview" [style.backgroundImage]="'url('+ imageUrl +')'">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-form" [class]="imageUrl ? 'grid col-12 lg:col-11' : 'grid col-12'">
+
+      <div class="field md:col-6 sm:col-12 xl:col-2 lg:col-4 col-12">
+        <label>Item Type</label>
+        <div>{{f.itemType.value}}</div>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-2 lg:col-4 col-12">
+        <label>Item Number</label>
+        <div>{{commonUtil.detailViewIsDash(f.itemNumber.value, false)}}</div>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-2 lg:col-4 col-12">
+        <label>Item Name</label>
+        <div>{{commonUtil.detailViewIsDash(f.name.value, false)}}</div>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-2 lg:col-4 col-12">
+        <label>UOM</label>
+        <div>{{commonUtil.detailViewIsDash(f.uomUnit.value, false)}}</div>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-2 lg:col-4 col-12">
+        <label>Parent Item</label>
+        <div>{{commonUtil.detailViewIsDash(f.parentItemName.value, false)}}</div>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-2 lg:col-4 col-12">
+        <label>Category</label>
+        <div>{{commonUtil.detailViewIsDash(f.itemCategory.value, false)}}</div>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-2 lg:col-4 col-12">
+        <label>Asset Account</label>
+        <div>{{commonUtil.detailViewIsDash(f.inventoryAssetAccountNumber.value, false)}}</div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="grid mt-3 mb-3">
+
+    <div class="col-6">
+      <div class="subHeadingColour">2. Sales Information</div>
+    </div>
+
+  </div>
+
+  <div class="grid detail-form">
+
+    <div class="field md:col-6 sm:col-12 xl:col-2 lg:col-4 col-12">
+      <label>Selling Price</label>
+      <div>{{f.salesPrice.value | number : '1.2-2'}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-2 lg:col-4 col-12">
+      <label>Sales Description</label>
+      <div>{{commonUtil.detailViewIsDash(f.salesDescription.value, false)}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-2 lg:col-4 col-12">
+      <label>Income Account</label>
+      <div>{{commonUtil.detailViewIsDash(f.incomeAccountNumber.value, false)}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-2 lg:col-4 col-12">
+      <label>Taxable</label>
+      <div>{{f.taxableStr.value}}</div>
+    </div>
+
+  </div>
+
+  <div class="grid mt-3 mb-3" *ngIf="f.expenseAccountNumber.value && commonItemDetails.controls.length > 0">
+
+    <div class="col-6">
+      <div class="subHeadingColour">3. Purchasing Vendors</div>
+    </div>
+
+  </div>
+
+  <div class="grid detail-form" *ngIf="f.expenseAccountNumber.value">
+
+    <div class="field md:col-6 sm:col-12 xl:col-2 lg:col-4 col-12">
+      <label>Expense Account</label>
+      <div>{{commonUtil.detailViewIsDash(f.expenseAccountNumber.value, false)}}</div>
+    </div>
+
+  </div>
+  <br>
+
+  <div class="grid p-fluid" *ngIf="commonItemDetails.controls.length > 0">
+    <div class="col-12">
+      <div>
+        <p-table responsiveLayout="scroll" [value]="commonItemDetails.controls" scrollable="true" scrollHeight="210px"
+                 [style]="{width:'auto'}" scrollDirection="both"
+                 styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="min-width:50px" class="thead-style  text-center" id="no">#</th>
+              <th style="min-width:200px" class="thead-style  text-center" id="vendorId">Vendor</th>
+              <th style="min-width:200px" class="thead-style  text-center" id="vendorItemNumberId">Vendor Part Number</th>
+              <th style="min-width:200px" class="thead-style  text-center" id="vendorItemDescription">Item Description
+              </th>
+              <th style="min-width:170px" class="thead-style  text-center" id="itemPriceId">Vendor Price</th>
+              <th style="min-width:170px" class="thead-style  text-center" id="leadTimeId">Lead Time</th>
+              <th style="min-width:170px" class="thead-style  text-center" id="minOrderQTYId">Min Order Qty</th>
+              <th style="min-width:170px" class="thead-style  text-center" id="itemStatus">Status</th>
+              <th style="min-width:100px" class="thead-style  text-center" id="itemImage">Item Image</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-i="rowIndex" let-item
+                       formArrayName="commonItemDetails">
+            <tr [formGroupName]="i">
+
+            <tr id="tr_{{i}}" class="draft-list-table-row">
+
+              <td style="text-align: center; width:50px"><label>{{i + 1}}</label></td>
+
+              <td style="width:200px">
+                <div>{{f.commonItemDetails.value[i].vendorName}}</div>
+              </td>
+
+
+              <td style="width:200px">
+                <div>{{f.commonItemDetails.value[i].vendorItemNumber}}</div>
+              </td>
+
+
+              <td style="width:200px">
+                <div app-read-more-text [fieldValue]="f.commonItemDetails.value[i].vendorItemDescription"
+                     [maxCharacters]="25"></div>
+              </td>
+
+
+              <td style="width:170px" class="text-right">
+                <div>{{f.commonItemDetails.value[i].vendorItemPrice | number : '1.2-2'}}</div>
+              </td>
+
+
+              <td style="width:170px">
+                <div>{{f.commonItemDetails.value[i].leadTime}}</div>
+              </td>
+
+
+              <td style="width:170px">
+                <div>{{f.commonItemDetails.value[i].minOrderQty}}</div>
+              </td>
+
+
+              <td style="width:170px" class="text-center">
+                <div>{{f.commonItemDetails.value[i].statusString}}</div>
+              </td>
+
+              <td class="text-center" style="width:100px">
+                  <span id="vendorItemImageId" class="item-image-wrapper"
+                        *ngIf="commonItemDetails.value[i].vendorItemImageUrl"
+                        [class.p-disabled]="commonItemDetails.value[i].isProgressItemView"
+                        (click)="viewVendorItemImage(commonItemDetails.value[i].id, commonItemDetails.value[i].vendorItemNumber, i)">View Image
+                  </span>
+              </td>
+
+            </tr>
+          </ng-template>
+
+        </p-table>
+      </div>
+    </div>
+  </div>
+</form>
+
+<!--Item Edit View-->
+<p-sidebar [fullScreen]="true" [modal]="false"
+           [showCloseIcon]="false" appendTo="body"
+           *ngIf="isEditView" [(visible)]="isEditView">
+  <app-item-create (refreshTable)="isEditView = false; getItemDetail(itemId)"
+                   [editView]="true" (closeEditView)="isEditView = false"
+                   [panel]="true" [itemID]="itemId" *ngIf="isEditView">
+  </app-item-create>
+</p-sidebar>
+
+<p-dialog *ngIf="commonVendorItemDetail.vendorItemImageUrl"
+          header="{{commonItemDetails.value[clickIndex].vendorItemNumber}}"
+          class="dialog-item-view-wrapper" [modal]="false"
+          [(visible)]="commonVendorItemDetail.vendorItemImageUrl">
+  <div
+    [ngClass]="'img-fluid-remover image-view-wrapper grid sm:col-12 md:col-12 lg:col-1'">
+    <div class="avatar-upload">
+      <div *ngIf="commonVendorItemDetail.vendorItemImageUrl" class="avatar-preview p-dialog-image-wrapper">
+        <div id="imagePreview1" [style.backgroundImage]="'url('+ commonVendorItemDetail.vendorItemImageUrl +')'">
+        </div>
+      </div>
+    </div>
+  </div>
+</p-dialog>
+
+<p-confirmDialog #cd header="Are you sure?" appendTo="body" key="itemDeleteDetailView"
+                 icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cd.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, delete"
+            (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

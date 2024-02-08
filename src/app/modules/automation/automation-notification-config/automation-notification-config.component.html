@@ -1,0 +1,66 @@
+<form [formGroup]="notification">
+  <div class="grid p-fluid">
+
+    <div class="field xl:col-3 lg:col-9 md:col-12 sm:col-12">
+      <label class="label-wrapper" for="notifiedUsers">Select Notification Users * </label>
+    <span class="p-float-label">
+           <p-multiSelect [options]="approvalUsers.data" id="notifiedUsers"
+                          inputId="dropdown" formControlName="notifiedUsers" optionLabel="name" optionValue="id"
+                          virtualScrollItemSize="25"
+                          [showToggleAll]="true" appendTo="body" #dpName [optionDisabled]="isDetailView ? 'id': ''"
+                          (onChange)="changedUserSelection($event, userNotificationForm)" [filter]="true">
+
+             <ng-template pTemplate="selectedItem">
+               <div>{{dpName.selectedItemsLabel}}</div>
+             </ng-template>
+
+             <ng-template let-users pTemplate="item">
+                 <div class="grid">
+                     <div class="dropdown-list"
+                          [ngClass]="users.id == 0 ? ' dropdown-add': null">{{users.name}}</div>
+                     <em *ngIf="users.id == 0" class="pi pi-plus dropdown-icon dropdown-add"></em>
+                 </div>
+             </ng-template>
+           </p-multiSelect>
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="notification.get('notifiedUsers').dirty && notification.get('notifiedUsers').errors">
+        User is required
+      </div>
+    </div>
+
+    <div class="xl:col-offset-6 lg:col-offset-3 md:col-offset-0 sm:col-offset-0 "></div>
+
+    <div class="field xl:col-6 lg:col-9 md:col-12 sm:col-12">
+      <label class="label-wrapper" for="notificationContent">Notification Content *</label>
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+          <input formControlName="notificationContent" id="notificationContent" maxlength="50"
+                    [readonly]="false" pInputText>
+        </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="notification.get('notificationContent').dirty && notification.get('notificationContent').errors">
+        Notification content is required
+      </div>
+    </div>
+    <div class="col-12">
+      <hr>
+      <br>
+    </div>
+
+    <div class="field xl:col-12 lg:col-12 md:col-12 sm:col-12"
+         *ngIf="actionIndex===(automationAction.length-1) && !isDetailView">
+      <p class="more-info" (click)="addActionDropDown()"> Add More Action <i class="pi pi-plus"></i></p>
+    </div>
+  </div>
+
+</form>
+
+<!--Add User-->
+<p-sidebar styleClass="p-sidebar-sm" [modal]="false" position="right" class="notWorkflowConditions" *ngIf="userPanel"
+           [(visible)]="userPanel">
+  <ng-template pTemplate="header">Create User</ng-template>
+  <app-add-user [panel]="true" (refreshTable)="getApprovalUserList()" *ngIf="userPanel"></app-add-user>
+</p-sidebar>
+

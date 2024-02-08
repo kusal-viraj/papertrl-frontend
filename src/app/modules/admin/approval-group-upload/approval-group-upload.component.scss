@@ -1,0 +1,52 @@
+@import "../../../../scss/color.scss";
+
+.download-link {
+  text-align: center;
+  color: $green;
+  font-weight: bolder;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.margin-top {
+  margin-top: 1% !important;
+}
+
+.margin-top-grid {
+  margin-top: 1% !important;
+}
+
+.infoUpload {
+  color: #A1ACB1;
+}
+.back-drop{
+  backdrop-filter: blur(10px);
+}
+
+.exception-body{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+@media only screen and (max-width: 442px) {
+  .upload-button {
+    display: none ;
+  }
+  .upload-button-mobile {
+    display: block ;
+  }
+}
+@media only screen and (min-width: 443px) {
+  .upload-button-mobile {
+    display: none ;
+  }
+  .upload-button {
+    display: block ;
+  }
+}
+
+.height{
+  min-height: calc(100vh - 185px);
+}

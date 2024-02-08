@@ -1,0 +1,81 @@
+@import "../../../../scss/color.scss";
+
+.btn-trash {
+  background-color: #D0D5D8;
+  opacity: 1;
+}
+
+.btn-trash:hover {
+  background-color: #8c8e91;
+  opacity: 1;
+}
+
+.more-info {
+  color: $green;
+  font-weight: normal;
+  text-align: left;
+  cursor: pointer;
+}
+
+.scroll-fields {
+  min-width: 220px;
+  display: inline-block;
+  padding-top: 25px;
+}
+
+p-calendar {
+  width: 100%;
+}
+
+.automation-fields-information {
+  border-radius: 8px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+  background-color: #fff3cd !important;
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  color: #664d03;
+
+  span {
+    font-size: 22px;
+  }
+
+  .automation-result {
+    font-weight: 550;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .field-resize {
+    white-space: nowrap;
+    overflow: auto
+  }
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 1px !important;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-inputtext {
+  border: none;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-inputtext:focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown {
+  border: none;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown:focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown:not(.p-disabled).p-focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown.p-dropdown-open {
+  border: 1px solid;
+}

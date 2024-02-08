@@ -1,0 +1,50 @@
+<p-table responsiveLayout="scroll" [value]="changePackage" scrollable="true"
+         styleClass="p-datatable-sm p-datatable-striped detail-table"  scrollHeight="200px" [style]="{width:'auto'}" >
+
+  <ng-template pTemplate="colgroup">
+    <colgroup>
+      <col style="width:200px">
+      <col style="width:200px">
+      <col style="width:200px">
+      <col style="width:200px">
+      <col style="width:200px">
+    </colgroup>
+  </ng-template>
+
+  <ng-template pTemplate="header">
+    <tr >
+      <th class="text-center" id="package" >Package</th>
+      <th class="text-center" id="invoiceCount" >No of Invoices Included</th>
+      <th class="text-center" id="fee" >Monthly Fee</th>
+      <th class="text-center subHeadingGreen" id="action" >Action</th>
+      <th class="text-center" id="status" >Status</th>
+
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-item let-i="rowIndex">
+    <tr>
+      <td>
+        {{item.packageName}}
+      </td>
+      <td class="text-center">
+        {{item.trlNoOfInvoices}}
+      </td>
+
+      <td class="text-right">
+        {{item.monthlyCost}}
+      </td>
+
+      <td class="text-center">
+        <button *ngIf="item.status === enums.STATUS_INACTIVE && !anyRequested" type="button" pButton class="profile-table-action-btn"
+                label="Request to Change" (click)="packageChange(item, i)"></button>
+        <button *ngIf="item.status === enums.STATUS_PENDING && anyRequested" type="button" pButton class="profile-table-action-btn reject-btn"
+                label="Delete Request" (click)="deleteRequest(item, i)"></button>
+      </td>
+
+      <td class="text-center">
+        <span [class]="'customer-badge status-'  + getStatus(item.status)">{{getStatus(item.status)}}</span>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+<p-toast position="bottom-right" key="bc"></p-toast>

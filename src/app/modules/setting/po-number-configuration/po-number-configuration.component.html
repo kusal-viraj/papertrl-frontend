@@ -1,0 +1,197 @@
+<div class="pt-4 p-3" [ngClass]="!isEditView ? '': 'drawer-content'">
+<form [formGroup]="poNumberConfigurationForm">
+  <div class="grid p-fluid filed-section mt-3">
+    <div [ngClass]="!isEditView ? 'field col-12 xl:col-3 lg:col-3 text-align-left': 'field col-12 text-align-left '">
+      <label class="label-wrapper" for="department">Select Department*</label>
+                  <span class="p-float-label">
+                      <p-dropdown id="department" formControlName="departmentId" [showClear]="true"
+                                  [autoDisplayFirst]="false" [options]="departments.data" [filter]="true"
+                                  optionDisabled="inactive" #dpNameDepartment
+                                  appendTo="body" (onChange)="departmentChange($event)"
+                                  optionLabel="name" optionValue="id">
+             <ng-template pTemplate="selectedItem">
+               <div>{{dpNameDepartment.selectedOption.name}}</div>
+             </ng-template>
+
+             <ng-template let-code pTemplate="item">
+                 <div class="grid">
+                     <div class="dropdown-list"
+                          [ngClass]="code.id == -1 ? ' dropdown-add': null">{{code.name}}</div>
+                     <em *ngIf="code.id == -1" class="pi pi-plus dropdown-icon dropdown-add"></em>
+                 </div>
+             </ng-template>
+                      </p-dropdown>
+                  </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="poNumberConfigurationForm.get('departmentId').dirty && poNumberConfigurationForm.get('departmentId').errors">
+        Department is required
+      </div>
+    </div>
+
+    <div [ngClass]="!isEditView ? 'field col-12 xl:col-3 lg:col-3 text-align-left': 'field col-12 text-align-left'">
+      <label class="label-wrapper" for="separatorSymbol">Select Separator</label>
+        <span class="p-float-label">
+           <p-dropdown [options]="separatorList.data" id="separatorSymbol" inputId="template" #selectedSeparatorSymbol
+                       formControlName="separatorSymbol" optionValue="id" optionLabel="name" [showClear]="true"
+                       (onChange)="validatePrefixAndSuffix(poNumberConfigurationForm)"
+                       [autoDisplayFirst]="false" [filter]="true">
+             <ng-template pTemplate="selectedItem">
+               <div>{{selectedSeparatorSymbol.selectedOption.name}}</div>
+             </ng-template>
+
+             <ng-template let-separates pTemplate="item">
+               <div class="grid">
+                 <div class="dropdown-list"
+                      [ngClass]="separates.name == 'Add New' ? ' dropdown-add': null">{{separates.name}}</div>
+                 <i *ngIf="separates.name == 'Add New'" class="pi pi-plus dropdown-icon  dropdown-add"></i>
+               </div>
+             </ng-template>
+           </p-dropdown>
+           </span>
+    </div>
+
+
+    <div [ngClass]="!isEditView ? 'field col-12 xl:col-3 lg:col-3 text-align-left': 'field col-12 text-align-left'">
+      <label class="label-wrapper" for="prefixes">Prefix </label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input (keyup)="removeSpace('prefixes'); validatePrefixAndSuffix(poNumberConfigurationForm)"
+                            #prefixValue
+                            formControlName="prefixes" id="prefixes" type="text" pInputText>
+            </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="poNumberConfigurationForm.get('prefixes').dirty && poNumberConfigurationForm.get('prefixes').errors">
+        Prefix is required
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="prefixValue.value.length > 49">
+        Prefix must be less than 50 characters
+      </div>
+    </div>
+
+    <div [ngClass]="!isEditView ? 'field col-12 xl:col-3 lg:col-3 text-align-left': 'field col-12 text-align-left'">
+      <label class="label-wrapper" for="runningNo">Running Number*</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input (keyup)="removeSpace('runningNo')" numbersOnly formControlName="runningNo" id="runningNo"
+                            type="text"
+                            pInputText>
+            </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="poNumberConfigurationForm.get('runningNo').dirty && poNumberConfigurationForm.get('runningNo').hasError('required')">
+        Running Number is required
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="poNumberConfigurationForm.get('runningNo').hasError('maxlength')">
+        Running Number must be less than 10 numbers
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="poNumberConfigurationForm.get('runningNo').hasError('pattern')">
+        This field only accepts numeric values
+      </div>
+    </div>
+
+
+    <div [ngClass]="!isEditView ? 'field col-12 xl:col-3 lg:col-3 text-align-left': 'field col-12 text-align-left'">
+      <label class="label-wrapper" for="suffix">Suffix </label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input (keyup)="removeSpace('suffixes'); validatePrefixAndSuffix(poNumberConfigurationForm)"
+                            #suffixValue
+                            formControlName="suffixes" id="suffix" type="text" pInputText>
+            </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="poNumberConfigurationForm.get('suffixes').dirty && poNumberConfigurationForm.get('suffixes').errors">
+        Suffix is required
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="suffixValue.value.length > 49">
+        Suffix must be less than 50 characters
+      </div>
+    </div>
+
+    <div [ngClass]="!isEditView ? 'field col-12 xl:col-3 lg:col-3 text-align-left': 'field col-12 text-align-left'">
+      <label class="label-wrapper" for="suffix">PO Number Pattern</label>
+      <div class="p-inputgroup">
+              <span class="p-float-label">
+               <input pInputText class="disabled" formControlName="poNoPattern" [readOnly]="true"
+                      #controlValue value="{{(poNumberConfigurationForm.get('prefixes').value ? poNumberConfigurationForm.get('prefixes').value : '') +
+                     ((poNumberConfigurationForm.get('separatorSymbol').value && poNumberConfigurationForm.get('prefixes').value) ?
+                       separatorsMap.get(poNumberConfigurationForm.get('separatorSymbol').value) : '') +
+                     ((poNumberConfigurationForm.get('runningNo').value && poNumberConfigurationForm.get('runningNo').valid) ? poNumberConfigurationForm.get('runningNo').value : '') +
+                     ((poNumberConfigurationForm.get('separatorSymbol').value && poNumberConfigurationForm.get('suffixes').value) ?
+                       separatorsMap.get(poNumberConfigurationForm.get('separatorSymbol').value) : '') +
+                     (poNumberConfigurationForm.get('suffixes').value ? poNumberConfigurationForm.get('suffixes').value : '')}}">
+              </span>
+      </div>
+    </div>
+
+    <div [ngClass]="!isEditView ? 'field col-12 xl:col-3 lg:col-3 text-align-left': 'field col-12 text-align-left'">
+      <div class="label-wrapper">Allow override</div>
+      <div class="p-inputgroup">
+        <p-checkbox class="costume-checkbox" formControlName="override" [binary]="true"
+                   ></p-checkbox>
+      </div>
+    </div>
+
+  </div>
+  <div class="grid button-section" *ngIf="!isEditView">
+    <div class="col-12">
+      <div class="pull-right">
+
+        <button pButton type="button" label="Reset" (click)="resetForm()" class="p-button-outlined p-button-sm"
+                icon="fa-solid fa-rotate-right"></button>&nbsp;
+
+        <button *ngIf="!isEditView" pButton type="button"
+                (click)="createPoNumberConfiguration(poNumberConfigurationForm.value)"
+                class="p-button-sm" [disabled]="isLoading"
+                iconPos="left" [icon]="isLoading ? 'pi pi-spin pi-spinner':'pi pi-plus'" label="Create Format"></button>
+
+        <button *ngIf="isEditView" pButton type="button"
+                (click)="updatePoNumberConfiguration(poNumberConfigurationForm.value)" class="p-button-sm"
+                [disabled]="isUpdating"
+                iconPos="left" [icon]="isUpdating ? 'pi pi-spin pi-spinner':'pi pi-save'" label="Save"></button>
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+
+<div *ngIf="isEditView">
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" label="Reset" (click)="resetForm()" class="p-button-outlined p-button-sm"
+              icon="fa-solid fa-rotate-right"></button>&nbsp;
+
+      <button *ngIf="!isEditView" pButton type="button"
+              (click)="createPoNumberConfiguration(poNumberConfigurationForm.value)"
+              class="p-button-sm" [disabled]="isLoading"
+              iconPos="left" [icon]="isLoading ? 'pi pi-spin pi-spinner':'pi pi-plus'" label="Create Format"></button>
+
+      <button *ngIf="isEditView" pButton type="button"
+              (click)="updatePoNumberConfiguration(poNumberConfigurationForm.value)" class="p-button-sm"
+              [disabled]="isUpdating"
+              iconPos="left" [icon]="isUpdating ? 'pi pi-spin pi-spinner':'pi pi-save'" label="Save"></button>
+    </div>
+  </div>
+</div>
+</div>
+<!--Create New Department-->
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           class="overflow-side-bar"
+           *ngIf="departmentPanel" [(visible)]="departmentPanel">
+  <ng-template pTemplate="header">Create Department</ng-template>
+  <app-add-department (updateDepartments)="getDepartmentList(); newDeptAdded.emit(); departmentPanel = false"
+                      *ngIf="departmentPanel"></app-add-department>
+</p-sidebar>
+
+<p-confirmDialog key="poNoConfig" #cd header="Are you sure?" icon="confirmation-msg-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cd.reject()"></button>
+    <button type="button"  pButton icon="pi pi-check" label="Create and Override"
+            (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

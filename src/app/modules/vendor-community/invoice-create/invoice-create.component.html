@@ -1,0 +1,718 @@
+<div class="field  pt-2 pl-4 form-header grid">
+  <div class="col-6">
+    <h5 class="subHeadingColour ">Create Invoice</h5>
+  </div>
+  <div class="col-6 pull-right text-right">
+    <div class="fa fa-close side-drawer-icon"
+         (click)="closeEInvoiceCreateMode()"></div>
+  </div>
+  </div>
+
+
+<form [formGroup]="createEInvoiceForm" autocomplete="off"
+      class="form-margin">
+  <h6 class="subHeading pt-4">Invoice Information</h6><br>
+
+  <div class="grid p-fluid">
+
+    <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12">
+      <label class="label-wrapper" for="vendor">Select Customer*</label>
+        <span class="p-float-label p-fluid">
+          <p-dropdown [virtualScroll]="customerList.data.length > 20" virtualScrollItemSize="25" [disabled]="isFromRecurringTemplate"
+                      [options]="customerList.data" id="vendor" #selectedVendorName
+                      formControlName="tenantId" optionValue="id" optionLabel="name"
+                      [autoDisplayFirst]="false" [filter]="true">
+           </p-dropdown>
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="createEInvoiceForm.get('tenantId').dirty && createEInvoiceForm.get('tenantId').errors">
+        Customer is required
+      </div>
+    </div>
+
+    <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12">
+      <label class="label-wrapper" for="vendor">Select Purchase Order</label>
+        <span class="p-float-label p-fluid">
+          <p-dropdown [virtualScroll]="poList.data.length > 20" virtualScrollItemSize="25"
+                      [options]="poList.data" id="poId" #selectedPoName
+                      formControlName="poId" optionValue="id" optionLabel="name" [showClear]="true"
+                      [autoDisplayFirst]="false" [filter]="true">
+
+           </p-dropdown>
+        </span>
+    </div>
+
+    <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12" *ngIf="createEInvoiceForm.get('poId').value">
+      <label class="label-wrapper" for="remaningSeling">Remaining Ceiling</label>
+          <span class="p-float-label">
+            <input formControlName="remainingCeling" [readOnly]="true"
+                   currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                   class="amounts" id="remaningSeling" type="text"
+                   pInputText>
+          </span>
+    </div>
+
+    <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12">
+      <label class="label-wrapper" for="invNumId">Invoice Number*</label>
+          <span class="p-float-label">
+            <input formControlName="billNo" id="invNumId" type="text" pInputText [readOnly]="isFromRecurringTemplate"
+                   (keyup)="removeSpace.clearSpace(createEInvoiceForm, 'billNo')"
+                   [ngClass]="isFromRecurringTemplate? 'disabled-field': ''">
+          </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="createEInvoiceForm.get('billNo').dirty && createEInvoiceForm.get('billNo').errors">
+        Invoice Number is required
+      </div>
+    </div>
+
+    <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12">
+      <label class="label-wrapper" for="billDateId">Invoice Date*</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+             <p-calendar formControlName="billDate" dateFormat="mm/dd/yy" [showIcon]="true"
+                         [showButtonBar]="true" appendTo="body" [readonlyInput]="true"
+                         id="billDateId"></p-calendar>
+            </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="createEInvoiceForm.get('billDate').dirty && createEInvoiceForm.get('billDate').errors">
+        Invoice Date is required
+      </div>
+    </div>
+
+    <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12">
+      <label class="label-wrapper" for="vendor">Select Discount Term*</label>
+        <span class="p-float-label p-fluid">
+          <p-dropdown [virtualScroll]="termList.data.length > 20" virtualScrollItemSize="25"
+                      [options]="termList.data" id="term" #selectedTermName
+                      formControlName="term" optionValue="id" optionLabel="name"
+                      [autoDisplayFirst]="false" [filter]="true">
+           </p-dropdown>
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="createEInvoiceForm.get('term').dirty && createEInvoiceForm.get('term').errors">
+        Discount Term is required
+      </div>
+    </div>
+
+    <div class="field col-12 xl:col-3 sm:col-12 lg:col-4 md:col-6" *ngIf="createEInvoiceForm.get(appFormConstants.TERM).value === 10">
+      <label class="label-wrapper" for="netDaysDue">Net Days Due</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input formControlName="netDaysDue" numbersOnly id="netDaysDue" type="text"
+                     pInputText (keyup)="getDueDate($event, false, true, false)">
+            </span>
+      </div>
+
+      <div class="p-invalid text-align-left" *ngIf="createEInvoiceForm.get('netDaysDue').dirty &&
+           createEInvoiceForm.get('netDaysDue').hasError('required')">
+        Net Days Due is required
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="createEInvoiceForm.get('netDaysDue').dirty && createEInvoiceForm.get('netDaysDue').hasError('min')">
+        Invalid net days due
+      </div>
+
+    </div>
+
+    <div class="field col-12 xl:col-3 sm:col-12 lg:col-4 md:col-6" *ngIf="createEInvoiceForm.get(appFormConstants.TERM).value === 10">
+      <label class="label-wrapper" for="discountPercentage">Discount Percentage</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input formControlName="discountPercentage" id="discountPercentage" type="text"
+                     currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.'}" maxlength="6"
+                     pInputText></span>
+      </div>
+    </div>
+
+    <div class="field col-12 xl:col-3 sm:col-12 lg:col-4 md:col-6"
+         *ngIf="createEInvoiceForm.get(appFormConstants.TERM).value === 10">
+      <label class="label-wrapper" for="discountDaysDue">Discount Days Due</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input formControlName="discountDaysDue" numbersOnly id="discountDaysDue" type="text"
+                     pInputText (keyup)="onKeyUpDiscountDaysDue()">
+            </span>
+      </div>
+      <div class="p-invalid" *ngIf="isValidDiscountDate">
+        <div>Discount days should be lower than net days due</div>
+      </div>
+    </div>
+
+
+    <div class="field field lg:col-4  xl:col-3 md:col-4 sm:col-6 col-12">
+      <label  class="label-wrapper" for="invNumId">Due Date</label>
+      <div class="p-inputgroup">
+          <span class="p-float-label">
+                   <p-calendar formControlName="dueDate" (onSelect)="getDueDate($event, false,false, true)"
+                               dateFormat="mm/dd/yy" [showIcon]="true" [showButtonBar]="true" id="dueDateStr"
+                               *ngIf="createEInvoiceForm.get(appFormConstants.TERM).value == 10"></p-calendar>
+
+                   <input *ngIf="createEInvoiceForm.get(appFormConstants.TERM).value !== 10" formControlName="dueDate"
+                          class="disabled-field" readonly id="dueDateId" type="text" pInputText>
+          </span>
+    </div>
+    </div>
+
+    <div class="field col-6">
+      <label class="label-wrapper" for="notes">Additional Notes</label>
+      <div class="p-inputgroup">
+          <span class="p-float-label">
+            <textarea formControlName="additionalNotes" maxlength="500" id="notes" rows="1" pInputTextarea></textarea>
+          </span>
+      </div>
+    </div>
+
+    <ng-container formArrayName="additionalData" *ngIf="headerAdditionalFieldDetails.length>0">
+      <ng-container class="grid col-12"
+                    *ngFor="let additionalField of headingSectionArray.controls; let i=index " [formGroupName]="i">
+        <span class="col-12 xl:col-3 md:col-3"
+              *ngIf="commonUtil.checkUndefinedValues(additionalField.get('fieldValue').value, headerAdditionalFieldDetails[i].docStatus, false)">
+
+      <div *ngIf="appFieldType.LABEL=== headerAdditionalFieldDetails[i].fieldTypeId">
+          <label class="label-wrapper" for="input_{{i}}">{{headerAdditionalFieldDetails[i].fieldName}}</label>
+      <span class="p-float-label">
+            <input type="text" class="form-control" pInputText
+                   [readonly]="true" readonly [value]="headerAdditionalFieldDetails[i].value">
+        </span>
+      </div>
+
+      <div *ngIf="appFieldType.TEXT_BOX === headerAdditionalFieldDetails[i].fieldTypeId">
+         <label class="label-wrapper"
+           for="input_{{i}}">{{headerAdditionalFieldDetails[i].fieldName}}
+           {{headerAdditionalFieldDetails[i].required ? '*' : ''}}</label>
+        <div class="p-inputgroup field">
+            <span class="p-float-label">
+              <input formControlName="fieldValue" type="text" pInputText id="input_{{i}}"
+                     maxlength="{{headerAdditionalFieldDetails[i].maxLength}}"
+                     [pKeyFilter]="commonUtil.buildRegex(headerAdditionalFieldDetails[i].dataType)"
+                     (keyup)="removeSpace.clearSpace(additionalField, 'fieldValue')">
+            </span>
+        </div>
+      </div>
+
+        <div *ngIf="appFieldType.TEXT_AREA === headerAdditionalFieldDetails[i].fieldTypeId">
+            <label class="label-wrapper"
+              for="notes_{{i}}">{{headerAdditionalFieldDetails[i].fieldName}}
+              {{headerAdditionalFieldDetails[i].required ? '*' : ''}}</label>
+      <div class="p-inputgroup field">
+          <span class="p-float-label">
+            <textarea formControlName="fieldValue" id="notes_{{i}}" rows="1" pInputTextarea
+                      maxlength="{{headerAdditionalFieldDetails[i].maxLength}}"
+                      (keyup)="removeSpace.clearSpace(additionalField, 'fieldValue')"></textarea>
+          </span>
+      </div>
+    </div>
+
+
+      <div
+        *ngIf="appFieldType.DROP_DOWN_FIELD === headerAdditionalFieldDetails[i].fieldTypeId && headerAdditionalFieldDetails[i].multiple === 'A'">
+        <label class="label-wrapper" for="multiselect_{{i}}">Select {{headerAdditionalFieldDetails[i].fieldName}}
+          {{headerAdditionalFieldDetails[i].required ? '*' : ''}}</label>
+      <span class="p-float-label field">
+           <p-multiSelect [options]="headerAdditionalFieldDetails[i].optionsList.data" id="multiselect_{{i}}"
+                          optionValue="id" inputId="multiselect_{{i}}" #multiSelect1 optionDisabled="inactive"
+                          (onChange)="addNewAdditionalDropDownOption($event,headerAdditionalFieldDetails[i],additionalField)"
+                          formControlName="fieldValue" optionLabel="name" [showToggleAll]="true" [filter]="true">
+             <ng-template pTemplate="selectedItem">
+                <div>{{additionalField.get('fieldValue').value.name}}</div>
+             </ng-template>
+
+             <ng-template let-multiselect pTemplate="item">
+                 <div class="grid">
+                     <div class="dropdown-list"
+                          [ngClass]="multiselect.id == 0 ? ' dropdown-add': null">{{multiselect.name}}</div>
+                     <em *ngIf="multiselect.name == 'Add New'"
+                         class="pi pi-plus dropdown-icon dropdown-add"></em>
+                 </div>
+             </ng-template>
+           </p-multiSelect>
+        </span>
+      </div>
+
+      <div
+        *ngIf="appFieldType.DROP_DOWN_FIELD === headerAdditionalFieldDetails[i].fieldTypeId && headerAdditionalFieldDetails[i].multiple != 'A'">
+         <label  class="label-wrapper" for="multiselect_{{i}}">Select {{headerAdditionalFieldDetails[i].fieldName}}
+           {{headerAdditionalFieldDetails[i].required ? '*' : ''}}</label>
+      <span class="p-float-label field">
+           <p-dropdown [virtualScroll]="headerAdditionalFieldDetails[i].optionsList.data.length>20" virtualScrollItemSize="25"
+                       optionDisabled="inactive"
+                       [options]="headerAdditionalFieldDetails[i].optionsList.data" [showClear]="true" #dropdown1
+                       (onChange)="addNewAdditionalDropDownOption($event,headerAdditionalFieldDetails[i],additionalField)"
+                       id="dropdown_{{i}}" optionValue="id" optionLabel="name" [autoDisplayFirst]="false"
+                       formControlName="fieldValue" inputId="dropdown_{{i}}" [filter]="true">
+
+             <ng-template pTemplate="selectedItem">
+                <div>{{dropdown1.selectedOption.name}}</div>
+             </ng-template>
+
+             <ng-template let-multiselect pTemplate="item">
+                 <div class="grid">
+                     <div class="dropdown-list"
+                          [ngClass]="multiselect.id == 0 ? ' dropdown-add': null">{{multiselect.name}}</div>
+                     <em *ngIf="multiselect.name == 'Add New'"
+                         class="pi pi-plus dropdown-icon dropdown-add"></em>
+                 </div>
+             </ng-template>
+           </p-dropdown>
+        </span>
+      </div>
+
+        <div *ngIf="appFieldType.FILE_INPUT === headerAdditionalFieldDetails[i].fieldTypeId">
+            <label class="label-wrapper" for="fileText">Upload {{headerAdditionalFieldDetails[i].fieldName}} Here
+              {{headerAdditionalFieldDetails[i].required ? '*' : ''}}</label>
+              <div class="p-inputgroup">
+              <span class="p-float-label">
+              <input [id]="'fileUploadH'+ i" #fileInput
+                     (change)="commonUtil.changeFileInput($event,additionalField, headerAdditionalFieldDetails[i],false, fileInput)"
+                     type="file" accept="{{headerAdditionalFieldDetails[i].fileTypes}}" hidden>
+              <input id="fileText" formControlName="attachment" readonly type="text" class="file-input-vendor"
+                     (click)="commonUtil.fileUploadClick('fileUploadH'+ ''+ i)"
+                     [value]="fileInput.files[0] ? fileInput.files[0].name : null" pInputText>
+              <button type="button" pButton label="Browse" class="p-button browse-button-wrapper p-button-sm browse-btn-vendor"
+                      (click)="commonUtil.fileUploadClick('fileUploadH'+ ''+ i)"></button>
+                 <button pButton type="button" class=" p-button-sm reset-btn-vendor" *ngIf="fileInput.files[0] != null"
+                         icon="fa-solid fa-rotate-right"
+                         (click)="fileInput.value = null; commonUtil.changeFileInput(null,additionalField, null,true, fileInput)"></button>
+             </span>
+
+              </div>
+        </div>
+
+      <div *ngIf="appFieldType.DATE_FIELD=== headerAdditionalFieldDetails[i].fieldTypeId">
+          <label class="label-wrapper" for="dateField_{{i}}">{{headerAdditionalFieldDetails[i].fieldName}}
+            {{headerAdditionalFieldDetails[i].required ? '*' : ''}} </label>
+      <div class="p-inputgroup field">
+            <span class="p-float-label">
+              <p-calendar formControlName="fieldValue" id="dateField_{{i}}"
+                          (onSelect)="formatDateHeadingSection($event, i)" [showIcon]="true"></p-calendar>
+            </span>
+      </div>
+    </div>
+
+        <div *ngIf="appFieldType.CHECK_BOX === headerAdditionalFieldDetails[i].fieldTypeId">
+            <label class="label-wrapper"
+              for="binaryA">{{headerAdditionalFieldDetails[i].fieldName}}{{headerAdditionalFieldDetails[i].required ? '*' : ''}}</label>
+           <div class="p-inputgroup" style="position:relative">
+             <div class="field-checkbox">
+               <p-checkbox name="checkBox" formControlName="fieldValue" id="binaryA"
+                           binary="true"></p-checkbox>
+             </div>
+           </div>
+         </div>
+
+              <div *ngIf="appFieldType.RADIO_BUTTON === headerAdditionalFieldDetails[i].fieldTypeId ">
+                <div class="grid col-12" [style]="{'align-items': 'center'}">
+               <div class="p-inputgroup">
+            <span>{{headerAdditionalFieldDetails[i].fieldName}} </span>
+          </div>
+                  <div *ngFor="let option of headerAdditionalFieldDetails[i].options">
+                      <input id="male1" type="radio" value="{{option.optionValue}}"
+                             formControlName="fieldValue">
+                      <span for="male1">{{' ' + option.optionValue}}</span>
+
+                  </div>
+                </div>
+              </div>
+
+      <div class="p-invalid text-align-left"
+           *ngIf="(additionalField.get('fieldValue').errors && additionalField.get('fieldValue').dirty) ||
+(additionalField.get('attachment').errors && additionalField.get('attachment').dirty)">
+
+         <div *ngIf="additionalField.get('fieldValue').dirty
+             && additionalField.get('fieldValue').hasError('required')"> {{headerAdditionalFieldDetails[i].fieldName}}
+           is required
+            </div>
+
+            <div *ngIf="additionalField.get('attachment').dirty
+             && additionalField.get('attachment').hasError('required')"> {{headerAdditionalFieldDetails[i].fieldName}}
+              is required
+            </div>
+
+        <div *ngIf="additionalField.get('fieldValue').hasError('isValidate')">
+          Field require ({{appConstant.DATA_TYPE_PATTERN_MAP.get(headerAdditionalFieldDetails[i].dataType)}}) type
+        </div>
+      </div>
+
+    </span>
+      </ng-container>
+
+    </ng-container>
+
+  </div>
+
+  <br *ngIf="headerAdditionalFieldDetails.length>0">
+
+
+  <div>
+    <p-table responsiveLayout="scroll" [value]="itemFields.controls"  scrollable="true" scrollHeight="150px"
+             [style]="{width:'auto'}" scrollDirection="both"
+             styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width:50px" class="thead-style detail-table-header-left" id="no">#</th>
+          <th style="min-width:100px" class="thead-style detail-table-header-left" id="itemNo1">Item Number</th>
+          <th style="min-width:100px" class="thead-style detail-table-header-left" id="itemName1">Item Name</th>
+          <th style="min-width:100px" class="thead-style detail-table-header-left" id="uom1">Unit Of Measurement</th>
+          <th style="min-width:180px" class="thead-style detail-table-header-left" id="description">Description</th>
+          <th style="min-width:80px"  class="thead-style detail-table-header-left" id="qty1">Quantity*</th>
+          <th style="min-width:100px" class="thead-style detail-table-header-left" id="price1">Cost*</th>
+          <th style="min-width:100px" class="thead-style detail-table-header-right" id="amount1">Line Amount</th>
+          <th style="min-width:20px" class="thead-style detail-table-header-left" id="empty1"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-i="rowIndex" let-item formArrayName="billItemDetails">
+        <tr id="tr_{{i}}" [formGroupName]="i" [pEditableRow]="item" (click)="onLItemClick(i)"
+            (keyup)="calculateTotal()" (change)="calculateTotal()">
+          <td style="text-align: center; width:50px"><label>{{i + 1}}</label></td>
+
+          <td style="width:100px">
+            <div class="p-inputgroup">
+              <input formControlName="itemNumber" (keydown)="navigate($event,'itemNumber',  i)" maxlength="20"
+                     placeholder="Item Number" name="itemName1" id="{{'itemNumber' + i}}"
+                     type="text" pInputText  (keyup)="removeSpace.clearSpace(itemFields.controls[i], 'itemNumber')">
+            </div>
+          </td>
+
+          <td style="width:100px">
+            <div class="p-inputgroup">
+              <input formControlName="itemName" (keydown)="navigate($event,'itemName',  i)"
+                     placeholder="Item Name" name="itemName1" id="{{'itemName' + i}}" maxlength="500"
+                     type="text" pInputText  (keyup)="removeSpace.clearSpace(itemFields.controls[i], 'itemName')">
+            </div>
+          </td>
+
+          <td style="width:100px">
+            <p-dropdown [virtualScroll]="uomList.data.length > 20" virtualScrollItemSize="25"
+                        formControlName="uomId" [autoDisplayFirst]="false" id="{{'uomId_' + i}}"
+                        name="productId1" (onChange)="calculateTotal()"
+                        appendTo="body" optionValue="id" optionLabel="name" placeholder="UOM"
+                        [filter]="true" [options]="uomList.data" [showClear]="true"
+                        [style]="{'width':'100%'}" #uom>
+            </p-dropdown>
+          </td>
+
+          <td style="width:180px">
+            <div class="p-inputgroup">
+              <textarea formControlName="description" (keydown)="navigate($event,'description',  i)"
+                     placeholder="Description" name="description" id="{{'description' + i}}"
+                        pInputTextarea    type="text" pInputText></textarea>
+            </div>
+          </td>
+
+          <td style="width:80px">
+            <div class="p-inputgroup">
+              <input formControlName="qty" name="qty" placeholder="Qty" id="{{'qty_' + i}}" type="text"
+                     (keydown)="navigate($event,'qty_',  i)" class="qty-field-alignment"
+                     autocomplete="off" (ngModelChange)="calculateTotal()"
+                     pInputText appDecimalNumber>
+            </div>
+          </td>
+
+
+          <td style="width:100px">
+            <div class="p-inputgroup">
+              <input pInputText type="text" name="unitPrice" placeholder="0.00" autocomplete="off"
+                     id="{{'cost' + i}}" (keydown)="navigate($event,'cost',  i)" (ngModelChange)="calculateTotal()"
+                     currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                     appNoNegativeValues
+                     formControlName="unitPrice">
+            </div>
+          </td>
+
+          <td style="width:100px">
+            <div class="p-inputgroup">
+              <input pInputText type="text" (keydown)="navigate($event,'amount',  i)"
+                     name="amount" id="{{'amount' + i}}" currencyMask [autocomplete]="false"
+                     [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                     value="{{itemFields.controls[i].value.amount | currency: '':''}}"
+                     placeholder="Line Amount" class="amounts"
+                     formControlName="amount">
+            </div>
+          </td>
+
+          <td class="text-center" style="width:20px">
+            <i class="fa fa-trash item-remove-button" style="margin-top: 0.5rem" *ngIf="itemFields.length > 1"
+               (click)="removeItem(i); calculateTotal()"></i>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="summary">
+        <div class="grid align-table-footer">
+          <div style="width: 44%">
+          </div>
+          <div style="width: 55%; margin-top: 5px" class=" text-right">
+                                <span class="hyperlink text-right p-text-normal"
+                                      (click)="createEInvoiceForm.get('tax').reset(); itemFields.reset(); calculateTotal();">Clear Lines
+                                </span> &nbsp;|&nbsp;
+            <span class="hyperlink text-right p-text-normal"
+                  (click)="addItem()">Add Line
+                                </span>
+          </div>
+        </div>
+      </ng-template>
+    </p-table>
+  </div>
+  <br>
+
+
+  <div class="grid">
+    <div class="order-drop-zone col-12 xl:col-8 top-marging">
+    </div>
+    <div class="order-amount-fields col-12 offset-0 xl:col-4">
+
+      <div class="grid">
+        <span class="col-6 lg:col-8 md:col-4 sm:col-5  xl:col-5 amount-text-alignment amount-label mt-1">Gross Amount</span>
+        <div class="col-6 lg:col-4 sm:col-7 md:col-8 xl:col-7">
+          <div class="p-fluid">
+            <input pInputText currencyMask placeholder="0.00"
+                   [options]="{prefix: '', thousands: ',', decimal: '.'}"
+                   class="text-right amounts"
+                   formControlName="grossAmount" readonly>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <span class="col-6 lg:col-8 md:col-4 sm:col-5  xl:col-5 amount-text-alignment amount-label">Tax Amount</span>
+        <div class="col-6 lg:col-4 sm:col-7 md:col-8 xl:col-7">
+          <div class="p-fluid">
+            <input pInputText pKeyFilter="money" class="text-right" currencyMask placeholder="0.00"
+                   (keyup)="calculateTotal()"
+                   [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                   [readOnly]="createEInvoiceForm.get('billAmount').value < 0"
+                   formControlName="tax">
+          </div>
+          <div class="p-invalid"
+               *ngIf="createEInvoiceForm.value.tax > createEInvoiceForm.value.grossAmount">
+            <div>Tax amount can not be greater than gross amount</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <span class="col-6 lg:col-8 md:col-4 sm:col-5  xl:col-5 amount-text-alignment amount-label mt-1">Net Amount</span>
+        <div class="col-6 lg:col-4 sm:col-7 md:col-8 xl:col-7">
+          <div class="p-fluid">
+            <input pInputText currencyMask placeholder="0.00"
+                   [options]="{prefix: '', thousands: ',', decimal: '.'}"
+                   class="text-right amountsNet"
+                   formControlName="billAmount" readonly>
+            <div class="p-invalid text-align-left"
+                 *ngIf="createEInvoiceForm.get('billAmount').dirty && createEInvoiceForm.get('billAmount').errors">
+              Net amount must be greater than 0
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="grid">
+
+    <div *ngIf="!isWorkflowConfigAvailable" class="order-drop-zone condition-resize col-12 xl:col-8">
+      <div class="col-12 xl:col-8 lg:col-8 md:col-12 sm:col-12">
+
+        <div class="grid mt-2">
+          <div class="col-12">
+
+            <h6 class="subHeadingColour">Select Approver(s)</h6>
+
+            <div formArrayName="adHocWorkflowDetails" class="condition-resize" *ngIf="adHocWorkflowDetails.length>0">
+
+              <div class="grid" style="min-width: 960px"
+                   *ngFor="let adHoc of adHocWorkflowDetails.controls; let adHocIndex=index"
+                   [formGroupName]="adHocIndex">
+
+                <div style="display: inline-block; min-width: 100px" class="field col-1" *ngIf="false">
+                  <input pInputText formControlName="approvalOrder" class="index-style text-style amounts"
+                         value="{{adHocIndex + 1}}"
+                         readonly>
+                </div>
+
+                <div style="display: inline-block; min-width: 200px" class="field p-fluid col-4">
+                  <div class="label-wrapper">Select Approval Group</div>
+                    <div class="p-inputgroup">
+                      <p-dropdown [virtualScroll]="approvalGroupList.data.length>20" virtualScrollItemSize="25"
+                                  (onChange)="validateDropDownValue(adHocWorkflowDetails.controls[adHocIndex].get('approvalGroup').value, adHoc);
+                                               this.adHocWorkflowDetails.controls[adHocIndex].get('approvalUser').reset();"
+                                  formControlName="approvalGroup" id="approvalGroup{{adHocIndex}}"
+                                  [autoDisplayFirst]="false" optionValue="id" optionLabel="name"
+                                  [showClear]="true" appendTo="body" placeholder="Select Approval Group"
+                                  [options]="approvalGroupList.data" optionDisabled="inactive" [filter]="true">
+                      </p-dropdown>
+                      <div class="p-invalid text-align-left" *ngIf="adHocWorkflowDetails.controls[adHocIndex].get('approvalGroup').dirty
+            && adHocWorkflowDetails.controls[adHocIndex].get('approvalGroup').errors">
+                        Approval Group Required
+                      </div>
+                    </div>
+                </div>
+
+                <div class="field p-fluid  text-center p-2 label-wrapper" style="padding-top: 33px !important;">or</div>
+
+                <div style="display: inline-block; min-width: 300px" class="field p-fluid col-3 ">
+                  <div class="label-wrapper">Select Approval User</div>
+                  <div class="p-inputgroup">
+                    <p-dropdown [virtualScroll]="approvalUserList.data.length > 20" virtualScrollItemSize="25"
+                                (onChange)="validateDropDownValue(adHocWorkflowDetails.controls[adHocIndex].get('approvalUser').value, adHoc);
+                                            this.adHocWorkflowDetails.controls[adHocIndex].get('approvalGroup').reset();"
+                                formControlName="approvalUser" id="approvalUser{{adHocIndex}}"
+                                optionValue="id" optionLabel="name" appendTo="body" placeholder="Select Approval User"
+                                [options]="approvalUserList.data" optionDisabled="inactive" [filter]="true"
+                                [showClear]="true">
+                    </p-dropdown>
+                    <div class="p-invalid text-align-left" *ngIf="adHocWorkflowDetails.controls[adHocIndex].get('approvalUser').dirty
+            && adHocWorkflowDetails.controls[adHocIndex].get('approvalUser').errors">
+                      Approval User Required
+                    </div>
+                  </div>
+                </div>
+
+<!--                <div style="display: inline-block; min-width: 150px" class="field col-3" *ngIf="false">-->
+<!--                  <button pButton type="button" class="p-button-sm p-button-outlined " iconPos="left"-->
+<!--                          icon="fa fa-trash"-->
+<!--                          *ngIf="adHocWorkflowDetails.controls.length > 1"-->
+<!--                          (click)="removeAdHocWorkflow(adHocIndex)">-->
+<!--                  </button>&nbsp;-->
+<!--                  <button pButton type="button" class="p-button-sm" iconPos="left"-->
+<!--                          icon="pi pi-plus"-->
+<!--                          *ngIf="adHocIndex == (adHocWorkflowDetails.controls.length-1)"-->
+<!--                          (click)="addAdHocWorkflowDetail()">-->
+<!--                  </button>-->
+<!--                </div>-->
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div *ngIf="matchingAutomation && isWorkflowConfigAvailable" class="order-drop-zone col-12 xl:col-7 top-marging">
+      <div class="grid mt-2">
+        <h6 class="subHeadingColour">Automated Workflow</h6>
+        <p-table responsiveLayout="scroll" [value]="matchingAutomation" scrollable="true" scrollHeight="150px"
+                 styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col style="width:80px">
+              <col style="width:180px">
+              <col style="width:180px">
+            </colgroup>
+          </ng-template>
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="thead-style detail-table-header-left" id="appOrder">Approval Order</th>
+              <th class="thead-style detail-table-header-left" id="appgroup">Approval Group</th>
+              <th class="thead-style detail-table-header-left" id="appUser">Approval User</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-i="rowIndex" let-item>
+            <tr>
+              <td class="text-center" [style]="'height : 30px'">
+                <label> {{item.approvalOrder}}</label>
+              </td>
+
+              <td [style]="'height : 30px'">
+                <label> {{item.approvalGroupName}}</label>
+              </td>
+
+              <td [style]="'height : 30px'">
+                <label> {{item.approvalUserName}}</label>
+              </td>
+
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div *ngIf="existingAttachments.length>0">
+    <div class="col-6 field">
+      <h6 class="subHeadingColour">Files Attached</h6>
+      <div>
+        <p-table responsiveLayout="scroll" [value]="existingAttachments" scrollable="true" scrollHeight="150px"
+                 styleClass="p-datatable-md p-datatable-striped detail-table">
+
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col style="width:300px">
+              <col style="width:300px">
+              <col style="width:50px">
+            </colgroup>
+          </ng-template>
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="thead-style detail-table-header-left" id="fileName">File Name</th>
+              <th class="thead-style detail-table-header-left" id="fieldName">Field Name</th>
+              <th class="thead-style detail-table-header-left" id="action1">Action</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-i="rowIndex" let-item>
+            <tr>
+              <td [style]="'height : 30px'">
+                <label> {{item.fileName}}</label>
+              </td>
+              <td [style]="'height : 30px'">
+                <label> {{item.fieldName}}</label>
+              </td>
+              <td class="text-center">
+                <i class="fa fa-download download-icon" (click)="downloadAttachment(item)"></i> &nbsp;
+                <i class="fa fa-trash download-icon" (click)="deleteAttachmentOnEdit(i)"></i>
+              </td>
+
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="col-12 xl:col-12 top-marging">
+      <ngx-dropzone accept="application/pdf,image/png,image/jpeg,image/jpg"
+                    (change)="changeFileList($event)" class="drop-zone-style"
+                    style="height: 234px; background-color: #f4fbfa">
+         <ngx-dropzone-label class="dp-zone-big-text-wrapper p-text-normal">Drop File(s) Here To Upload <br><br>
+         <span class="dp-zone-small-text-wrapper p-text-normal">(We only accept PDF, JPG JPEG and PNG formats, all the other formats will be ignored)</span>
+        </ngx-dropzone-label>
+        <ngx-dropzone-preview class="preview-file" *ngFor="let f of attachments" [removable]="true"
+                              (removed)="onRemove(f)">
+          <ngx-dropzone-label class="uploaded-file-name">{{ f.name }}</ngx-dropzone-label>
+        </ngx-dropzone-preview>
+      </ngx-dropzone>
+    </div>
+  </div>
+</form>
+<div class="grid footer form-footer-button">
+  <div class="col-12 button-set-wrapper">
+    <div class="pull-right">
+      <button pButton type="button" (click)="resetEInvoiceForm(true)" label="Reset"
+              class="p-button-outlined p-button-sm" [disabled]="isLoading" icon="fa-solid fa-rotate-right"></button>&nbsp;
+
+      <button pButton type="submit" [disabled]="isLoading"
+              *ngIf="privilegeService.isAuthorized(appAuthorities.INVOICE_CREATE)" class="p-button-sm"
+              iconPos="left" [icon]="isLoading ? 'pi pi-spin pi-spinner' : 'fa-solid fa-share-from-square'"
+              (click)="createEInvoice(createEInvoiceForm.value)"
+              label="Submit For Approval"></button>
+    </div>
+  </div>
+</div>
+
+<!--Create New DropDown-->
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" (onHide)="addNewDropDown = false" position="right" [modal]="true"
+           [dismissible]="true"
+           *ngIf="addNewDropDown"
+           [(visible)]="addNewDropDown">
+  <ng-template pTemplate="header">Create New DropDown Option</ng-template>
+  <app-additional-field-add-new [field]="selectedAdditionalField" *ngIf="addNewDropDown" [isCreate]="!editView"
+                                (closedComponent)="addNewDropDown = false"></app-additional-field-add-new>
+</p-sidebar>

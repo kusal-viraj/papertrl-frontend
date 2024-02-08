@@ -1,0 +1,140 @@
+@import '../../../../../scss/table-responsive';
+@import '../../../../../scss/color';
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      z-index: 1;
+      transform: scale(1.05);
+      background-color: #f0f0f0;
+    }
+    &.active {
+      background-color: #f0f0f0;
+    }
+    &:hover:not(.active) {
+      transform: translateX(5px);
+      background-color: #f0f0f0;
+    }
+  }
+}
+
+.vendor-item-field {
+  min-height: calc(90vh - 28px);
+  margin-left: 14px;
+  .field {
+    margin-bottom: 1px;
+
+    label {
+      font-size: 12px;
+      font-weight: bold;
+      font-stretch: normal;
+      color: $secondary-black-grey;
+      margin-bottom: 1px;
+    }
+
+    div {
+      font-size: 14px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      color: $secondary-black-grey;
+    }
+  }
+}
+
+.radio-button-group{
+  font-size: 12px;
+  font-weight: bold;
+  font-stretch: normal;
+  color: $secondary-black-grey;
+}
+
+.radio-selection{
+  margin-bottom: 9px !important;
+  .field{
+    width: auto!important;
+
+    label {
+      font-size: 12px !important;
+      font-weight: normal !important;
+      font-stretch: normal !important;
+      font-style: normal !important;
+      line-height: normal !important;
+    }
+  }
+}
+
+.payment-fields-invalid{
+  margin-left: 20px !important;
+  margin-bottom: 28px !important;
+  width: 98% !important;
+}
+
+.item-no{
+  margin-bottom: 13px;
+  color: $secondary-black-grey;
+  font-size: 14px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+}
+
+.item-desc{
+  color: #bcbcbc;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+}
+
+.item-list{
+  max-height: 899px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-right: 1px solid $canceled-gray;
+  width: 400px;
+  height: 899px;
+}
+
+.invalid{
+  color: #f44336 !important;
+  font-size: 12px !important;
+}
+
+.vendor-detail{
+  margin-top: 23px !important;
+  height: calc(100vh - 163px);
+}
+
+.valid-vendor-item{
+  margin-top: 23px !important;
+  height: calc(100vh - 114px);
+}
+
+.vendor-item-mapping-option{
+  margin-bottom: 30px !important;
+  :first-child{
+    margin-left: 11px !important;
+  }
+}
+
+
+@media only screen and (max-width: 1366px) {
+  .vendor-detail{
+    margin-top: 23px !important;
+    height: calc(78vh - 11px);
+  }
+  .vendor-item-detail{
+    margin-bottom: 19px !important;
+  }
+}

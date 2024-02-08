@@ -1,0 +1,30 @@
+[
+  {
+    "label": "Add New",
+    "id": "new"
+  },
+  {
+    "label": "Test Role",
+    "id": "NY"
+  },
+  {
+    "label": "Role Test",
+    "id": "RM"
+  },
+  {
+    "label": "Role",
+    "id": "LDN"
+  },
+  {
+    "label": "PM",
+    "id": "NY"
+  },
+  {
+    "label": "AP",
+    "id": "RM"
+  },
+  {
+    "label": "AR",
+    "id": "LDN"
+  }
+]

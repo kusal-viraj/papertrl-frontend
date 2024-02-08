@@ -1,0 +1,63 @@
+@import "../../../../scss/color.scss";
+
+.max-width {
+  width: 100% !important;
+}
+
+.receipt-select {
+  .col-1 {
+    align-self: center;
+  }
+}
+
+:host ::ng-deep .selected-receipt-row {
+  background-color: $light-green !important;
+}
+
+.link {
+  color: $secondary-blue;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.pop-up-header {
+  width: 100%;
+}
+
+.table-scroll {
+  th {
+    overflow-wrap: break-word;
+    white-space: normal;
+  }
+}
+
+.amounts {
+  width: 100%;
+  background-color: #f8f9fa;
+}
+
+.index-style {
+  color: #b2b2b2;
+  font-weight: 500;
+}
+
+.text-style {
+  text-align: center;
+  color: #A1ACB1;
+  opacity: 1;
+}
+
+.table-rows {
+  td {
+    vertical-align: middle;
+  }
+}
+
+.project-dropdown ::ng-deep .p-dropdown .p-inputtext {
+  max-width: 250px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

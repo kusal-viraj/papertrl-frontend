@@ -1,0 +1,386 @@
+
+<form [formGroup]="templateCreationForm" (ngSubmit)="createBillTemplate()" style="margin: 10px">
+  <div class="grid">
+    <div class="field mb-0 col-6 main-form-content">
+
+      <div class="grid">
+        <div class="col-4">
+          <h5 class="module-header-label" *ngIf="detailView">Bill Template Details</h5>
+          <h5 class="module-header-label" *ngIf="editView">Edit Bill Template</h5>
+          <h5 class="module-header-label" *ngIf="!detailView && !editView">Create Bill Template</h5>
+        </div>
+
+        <div class="col-8 text-right">
+          <div class="fa fa-trash side-drawer-icon"
+               *ngIf="privilegeService.isAuthorized(appAuthorities.BILL_TEMPLATES_DELETE) && detailView"
+               pTooltip="Delete" tooltipPosition="bottom"  (click)="deleteOcr()" ></div>
+          <div class="fa fa-pencil side-drawer-icon"
+               *ngIf="privilegeService.isAuthorized(appAuthorities.BILL_TEMPLATES_EDIT) &&
+                  billTemplateStatus === 'Active' && detailView"
+               pTooltip="Edit" tooltipPosition="bottom" (click)="editTemplate()" ></div>
+          <div class="fa fa-close side-drawer-icon"
+               (click)="closeSideDrawer()"></div>
+        </div>
+
+
+      </div><br>
+
+      <div class="grid" [ngStyle]="{'align-items' : 'baseline'}">
+
+        <div class="field col-6" *ngIf="fromTemplateManagement && !detailView">
+          <label  class="label-wrapper" for="attachment">Upload Attachment(.pdf)*</label>
+          <div class="p-inputgroup">
+              <span class="p-float-label">
+              <input id="attachment" #fileInput1
+                     (change)="changeFileInput($event, templateCreationForm, 'application/pdf')"
+                     type="file" class="place-holder-width"
+                     accept="application/pdf" hidden>
+              <input id="fileText1" formControlName="attachment" readonly type="text" class="file-input-vendor"
+                     (click)="fileUploadClick('attachment')"
+                     [value]="fileInput1.files[0] ? fileInput1.files[0].name : null" pInputText>
+              <button type="button" pButton label="Browse" class="p-button browse-button-wrapper p-button-sm browse-btn-vendor"
+                      (click)="fileUploadClick('attachment')"></button>
+           <button pButton type="button" class="p-button-borderless p-button-sm reset-btn-vendor" *ngIf="fileInput1.files[0] != null"
+                   icon="fa fa-close" (click)="attachmentClearBtn()"></button>
+             </span>
+          </div>
+          <div class="p-invalid text-align-left"
+               *ngIf="templateCreationForm.get('attachment').dirty && templateCreationForm.get('attachment').errors">
+            Attachment is required
+          </div>
+
+        </div>
+
+        <div class="field col-6 p-fluid">
+          <div>
+            <span>
+              <label class="label-wrapper" for="templateName">Template Name*</label>
+              <input formControlName="templateName" id="templateName" type="text" pInputText maxlength="100"
+                     (keyup)="removeSpace.clearSpace(templateCreationForm, 'templateName')">
+
+            </span>
+          </div>
+          <div class="p-invalid text-align-left"
+               *ngIf="templateCreationForm.get('templateName').dirty && templateCreationForm.get('templateName').errors">
+            Template name is required
+          </div>
+        </div>
+
+        <div class="field col-6 p-fluid" *ngIf="!fromVendor">
+        <span>
+            <label class="label-wrapper" for="vendor">Vendor*</label>
+           <p-dropdown [virtualScroll]="vendorList.data.length > 20" virtualScrollItemSize="25" [style]="{'width': '100%'}"
+                       [options]="vendorList.data" id="vendor" inputId="vendor" optionDisabled="inactive"
+                       #selectedVendorName
+                       (onChange)="changeVendorList(selectedVendorName.selectedOption.id)"
+                       formControlName="vendorId" optionValue="id" optionLabel="name" [showClear]="true"
+                       [autoDisplayFirst]="false" [filter]="true">
+             <ng-template pTemplate="selectedItem">
+               <div>{{selectedVendorName.selectedOption.name}}</div>
+             </ng-template>
+
+             <ng-template let-vendorAccount1 pTemplate="item">
+               <div class="grid">
+                 <div class="dropdown-list"
+                      [ngClass]="vendorAccount1.name == 'Add New' ? ' dropdown-add': null">{{vendorAccount1.name}}</div>
+                 <em *ngIf="vendorAccount1.name == 'Add New'" class="pi pi-plus dropdown-icon  dropdown-add"></em>
+               </div>
+             </ng-template>
+           </p-dropdown>
+           </span>
+
+          <div class="p-invalid text-align-left"
+               *ngIf="templateCreationForm.get('vendorId').dirty && templateCreationForm.get('vendorId').errors">
+            Vendor is required
+          </div>
+        </div>
+
+        <div class="field col-6 p-fluid">
+          <div>
+            <span class="p-input-icon-right">
+              <label class="label-wrapper" for="poNumber">Purchase Order</label>
+              <i
+                *ngIf="fromTemplateManagement && editView && templateCreationForm.get(appFormConstants.PO_NUMBER).value"
+                class="pi pi-times pt-2 change-cursor" (click)="clearField(appFormConstants.PO_NUMBER)"></i>
+              <input formControlName="poNumber" class="change-cursor change-input-color"
+                     (blur)="onFieldBlur('poNumber')"
+                     readonly id="poNumber" type="text" pInputText>
+            </span>
+          </div>
+        </div>
+
+
+        <div class="field col-6 p-fluid">
+          <div>
+            <label class="label-wrapper" for="billNo">{{camelTemplate}} Number</label>
+            <span class="p-input-icon-right">
+              <i *ngIf="fromTemplateManagement && editView && templateCreationForm.get(appFormConstants.BILL_NO).value"
+                 class="pi pi-times change-cursor" (click)="clearField(appFormConstants.BILL_NO)"></i>
+              <input formControlName="billNo" class="change-cursor change-input-color" (blur)="onFieldBlur('billNo')"
+                     readonly id="billNo" type="text"
+                     pInputText>
+
+            </span>
+          </div>
+        </div>
+
+        <div class="field col-6 p-fluid">
+          <div>
+            <span class=" p-input-icon-right">
+              <label class="label-wrapper" for="billAmount">{{camelTemplate}} Amount</label>
+              <i
+                *ngIf="fromTemplateManagement && editView && templateCreationForm.get(appFormConstants.BILL_AMOUNT).value"
+                class="pi pi-times  pt-2 change-cursor" (click)="clearField(appFormConstants.BILL_AMOUNT)"></i>
+              <input formControlName="billAmount" currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.'}"
+                     id="billAmount" type="text" class="change-cursor change-input-color"
+                     (blur)="onFieldBlur('billAmount')" readonly pInputText>
+            </span>
+          </div>
+        </div>
+
+        <div class="field col-6 p-fluid">
+                <span>
+                   <label class="label-wrapper" for="dateFormat">Select Date Format</label>
+           <p-dropdown [virtualScroll]="dateFormatList.data.length > 20" virtualScrollItemSize="25" [options]="dateFormatList.data"
+                       id="dateFormat" inputId="dateFormat" #dateFormatLabel
+                       formControlName="billDateFormat" optionValue="id" optionLabel="name" [showClear]="true"
+                       appendTo="body" (onChange)="validateDate()"
+                       [autoDisplayFirst]="false" [filter]="true">
+             <ng-template pTemplate="selectedItem">
+               <div>{{dateFormatLabel.selectedOption.name}}</div>
+             </ng-template>
+
+             <ng-template let-formats pTemplate="item">
+               <div class="grid">
+                 <div class="dropdown-list"
+                      [ngClass]="formats.name == 'Add New' ? ' dropdown-add': null">{{formats.name}}</div>
+                 <em *ngIf="formats.name == 'Add New'" class="pi pi-plus dropdown-icon  dropdown-add"></em>
+               </div>
+             </ng-template>
+           </p-dropdown>
+           </span>
+        </div>
+
+        <div class="field col-6 p-fluid">
+          <div>
+            <label class="label-wrapper  " for="billAmount">{{camelTemplate}} Date</label>
+            <span class=" p-input-icon-right">
+              <i
+                *ngIf="fromTemplateManagement && editView && templateCreationForm.get(appFormConstants.BILL_DATE_STR).value"
+                class="pi pi-times change-cursor" (click)="clearField(appFormConstants.BILL_DATE_STR)"></i>
+              <input readonly formControlName="billDateStr" id="billDate" (blur)="onFieldBlur('billDateStr')"
+                     (keyup)="validateDate()" (ngModelChange)="validateDate()"
+                     type="text" class="change-cursor change-input-color" pInputText>
+
+            </span>
+          </div>
+          <div class="p-invalid text-align-left" *ngIf="!isValidDate">Invalid {{simpleTemplate}} date, date should be
+            match the
+            selected format
+          </div>
+        </div>
+
+        <div class="field col-6 p-fluid">
+                <span>
+                  <label class="label-wrapper" for="terms">Select Payment Term</label>
+           <p-dropdown [virtualScroll]="termList.data.length > 20" virtualScrollItemSize="25" [options]="termList.data" id="terms"
+                       inputId="terms" #termName style="'width: 100%'"
+                       formControlName="term" optionValue="id" optionLabel="name" appendTo="body" [showClear]="true"
+                       [autoDisplayFirst]="false" [filter]="true">
+             <ng-template pTemplate="selectedItem">
+               <div>{{termName.selectedOption.name}}</div>
+             </ng-template>
+
+             <ng-template let-terms pTemplate="item">
+               <div class="grid">
+                 <div class="dropdown-list"
+                      [ngClass]="terms.name == 'Add New' ? ' dropdown-add': null">{{terms.name}}</div>
+                 <em *ngIf="terms.name == 'Add New'" class="pi pi-plus dropdown-icon  dropdown-add"></em>
+               </div>
+             </ng-template>
+           </p-dropdown>
+
+           </span>
+        </div>
+
+        <div class="field col-6 p-fluid" *ngIf="templateCreationForm.get(appFormConstants.TERM).value === 10">
+          <div>
+            <span>
+              <label class="label-wrapper" for="netDaysDue">Net Days Due*</label>
+                 <p-inputNumber class="p-fluid text-right full-width" formControlName="netDaysDue" mode="decimal"
+                                inputId="withoutgrouping"
+                                [min]="0" [useGrouping]="false" [max]="1000000000" id="netDaysDue">  </p-inputNumber>
+
+            </span>
+          </div>
+
+          <div class="p-invalid text-align-left"
+               *ngIf="templateCreationForm.get('netDaysDue').dirty && templateCreationForm.get('netDaysDue').errors">
+            Net Days Due is required
+          </div>
+
+        </div>
+
+        <div class="field col-6 p-fluid" *ngIf="templateCreationForm.get(appFormConstants.TERM).value === 10">
+          <div>
+            <span>
+              <label class="label-wrapper" for="discountPercentage">Discount Percentage</label>
+              <input formControlName="discountPercentage" id="discountPercentage" type="text"
+                     currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.'}" maxlength="6"
+                     pInputText>
+            </span>
+          </div>
+        </div>
+
+        <div class="field col-6 p-fluid" *ngIf="templateCreationForm.get(appFormConstants.TERM).value === 10">
+          <div>
+            <span>
+              <label class="label-wrapper" for="discountDaysDue">Discount Days Due</label>
+             <p-inputNumber class="p-fluid text-right discount-due-date" id="discountDaysDue"
+                            formControlName="discountDaysDue" mode="decimal" inputId="withoutgrouping"
+                            [min]="0" [max]="1000000000" [useGrouping]="false">
+            </p-inputNumber>
+            </span>
+          </div>
+          <div class="p-invalid" *ngIf="isValidDiscountDate">
+            <div>Discount days should be lower than net days due</div>
+          </div>
+        </div>
+
+
+        <div class="field col-6 p-fluid" *ngIf="!fromVendor">
+          <label class="label-wrapper">Other Email(s)</label>
+          <div class="p-inputgroup">
+              <span class="p-float-label">
+          <p-chips [disabled]="detailView" id="otherEmail"
+                   [placeholder]="!isFloating ? 'Other Email(s)' : ''" separator="," [addOnBlur]="true"
+                   [addOnTab]="true"
+                   (onRemove)="validateEmail(vendorOtherEmails)" (keyup)="isFloating = true"
+                   (onFocus)="isFloating = true" (focusout)="isFloating = false"
+                   (onAdd)="validateEmail(vendorOtherEmails)"
+                   [allowDuplicate]="false"
+                   [ngModelOptions]="{standalone: true}" [(ngModel)]="vendorOtherEmails">
+          </p-chips>
+              </span>
+          </div>
+          <label class="email-description">Enter email address(es) and press "Tab", "Enter" or ","</label>
+          <div [ngClass]="!isValidEmail ? 'p-invalid text-align-left' : ''" *ngIf="!isValidEmail">One or more email
+            address(es) entered is/are invalid
+          </div>
+        </div>
+
+      </div>
+
+      <div class="grid" *ngIf="!detailView">
+
+        <ul>
+          <li *ngIf="fromTemplateManagement" class="subHeadingColour">Step 1: Upload a sample {{simpleTemplate}} to
+            create your
+            desired {{simpleTemplate}} format.
+          </li>
+          <br>
+          <li class="subHeadingColour">Step {{fromTemplateManagement ? '2' : '1'}}: Enter a name for your template in
+            the Template Name field above.
+          </li>
+          <br>
+          <ng-template [ngIf]="!fromVendor">
+            <li class="subHeadingColour">Step {{fromTemplateManagement ? '3' : '2'}}: Select the vendor to assign your
+              new bill template.
+            </li>
+            <br>
+            <li class="subHeadingColour">Step {{fromTemplateManagement ? '4' : '3'}}: Click one of the fields above
+              (i.e. Bill Number). Highlight the corresponding field (i.e. Bill Number) in the preview of the bill to
+              the right. Right-click and select "Copy" (or press Ctrl + C on your keyboard). The Bill Number will
+              autofill the Bill Number field.
+            </li>
+            <br>
+            <li class="subHeadingColour">Step {{fromTemplateManagement ? '5' : '4'}}: Repeat for each field you want to
+              include in the template.
+            </li>
+            <br>
+            <li class="subHeadingColour">Step {{fromTemplateManagement ? '6' : '5'}}: Use the drop down list to select a
+              Payment Term.
+            </li>
+            <br>
+            <li class="subHeadingColour">Step {{fromTemplateManagement ? '7' : '6'}}: Enter any additional emails you
+              have apart from the primary email to Other Email(s) field.
+            </li>
+            <br>
+            <li class="subHeadingColour">Step {{fromTemplateManagement ? '8' : '7'}}: Click Create Bill Template to save
+              your template.
+            </li>
+          </ng-template>
+
+
+          <ng-template [ngIf]="fromVendor">
+            <li class="subHeadingColour">Step {{fromTemplateManagement ? '3' : '2'}}: Click one of the fields above
+              (i.e. Invoice Number). Highlight the corresponding field (i.e. Invoice Number) in the preview of the
+              invoice to the right. Right-click and select "Copy" (or press Ctrl + C on your keyboard). The Invoice
+              Number will autofill the Invoice Number field.
+            </li>
+            <br>
+            <li class="subHeadingColour">Step {{fromTemplateManagement ? '4' : '3'}}: Repeat for each field you want to
+              include in the template.
+            </li>
+            <br>
+            <li class="subHeadingColour">Step {{fromTemplateManagement ? '5' : '4'}}: Use the drop down list to select a
+              Payment Term.
+            </li>
+            <br>
+            <li class="subHeadingColour">Step {{fromTemplateManagement ? '6' : '5'}}: Click Create Invoice Template to
+              save your template.
+            </li>
+          </ng-template>
+
+        </ul>
+      </div>
+
+      <div class="grid panel-footer footer">
+        <div *ngIf="!detailView" class="button-set-wrapper form-footer-button">
+          <div class="pull-right">
+            <button pButton *ngIf="!detailView" [disabled]="btnLoading" type="button" label="Reset" (click)="reset()"
+                    class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+            <button *ngIf="!editView && !detailView" [disabled]="btnLoading" pButton type="submit"
+                    label="Create {{camelTemplate}} Template"
+                    class="p-button-sm margin-right"
+                    [icon]="btnLoading ? 'pi pi-spin pi-spinner': 'pi pi-plus'"></button>
+
+            <button *ngIf="editView && !detailView" [disabled]="btnLoading" pButton type="submit" label="Save"
+                    class="p-button-sm margin-right"
+                    [icon]="btnLoading ? 'pi pi-spin pi-spinner': 'pi pi-save'"></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-6 attachment">
+      <ngx-extended-pdf-viewer [handTool]="false" [showOpenFileButton]="false" [showToolbar]="false" [src]="billUrl"
+                               [showBookmarkButton]="false" *ngIf="billUrl" [zoom]="125" useBrowserLocale="true"
+                               class="attachment-pdf"
+                               height="100%" (copy)="copyValuesFromInvoice()"></ngx-extended-pdf-viewer>
+    </div>
+
+  </div>
+
+
+</form>
+
+<!--Create New Vendor-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" appendTo="body" [modal]="true" position="right"
+           class="overflow-side-bar" *ngIf="addNewVendor"
+           [(visible)]="addNewVendor">
+   <ng-template pTemplate="header">Create Vendor</ng-template>
+  <app-add-vendor (refreshVendorList)="getVendorList()" *ngIf="addNewVendor"></app-add-vendor>
+</p-sidebar>
+
+
+<p-confirmDialog #cd header="Are you sure?" icon="conf-delete-icon pi pi-exclamation-triangle" key="deleteTemplateFromDetailView">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cd.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, Delete it"
+            (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+

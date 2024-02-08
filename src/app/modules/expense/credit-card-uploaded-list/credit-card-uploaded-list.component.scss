@@ -1,0 +1,16 @@
+@import '../../../../scss/table-responsive';
+
+
+.employee-wrapper {
+  width: 50%;
+  ::ng-deep .p-dialog-header {
+    border-radius: 0;
+    .grid {
+      width: 100%;
+    }
+  }
+}
+
+.table-wrapper {
+  height: calc(100vh - 254px);
+}

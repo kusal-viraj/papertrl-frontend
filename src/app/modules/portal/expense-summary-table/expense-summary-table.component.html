@@ -1,0 +1,133 @@
+<p-table responsiveLayout="scroll" id="columnSelect" #dt [columns]="selectedColumns" (onFilter)="tableSupportBase.onFilter(dt)"
+         (onSort)="tableSupportBase.onSort(dt)" [hidden]="tableSupportBase.isVisibleTable"
+         (onRowSelect)="tableSupportBase.rowSelected(dt,null)" (onRowUnselect)="tableSupportBase.rowSelected(dt,null)"
+         [(selection)]="tableSupportBase.rows" [value]="dataSource" columnResizeMode="expand"
+         dataKey="id" [reorderableColumns]="true" [rowHover]="true" [lazy]="false"
+         [responsive]="false" selectionMode="multiple" scrollHeight="320px" [scrollable]="true"
+         stateStorage="session" stateKey="{{tableKeyEnum.EXPENSE_TABLE_KEY}}" [rows]="25" [showCurrentPageReport]="true"
+         [rowsPerPageOptions]="[25, 50, 75]" [loading]="tableSupportBase.loading" [resizableColumns]="false" [tableStyle]="{'min-width': tableSupportBase.minWidth}"
+         [totalRecords]="tableSupportBase.totalRecords" [paginator]="true"
+         styleClass="p-datatable-sm p-datatableResponsive p-datatable-striped p-datatable-gridlines"
+         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [filterDelay]="0">
+
+  <ng-template pTemplate="caption">
+    <div class="grid" [style]="{'align-items': 'center'}">
+      <div class="col-12 p-p-0">
+        <p-calendar (onSelect)="dateSelected(selectedDate.value)"
+                    (onClearClick)="dateCleared()" [numberOfMonths]="2"
+                    appendTo="body" selectionMode="range" #selectedDate
+                    [showButtonBar]="true" styleClass="p-column-filter" [placeholder]="'Select Date to Filter'"
+                    [readonlyInput]="true" dateFormat="mm-dd-yy"></p-calendar>
+        <button pButton icon="pi pi-refresh" type="button" label="Refresh"
+                (click)="getDataFromBackend(fromDate, toDate)"
+                class="p-button-outlined pull-right p-button-sm"></button>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template *ngIf="tableSupportBase.isTableInResponsive" pTemplate="colgroup" let-columns>
+    <colgroup *ngIf="tableSupportBase.isTableInResponsive">
+      <col *ngFor="let col of columns">
+    </colgroup>
+  </ng-template>
+
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th *ngFor="let col of columns" pResizableColumn [pResizableColumnDisabled]="!col.isReSizable"
+          [ngStyle]="{'text-align': col.align}"
+          [pReorderableColumnDisabled]="!col.isReOrderable" pReorderableColumn
+          [pSortableColumnDisabled]="!col.isSortable" pSortableColumn="{{col.sortableField}}"
+          [innerHTML]=col.header>
+
+        <p-sortIcon *ngIf="col.isSortable" field="{{col.sortableField}}"></p-sortIcon>
+      </th>
+    </tr>
+    <tr>
+      <th *ngFor="let col of columns">
+        <div *ngIf="col.searchType == enums.CHECKBOX" [ngStyle]="{'text-align': col.align}">
+          <p-tableHeaderCheckbox #checkAllStatus></p-tableHeaderCheckbox>
+        </div>
+        <div *ngIf="col.searchType == enums.MULTISELECT" class="p-fluid">
+
+          <p-multiSelect [options]="subAccountList.data" placeholder="Any" appendTo="body"
+                         optionValue="name" optionLabel="name"
+                         (onChange)="onMultiSelectChange($event, col.field)">
+            <ng-template let-option pTemplate="item">
+              <div class="p-multiselect-representative-option">
+                <span class="ml-1">{{option.name}}</span>
+              </div>
+            </ng-template>
+          </p-multiSelect>
+        </div>
+
+        <div *ngIf="col.searchType == enums.INPUT" class="p-fluid">
+          <p-columnFilter matchMode="contains" type="text" [placeholder]="col.placeholder" field="{{col.field}}">
+            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+              <input pInputText type="text" [placeholder]="col.placeholder"
+                     (keyup)="filter($event.target.value)" [ngModel]="value" class="p-column-filter">
+            </ng-template>
+          </p-columnFilter>
+        </div>
+
+
+        <div *ngIf="col.searchType == enums.NUMERIC" class="p-fluid">
+          <div class="p-inputgroup">
+            <input type="text" pInputText placeholder="0.00" #val1 [options]="{prefix: '', thousands: '', decimal: '.'}" currencyMask
+                   (keyup)="tableSupportBase.filterRange(dt, val1.value, val2.value, col.field, $event)">
+
+            <span class="p-inputgroup-addon field-clear-button">< ></span>
+
+            <input type="text" pInputText placeholder="0.00" #val2 [options]="{prefix: '', thousands: '', decimal: '.'}" currencyMask
+                   (keyup)="tableSupportBase.filterRange(dt, val1.value, val2.value, col.field, $event)">
+          </div>
+        </div>
+
+        <div *ngIf="col.searchType == enums.NUMBER" class="p-fluid" [style]="{'text-align': 'center'}">
+          <input pInputText pKeyFilter="money" type="number" [placeholder]="col.placeholder"
+                 [value]="dt.filters[ col.field]?.value === undefined ? null : dt.filters[ col.field]?.value"
+                 (input)="dt.filter($event.target.value, col.field, 'contains')" class="p-column-filter">
+        </div>
+        <div *ngIf="col.searchType == enums.DATE" class="p-fluid" [style]="{'text-align': 'center'}">
+          <p-calendar (onSelect)="tableSupportBase.onDateSelect(dt, selectedLaw.value, col.field)" #selectedLaw
+                      (onClearClick)="dt.filter('', col.field, 'contains')"
+                      appendTo="body" name="{{col.fieldID}}" selectionMode="range"
+                      [showButtonBar]="true" styleClass="p-column-filter" [placeholder]="col.placeholder"
+                      [readonlyInput]="true" dateFormat="mm-dd-yy"></p-calendar>
+        </div>
+        <div *ngIf="col.searchType == enums.DROPDOWN" class="p-fluid">
+          <p-dropdown appendTo="body" optionLabel="name" optionValue="id" [showClear]="true"
+                      [options]="col.dropdownValues" [filter]="true"
+                      (onChange)="dt.filter($event.value, col.field, 'contains')"
+                      placeholder="Any"></p-dropdown>
+        </div>
+
+
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-customer let-columns="columns">
+    <tr>
+      <td *ngFor="let col of columns" [ngStyle]="{'text-align': col.align}"
+          [class.freeze-right]="col.frozenDirection == 'right'" [ngClass]="col.searchType == enums.ACTION_BUTTON ? 'vendor-table-action-btn' : null">
+        <span class="p-column-title">{{col.header}}</span>
+
+        <span class="table-data">{{customer[col.field]}}</span>
+
+      </td>
+    </tr>
+  </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <div class="text-center grid table-empty-data">
+          <div class="col-12">
+            <i class="fa-solid fa-magnifying-glass"></i><br>
+            <p>There are no records found</p>
+          </div>
+      </div>
+    </ng-template>
+</p-table>
+
+<div class="no-data-show" *ngIf="tableSupportBase.isVisibleTable == true">
+  <span class="fa fa-search"></span>
+  <div style="margin-top: 1%">There are no transactions matching the criteria</div>
+</div>

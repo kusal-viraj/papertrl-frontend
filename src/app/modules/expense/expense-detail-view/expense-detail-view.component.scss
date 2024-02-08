@@ -1,0 +1,40 @@
+@import '../../../../scss/color';
+@import '../../../../scss/table-responsive';
+
+.expense-detail-form {
+  .customer-badge {
+    display: block;
+    padding: 0;
+  }
+
+  .index-style {
+    color: #b2b2b2;
+    font-weight: 500;
+  }
+
+  .table-footer-amount {
+    color: #656060;
+    font-weight: 400;
+  }
+
+  .download-report {
+    cursor: pointer;
+    color: $green;
+  }
+
+  .non-download-report {
+    color: $light-gray;
+  }
+
+  .table-footer-style ::ng-deep .p-datatable .p-datatable-footer {
+    padding: 20px !important;
+  }
+}
+
+.top-btn {
+  color: #A3ACB0;
+  border-color: #A3ACB0;
+}
+
+
+

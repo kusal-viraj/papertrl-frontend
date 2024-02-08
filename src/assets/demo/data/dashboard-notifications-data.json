@@ -1,0 +1,54 @@
+[
+  {
+    "id": 2,
+    "notificationTitle": "Invoices",
+    "notificationDescription": "#5455 Invoice was Approved",
+    "clickable": true,
+    "icon": "fa fa-file-text-o",
+    "routerLink": []
+  },
+  {
+    "id": 3,
+    "notificationTitle": "PO",
+    "notificationDescription": "#5455 PO was Rejected",
+    "clickable": true,
+    "routerLink": [
+      "home/purchase-orders"
+    ],
+    "icon": "fa fa-money"
+  },
+  {
+    "id": 1,
+    "notificationTitle": "Vendor",
+    "notificationDescription": "John has sent a request",
+    "clickable": true,
+    "routerLink": [
+      "home/vendor"
+    ],
+    "icon": "fa fa-user"
+  },
+  {
+    "id": 6,
+    "notificationTitle": "Vendors",
+    "notificationDescription": "Smith Rejected the Request",
+    "clickable": false,
+    "routerLink": [],
+    "icon": "fa fa-user"
+  },
+  {
+    "id": 4,
+    "notificationTitle": "Invoices",
+    "notificationDescription": "#5455 Invoice was Approved",
+    "clickable": true,
+    "routerLink": ["home/bills"],
+    "icon": "fa fa-file-text-o"
+  },
+  {
+    "id": 5,
+    "notificationTitle": "Invoices",
+    "notificationDescription": "#2560 Invoice was Approved",
+    "clickable": true,
+    "routerLink": ["home/bills"],
+    "icon": "fa fa-file-text-o"
+  }
+]

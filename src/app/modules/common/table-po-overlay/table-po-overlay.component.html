@@ -1,0 +1,45 @@
+<div class="overlay-panel" *ngIf="poDto">
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Submit Date</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(poDto.submitDate, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Delivery Date</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(poDto.deliveryDate, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Project/ Task</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(poDto.project, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>PO Amount</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(poDto.amount, true) | number : '1.2-2'}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>PO Remaining Ceiling</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(poDto.remainingCeiling, true) | number : '1.2-2'}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>PO Remaining Price Variance</label></div>
+    <div
+      class="col-6 ml-2">{{commonUtil.detailViewIsDash(poDto.remainingPriceVariance, true) | number : '1.2-2'}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Status</label></div>
+    <div class="col-6 ml-2">
+    <span
+      [class]="'customer-badge status-'  + tableSupportBase.getStatus(poDto.internalApprovalStatus)">{{tableSupportBase.getStatus(poDto.internalApprovalStatus)}}</span>
+    </div>
+  </div>
+</div>
+<div class="overlay-panel" *ngIf="!poDto">
+  <div *ngIf="!poDto" class="loading-wrapper">
+    <em class="fa fa-spinner fa-pulse"></em>
+  </div>
+</div>

@@ -1,0 +1,58 @@
+<div class="overlay-panel" *ngIf="cardDto">
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Nick Name</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(cardDto.nickName, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Card Number</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(cardDto.cardNumber, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Card Owner</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(cardDto.cardOwner, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Total Amount</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(cardDto.amountStr, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Utilized Amount</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(cardDto.utilizedAmountStr, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Balance Amount</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(cardDto.balanceAmountStr, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Card Effective Until</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(cardDto.effectiveUntilStr, false)}}</div>
+  </div>
+
+  <!--  <div class="grid">-->
+  <!--    <div class="col-5 font-bold"><label>Approval Status</label></div>-->
+  <!--    <div class="col-6 ml-2 capitalize">-->
+  <!--      <li [class]="'mr-2 status-style status-'  + tableSupportBase.getStatus(cardDto.status)"></li>-->
+  <!--      {{tableSupportBase.getStatus(cardDto.status) | titlecase}}-->
+  <!--    </div>-->
+  <!--  </div>-->
+
+  <!--  <div class="grid">-->
+  <!--    <div class="col-5 font-bold"><label>Payment Status</label></div>-->
+  <!--    <div class="col-6 ml-2 capitalize">-->
+  <!--      <li [class]="'mr-2 status-style status-'  + getStatus(cardDto.paymentStatus)"></li>-->
+  <!--      {{getStatus(cardDto.paymentStatus) | titlecase}}-->
+  <!--    </div>-->
+  <!--  </div>-->
+
+</div>
+<div class="overlay-panel" *ngIf="!cardDto">
+  <div *ngIf="!cardDto" class="loading-wrapper">
+    <em class="fa fa-spinner fa-pulse"></em>
+  </div>
+</div>

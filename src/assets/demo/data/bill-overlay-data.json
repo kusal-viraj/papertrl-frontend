@@ -1,0 +1,15 @@
+{
+  "id": 1,
+  "paymentRef": "24355345",
+  "paymentAmount": "20,000.00",
+  "discountAmount": "5000.00",
+  "paymentDate": "17/12/2020",
+  "billNo": "345876",
+  "term": "3 Months",
+  "billAmount": "20,000.00",
+  "vendor": "Bamboo Watch",
+  "billDate": "17/12/2020",
+  "billDueDate": "20/12/2020",
+  "poNo": "PO000012",
+  "status": "A"
+}

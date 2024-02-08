@@ -1,0 +1,74 @@
+@import "../../../../scss/color.scss";
+
+.card-custom{
+  padding: 1rem 0 1rem 1rem;
+  .p-card-body {
+    padding: 1rem 0 1rem 1rem !important;
+  }
+}
+
+.download-link {
+  text-align: center;
+  color: $green;
+  font-weight: bolder;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.list-box ::ng-deep .p-listbox{
+  border: none;
+}
+
+.report-type-list-wrapper{
+  min-height: 800px;
+}
+
+.report-type-list-billableTransaction{
+  min-height: 738px;
+}
+
+.report-type-list-height{
+  max-height: 60vh;
+  overflow: auto;
+}
+
+.pdq-viewer-height{
+  height: 100%;
+}
+
+.divider-width-wrapper{
+  width: 1%;
+}
+
+.preview-content-wrapper{
+  width: 74%;
+  padding-left: 0;
+}
+
+.table-wrapper{
+  margin-top: 5px;
+}
+
+.item-account-identifier{
+  justify-content: end;
+  margin-right: 7px;
+  margin-bottom: 2px;
+}
+
+.item-color-wrapper{
+  padding: 8px;
+  border-radius: 10px;
+  background: $secondary-dark-purple;
+}
+.account-color-wrapper{
+  padding: 8px;
+  background: $editable-border;
+  border-radius: 10px;
+}
+
+.empty-data-wrapper{
+  padding: 314px;
+  font-size: 16.6667px;
+  font-family: sans-serif;
+  transform: scaleX(1.00029);
+  text-align: center;
+}

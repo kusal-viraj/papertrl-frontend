@@ -1,0 +1,23 @@
+[
+  {
+    "action": "DELETE",
+    "label": "Delete",
+    "icon": "fa fa-trash",
+    "active": true,
+    "authCode": "ROLES_DELETE"
+  },
+  {
+    "action": "INACTIVATE",
+    "label": "Inactivate",
+    "icon": "fa fa-toggle-off",
+    "active": true,
+    "authCode": "ROLES_INACTIVATE"
+  },
+  {
+    "action": "ACTIVATE",
+    "label": "Activate",
+    "icon": "fa fa-toggle-on",
+    "active": true,
+    "authCode": "ROLES_ACTIVATE"
+  }
+]

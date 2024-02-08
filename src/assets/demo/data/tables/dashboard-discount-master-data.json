@@ -1,0 +1,40 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "vendorName": "Vendor",
+      "billNo": "JG514",
+      "applicableDiscount": "3000.00",
+      "applicableDate": "17/12/2020"
+    },
+    {
+      "id": 1,
+      "vendorName": "Vendor",
+      "billNo": "JG514",
+      "applicableDiscount": "3000.00",
+      "applicableDate": "17/12/2020"
+    },
+    {
+      "id": 1,
+      "vendorName": "Vendor",
+      "billNo": "JG514",
+      "applicableDiscount": "3000.00",
+      "applicableDate": "17/12/2020"
+    },
+    {
+      "id": 1,
+      "vendorName": "Vendor",
+      "billNo": "JG514",
+      "applicableDiscount": "3000.00",
+      "applicableDate": "17/12/2020"
+    },
+    {
+      "id": 1,
+      "vendorName": "Vendor",
+      "billNo": "JG514",
+      "applicableDiscount": "3000.00",
+      "applicableDate": "17/12/2020"
+    }
+  ],
+  "totalRecords": 5
+}

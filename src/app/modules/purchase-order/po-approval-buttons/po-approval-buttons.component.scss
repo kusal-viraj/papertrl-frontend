@@ -1,0 +1,50 @@
+@import "../../../../scss/color.scss";
+
+.audit-btn{
+  color: #73828A;
+  border-color: #A3ACB0;
+}
+
+.dropdown-list {
+  padding-top: 10px;
+  margin-right: 25px;
+  padding-left: 5px;
+}
+.dropdown-icon {
+  right: 10px;
+  padding-top: 10px;
+  position: absolute;
+  z-index: 1;
+}
+
+.dropdown-icon:hover {
+  color: $green;
+  z-index: 1;
+}
+.dropdown-add {
+  color: $green;
+}
+
+@media only screen and (max-width: 1478px) and (min-width: 990px) {
+  .btn-resize {
+    width: 50%;
+  }
+}
+.sticky-btn {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: #ffffff;
+  margin-bottom: -21px;
+  z-index: 10;
+}
+
+.button-set-wrapper{
+  display: flex;
+  flex-wrap: wrap;
+
+}
+
+

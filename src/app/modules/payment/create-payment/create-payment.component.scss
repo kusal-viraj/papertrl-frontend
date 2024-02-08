@@ -1,0 +1,59 @@
+@import "../../../../scss/color.scss";
+@import '../../../../scss/table-responsive';
+@import '../../../../scss/common-styles';
+
+.table-wrapper {
+  height: 520px;
+
+  .pi-info-circle{
+    color: $red;
+  }
+}
+
+.form {
+  margin-bottom: 100px;
+}
+
+.summary {
+  .subHeadingColour {
+    font-size: 18px;
+  }
+
+  .document-list {
+    overflow-y: auto;
+    max-height: calc(100vh - 210px);
+  }
+}
+
+.total {
+  h2 {
+    margin-bottom: 0;
+    font-size: 20px;
+  }
+
+  p {
+    color: $secondary-blue;
+    cursor: pointer;
+  }
+}
+
+.us-bank {
+  margin-left: 20px;
+  float: left;
+
+  .grid {
+    align-items: center;
+
+    p {
+      font-size: 14px;
+      font-style: italic;
+      color: $offline-gray;
+    }
+  }
+}
+
+.input-max-width {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+

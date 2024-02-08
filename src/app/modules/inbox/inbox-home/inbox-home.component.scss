@@ -1,0 +1,488 @@
+@import "../../../../scss/color.scss";
+
+@media only screen and (max-width: 1370px) {
+  .card-overflow-main {
+    //max-height: 740px;
+    //min-height: 740px;
+  }
+}
+
+.tab-action {
+  min-height: 36px;
+}
+
+.main-card {
+  margin: 0 -18px 0 0px;
+  //min-height: 808px
+}
+
+.child-card {
+  //min-height: 700px;
+  //padding: 1px 4px;
+}
+
+.popup-header-label {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  padding-left: 1rem !important;
+}
+
+.drop-files-text {
+  padding: 0 27px;
+}
+
+.grid-heading-label {
+  color: $green;
+  text-align: right;
+  font-size: 16px;
+}
+
+.grid-icon-wrap-animation {
+  cursor: pointer;
+  animation: grid-icon 1s infinite;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+}
+
+.grid-icon-wrap {
+  cursor: pointer;
+  color: $green;
+  font-weight: 500
+}
+
+@keyframes grid-icon {
+  from {
+    color: #7cdfda;
+    font-weight: 100
+  }
+  to {
+    color: $green;
+    font-weight: 500
+  }
+}
+
+.child-card-outer-div {
+  //padding: 42px 5px 5px;
+}
+
+.inbox-heading-label {
+  padding-top: 17px;
+  font-size: 28px;
+}
+
+.heading-text {
+  margin-left: 8px;
+}
+
+.copy-text {
+  color: $green;
+  font-size: 14px;
+  cursor: pointer;
+
+  &:hover {
+    font-weight: bold;
+  }
+}
+
+.edit-text {
+  //color: $green;
+  font-size: 14px;
+  cursor: pointer;
+
+  &:hover {
+    font-weight: bold;
+  }
+}
+
+.review-text {
+  color: $green;
+  cursor: pointer;
+  float: right;
+}
+
+.delete-text {
+  color: $green;
+  cursor: pointer;
+  float: right;
+  margin-left: 35px;
+}
+
+.to-processed-data:hover {
+  cursor: pointer;
+  background-color: #ECEEEF;
+}
+
+@media only screen and (max-width: 1190px) {
+  .to-processed-data {
+    height: 80px;
+  }
+}
+
+.delete-icon {
+  margin-left: -23px;
+  margin-right: 3px;
+}
+
+.main-card-grid {
+  padding: 0px 0 1px;
+}
+
+.parent-card-grid {
+  padding: 14px 0px 1px 11px;
+}
+
+.search-icon {
+  background: $green 0% 0% no-repeat padding-box;
+  opacity: 1;
+  color: white;
+  padding: 2px 5px;
+  margin-left: -7px;
+  font-size: 10px;
+}
+
+.to-processed-data-active {
+  background-color: #ECEEEF;
+}
+
+.drop-down-button {
+  background: transparent;
+  color: #adb7bb;
+  font-size: 20px;
+  padding: 0;
+  left: -8px;
+  align-items: flex-end;
+}
+
+.drop-down-button:hover {
+  background: transparent;
+  color: $green;
+}
+
+.email-information {
+  font-size: 16px;
+  color: #999999;
+}
+
+.search-wrap {
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  font-size: 14px;
+  box-shadow: none !important;
+  border-color: $light-gray !important;
+}
+
+.search-wrap:hover {
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  font-size: 14px;
+  box-shadow: none !important;
+  border-color: $light-gray !important;
+}
+
+.search-icon-wrap {
+  border-left: none;
+  box-shadow: none;
+  border-top: none;
+  font-size: 14px;
+  color: $light-gray !important;
+}
+
+.search-field-wrap {
+  padding-left: 0;
+
+}
+
+.tab-label {
+  font-size: 16px;
+  color: $grey;
+}
+
+.heading-text-wrapper {
+  float: right;
+}
+
+.review-text-bold {
+  font-weight: bold;
+}
+
+.drop-files-text-processTab {
+  margin-bottom: 35px;
+}
+
+.editable-email-wrapper {
+  box-shadow: none !important;
+  color: $grey;
+  position: relative;
+  font-size: 15px;
+  float: left;
+  min-width: 230px;
+  padding: 3px 5px;
+  margin: -5px 0px 0 5px;
+}
+
+.copy-wrap {
+  height: 28px;
+}
+
+.padding-bottom {
+  padding-bottom: 30px !important;
+}
+
+.email-text-edit {
+  color: $grey;
+}
+
+.email-text-default {
+  color: $grey;
+  width: auto;
+}
+
+.drop-text{
+  padding-left: 1rem !important;
+}
+
+.text-overflow-wrap {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: auto;
+}
+
+.invalid-userNameLength {
+  margin-top: 4px;
+}
+
+.process-tab-style {
+  color: transparent;
+  float: right;
+  margin-left: 30px;
+}
+
+
+.custom-grid{
+  padding: 20px;
+}
+
+
+//
+//@media only screen and (max-width: 1024px) {
+//  .email-text-default {
+//    width: 100% !important;
+//  }
+//  .email-text-edit {
+//    width: 100% !important;
+//  }
+//  .edit-text {
+//    text-align: right !important;
+//    width: 10% !important;
+//    padding-left: 0 !important;
+//  }
+//  .copy-text {
+//    width: 90% !important;
+//    text-align: right !important;
+//    padding-right: 0 !important;
+//  }
+//  .editable-email-wrapper {
+//    width: 142px !important;
+//
+//  }
+//  .tab-action {
+//    width: 100% !important;
+//    min-height: 91px;
+//  }
+//}
+
+//@media only screen and (max-width: 1440px) {
+//  .pdf-viewer-wrap {
+//    width: 57% !important;
+//  }
+//  .emails-viewer-wrap {
+//    width: 43% !important;
+//  }
+//}
+
+.child-card-progress {
+  background: #ededed;
+  text-align-last: center;
+  padding: 300px;
+}
+
+@keyframes custom-progress-spinner-color {
+  100%,
+  0% {
+    stroke: $green;
+  }
+  40% {
+    stroke: $green;
+  }
+  66% {
+    stroke: $green;
+  }
+  80%,
+  90% {
+    stroke: $green;
+  }
+}
+
+.notification-count-wrapper {
+  align-self: baseline;
+}
+
+.sync-wrapper .fa-refresh {
+  color: $green;
+  font-size: 22px;
+  margin-right: 7px;
+  cursor: pointer;
+  margin-top: -5px;
+}
+
+.sync-text-wrapper {
+  color: $green;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.child-card .view-email-body-wrapper {
+  background: white;
+  height: calc(100vh - 96px);
+  //width: 100%;
+  padding: 10px;
+}
+
+.child-card .view-email-body-wrapper .email-body {
+  font-size: 16px;
+  width: auto;
+  white-space: pre-line;
+  color: #999999;
+}
+
+.view-email-body-wrapper .pi-times {
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.top-btn {
+  color: #A3ACB0;
+  border-color: #A3ACB0;
+}
+
+
+.download-attachment-link {
+  text-decoration: underline;
+  font-size: 14px;
+  color: $green;
+  cursor: pointer;
+
+  .fa-download {
+    text-decoration: inherit;
+  }
+}
+
+.document-type-wrapper {
+  font-size: 14px;
+  color: #999999;
+}
+
+.download-attachment-link .fa-download {
+  cursor: pointer;
+  animation: click-to-download 1s infinite;
+}
+
+@keyframes click-to-download {
+  from {
+    font-size: 12px
+  }
+  to {
+    font-size: 14px
+  }
+}
+
+
+.action-btn-top span{
+  padding: 10px !important;
+  cursor: pointer !important;
+  position: relative;
+  z-index: 100;
+}
+.total-record-wrapper{
+  font-size: 14px;
+  color: #999999;
+  bottom: 0;
+  text-align: center;
+}
+
+.custom-label-button {
+  padding:  10px !important;
+}
+
+
+.text-bold{
+  font-weight: bold;
+  color: #555555;
+}
+
+
+
+.side-drawer-icon {
+  font-size: 16px;
+  padding: 10px;
+  margin-right: 5px;
+  width: 36px;
+  border-radius: 50%;
+  text-align: center;
+  background: none;
+  border: none;
+
+  &:hover {
+    background-color: unset !important;
+    cursor: pointer !important;
+  }
+}
+
+@media only screen and (max-width: 1366px) {
+  //.child-card {
+  //  padding: 1px 6px !important;
+  //}
+}
+.child-card-email{
+  position: relative;
+}
+
+.inbox-panels{
+  position: relative;
+  top: 30px;
+}
+
+.card-padding{
+  padding-right: 0.1rem !important;
+  position: relative;
+  top: 13px;
+}
+
+.p-menu .p-menuitem-link .p-menuitem-text {
+  margin-left: 25px;
+}
+
+//.p-menu .p-menuitem-link {
+//  padding-left: 20px;
+//}
+.p-menu .p-menuitem-link .p-menuitem-icon {
+  margin-right: unset !important;
+  width: 1px;
+}
+
+input[type=search]::-webkit-search-cancel-button {
+  //-webkit-appearance: none; /* Remove default appearance */
+  //appearance: none; /* Remove default appearance for non-webkit browsers */
+  //width: 16px; /* Adjust size as needed */
+  //height: 16px; /* Adjust size as needed */
+  //background-image: url("../../../../assets/images/close.png");
+  //background-size: cover;
+  //cursor: pointer;
+}
+.p-tabview .p-tabview-panels {
+  //height: calc(100vh - 335px) !important;
+}

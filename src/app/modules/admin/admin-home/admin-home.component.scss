@@ -1,0 +1,16 @@
+
+:host ::ng-deep .custom-span {
+  margin: 0 .5rem;
+}
+
+
+:host ::ng-deep .p-tabview p {
+  line-height: 1.5;
+  margin: 0;
+}
+
+@media only screen and (max-width: 600px) {
+  .screen-change-btn{
+    width: 100%;
+  }
+}

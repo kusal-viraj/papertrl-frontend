@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "label": "Bill"
+  },
+  {
+    "id": 2,
+    "label": "Bill Payment"
+  },
+  {
+    "id": 3,
+    "label": "Purchase Order"
+  },
+  {
+    "id": 4,
+    "label": "PO Receipt"
+  },
+  {
+    "id": 5,
+    "label": "Expenses"
+  }
+]

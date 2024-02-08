@@ -1,0 +1,121 @@
+<form [formGroup]="applyToBillForm" class="form-outer-padding mb-0">
+
+  <div class="grid apply-credit-wrapper">
+
+    <div class="field col-3">
+      <label>Vendor</label>
+      <div>{{applyToBillForm.get('vendorName').value}}</div>
+    </div>
+
+    <div class="field  col-3">
+      <label>Credit Note No</label>
+      <div>{{applyToBillForm.get('creditNoteNo').value}}</div>
+    </div>
+
+    <div class="field col-3">
+      <label>Remaining Credit</label>
+      <div>{{applyToBillForm.get('amountToCredit').value}}</div>
+    </div>
+
+    <div class="col-12">
+      <p-table responsiveLayout="scroll" [value]="lineItemMainTable.controls" scrollable="true" scrollHeight="256px"
+               [style]="{width:'auto'}" scrollDirection="both"
+               styleClass="p-datatable-md p-datatable-striped detail-table">
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="min-width:50px"  class="thead-style detail-table-header-center" id="no">#</th>
+            <th style="min-width:250px" class="thead-style detail-table-header-left" id="itemNumber1">Bill Number</th>
+            <th style="min-width:150px" class="thead-style detail-table-header-right" id="itemName1">Remaining Balance</th>
+            <th style="min-width:150px" class="thead-style detail-table-header-right" id="sku">Amount to Apply</th>
+            <th style="min-width:50px"  class="thead-style detail-table-header-left" id="delete"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-i="rowIndex" let-item formArrayName="creditNoteBillDetails">
+          <tr id="tr_{{i}}" [formGroupName]="i" [pEditableRow]="item" (click)="onLItemClick(i)">
+            <td style="text-align: center; width:50px"><label>{{i + 1}}</label></td>
+
+            <td style="width:250px">
+              <p-dropdown [virtualScroll]="vendorRelatedBillList.data.length>20" virtualScrollItemSize="25"
+                          formControlName="billId" [autoDisplayFirst]="false" id="{{'productId' + i}}"
+                          name="productId1" class="number-column-table-dropdown" #selectedBill
+                          (onChange)="changeBillList(lineItemMainTable.controls[i]?.get('billId').value, i); calculateAmount(i)"
+                          appendTo="body" optionValue="id" optionLabel="name" placeholder="Select Bill Number"
+                          [filter]="true" [options]="vendorRelatedBillList.data" [showClear]="true"
+                          optionDisabled="inactive"
+                          [style]="{'width':'100%'}">
+
+                <ng-template pTemplate="selectedItem">
+                  <div>{{selectedBill.selectedOption.name}}</div>
+                </ng-template>
+
+                <ng-template let-item pTemplate="item">
+                  <div class="grid">
+                    <div class="dropdown-list"
+                         [ngClass]="item.id == 0 ? ' dropdown-add': null">{{item.name}}</div>
+                    <em *ngIf="item.id == 0" class="pi pi-plus dropdown-icon dropdown-add"></em>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </td>
+
+            <td style="width:150px">
+              <div class="p-inputgroup">
+                <input formControlName="remainingBalance" [readOnly]="true"
+                       currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                       placeholder="Remaining Balance" name="remainingBalance" id="{{'remainingBalance' + i}}"
+                       type="text" pInputText>
+              </div>
+            </td>
+
+            <td style="width:150px">
+              <div class="p-inputgroup">
+                <input formControlName="appliedCreditAmount" (keyup)="calculateAmount(i)"
+                       currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.', allowNegative: false}"
+                       placeholder="Amount to Apply" name="sku" id="{{'appliedCreditAmount' + i}}" maxlength="50"
+                       type="text" pInputText>
+              </div>
+            </td>
+
+            <td style="width:50px" class="text-center">
+              <i class="fa fa-trash item-remove-button item-remove-icon" *ngIf="lineItemMainTable.length > 1" (keyup)="calculateAmount(i)"
+                 (click)="removeItem(i); calculateAmount(i)"></i>
+            </td>
+
+          </tr>
+
+        </ng-template>
+        <ng-template pTemplate="summary">
+          <div class="text-right">
+                <span class="hyperlink text-right p-text-normal"
+                      (click)="lineItemMainTable.reset(); calculateAmount(itemIndex)">Clear Lines
+                                </span> &nbsp;|&nbsp;
+            <span class="hyperlink text-right p-text-normal"
+                  (click)="addItem(); calculateAmount(itemIndex)">Add Line
+              </span>
+          </div>
+        </ng-template>
+      </p-table>
+    </div>
+
+  </div>
+
+  <div class="grid alignment-with-item-table">
+    <div class="field col-offset-8 col-1 amount-label-wrapper">
+      <label class="subHeadingColour" for="totalCredit"><b>Total Credit</b></label>
+    </div>
+    <div class="field col-3 credit-amount-field-wrapper">
+      <div id="totalCredit">{{applyToBillForm.get('totalCredit').value ? applyToBillForm.get('totalCredit').value : 0.0 | number : '1.2-2'}}</div>
+    </div>
+  </div>
+</form>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" class="p-button-sm ml-2" iconPos="left" [disabled]="isSubmit"
+              [icon]="isSubmit ? 'pi pi-spin pi-spinner': 'fa fa-share'" (click)="applyToBill()"
+              label="Apply"></button>
+    </div>
+  </div>
+</div>

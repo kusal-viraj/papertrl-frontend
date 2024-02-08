@@ -1,0 +1,324 @@
+{
+  "advancedFilters": [
+    {
+      "field": "billNo",
+      "header": "Bill NO",
+      "searchType": "input"
+    },
+    {
+      "field": "billDate",
+      "header": "Date",
+      "searchType": "date"
+    },
+    {
+      "field": "billAmount",
+      "header": "Amount",
+      "searchType": "numeric"
+    },
+    {
+      "field": "terms",
+      "header": "Terms",
+      "searchType": "input"
+    },
+    {
+      "field": "dueDate",
+      "header": "Due Date",
+      "searchType": "date"
+    },
+    {
+      "field": "vendor",
+      "header": "Vendor",
+      "searchType": "input"
+    },
+    {
+      "field": "poNo",
+      "header": "PO No",
+      "searchType": "input"
+    },
+    {
+      "field": "submittedBy",
+      "header": "Submitted By",
+      "searchType": "input"
+    },
+    {
+      "field": "submittedDate",
+      "header": "Submitted Date",
+      "searchType": "date"
+    },
+    {
+      "field": "remainingBalance",
+      "header": "Remaining Balance",
+      "searchType": "input"
+    },
+    {
+      "field": "discountAmount",
+      "header": "Discount Amount",
+      "searchType": "numeric"
+    },
+    {
+      "field": "approvalUser",
+      "header": "approval User",
+      "searchType": "input"
+    },
+    {
+      "field": "approvalDate",
+      "header": "approval Date",
+      "searchType": "date"
+    },
+    {
+      "field": "status",
+      "header": "Status",
+      "searchType": "dropdown",
+      "dropdownValues": [
+        {
+          "label": "PENDING",
+          "value": "P"
+        },
+        {
+          "label": "APPROVED",
+          "value": "A"
+        },
+        {
+          "label": "REJECTED",
+          "value": "R"
+        }
+      ]
+    }
+  ],
+  "columns": [
+    {
+      "field": "checkbox",
+      "header": null,
+      "columnShow": true,
+      "isSortable": false,
+      "isReOrderable": false,
+      "isReSizable": false,
+      "canHide": false,
+      "align": "center",
+      "searchType": "checkbox"
+    },
+    {
+      "field": "action",
+      "header": "Action",
+      "isSortable": false,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "actionButton",
+      "canHide": false
+    },
+    {
+      "field": "billNo",
+      "header": "Bill No",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Bill No"
+    },
+    {
+      "field": "billDate",
+      "header": "Date",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "date",
+      "canHide": true,
+      "placeholder": "Date"
+    },
+    {
+      "field": "billAmount",
+      "header": "Amount",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "right",
+      "searchType": "numeric",
+      "canHide": true,
+      "placeholder": "Amount"
+    },
+    {
+      "field": "terms",
+      "header": "Terms",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Terms"
+    },
+    {
+      "field": "dueDate",
+      "header": "Due Date",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "date",
+      "canHide": true,
+      "placeholder": "Due Date"
+    },
+    {
+      "field": "vendor",
+      "header": "Vendor",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": false,
+      "align": "left",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Vendor"
+    },
+    {
+      "field": "poNo",
+      "header": "PO No",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "PO No"
+    },
+    {
+      "field": "poReceipt",
+      "header": "PO Receipt",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "PO Receipt"
+    },
+    {
+      "field": "submittedBy",
+      "header": "Submitted By",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": false,
+      "align": "left",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Submitted By"
+    },
+    {
+      "field": "submittedDate",
+      "header": "Submitted Date",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": false,
+      "align": "left",
+      "searchType": "date",
+      "canHide": true,
+      "placeholder": "Submitted Date"
+    },
+    {
+      "field": "remainingBalance",
+      "header": "Remaining Balance",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": false,
+      "align": "left",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Remaining Balance"
+    },
+    {
+      "field": "discountAmount",
+      "header": "Discount Amount",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": false,
+      "align": "left",
+      "searchType": "numeric",
+      "canHide": true,
+      "placeholder": "Discount Amount"
+    },
+    {
+      "field": "approvalUser",
+      "header": "approval User",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": false,
+      "align": "left",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "approval User"
+    },
+    {
+      "field": "approvalDate",
+      "header": "approval Date",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": false,
+      "align": "left",
+      "searchType": "date",
+      "canHide": true,
+      "placeholder": "approval Date"
+    },
+    {
+      "field": "status",
+      "header": "Status",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "dropdown",
+      "canHide": true,
+      "placeholder": "All",
+      "dropdownValues": [
+        {
+          "label": "PENDING",
+          "value": "P"
+        },
+        {
+          "label": "APPROVED",
+          "value": "A"
+        },
+        {
+          "label": "REJECTED",
+          "value": "R"
+        }
+      ]
+    }
+  ],
+  "state": {
+    "first": 0,
+    "rows": 10,
+    "tableWidth": "2000px",
+    "columnWidths": "51,126,160,164,150,156,159,154,148,164",
+    "columnOrder": [
+      "checkbox",
+      "action",
+      "billNo",
+      "billDate",
+      "billAmount",
+      "terms",
+      "dueDate",
+      "poNo",
+      "poReceipt",
+      "status"
+    ]
+  }
+}

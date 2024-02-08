@@ -1,0 +1,197 @@
+<div class="drawer-content p-3">
+  <form [formGroup]="createNewCodeForm" (ngSubmit)="onSubmit(createNewCodeForm)">
+    <div class="grid mb-4 p-fluid">
+      <div [ngClass]="'field col-12'">
+        <div>
+        <span>
+          <label class="label-wrapper" for="projectCode">Project Code*</label>
+          <input formControlName="name"
+                 (keyup)="removeSpaces.clearSpace(createNewCodeForm, 'name')"
+                 id="projectCode" type="text" pInputText>
+
+        </span>
+        </div>
+        <div class="p-invalid text-align-left"
+             *ngIf="createNewCodeForm.get('name').dirty && createNewCodeForm.get('name').hasError('required')">
+          Project Code is required
+        </div>
+        <div class="p-invalid text-align-left" *ngIf="createNewCodeForm.get('name').hasError('maxlength')">Project Code
+          must be less than 50 characters
+        </div>
+      </div>
+    </div>
+
+    <div class="grid  p-fluid">
+      <div [ngClass]="'field col-12'">
+      <span>
+        <label class="label-wrapper" for="parentProject">Select Parent Project </label>
+        <p-dropdown [options]="projectCodes.data" id="parentProject" [showClear]="true" class="parent-project"
+                    inputId="role" formControlName="parentId" optionLabel="name" optionValue="id"
+                    [virtualScroll]="projectCodes.data.length>20" virtualScrollItemSize="25"
+                    [autoDisplayFirst]="false" optionDisabled="inactive" [filter]="true">
+        </p-dropdown>
+
+      </span>
+      </div>
+    </div>
+
+    <div class="grid  p-fluid">
+      <div [ngClass]="'field col-12'">
+        <div>
+        <span>
+          <label class="label-wrapper" for="contractValue">Contract Value</label>
+          <input formControlName="contractValue" id="contractValue" type="text" currencyMask maxlength="20"
+                 [options]="{ prefix: '', thousands: ',', decimal: '.', allowNegative: false}" pInputText>
+        </span>
+        </div>
+        <div class="p-invalid text-align-left" *ngIf="createNewCodeForm.get('contractValue').hasError('maxlength')">
+          Project Code contract value can not greater than 20 digits
+        </div>
+      </div>
+    </div>
+
+    <div class="grid  p-fluid">
+      <div [ngClass]="'field col-12'">
+        <div>
+        <span>
+          <label class="label-wrapper" for="contractValue">Budget</label>
+          <input formControlName="projectBudget" id="budget" type="text" currencyMask maxlength="20"
+                 [options]="{ prefix: '', thousands: ',', decimal: '.', allowNegative: false}" pInputText>
+        </span>
+        </div>
+        <div class="p-invalid text-align-left" *ngIf="createNewCodeForm.get('projectBudget').hasError('maxlength')">
+          Budget can not greater than 20 digits
+        </div>
+      </div>
+    </div>
+
+
+    <div class="grid  p-fluid">
+      <div [ngClass]="'field col-12'">
+        <div>
+        <span>
+          <label class="label-wrapper">Start Date{{createNewCodeForm.get('endDate').value ? '*' : ''}}</label>
+          <p-calendar formControlName="startDate"
+                      (onSelect)="validateEndDate($event); validateDate()" [showButtonBar]="true"
+                      dateFormat="mm/dd/yy" [showIcon]="true" (onClearClick)="validateDate()"></p-calendar>
+      </span>
+        </div>
+        <div class="p-invalid text-align-left"
+             *ngIf="createNewCodeForm.get('startDate').dirty && createNewCodeForm.get('startDate').hasError('required')">
+          Start Date is required
+        </div>
+      </div>
+    </div>
+
+
+    <div class="grid  p-fluid">
+      <div [ngClass]="'field col-12'">
+        <div>
+        <span>
+          <label class="label-wrapper">End Date{{createNewCodeForm.get('startDate').value ? '*' : ''}}</label>
+          <p-calendar formControlName="endDate" [minDate]="getMinDate()" todayButtonStyleClass="todayBtn"
+                      (onClearClick)="validateDate()"
+                      dateFormat="mm/dd/yy" [showIcon]="true" [showButtonBar]="true"
+                      (onSelect)="validateDate()"></p-calendar>
+
+      </span>
+        </div>
+        <div class="p-invalid text-align-left"
+             *ngIf="createNewCodeForm.get('endDate').dirty && createNewCodeForm.get('endDate').hasError('required')">
+          End Date is required
+        </div>
+      </div>
+    </div>
+
+    <div class="grid  p-fluid">
+      <div [ngClass]="'field col-12'">
+        <label class="label-wrapper" for="description">Description</label>
+        <div class="p-inputgroup">
+        <span class="p-float-label">
+          <textarea formControlName="description" (keyup)="removeSpaces.clearSpace(createNewCodeForm, 'description')"
+                    pInputTextarea rows="2" id="description" pInputText></textarea>
+        </span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="label-wrapper">Users</div>
+
+    <div [ngClass]="'field col-12'">
+                <span>
+                   <label class="label-wrapper" for="parentProject">Select User(s)</label>
+                  <p-listbox [options]="allUsersList.data" [metaKeySelection]="false" #user
+                             formControlName="userNameList" optionDisabled="inactive"
+                             [checkbox]="true" [filter]="true" [multiple]="true" optionLabel="name"
+                             optionValue="id" (onChange)="changeUserMultiSelect($event, user)"
+                             [listStyle]="{'max-height':'250px'}" [style]="{'width':'auto'}">
+                 <ng-template let-user pTemplate="item">
+                              <div class="grid">
+                     <div class="dropdown-list"
+                          [ngClass]="user.id == 0 ? ' role-dropdown-add': null">{{user.name}}</div>
+                     <em *ngIf="user.name == 'Add New' "
+                         class="pi pi-plus role-dropdown-icon role-dropdown-add"></em>
+                 </div>
+                   </ng-template>
+                  </p-listbox>
+             </span>
+    </div>
+
+    <div class="label-wrapper">Accounts</div>
+
+    <div [ngClass]="'field col-12'">
+                <span>
+                   <label class="label-wrapper" for="account">Select Account(s)</label>
+                    <p-listbox [options]="allAccountsList.data" [metaKeySelection]="false"
+                               formControlName="accountIdList" optionDisabled="inactive" #account
+                               [checkbox]="true" [filter]="true" [multiple]="true" optionLabel="name"
+                               optionValue="id" id="account" (onChange)="changeAccountMultiSelect($event, account)"
+                               [listStyle]="{'max-height':'250px'}" [style]="{'width':'auto'}">
+                 <ng-template let-account pTemplate="item">
+                          <div class="grid">
+                     <div class="dropdown-list"
+                          [ngClass]="account.id == 0 ? ' role-dropdown-add': null">{{account.name}}</div>
+                     <em *ngIf="account.name == 'Add New' "
+                         class="pi pi-plus role-dropdown-icon role-dropdown-add"></em>
+                 </div>
+                   </ng-template>
+                  </p-listbox>
+        </span>
+    </div>
+
+  </form>
+</div>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" (click)="restForm()" label="Reset" [disabled]="loading"
+              class="p-button-outlined p-button-sm margin-right button-responsive-mobile"
+              icon="fa-solid fa-rotate-right"></button>&nbsp;
+
+      <button pButton type="button" (click)="onSubmit(createNewCodeForm)" [disabled]="loading" class="p-button-sm "
+              iconPos="left"
+              [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-plus'" label="Create"></button>
+
+    </div>
+  </div>
+</div>
+
+
+<!--Add New Account-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" appendTo="body" [modal]="true" position="right"
+           class="overflow-side-bar" *ngIf="isAddNewAccount" [(visible)]="isAddNewAccount">
+  <ng-template pTemplate="header">Account Information</ng-template>
+  <app-add-account (updatedAccountList)="getAccount(); isAddNewAccount = false"
+                   [detailView]="false" [editView]="false" [panel]="true" *ngIf="isAddNewAccount"></app-add-account>
+</p-sidebar>
+
+
+<!--Add New User-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" appendTo="body" [modal]="true" position="right"
+           class="overflow-side-bar" *ngIf="isAddNewUser" [(visible)]="isAddNewUser">
+  <ng-template pTemplate="header">Create User</ng-template>
+  <app-add-user [panel]="true" [detailView]="false" (refreshTable)="loadUser(); isAddNewUser = false"
+                [editView]="false" *ngIf="isAddNewUser"></app-add-user>
+</p-sidebar>

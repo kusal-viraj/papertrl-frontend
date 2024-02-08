@@ -1,0 +1,63 @@
+@import "../../../../scss/color.scss";
+
+
+.custom-card-form {
+  width: 100%;
+  border: none;
+  box-shadow: none;
+  //contain: size;
+  height: 99%;
+
+}
+
+.custom-card-items {
+  width: 100%;
+  border: none;
+  box-shadow: none;
+  //contain: size;
+  height: 100%;
+
+}
+
+.item-remove-button {
+  color: #9c9c9c;
+}
+
+.item-remove-button:hover {
+  cursor: pointer;
+}
+
+.custom-card-approve-btn {
+  width: 100%;
+  border: none;
+  box-shadow: none;
+  //contain: size;
+  height: 100%;
+}
+
+.topic {
+  color: $green;
+}
+
+.po-no {
+  color: #73828A;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.top-btn {
+  color: #A3ACB0;
+  border-color: #A3ACB0;
+}
+
+.customSplit {
+  contain: strict;
+  overflow-y: auto;
+  margin-right: 10px;
+}
+
+.close-btn{
+  min-width: 159px;
+}

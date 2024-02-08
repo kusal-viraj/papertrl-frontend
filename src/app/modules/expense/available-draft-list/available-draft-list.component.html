@@ -1,0 +1,75 @@
+<div class="grid mt-4">
+
+  <div style="width:100%">
+    <p-table responsiveLayout="scroll" [value]="availableDraftList" scrollable="true" scrollHeight="300px"
+             [style]="{width:'auto'}" scrollDirection="both"
+             styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width:30px" class="thead-style detail-table-header-left" id="no">#</th>
+          <th style="min-width:150px" class="thead-style detail-table-header-left" id="reportNumber">Report Number</th>
+          <th style="min-width:150px" class="thead-style detail-table-header-left" id="reportName">Report Name</th>
+          <th style="min-width:150px" class="thead-style detail-table-header-left" id="businessPurpose">Business Purpose</th>
+          <th style="min-width:150px" class="thead-style detail-table-header-left" id="fromDate">From Date</th>
+          <th style="min-width:150px" class="thead-style detail-table-header-left" id="toDate">To Date</th>
+          <th style="min-width:150px" class="thead-style detail-table-header-left" id="vendor">Vendor</th>
+          <th style="min-width:60px" class="thead-style detail-table-header-left" id="edit">Action</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-i="rowIndex" let-draft>
+        <tr class="draft-list-table-row">
+
+          <td style="text-align: center; width:30px"><label>{{i + 1}}</label></td>
+
+          <td style="width:150px">
+            <div>{{draft.id}}</div>
+          </td>
+
+          <td style="width:150px">
+            <div app-read-more-text [fieldValue]="draft.reportName"
+                 [maxCharacters]="20"></div>
+          </td>
+
+          <td style="width:150px">
+            <div app-read-more-text [fieldValue]="draft.businessPurpose"
+                 [maxCharacters]="20"></div>
+          </td>
+
+          <td class="text-left" style="width:150px">
+            <div app-read-more-text [fieldValue]="draft.fromDate"
+                 [maxCharacters]="20"></div>
+          </td>
+
+          <td class="text-left" style="width:150px">
+            <div app-read-more-text [fieldValue]="draft.toDate"
+                 [maxCharacters]="20"></div>
+          </td>
+
+          <td style="width:150px">
+            <div app-read-more-text [fieldValue]="draft.vendor"
+                 [maxCharacters]="20"></div>
+          </td>
+
+          <td style="width:60px" class="text-center button-table-data">
+            <em id="removeButton" [class]="draft.isProgress ? 'pi pi-spin pi-spinner' : 'fa fa-pencil'"
+               [class.disabled]="isProgressDataPatching" class="item-remove-button"
+               (click)="emitClickEvent.emit(draft); expenseService.isProcessingPatchingDataFromDraft.next({isProgress: true, index: i})"></em>
+          </td>
+
+        </tr>
+
+      </ng-template>
+
+    </p-table>
+  </div>
+
+  <div class="grid col-12 mb-1 mt-5">
+    <div class="pull-right">
+    <p-checkbox (onChange)="changeStateOfExpenseDraftList()" [(ngModel)]="isChecked"
+                [binary]="true"></p-checkbox>&nbsp;<span class="subHeadingColour">Don't show again</span>
+    </div>
+  </div>
+
+</div>

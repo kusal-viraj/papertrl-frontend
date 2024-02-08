@@ -1,0 +1,88 @@
+
+<div class="col-12 mt-4">
+  <form [formGroup]="accountSyncForm" (ngSubmit)="onSubmit()">
+    <div class="grid p-fluid">
+
+      <div class="field col-12">
+        <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input formControlName="sync_user_id" maxlength="150" (keyup)="removeSpace('sync_user_id')"
+                     id="sync_user_id" type="text" pInputText name="fakeUser" [readOnly]="isCurrentUser()">
+              <label for="sync_user_id">User Name</label>
+            </span>
+        </div>
+        <div class="p-invalid text-align-left"
+             *ngIf="accountSyncForm.get('sync_user_id').dirty && accountSyncForm.get('sync_user_id').hasError('required')">
+          User Name is Required
+        </div>
+      </div>
+      <div class="field col-12">
+        <div class="p-inputgroup mb-2">
+              <span class="p-float-label  p-input-icon-right">
+                   <i [ngClass]="passwordShow? 'pi pi-eye-slash' : 'pi pi-eye'"
+                      *ngIf="!isCurrentUser()"
+                      (click)="passwordShow? passwordShow= false: passwordShow= true"></i>
+                     <input class="password-text" [style]="'width: 100%'" name="fakePassword"
+                            [readOnly]="isCurrentUser()"
+                            formControlName="sync_user_password" [feedback]="false" autocomplete="off"
+                            [showPassword]="passwordShow" id="float-input" type="password" pPassword>
+                     <label for="float-input">Password*</label>
+              </span>
+        </div>
+        <div class="p-invalid text-align-left"
+             *ngIf="accountSyncForm.get('sync_user_password').dirty && accountSyncForm.get('sync_user_password').hasError('required')">
+          Password is Required
+        </div>
+        <div class="p-invalid text-align-left"
+             *ngIf="accountSyncForm.get('sync_user_password').hasError('maxlength')">Password must be less than 20
+          characters
+        </div>
+        <br>
+        <span *ngIf="isCurrentUser()"
+              (click)="accountSyncForm.get('sync_user_password').reset()" class="edit">Click to Edit</span>
+      </div>
+    </div>
+
+
+
+    <div *ngIf="!isCurrentUser()" class="grid">
+      <div class="col-12 text-right">
+        <button pButton type="button" (click)="accountSyncForm.reset();" label=" "
+                class="p-button-outlined resetBtn p-fluid p-button-sm">
+          <div style="width: 100%"><span class="fa-solid fa-rotate-right"></span> &nbsp; Reset</div>
+        </button>&nbsp;
+
+        <button pButton type="submit" class="p-button-sm" label=" ">
+          <div style="width: 100%"><span class="pi pi-save"></span> &nbsp; Save</div>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="col-12">
+  <p-toggleButton class="p-button-sm button-width" iconPos="right" (onChange)="connectBb($event)"
+                  [onLabel]="showSpin ? '' :'Disconnect from ' + systemName"
+                  [offLabel]="showSpin ? '' : 'Connect to ' + systemName"
+                  [onIcon]="showSpin ? 'pi pi-spin pi-spinner': 'pi pi-circle-on'"
+                  [offIcon]="showSpin ? 'pi pi-spin pi-spinner': 'pi pi-circle-off'"
+                  [(ngModel)]="statusOfSystemButton"></p-toggleButton>
+</div>
+
+
+<ng-container *ngIf="configurationsList.length != 0 && showConfigurationList && showConfigurationListLoaded">
+  <h6 class="subHeadingColour mt-3">Service Configurations</h6>
+  <div class="mb-2" *ngFor="let config of configurationsList">
+    <p-fieldset class="syncFieldSet" legend="{{config.name}}">
+      <div class="grid" *ngFor="let data of config.serviceStatus">
+        <div class="col-3">
+          <p-inputSwitch [disabled]="isConfigsDisabled" [(ngModel)]="data.syncable"
+                         (onChange)="configsChanged(data)"></p-inputSwitch>
+        </div>
+        <div class="col-9">
+          <p>{{data.serviceName + ' ' + systemName}}</p>
+        </div>
+      </div>
+    </p-fieldset>
+  </div>
+</ng-container>

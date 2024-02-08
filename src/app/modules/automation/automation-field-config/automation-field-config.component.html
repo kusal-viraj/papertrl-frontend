@@ -1,0 +1,371 @@
+<form [formGroup]="automationForm">
+
+  <div formArrayName="automationActions" *ngIf="automationActionConfig.length>0">
+
+    <ng-container *ngFor="let automation of automationActionConfig.controls; let  automationIndex =index"
+                  [formGroupName]="automationIndex">
+
+      <div class="field-resize" formArrayName="fieldConfig" *ngIf=" fieldConfig(actionIndex).length>0">
+
+        <div class="grid p-fluid" style="min-width: 800px"
+             *ngFor="let field of fieldConfig(automationIndex).controls; let  fieldValueIndex =index"
+             [formGroupName]="fieldValueIndex">
+
+          <div class="scroll-fields field col-3 xl:col-2 lg:col-3 md:col-3 sm:col-3">
+            <label class="label-wrapper" for="fieldId_{{automationIndex}}">Select Field* </label>
+            <span>
+           <p-dropdown inputId="dropdown" formControlName="fieldId" id="fieldId_{{automationIndex}}" showClear="true"
+                       [autoDisplayFirst]="false" [options]="fieldList.data" [filter]="true" appendTo="body"
+                       optionDisabled="inactive"
+                       optionLabel="name" optionValue="id" (onChange)="fieldTypeChanged($event,field);
+                        checkBillApprovalFieldValueIsApproved(field)"></p-dropdown>
+            </span>
+            <div class="p-invalid text-align-left"
+                 *ngIf="field.get('fieldId').dirty && field.get('fieldId').errors">
+              Field is required
+            </div>
+          </div>
+
+          <div class="scroll-fields field col-3 xl:col-2 lg:col-3 md:col-3 sm:col-3">
+            <label class="label-wrapper" for="fieldValue_{{automationIndex}}">Field Value* </label>
+            <span *ngIf="!field.get('hasDropDownValue').value && (field.get('dataType').value !== appConstant.FIELD_DATA_TYPE_INT
+                  && field.get('dataType').value !== appConstant.FIELD_DATA_TYPE_DECIMAL && field.get('dataType').value !== appConstant.FIELD_DATE_TYPE_DATE )">
+              <input formControlName="fieldValue" id="fieldValue_{{automationIndex}}"
+                     [maxLength]="field.get('maxLength').value"
+                     (keypress)="removeFieldSpace(field.get('fieldValue'))" type="text" pInputText>
+              </span>
+
+            <span
+              *ngIf="field.get('hasDropDownValue').value && (field.get('dataType').value == appConstant.FIELD_DATA_TYPE_TEXT)">
+                  <input formControlName="fieldValue" id="fieldValue1_{{automationIndex}}"
+                         [maxLength]="field.get('maxLength').value"
+                         (keypress)="removeFieldSpace(field.get('fieldValue'))" type="text" pInputText>
+              </span>
+
+            <span
+              *ngIf="field.get('hasDropDownValue').value && field.get('dataType').value === appConstant.FIELD_DATA_TYPE_INT">
+                    <p-dropdown inputId="dropdown" formControlName="fieldValue" id="valueDropdown_{{automationIndex}}"
+                                [autoDisplayFirst]="false" showClear="true" appendTo="body" #dropdownRef
+                                [options]="fieldValueList[fieldValueIndex].data" [filter]="true"
+                                (onChange)="checkBillApprovalFieldValueIsApproved(field)"
+                                optionLabel="name" optionValue="id">
+
+                        <ng-template let-dropItem pTemplate="item">
+                          <div class="grid">
+                            <div class="dropdown-list"
+                                 [ngClass]="dropItem.id == 0 ? ' dropdown-add': null">{{dropItem.name}}</div>
+                            <em *ngIf="dropItem.id == 0" class="pi pi-plus dropdown-icon dropdown-add"></em>
+                          </div>
+                        </ng-template>
+                    </p-dropdown>
+             </span>
+
+            <span *ngIf="!field.get('hasDropDownValue').value && field.get('dataType').value == appConstant.FIELD_DATA_TYPE_DECIMAL">
+                  <input formControlName="fieldValue" id="fieldValueDecimal_{{automationIndex}}" type="text"
+                         currencyMask [maxLength]="field.get('maxLength').value"
+                         [options]="{ prefix: '', thousands: ',', decimal: '.' }" pInputText>
+              </span>
+
+            <div class="p-inputgroup">
+                <span *ngIf="!field.get('hasDropDownValue').value && field.get('dataType').value == appConstant.FIELD_DATE_TYPE_DATE">
+                  <p-calendar formControlName="fieldValue" id="dateField_{{automationIndex}}"
+                              [showIcon]="true"></p-calendar>
+                </span>
+            </div>
+
+            <div class="p-invalid text-align-left"
+                 *ngIf="field.get('fieldValue').dirty && field.get('fieldValue').errors">
+              Field value is required
+            </div>
+          </div>
+
+          <div style="display: inline-block; padding-top: 42px;" *ngIf="!isDetailView">
+
+            <button pButton type="button" class="p-button-sm p-button-borderless" iconPos="left"
+                    icon="fa-solid fa-trash-can"
+                    *ngIf="fieldConfig(automationIndex).controls.length > 1"
+                    (click)="removeFieldValue(fieldValueIndex)">
+            </button>
+            <button pButton type="button" class="p-button-sm p-button-borderless" iconPos="left" icon="fa-solid fa-plus"
+                    *ngIf="fieldValueIndex == (fieldConfig(automationIndex).controls.length-1)"
+                    (click)="addFieldValueRow()"></button>
+
+          </div>
+
+          <div class="xl:col-6 lg:col-6 md:col-6 sm:col-6"></div>
+
+          <small class="col-6 p-4 xl:col-4 lg:col-6 md:col-6 sm:col-6 block automation-fields-information"
+                 *ngIf="getMessageForSelectedField(field.get('fieldId').value)?.eventList.length > 0">
+            <div class="grid m-0">
+              <div class="col-1 p-0 text-center">
+                <span class="pi pi-exclamation-circle"></span>
+              </div>
+              <div class="col-11 p-0">
+                <div class="grid">
+                  <div class="col-12 pb-0">
+                    {{getMessageForSelectedField(field.get('fieldId').value)?.message}}
+                  </div>
+                    <div class="col-12 pt-1 pb-0">
+                      <ul class="m-0">
+                        <li class="pl-2" *ngFor="let event of getMessageForSelectedField(field.get('fieldId').value).eventList">{{event}}</li>
+                      </ul>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </small>
+          <!-- Define Expense Cost Distribution table when a bill mark as approved by default-->
+          <div class="table-scroll col-12"
+               *ngIf="documentType==documentTypeBill&&statusField==fieldConfig(actionIndex).controls[fieldValueIndex].get('fieldId').value&&
+               fieldValueApproved==fieldConfig(actionIndex).controls[fieldValueIndex].get('fieldValue').value&&enableDistributionTables">
+            <p-tabView styleClass="tabview-custom">
+
+              <!-- Define Expense Cost Distribution table when a bill mark as approved by default-->
+              <p-tabPanel
+                *ngIf="field.get('hasDistributionInfo') && getExpenseCostDistributionForm(automationIndex,fieldValueIndex).length>0">
+                <ng-template pTemplate="header">
+                  <span class="custom-span">Expense Cost Distribution</span>
+                </ng-template>
+                <ng-template pTemplate="content">
+                  <div class="table-scroll col-12">
+
+                    <p-table responsiveLayout="scroll"
+                             [value]="getExpenseCostDistributionForm(automationIndex,fieldValueIndex).controls"
+                             scrollable="true" scrollHeight="210px" [style]="{width:'auto'}"
+                             styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+                      <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                          <col style="width:150px">
+                          <col style="width:250px">
+                          <col style="width:250px">
+                          <col style="width:250px">
+                        </colgroup>
+                      </ng-template>
+
+                      <ng-template pTemplate="header">
+                        <tr>
+                          <th class="thead-style detail-table-header-left" id="account">Account Number*</th>
+                          <th class="thead-style detail-table-header-left" id="accountName">Account Name</th>
+                          <th class="thead-style detail-table-header-left" id="description">Description</th>
+                          <th class="thead-style detail-table-header-left" id="project">Project/Task</th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-i="rowIndex" let-item
+                                   formArrayName="billExpenseCostDistributions">
+                        <tr [formGroupName]="i">
+                          <td>
+                            <p-dropdown [options]="accountList.data" id="{{'account' + i}}"
+                                        inputId="account" formControlName="accountId" showClear="true"
+                                        optionLabel="name" optionValue="id" placeholder="Account*"
+                                        [style]="{'width':'100%'}"
+                                        [readonly]="isDetailView"
+                                        (onChange)="changeList('ACCOUNT',$event, i,item);
+                                 getAccountName($event, i ,item)"
+                                        [autoDisplayFirst]="false" #selectAccountLabel appendTo="body"
+                                        [filter]="true">
+
+                              <ng-template pTemplate="selectedItem">
+                                <div>{{selectAccountLabel.selectedOption.name}}</div>
+                              </ng-template>
+
+                              <ng-template let-accounts pTemplate="item">
+                                <div class="grid">
+                                  <div class="dropdown-list"
+                                       [ngClass]="accounts.id == 0 ? 'dropdown-add': null">{{accounts.name}}</div>
+                                  <em *ngIf="accounts.id ==0" class="pi pi-plus dropdown-add dropdown-icon"></em>
+                                </div>
+                              </ng-template>
+                            </p-dropdown>
+                          </td>
+
+                          <td>
+                            <div class="p-inputgroup">
+                              <input formControlName="accountName"
+                                     placeholder="Account Name"
+                                     name="description" id="{{'accountName' + i}}" [readOnly]="isDetailView"
+                                     type="text" pInputText>
+                            </div>
+                          </td>
+
+                          <td>
+                            <div class="p-inputgroup">
+                              <input formControlName="description" id="{{'description_' + i}}" [readOnly]="isDetailView"
+                                     placeholder="Description" name="description" type="text" pInputText>
+                            </div>
+                          </td>
+                          <td>
+                            <p-dropdown [options]="projectCodeList.data" id="{{'projectTask' + i}}" inputId="code"
+                                        formControlName="projectId" [readonly]="isDetailView" showClear="true"
+                                        optionLabel="name" optionValue="id" placeholder="Project Task"
+                                        [style]="{'width':'100%'}" optionDisabled="inactive"
+                                        [autoDisplayFirst]="false" #code appendTo="body"
+                                        (onChange)="changeList('PROJECT_CODE', $event, i,item)"
+                                        [filter]="true">
+                              <ng-template pTemplate="selectedItem">
+                                <div>{{code.selectedOption.name}}</div>
+                              </ng-template>
+
+                              <ng-template let-projectCodes pTemplate="item">
+                                <div class="grid">
+                                  <div class="dropdown-list"
+                                       [ngClass]="projectCodes.id == 0 ? 'dropdown-add': null">{{projectCodes.name}}</div>
+                                  <em *ngIf="projectCodes.id == 0 " class="pi pi-plus dropdown-add dropdown-icon"></em>
+                                </div>
+                              </ng-template>
+                            </p-dropdown>
+                          </td>
+
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </div>
+                </ng-template>
+              </p-tabPanel>
+              <!-- Define Expense Cost Distribution table when a bill mark as approved by default-->
+
+              <!-- Define Item Cost Distribution table when a bill mark as approved by default-->
+              <p-tabPanel
+                *ngIf="field.get('hasDistributionInfo') && getItemCostDistributionForm(automationIndex,fieldValueIndex).length>0">
+                <ng-template pTemplate="header">
+                  <span class="custom-span">Item Cost Distribution</span>
+                </ng-template>
+                <ng-template pTemplate="content">
+                  <div class="table-scroll col-12">
+                    <p-table responsiveLayout="scroll"
+                             [value]="getItemCostDistributionForm(automationIndex,fieldValueIndex).controls"
+                             scrollable="true" scrollHeight="210px" [style]="{width:'auto'}"
+                             styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+                      <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                          <col style="width:150px">
+                          <col style="width:250px">
+                          <col style="width:250px">
+                          <col style="width:250px">
+                        </colgroup>
+                      </ng-template>
+
+                      <ng-template pTemplate="header">
+                        <tr>
+                          <th class="thead-style detail-table-header-left" id="itemService">Item / Service *</th>
+                          <th class="thead-style detail-table-header-left" id="itemName">Item Name</th>
+                          <th class="thead-style detail-table-header-left" id="itemDescription">Description</th>
+                          <th class="thead-style detail-table-header-left" id="itemProject">Project/Task</th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-i="rowIndex" let-item formArrayName="billItemCostDistributions">
+                        <tr [formGroupName]="i">
+                          <td>
+                            <p-dropdown [options]="itemList.data" id="{{'itemService' + i}}" inputId="item"
+                                        formControlName="itemId" [readonly]="isDetailView" showClear="true"
+                                        optionLabel="name" optionValue="id" placeholder="Item/ Service*"
+                                        [style]="{'width':'100%'}"
+                                        [autoDisplayFirst]="false" #selectedItemLabel appendTo="body"
+                                        (onChange)="changeList('ITEM', $event, i,item);
+                                getItemName($event, i,item)"
+                                        [filter]="true">
+                              <ng-template pTemplate="selectedItem">
+                                <div>{{selectedItemLabel.selectedOption.name}}</div>
+                              </ng-template>
+
+                              <ng-template let-items pTemplate="item">
+                                <div class="grid">
+                                  <div class="dropdown-list"
+                                       [ngClass]="items.id == 0 ? 'dropdown-add': null">{{items.name}}</div>
+                                  <em *ngIf="items.id == 0" class="pi pi-plus dropdown-icon dropdown-add"></em>
+                                </div>
+                              </ng-template>
+                            </p-dropdown>
+                          </td>
+
+                          <td>
+                            <div class="p-inputgroup">
+                              <input formControlName="itemName" placeholder="Item Name" name="description"
+                                     [readOnly]="isDetailView" id="{{'itemName' + i}}"
+                                     type="text" pInputText>
+                            </div>
+                          </td>
+
+                          <td>
+                            <div class="p-inputgroup">
+                              <input formControlName="description" placeholder="Description" name="description"
+                                     [readOnly]="isDetailView" id="{{'itemDescription_' + i}}"
+                                     type="text" pInputText>
+                            </div>
+                          </td>
+
+                          <td>
+                            <p-dropdown [options]="projectCodeList.data" id="{{'itemProjectTask' + i}}" inputId="code"
+                                        formControlName="projectId" [readonly]="isDetailView" showClear="true"
+                                        optionLabel="name" optionValue="id" placeholder="Project/Task"
+                                        [style]="{'width':'100%'}" optionDisabled="inactive"
+                                        [autoDisplayFirst]="false" #itemProjectCode appendTo="body"
+                                        (onChange)="changeList('PROJECT_CODE', $event, i,item)"
+                                        [filter]="true">
+                              <ng-template pTemplate="selectedItem">
+                                <div>{{itemProjectCode.selectedOption.name}}</div>
+                              </ng-template>
+
+                              <ng-template let-itemProjectCodes pTemplate="item">
+                                <div class="grid">
+                                  <div class="dropdown-list"
+                                       [ngClass]="itemProjectCodes.id == 0 ? 'dropdown-add': null">{{itemProjectCodes.name}}</div>
+                                  <em *ngIf="itemProjectCodes.id == 0 "
+                                      class="pi pi-plus dropdown-add dropdown-icon"></em>
+                                </div>
+                              </ng-template>
+                            </p-dropdown>
+                          </td>
+
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </div>
+                </ng-template>
+              </p-tabPanel>
+              <!-- Define Item Cost Distribution table when a bill mark as approved by default-->
+            </p-tabView>
+
+          </div>
+          <!-- Define Expense Cost Distribution table when a bill mark as approved by default-->
+        </div>
+      </div>
+
+
+    </ng-container>
+
+  </div>
+
+  <hr>
+  <br>
+
+  <div class="field col-12 xl:col-6 lg:col-6 md:col-12 sm:col-12"
+       *ngIf="actionIndex===(automationActionConfig.length-1) && !isDetailView">
+    <p class="more-info" (click)="addActionDropDown()"> Add More Action <i class="pi pi-plus"></i></p>
+  </div>
+
+</form>
+<!--Add New Account-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" appendTo="body" [modal]="true" position="right"
+           class="overflow-side-bar" *ngIf="isAddNewAccount" [(visible)]="isAddNewAccount">
+  <ng-template pTemplate="header">Account Information</ng-template>
+  <app-add-account (updatedAccountList)="getAccounts(accountList)"
+                   [detailView]="false" [editView]="false" [panel]="true" *ngIf="isAddNewAccount"></app-add-account>
+</p-sidebar>
+<!--Add New Project Code-->
+<p-sidebar styleClass="p-sidebar-sm" *ngIf="isAddNewProjectCodes" [dismissible]="true" appendTo="body" [modal]="true"
+           position="right" class="overflow-side-bar"
+           [(visible)]="isAddNewProjectCodes">
+  <ng-template pTemplate="header">Create Project</ng-template>
+  <app-create-new-project-code (updatedParentCodeList)="getProjectTaskList(projectCodeList)"
+                               *ngIf="isAddNewProjectCodes">
+  </app-create-new-project-code>
+</p-sidebar>
+<!--Add New Item-->
+<p-sidebar styleClass="p-sidebar-md" [dismissible]="true" appendTo="body" [modal]="true" position="right"
+           class="overflow-side-bar" *ngIf="isAddNewItem" [(visible)]="isAddNewItem">
+  <ng-template pTemplate="header">Create Item</ng-template>
+  <app-add-item (emittedTabIndex)="getItems(itemList)" [editView]="false" [detailView]="false" [panel]="true"
+                *ngIf="isAddNewItem"></app-add-item>
+</p-sidebar>

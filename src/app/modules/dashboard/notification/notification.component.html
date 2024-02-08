@@ -1,0 +1,63 @@
+<ng-container>
+
+  <a tabindex="0" (click)="notifications.length > 0 ? notificationClicked() : null">
+    <i class="pi pi-bell"></i>
+    <span [class]="noOfNotifications > 99 ? 'topbar-badge topbar-badge-large-count':'topbar-badge'">{{noOfNotifications > 99 ? '99+' : noOfNotifications}}</span>
+  </a>
+  <ul (click)=" app.notificationMenuClick = true; app.topbarNotificationMenuActive = true"
+      class="notifications-menu fade-in-up">
+    <ng-scrollbar class="virtual-scroll mt-2" thumbClass="white-scrollbars">
+      <cdk-virtual-scroll-viewport scrollViewport itemSize="50" class="example-viewport">
+
+        <li *ngFor="let items of notifications; let i = index" role="menuitem">
+          <div class="grid p-2 notification-grid"
+               [ngStyle]="i%2 == 0 ? {'background-color': '#f9f9f9fc'} : {'background-color': 'white'} ">
+            <div class="notification-item--wrapper col-12 p-p-0 {{getNotificationColors(items.notificationTypeId)}} "
+                 [ngClass]="getNotificationStatus(items.status)">
+              <a class="inner-wrapper" (click)="itemClickedNotification(items)"
+                 tabindex="0" [ngClass]="!items.clickable ? 'no-click-items' : null">
+                <div class="icon-wrapper">
+                  <i class="notification-icon" [ngClass]="getNotificationIcon(items.notificationTypeId)"></i>
+                </div>&nbsp;
+                <div class="notification-item">
+                  <div class="notification-summary">{{items.title}}</div>
+                  <div class="notification-detail">
+                    {{getNotificationReference(items)}} {{items.description}}.</div>
+                </div>
+              </a>
+              <span
+                (click)="app.notificationMenuClick = true; app.topbarNotificationMenuActive = true; removeNotification(items.tenantId,items.id, items.status)"
+                class=" close-mark ">
+                <i style="align-self: center" class="pi pi-times"></i>
+              </span>
+            </div>
+          </div>
+        </li>
+      </cdk-virtual-scroll-viewport>
+    </ng-scrollbar>
+
+    <div role="menuitem" class="footer">
+      <button (click)="showClearDialog = !showClearDialog" class="clear-all">
+        <i style="align-self: left" class="fa fa-trash"></i>Clear All
+      </button>
+    </div>
+
+    <div *ngIf="showClearDialog" class="notification-wrapper">
+      <div class="notification-dialog">
+        <i class="fa fa-trash"></i>
+        <span class="label">Do you want to clear all notifications?</span>
+        <div class="grid">
+          <div class="col-6">
+            <button class="p-button-rounded no" (click)="showClearDialog = !showClearDialog"
+                    label="No" pButton></button>
+          </div>
+          <div class="col-6">
+            <button class="p-button-rounded yes" (click)="clearAllNotifications()" label="Yes" pButton></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ul>
+
+</ng-container>
+

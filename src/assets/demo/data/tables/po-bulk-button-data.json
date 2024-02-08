@@ -1,0 +1,51 @@
+[
+  {
+    "action": "DELETE",
+    "label": "Delete",
+    "icon": "fa fa-trash",
+    "active": true,
+    "authCode": "PURCHASE_ORDER_DELETE"
+  },
+  {
+    "action": "REJECT",
+    "label": "Reject",
+    "icon": "fa fa-minus-circle",
+    "active": true,
+    "authCode": "PURCHASE_ORDER_REJECT"
+  },
+  {
+    "action": "QUICK_APPROVE",
+    "label": "Quick Approve",
+    "icon": "pi pi-check",
+    "active": true,
+    "authCode": "PURCHASE_ORDER_QUICK_APPROVE"
+  },
+  {
+    "action": "SEND_TO_VENDOR",
+    "label": "Send to Vendor Approval",
+    "icon": "pi pi-reply",
+    "active": true,
+    "authCode": "PURCHASE_ORDER_SEND_VENDOR_APPROVAL"
+  },
+  {
+    "action": "SEND_PO_ATTACHMENT",
+    "label": "Email to Vendor",
+    "icon": "fa-solid fa-paper-plane",
+    "active": true,
+    "authCode": "PURCHASE_ORDER_SEND_ATTACHMENT"
+  },
+  {
+    "action": "OPEN",
+    "label": "Reopen",
+    "icon": "fa-regular fa-circle-check",
+    "active": false,
+    "authCode": "RE_OPEN_PURCHASE_ORDER"
+  },
+  {
+    "action": "CLOSE",
+    "label": "Close",
+    "icon": "fa fa-times",
+    "active": false,
+    "authCode": "CLOSE_PURCHASE_ORDER"
+  }
+]

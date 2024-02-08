@@ -1,0 +1,125 @@
+@import '../../../../scss/table-responsive';
+
+@media only screen and (max-width: 600px) {
+  .screen-change-btn {
+    width: 100%;
+  }
+}
+
+
+
+.subHeadings{
+  cursor: pointer;
+  color: #70a8dc!important;;
+  text-decoration: underline;
+  font-weight: normal;
+}
+
+@media only screen and (max-width: 600px) {
+  .heading-responsive {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.heading {
+  size: 16px;
+  color: $green;
+  cursor: pointer;
+  font-weight: 600;
+
+}
+
+.subHeading {
+  color: #73828A;
+}
+
+.dropdown-list {
+  padding-top: 10px;
+  margin-right: 25px;
+  padding-left: 5px;
+}
+
+.dropdown-icon {
+  right: 10px;
+  padding-top: 10px;
+  position: absolute;
+  z-index: 1;
+}
+
+.dropdown-icon:hover {
+  color: $green;
+  z-index: 1;
+}
+
+.dropdown-add {
+  color: $green;
+}
+
+.btn-trash {
+  background-color: #D0D5D8;
+  opacity: 1;
+}
+
+.btn-trash:hover {
+  background-color: #8c8e91;
+  opacity: 1;
+}
+
+.trash-button-wrapper{
+  width: 16% !important;
+}
+
+.plus-button-wrapper{
+  width: 80% !important;
+}
+
+@media screen and (max-width: 1366px) {
+  .trash-button-wrapper{
+    width: 27% !important;
+  }
+
+  .plus-button-wrapper{
+    width: 70% !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .trash-button-wrapper{
+    width: 10% !important;
+  }
+
+  .plus-button-wrapper{
+    width: 70% !important;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .trash-button-wrapper{
+    width: 26% !important;
+  }
+
+  .plus-button-wrapper{
+    width: 70% !important;
+  }
+}
+
+@media screen and (max-width: 1440px) {
+  .trash-button-wrapper{
+    width: 23% !important;
+  }
+
+  .plus-button-wrapper{
+    width: 75% !important;
+  }
+}
+
+.addtionFiled-wrapper{
+  height: calc(100vh - 332px);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.existingAdditionalFields{
+  display: none !important;
+}

@@ -1,0 +1,113 @@
+<div class="grid m-0">
+  <h5 [class]="'subHeadingColour col-6 p-2'">Department Details</h5>
+
+  <div class="col-6 text-right">
+    <div  pTooltip="Delete" tooltipPosition="bottom" *ngIf="privilegeService.isAuthorized(appAuthorities.DEPARTMENT_DELETE)"
+          class="mr-3 fa fa-trash side-drawer-icon" (click)="deleteDepartment()"></div>
+    <div  pTooltip="Edit" tooltipPosition="bottom" *ngIf="privilegeService.isAuthorized(appAuthorities.DEPARTMENT_EDIT)"
+          class="mr-3 fa fa-pencil side-drawer-icon" (click)="editDepartmentData()"></div>
+    <div  pTooltip="Close" tooltipPosition="bottom" class="mr-3 fa fa-close side-drawer-icon"
+         (click)="closeDetailView.emit()"></div>
+  </div>
+
+  <form class="department-form ml-2" [formGroup]="departmentDetailsForm">
+    <div class="grid p-fluid mb-2">
+
+      <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Department Code</label>
+        <div class="pt-2" app-read-more-text
+             [fieldValue]="commonUtil.detailViewIsDash(f.departmentCode.value,false)" [maxCharacters]="20"></div>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Department Name</label>
+        <div class="pt-1" app-read-more-text
+             [fieldValue]="commonUtil.detailViewIsDash(f.departmentName.value,false)" [maxCharacters]="20"></div>
+      </div>
+
+      <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <label>Contact Person</label>
+        <div class="pt-1" app-read-more-text
+             [fieldValue]="commonUtil.detailViewIsDash(f.contactPerson.value,false)" [maxCharacters]="20"></div>
+      </div>
+
+      <ng-container formGroupName="billingAddress">
+      <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <div class="col-12 p-0">
+          <label>Billing Address</label>
+        </div>
+
+        <div class="pt-1" *ngIf="!isBillingEmpty()">-</div>
+
+          <div class="field col-12 pl-0 pb-0 pt-1">
+            <div *ngIf="getBillingAddressLine1.value">
+              {{getBillingAddressLine1.value + ','}}
+            </div>
+            <div *ngIf="getBillingAddressLine2.value">
+              {{getBillingAddressLine2.value + ','}}
+            </div>
+            <div *ngIf="getBillingAddressCity.value">
+              {{getBillingAddressCity.value + ','}}
+            </div>
+            <div *ngIf="getBillingAddressState.value">
+              {{getBillingAddressState.value + ','}}
+            </div>
+            <div *ngIf="getBillingAddressZipcode.value">
+              {{getBillingAddressZipcode.value + ','}}
+            </div>
+            <div *ngIf="getBillingAddressCountry.value">
+              {{getBillingAddressCountry.value + '.'}}
+            </div>
+          </div>
+      </div>
+      </ng-container>
+
+      <ng-container formGroupName="shippingAddress">
+      <div class="field md:col-6 sm:col-12 xl:col-4 lg:col-4 col-12">
+        <div class="col-12 p-0">
+          <label>Shipping Address</label>
+        </div>
+
+        <div *ngIf="!isShippingEmpty()">-</div>
+
+          <div class="field col-12 pl-0 pb-0 pt-1">
+            <div *ngIf="getShippingAddressLine1.value">
+              {{getShippingAddressLine1.value + ','}}
+            </div>
+            <div *ngIf="getShippingAddressLine2.value">
+              {{getShippingAddressLine2.value + ','}}
+            </div>
+            <div *ngIf="getShippingAddressCity.value">
+              {{getShippingAddressCity.value + ','}}
+            </div>
+            <div *ngIf="getShippingAddressState.value">
+              {{getShippingAddressState.value + ','}}
+            </div>
+            <div *ngIf="getShippingAddressZipcode.value">
+              {{getShippingAddressZipcode.value + ','}}
+            </div>
+            <div *ngIf="getShippingAddressCountry.value">
+              {{getShippingAddressCountry.value + '.'}}
+            </div>
+          </div>
+      </div>
+      </ng-container>
+
+      <div class="field col-12 pt-2">
+          <div *ngIf="f.useForPoCreation.value">The above billing and shipping addresses are used in POs. </div>
+        <div *ngIf="!f.useForPoCreation.value">The billing and shipping addresses from the company profile are used in POs.</div>
+      </div>
+
+    </div>
+
+  </form>
+</div>
+
+<!--Edit department-->
+<p-sidebar styleClass="p-sidebar-sm" [modal]="true" [dismissible]="true" position="right"
+           [(visible)]="editDepartment" *ngIf="editDepartment" appendTo="body">
+  <ng-template pTemplate="header">Edit Department</ng-template>
+  <app-department-create *ngIf="editDepartment" [panel]="true" [editView]="true" [depId]="departmentId"
+                         (updateDepartments)="editDepartment = false; getDepartmentData(departmentId);
+                         successUpdate.emit()"></app-department-create>
+</p-sidebar>

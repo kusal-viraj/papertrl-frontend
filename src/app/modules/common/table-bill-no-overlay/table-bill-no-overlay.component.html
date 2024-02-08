@@ -1,0 +1,43 @@
+<div class="overlay-panel" *ngIf="billDto">
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Bill Amount</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(billDto.amount, true)| number : '1.2-2'}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Bill Date</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(billDto.dateString, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Due Date</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(billDto.dueDate, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Term</label></div>
+    <div class="col-6 ml-2">{{commonUtil.detailViewIsDash(billDto.term, false)}}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Approval Status</label></div>
+    <div class="col-6 ml-2 capitalize">
+      <li [class]="'mr-2 status-style status-'  + tableSupportBase.getStatus(billDto.status)"></li>
+      {{tableSupportBase.getStatus(billDto.status) | titlecase}}
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="col-5 font-bold"><label>Payment Status</label></div>
+    <div class="col-6 ml-2 capitalize">
+      <li [class]="'mr-2 status-style status-'  + getStatus(billDto.paymentStatus)"></li>
+      {{getStatus(billDto.paymentStatus) | titlecase}}
+    </div>
+  </div>
+
+</div>
+<div class="overlay-panel" *ngIf="!billDto">
+  <div *ngIf="!billDto" class="loading-wrapper">
+    <em class="fa fa-spinner fa-pulse"></em>
+  </div>
+</div>

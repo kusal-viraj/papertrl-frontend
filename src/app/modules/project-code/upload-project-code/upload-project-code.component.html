@@ -1,0 +1,80 @@
+<p-blockUI class="boarder-hide" *ngIf="responsePercentage !== 0" [blocked]="responsePercentage > 0" [target]="pnl">
+  <div class="exception-body" *ngIf="responsePercentage">
+    <div class="exception-content">
+      <circle-progress
+        [percent]="[responsePercentage]"
+        [radius]="70"
+        [outerStrokeWidth]="10"
+        [innerStrokeWidth]="100"
+        [outerStrokeColor]="'#95fdff'"
+        [innerStrokeColor]="'transparent'"
+        [showUnits]=true
+        [titleFontWeight]="600"
+        [showSubtitle]=false
+        [backgroundGradient]=false
+        [animation]="false">
+      </circle-progress>
+    </div>
+  </div>
+</p-blockUI>
+
+<div class="height">
+
+  <div class="text-left ">
+    <p class="margin-top infoUpload"><b>Step 1: </b><span (click)="downloadProjectCodeTemplate()" class="download-link">Download</span>
+      the template.</p>
+    <p class="margin-top infoUpload"><b>Step 2: </b> Fill in all fields and save.</p>
+    <p class="margin-top infoUpload"><b>Step 3: </b> Upload the completed template.</p>
+  </div>
+
+  <form [formGroup]="uploadCodeForm">
+    <div class="grid">
+      <div class="col-12 mt-5 upload-field">
+        <div class="p-inputgroup">
+        <span class="p-float-label inner-text-position">
+          <input id="fileUpload" #codeList formControlName="codeListController"
+                 accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                 (change)="changeProjectCodeUpload($event)" type="file" hidden>
+          <input id="fileText" formControlName="codeListController"
+                 [value]="codeList.files[0] ? codeList.files[0].name : null" readonly class="input-max-width"
+                 onClick="document.getElementById('fileUpload').click()" type="text" pInputText>
+          <label for="fileText">Browse a file to upload* </label>
+          <button pButton label="Browse" class="p-button file-browse p-button-sm"
+                  onClick="document.getElementById('fileUpload').click()"></button>
+                  </span>
+        </div>
+      </div>
+    </div>
+    <div class="p-invalid text-align-left"
+         *ngIf="uploadCodeForm.get('codeListController').dirty && uploadCodeForm.get('codeListController').errors">
+      File is required
+    </div>
+  </form>
+</div>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+
+      <button pButton class="p-button-sm p-button-outlined ml-2" type="button"
+              icon="fa-solid fa-rotate-right" label="Reset" [disabled]="isDisabled"
+              (click)="uploadCodeForm.reset()"></button>
+
+      <button class="p-button-sm  ml-2" pButton type="submit" icon="fa fa-cloud-upload"
+              label="Upload" [disabled]="isDisabled"
+              (click)="uploadProjectCodeList()"></button>
+
+      <div class="upload-button-mobile field col-12">
+        <button pButton class="p-button-sm p-button-outlined" type="button" icon="fa-solid fa-rotate-right"
+                label="Reset"
+                [disabled]="isDisabled" (click)="uploadCodeForm.reset()"></button>
+      </div>
+
+      <div class=" upload-button-mobile field col-12">
+        <button class="p-button-sm" pButton type="submit" icon="fa fa-cloud-upload" label="Upload"
+                [disabled]="isDisabled" (click)="uploadProjectCodeList()"></button>
+      </div>
+
+    </div>
+  </div>
+</div>

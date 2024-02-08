@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "label": "Image files"
+  },
+  {
+    "id": 2,
+    "label": "PDF files"
+  },
+  {
+    "id": 3,
+    "label": "MS Excel(93-2003) files"
+  },
+  {
+    "id": 4,
+    "label": "MS Excel files"
+  },
+  {
+    "id": 5,
+    "label": "MS Word files(93-2003) files"
+  },
+  {
+    "id": 6,
+    "label": "MS Word files"
+  }
+]

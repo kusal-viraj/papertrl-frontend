@@ -1,0 +1,83 @@
+@import "../../../../scss/color.scss";
+
+.receipt-attachment-wrapper{
+  height: 105px;
+  width: 74px;
+  margin-left: 13px;
+  margin-bottom: 8px;
+  border: solid 1px $canceled-gray;
+  background: $canceled-gray;
+  color: $offline-gray;
+  border-radius: 6px;
+  &:hover{
+    cursor: pointer;
+  }
+}
+
+.pdf-icon-wrapper{
+  padding: 32px 25px 25px 25px;
+  font-size: 36px;
+}
+
+.selected-item-wrapper {
+  text-align-last: left;
+  height: 0;
+  position: relative;
+  margin-right: 13px;
+}
+
+.check-box-wrapper {
+  margin-left: 4px;
+  margin-top: 3px;
+  font-size: 18px;
+  color: $green;
+}
+
+.attachment-view{
+  height: 100%;
+  width: 100%;
+ }
+
+.single-attachment-view{
+  height: 100%;
+  width: 100%;
+}
+
+.attachment-wrapper{
+  text-align: center;
+  padding-top: 35%;
+}
+
+.single-attachment-wrapper{
+  text-align: center;
+  padding-top: 40%;
+}
+
+.progress-gif{
+  height: 45px;
+}
+
+.view-one{
+  height: 96% !important;
+}
+.view-multiple{
+  height: 96% !important;
+}
+
+@media screen and (max-width: 1366px) {
+  .attachment-wrapper{
+    text-align: center;
+    padding-top: 25% !important;
+  }
+
+  .single-attachment-wrapper{
+    text-align: center;
+    padding-top: 38% !important;
+  }
+  .view-one{
+    height: 96% !important;
+  }
+  .view-multiple{
+    height: 77% !important;
+  }
+}

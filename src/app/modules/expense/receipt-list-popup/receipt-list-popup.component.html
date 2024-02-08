@@ -1,0 +1,136 @@
+<div class="grid m-2 mb-0"  *ngIf="!viewDetail">
+  <div class="col-12 xl:col-6">
+      <span class="p-input-icon-left mr-2" [hidden]="uploadView">
+      <i class="pi pi-search"></i>
+      <input type="text" pInputText placeholder="Search by File Name" [(ngModel)]="searchValue"
+             (keyup)="loadData(this.tableSupportBase.searchFilterDto)">
+    </span>
+  </div>
+  <div class="col-12 xl:col-6 text-right">
+    <span>
+      <button pButton type="button" class="p-button-outlined" icon="fa fa-paperclip" label="Attach Missing Receipt"
+              (click)="attachMissingReceipt.emit()" [hidden]="uploadView" *ngIf="!fromExpense"></button>
+      <button pButton type="button" class="p-button-outlined" icon="pi pi-arrow-left" label="Back"
+              (click)="uploadView = false" [hidden]="!uploadView"></button>
+    </span>
+    <span [hidden]="uploadView">
+      <button pButton type="button" class="ml-2" icon="fa fa-cloud-upload" label="Upload Receipt"
+              (click)="uploadView = true"></button>
+    </span>
+  </div>
+</div>
+
+<div [hidden]="uploadView"  class="grid m-2 mb-0">
+  <div class="col-12" [class.content-view]="singleAttachment || singleAttachmentLoading" *ngIf="!viewDetail">
+    <p-dataView [value]="tableSupportBase.dataSource" [paginator]="true" [rows]="48" layout="grid"
+                [styleClass]="viewDetail ? 'exp-receipt-detail': 'exp-receipt'"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [filterBy]="'thumbnailUrl'" [showCurrentPageReport]="true" #dt
+                [lazy]="true" (onLazyLoad)="loadData($event)" [totalRecords]="tableSupportBase.totalRecords">
+      <ng-template let-i="rowIndex" let-item pTemplate="gridItem">
+        <div [class]="(singleAttachment || singleAttachmentLoading) ? 'col-12 xl:col-3 md:col-3 p-1' : 'col-12 xl:col-2 md:col-3 p-1'">
+
+          <div class="product-grid-item card" [class.card-hover]="item.id == displayedAttachmentId"
+               [class.selected]="(item.id === selectedReceiptId) && !viewDetail"
+               (click)="select(item)" (mouseleave)="menu.hide(); item.openMenu = false">
+
+            <div class="top-corner-menu"  [class.visible-menu]="item.openMenu" [hidden]="isDeleteMenuVisible(item)"
+                 (click)="selectedActionForDelete = item; $event.stopPropagation(); menu.hide(); menu.toggle($event); item.openMenu = true">
+              <i class="fa fa-ellipsis-v" aria-hidden="true" #menuAttr></i>
+              <p-menu #menu class="receipt-action-menu" appendTo="menuAttr" [model]="actionMenuItems" [popup]="true"></p-menu>
+
+            </div>
+            <div class="product-grid-item-content">
+              <i *ngIf="!item.loading" class="fa-solid fa-file-pdf"></i>
+              <i *ngIf="item.loading" class="pi pi-spin pi-spinner"></i>
+            </div>
+            <div class="product-grid-item-bottom">
+              <div class="grid w-full">
+                <div class="col-12 pb-0">
+                  <div class="product-description" [class.font-weight-600]="item['receipt.attached'] == 'N'" [tooltipDisabled]="item['receipt.fileName'].length < 50"
+                       [pTooltip]="item['receipt.fileName']" tooltipPosition="bottom">
+                    {{item['receipt.fileName'].length < 50 ? item['receipt.fileName'] : (item['receipt.fileName'] | slice:0:50) + '...'}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <div class="text-center grid table-empty-data">
+          <div class="col-12">
+            <i class="fa-solid fa-magnifying-glass"></i><br>
+            <p>There are no records found</p>
+          </div>
+        </div>
+      </ng-template>
+    </p-dataView>
+  </div>
+  <div class="image-wrapper"  [class.attachment-view]="(singleAttachment || singleAttachmentLoading) && !viewDetail"
+       [class.w-full]="viewDetail" *ngIf="singleAttachment || singleAttachmentLoading">
+    <ngx-extended-pdf-viewer [handTool]="false" [showOpenFileButton]="false" [showBookmarkButton]="false"
+                             [src]="singleAttachment" useBrowserLocale="true" [showToolbar]="true"
+                             [showSidebarButton]="false" [showFindButton]="false"
+                             *ngIf="!singleAttachmentLoading"
+                             [showSecondaryToolbarButton]="false"
+                             [showRotateButton]="false" [showPropertiesButton]="false" [showPrintButton]="false"
+                             height="100%" class="image-viewer borderless-pdf"></ngx-extended-pdf-viewer>
+    <div *ngIf="singleAttachmentLoading">
+      <img class="attachment-process-gif" alt="card" src="../../../../assets/images/progress-gif.gif">
+    </div>
+  </div>
+</div>
+
+<div class="grid m-3" *ngIf="uploadView">
+  <div class="col-12" *ngIf="!loading && !viewDetail">
+    <ngx-dropzone accept="application/pdf,image/png,image/jpeg,image/jpg" (change)="changeFileList($event)"
+                  class="drop-zone-style">
+      <ngx-dropzone-label class="dp-zone-big-text-wrapper p-text-normal">
+        <div class="grid justify-content-evenly upload-image-wrapper p-col-12">
+          <img alt="card" src="../../../../assets/images/dropzone-bg-image-removebg-preview.png">
+        </div>
+        Drop File(s) Here To Upload <br><br>
+        <span class="dp-zone-small-text-wrapper p-text-normal"> (We only accept PDF, JPG JPEG and PNG formats, all the other formats will be ignored)</span>
+      </ngx-dropzone-label>
+      <ngx-dropzone-preview *ngFor="let f of attachments" [removable]="true" (removed)="onRemove(f)">
+        <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+      </ngx-dropzone-preview>
+    </ngx-dropzone>
+  </div>
+
+  <div class="col-12" *ngIf="loading">
+    <ngx-dropzone [disabled]="true" class="drop-zone-style1" style="background-color: #ededed">
+      <ngx-dropzone-label>
+        <p-progressSpinner [style]="{width: '70px', height: '70px'}" styleClass="custom-spinner" strokeWidth="4"
+                           fill="transparent"
+                           animationDuration=".8s"></p-progressSpinner>
+        <br>
+        <ngx-dropzone-label class="subHeadingColour p-text-normal">Please wait, We are processing your file(s)
+        </ngx-dropzone-label>
+      </ngx-dropzone-label>
+    </ngx-dropzone>
+  </div>
+</div>
+
+<div [hidden]="uploadView" *ngIf="!viewDetail" class="grid m-2 mt-0 mb-0">
+  <div class="col-12 xl:col-6 toggle-content align-self-center">
+    <p-checkbox (onChange)="loadData(tableSupportBase.searchFilterDto);toggleList()" [(ngModel)]="showUsedReceipts"
+                [binary]="true"></p-checkbox>&nbsp;<span class="vertical-align-top">Show new and used receipts</span>  </div>
+  <div class="col-12 xl:col-6 text-right" *ngIf="selectedReceipt || singleAttachment">
+    <button pButton type="button" class="p-button-outlined" icon="fa-solid fa-rotate-right" label="Reset"
+            (click)="reset()"></button>
+    <button pButton type="button" class="ml-2" icon="pi pi-save" label="Apply & Close"
+            (click)="applyAndClose()"></button>
+  </div>
+</div>
+
+
+<p-confirmDialog #rej key="receiptDel" appendTo="body" header="Are you sure?" icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="rej.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, Delete"
+            (click)="rej.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

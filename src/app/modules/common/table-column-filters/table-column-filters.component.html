@@ -1,0 +1,88 @@
+<div class="drawer-content p-3">
+  <div class="grid p-fluid">
+    <ng-container *ngFor="let col of columns">
+      <div [ngClass]="'field col-12'" *ngIf="col.searchType == enums.MULTISELECT">
+            <span class="p-fluid">
+              <label class="label-wrapper">{{col.header}}</label>
+             <p-multiSelect [options]="col.dropdownValues" placeholder="Any" appendTo="body" optionLabel="name"
+                            [(ngModel)]="col.value"
+                            optionValue="id" virtualScrollItemSize="25" [virtualScroll]="true"
+                            (onChange)="dt.filter($event.value, col.field, 'contains')" id="multiselect">
+              </p-multiSelect>
+            </span>
+      </div>
+
+
+      <div [ngClass]="'field col-12'" *ngIf="col.searchType == enums.INPUT">
+            <span class="p-fluid">
+              <label class="label-wrapper">{{col.header}}</label>
+                <input pInputText type="text" [(ngModel)]="col.value" [placeholder]="col.placeholder"
+                       (keyup)="dt.filter($event.target.value, col.field, 'contains')" class="p-column-filter">
+            </span>
+      </div>
+
+      <div [ngClass]="'field col-12'" *ngIf="col.searchType == enums.NUMERIC">
+          <span class="p-fluid">
+                          <label class="label-wrapper">{{col.header}}</label>
+
+                <div class="p-inputgroup">
+              <input type="text" pInputText placeholder="0.00" #val1
+                     [options]="{prefix: '', thousands: '', decimal: '.'}"
+                     currencyMask [(ngModel)]="col.value"
+                     (keyup)="tableSupportBase.filterRange(dt, val1.value, val2.value, col.field, $event)">
+
+               <span class="p-inputgroup-addon field-clear-button">< ></span>
+
+               <input type="text" pInputText placeholder="0.00" #val2
+                      [options]="{prefix: '', thousands: '', decimal: '.'}"
+                      currencyMask [(ngModel)]="col.value2"
+                      (keyup)="tableSupportBase.filterRange(dt, val1.value, val2.value, col.field, $event)">
+                </div>
+
+          </span>
+      </div>
+
+      <div [ngClass]="'field col-12'" *ngIf="col.searchType == enums.NUMBER">
+            <span class="p-fluid">
+              <label class="label-wrapper">{{col.header}}</label>
+            <input pInputText pKeyFilter="money" type="number" [placeholder]="col.placeholder" [(ngModel)]="col.value"
+                   (input)="dt.filter($event.target.value, col.field, 'contains')" class="p-column-filter">
+            </span>
+      </div>
+
+      <div [ngClass]="'field col-12'"  *ngIf="col.searchType == enums.DATE">
+            <span class="p-fluid">
+             <label class="label-wrapper">{{col.header}}</label>
+              <p-calendar (onSelect)="tableSupportBase.onDateSelect(dt, selectedLaw.value, col.field)" #selectedLaw
+                          (onClearClick)="dt.filter('', col.field, 'contains')" [placeholder]="col.placeholder"
+                          appendTo="body" name="{{col.fieldID}}" selectionMode="range" [numberOfMonths]="2"
+                          [showButtonBar]="true" styleClass="p-column-filter" [(ngModel)]="col.value"
+                          [readonlyInput]="true" dateFormat="mm-dd-yy"></p-calendar>
+            </span>
+      </div>
+
+      <div [ngClass]="'field col-12'" *ngIf="col.searchType == enums.DROPDOWN">
+            <span class="p-fluid">
+               <label class="label-wrapper">{{col.header}}</label>
+               <p-dropdown appendTo="body" optionLabel="name" optionValue="id" [(ngModel)]="col.value"
+                           [virtualScroll]="col.dropdownValues" virtualScrollItemSize="20" [filter]="true"
+                           [options]="col.dropdownValues" [showClear]="true"
+                           (onChange)="dt.filter($event.value, col.field, 'equals')"
+                           placeholder="Any"></p-dropdown>
+            </span>
+      </div>
+
+    </ng-container>
+  </div>
+</div>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+    <button pButton type="button" (click)="resetFilters()" label="Reset"
+            class="p-button-borderless mr-3 p-button-sm"></button>
+    <button pButton type="submit" [loading]="btnLoading" (click)="closeDrawer.emit(true)" class="p-button-sm p-button-outlined"
+            label="Close"></button>
+      </div>
+</div>
+</div>

@@ -1,0 +1,159 @@
+<div class="grid p-m-0">
+  <div class="col-6 pl-0">
+    <h5 class="subHeadingColour">Create a support ticket</h5>
+  </div>
+  <div class="col-6 pr-0 text-right pull-right">
+    <div class="fa fa-close side-drawer-icon"
+         (click)="closeDrawer()"></div>
+  </div>
+</div>
+
+<form [formGroup]="formGroup" class="support-form-wrapper mt-3">
+  <div class="grid p-fluid">
+
+    <div class="col-12 xl:col-12 lg:col-12 md:col-12 sm:col-12 field">
+      <div class="subHeadingColour field mb-2">What can we help you with?</div>
+      <div class="inputgroup">
+        <p-dropdown [options]="categoryList" optionLabel="name" #selectedVal [autoDisplayFirst]="false"
+                    class="category" optionValue="id" formControlName="typeId">
+          <ng-template pTemplate="selectedItem">
+            <div class="grid ml-1" *ngIf="selectedVal.selectedOption">
+              <div class="col-1 icon">
+                <i class="{{selectedVal.selectedOption.icon}}"></i>
+              </div>
+              <div class="col-10 pb-0">
+                <div class="grid info-wrapper">
+                  <div class="col-12 title">
+                    {{selectedVal.selectedOption.name}}
+                  </div>
+                  <div class="col-12 pt-0 description">
+                    {{selectedVal.selectedOption.description}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template let-items pTemplate="item">
+            <div class="grid">
+              <div class="col-1 icon">
+                <i class="{{items.icon}}"></i>
+              </div>
+              <div class="col-10 pb-0">
+                <div class="grid info-wrapper">
+                  <div class="col-12 title">
+                    {{items.name}}
+                  </div>
+                  <div class="col-12 pt-0 description">
+                    {{items.description}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+    </div>
+
+
+    <div class="col-12 xl:col-12 lg:col-12 md:col-12 sm:col-12 field">
+      <label class="label-wrapper" for="feature">Select Feature*</label>
+        <span class="p-float-label">
+           <p-dropdown formControlName="featureId" id="feature" [autoDisplayFirst]="false" [showClear]="false"
+                       [options]="featureList.data" optionValue="id" optionLabel="name">
+             <ng-template let-item pTemplate="item">
+                 <div class="grid">
+                     <div class="dropdown-list"
+                          [ngClass]="item.label == 'Add New' ? ' dropdown-add': null">{{item.name}}</div>
+                     <em *ngIf="item.label == 'Add New'" class="pi pi-plus dropdown-icon dropdown-add"></em>
+                 </div>
+             </ng-template>
+           </p-dropdown>
+
+        </span>
+      <div class="p-invalid text-align-left" *ngIf="formGroup.get('featureId').dirty && formGroup.get('featureId').errors">
+        Feature is required
+      </div>
+    </div>
+
+    <div *ngIf="formGroup.get('featureId').value === otherFeatureId" class="col-12 xl:col-12 lg:col-12 md:col-12 sm:col-12 field">
+      <span class="p-float-label">
+        <input formControlName="otherFeatureDetail" (keyup)="removeSpaces.clearSpace(formGroup, 'otherFeatureDetail')" type="text"
+               id="other" pInputText [required]="formGroup.get('featureId').value === otherFeatureId">
+        <label for="summary">Other*</label>
+      </span>
+      <div class="p-invalid text-align-left" *ngIf="formGroup.get('otherFeatureDetail').dirty && formGroup.get('otherFeatureDetail').errors">
+        Other is required
+      </div>
+    </div>
+
+    <div class="col-12 xl:col-12 lg:col-12 md:col-12 sm:col-12 field" *ngIf="privilegeService.isSupport()">
+      <label class="label-wrapper" for="tenantId">Select Customer</label>
+        <span class="p-float-label">
+           <p-dropdown formControlName="customerId" id="tenantId" [autoDisplayFirst]="false" [showClear]="true"
+                       [options]="tenantIdList.data" optionValue="otherName" optionLabel="name" [filter]="true">
+           </p-dropdown>
+        </span>
+    </div>
+
+    <div class="col-12 xl:col-12 lg:col-12 md:col-12 sm:col-12 field">
+      <label class="label-wrapper" for="summary">Summary*</label>
+      <span class="p-float-label">
+        <input formControlName="summary" (keyup)="removeSpaces.clearSpace(formGroup, 'summary')" type="text"
+               id="summary" pInputText>
+      </span>
+      <div class="p-invalid text-align-left" *ngIf="formGroup.get('summary').dirty && formGroup.get('summary').errors">
+        Summary is required
+      </div>
+    </div>
+
+    <div class="col-12 xl:col-12 lg:col-12 md:col-12 sm:col-12 field">
+      <label class="label-wrapper" for="description">Description*</label>
+      <span class="p-inputgroup">
+        <textarea id="description" formControlName="description" [rows]="3" pInputTextarea maxlength="300"
+                  (keyup)="removeSpaces.clearSpace(formGroup, 'description')"></textarea>
+
+      </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="formGroup.get('description').dirty && formGroup.get('description').errors">
+        Description is required
+      </div>
+    </div>
+
+
+
+
+    <div class="col-12 xl:col-12 lg:col-12 md:col-12 sm:col-12 field">
+      <ngx-dropzone accept="application/pdf,image/png,image/jpeg,image/jpg" (change)="changeFileList($event)"
+                    class="drop-zone-style" [maxFileSize]="2.5e+7">
+        <ngx-dropzone-label class="dp-zone-big-text-wrapper p-text-normal">Drop File(s) Here To Upload <br><br>
+         <span class="dp-zone-small-text-wrapper p-text-normal">(We only accept PDF, JPG JPEG and PNG formats, all the other formats will be ignored)</span>
+        </ngx-dropzone-label>
+        <ngx-dropzone-preview *ngFor="let f of attachments" [removable]="true" (removed)="onRemove(f)">
+          <ngx-dropzone-label class="file-label">{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+        </ngx-dropzone-preview>
+      </ngx-dropzone>
+    </div>
+
+
+  </div>
+</form>
+
+
+<!--<div class="grid footer button-responsive">-->
+<!--  <div class="col-12" style="margin-top: 3%">-->
+<!--    <div class="pull-right">-->
+
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<div class="grid fixed panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+            <button pButton type="button" [disabled]="loading" (click)="reset()" label="Reset"
+                    class="p-button-outlined p-button-sm" icon="fa-solid fa-rotate-right"></button>
+            <button pButton type="button" [disabled]="loading" class="p-button-sm ml-2" label="Create Ticket"
+                    iconPos="left" [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-plus'" (click)="submitForm()"></button>
+    </div>
+  </div>
+  </div>

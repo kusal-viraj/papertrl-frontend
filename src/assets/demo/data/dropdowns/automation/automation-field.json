@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "label": "Bill Number"
+  },
+  {
+    "id": 2,
+    "label": "Vendor"
+  },
+  {
+    "id": 3,
+    "label": "Approval Status"
+  },
+  {
+    "id": 4,
+    "label": "Date"
+  },
+  {
+    "id": 5,
+    "label": "Amount"
+  },
+  {
+    "id": 6,
+    "label": "Term"
+  },
+  {
+    "id": 7,
+    "label": "Due Date"
+  },
+  {
+    "id": 8,
+    "label": "PO Number"
+  },
+  {
+    "id": 9,
+    "label": "PO Receipt"
+  }
+]

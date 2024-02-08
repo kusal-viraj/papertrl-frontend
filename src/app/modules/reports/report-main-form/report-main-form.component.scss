@@ -1,0 +1,44 @@
+.footer {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #ffffff;
+}
+
+@media only screen and (max-width: 1960px) and (min-width: 1800px) {
+  .reset-btn {
+    width: 110px !important;
+  }
+
+  .view-btn {
+    width: 155px !important;
+  }
+
+  .export-btn {
+    width: 160px !important;
+  }
+}
+
+@media only screen and (max-width: 1800px) {
+  .reset-btn {
+    width: 100% !important;
+  }
+
+  .view-btn {
+    width: 100% !important;
+  }
+
+  .export-btn {
+    width: 100% !important;
+  }
+}
+
+@media only screen and (max-width: 1366px) {
+  .trs-view-button-wrapper {
+    width: 60% !important;
+  }
+  .reset-button-wrapper {
+    width: 40% !important;
+  }
+}

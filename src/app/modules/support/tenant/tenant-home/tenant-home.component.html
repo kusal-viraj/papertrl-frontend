@@ -1,0 +1,30 @@
+
+    <div class="grid mt-2" style="background-color: white">
+
+<div class="col-6">
+  <app-table-header-action-buttons
+    [componentInstance]="tenantListComponent" *ngIf="tenantListComponent"
+    [tableSupportBase]="tenantListComponent?.tableSupportBase"
+    (showUtilizationReport)="tenantListComponent.showUtilizationReport = true"
+    (refresh)="tenantListComponent?.loadData(tenantListComponent.tableSupportBase.searchFilterDto)"
+    (showFilters)="tenantListComponent.showFilter = !tenantListComponent?.showFilter;
+    tenantListComponent.showFilterColumns = false"
+    (showColumns)="tenantListComponent.showFilterColumns = !tenantListComponent?.showFilterColumns; tenantListComponent.showFilter = false"
+    [visibleActions]="tenantListComponent?.availableHeaderActions">
+
+  </app-table-header-action-buttons>
+</div>
+      <div class="col-6">
+        <div [ngClass]="'col-11'" style="text-align: right" class="screen-change-btn">
+          <button pButton class="mr-2 p-button" *ngIf="!createTenant "
+                  label="Create Tenant" (click)="toggle('tc')"></button>
+          <button pButton class="mr-2 p-button-outlined" *ngIf="!listTenant"
+                  label="View Tenant List" (click)="toggle('tl')"></button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <app-tenant-list #tenantListComponent *ngIf="listTenant"></app-tenant-list>
+      <app-tenant-create (refreshTable)="refreshTable();" *ngIf="createTenant"></app-tenant-create>
+    </div>

@@ -1,0 +1,194 @@
+<div [ngClass]="inInvalidItemSelection ? 'valid-vendor-item' :' vendor-detail'">
+
+  <div class="col-12 grid payment-fields-invalid" *ngIf="inInvalidItemSelection">
+    <span class="fa fa-question-circle"></span>
+    Please review the table below before proceeding. Certain records are marked in red, requiring your attention.
+    Selection of corresponding item numbers for these records is mandatory.
+  </div>
+
+  <form [formGroup]="mappingOptionSelectionForm">
+
+    <div class="vendor-item-mapping-option">
+      <label>
+        <input type="radio" name="optionId" [value]="1"
+               formControlName="optionId"
+               (change)="onOptionChange(mappingOptionSelectionForm.get('optionId').value)">
+        Generate new item with vendor part number
+      </label>
+
+      <label>
+        <input type="radio" name="optionId" [value]="2"
+               formControlName="optionId"
+               (change)="onOptionChange(mappingOptionSelectionForm.get('optionId').value)">
+        Create new item with a system-generated Item Number
+      </label>
+
+      <label>
+        <input type="radio" name="optionId" [value]="3"
+               formControlName="optionId"
+               (change)="onOptionChange(mappingOptionSelectionForm.get('optionId').value)">
+        Map to an existing item number
+      </label>
+
+    </div>
+
+  </form>
+
+
+  <div *ngIf="responseData.itemVendorWiseList.length !== 0" class="vendor-item-detail">
+    <p-table [value]="responseData.itemVendorWiseList" scrollable="true"
+             [scrollHeight]="inInvalidItemSelection ? '698px' : '691px'"
+             [style]="{width:'auto'}" scrollDirection="both" [lazy]="true" [(selection)]="selectedVendorItems"
+             styleClass="p-datatable-sm p-datatable-striped detail-table vendor-item-table">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width:50px" class="thead-style detail-table-header-center" id="checkBox">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th style="min-width:190px" class="thead-style detail-table-header-left" id="vendorPartNo">Vendor Part Number
+          </th>
+          <th style="min-width:190px" class="thead-style detail-table-header-left" id="itemNo">Item No</th>
+          <th style="min-width:250px" class="thead-style detail-table-header-left" id="itemDescription">Item Description
+          </th>
+          <th style="min-width:220px" class="thead-style detail-table-header-left" id="leadTime">Lead Time</th>
+          <th style="min-width:220px" class="thead-style detail-table-header-right" id="price">Item Price</th>
+          <th style="min-width:170px" class="thead-style detail-table-header-left" id="minOrderQty">Min Order QTY</th>
+          <th style="min-width:250px" class="thead-style detail-table-header-left" id="status">Status</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-i="rowIndex" let-item>
+
+        <tr id="tr_{{i}}" [pEditableRow]="item">
+
+          <td style="width:50px" class="detail-table-header-center">
+            <p-tableCheckbox class="item-mapping-table-checkbox" [value]="item"></p-tableCheckbox>
+          </td>
+
+          <td style="width:220px">
+            {{item.vendorItemNumber}}
+          </td>
+
+          <td style="width:190px">
+            <div class="p-inputgroup">
+
+              <p-dropdown [virtualScroll]="itemList.data.length>20" virtualScrollItemSize="25"
+                          [autoDisplayFirst]="false" id="{{'productId' + i}}" *ngIf="isSelectedExistingItemNumber"
+                          name="{{'productId' + i}}" class="number-column-table-dropdown" [(ngModel)]="item.itemMstId"
+                          appendTo="body" optionValue="id" optionLabel="name" placeholder="Select Item Number"
+                          [filter]="true" [options]="itemList.data" [showClear]="true"
+                          (onChange)="changeItemList($event, item, dpNameProductId);"
+                          optionDisabled="inactive" [ngClass]="item.isInvalid ? 'invalid-vendor-item-line':''"
+                          [style]="{'width':'100%'}" #dpNameProductId>
+                <ng-template pTemplate="selectedItem">
+                  <div>{{dpNameProductId.selectedOption.name}}</div>
+                </ng-template>
+
+                <ng-template let-selectedItem pTemplate="item">
+                  <div class="grid">
+                    <div class="dropdown-list"
+                         [ngClass]="selectedItem.id == 0 ? ' dropdown-add': null">{{selectedItem.name}}</div>
+                    <em *ngIf="selectedItem.id == 0" class="pi pi-plus dropdown-icon dropdown-add"></em>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+
+              <div *ngIf="isSelectedVendorPartNumber">{{item.vendorItemNumber}}</div>
+
+            </div>
+          </td>
+
+
+          <td style="width:250px">
+            {{item.vendorItemDescription}}
+          </td>
+
+          <td style="width:220px">
+            {{item.leadTime}}
+          </td>
+
+          <td class="detail-table-header-right" style="width:250px">
+            {{item.vendorItemPrice | number : '1.2-2'}}
+          </td>
+
+          <td style="width:250px">
+            {{item.minOrderQty}}
+          </td>
+
+          <td style="width:100px">
+            <li [class]="'mr-2 status-style status-'  + tableSupportBase.getStatus(item.status)"></li>
+            {{item.status === 'A' ? 'Active' : 'Inactive'}}
+          </td>
+
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </div>
+</div>
+
+<div class="grid footer form-footer-button">
+  <div class="col-12 button-set-wrapper">
+    <div class="pull-right">
+
+      <button pButton type="button" label="Discard items" (click)="cancel()" class="p-button-outlined
+         p-button-sm margin-right"
+              icon="fa-solid fa-rotate-right">
+      </button>&nbsp;
+
+      <button pButton type="button" (click)="mappingSelectedItemList()"
+              [disabled]="isLoadingUpdateProgress"
+              [icon]="isLoadingUpdateProgress ? 'pi pi-spin pi-spinner': 'pi pi-plus'"
+              class="p-button-sm button-responsive-mobile" iconPos="left" label="Update Item">
+      </button>
+
+    </div>
+  </div>
+</div>
+
+
+<!--Item Create-->
+<p-sidebar styleClass="p-sidebar-lg" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           class="overflow-side-bar" *ngIf="addNewItemOverlay" [(visible)]="addNewItemOverlay">
+  <ng-template pTemplate="header">Create Item</ng-template>
+  <app-add-item (emittedTabIndex)="getVendorItemList(vendorId); addNewItemOverlay = false " [editView]="false"
+                [vendorId]="vendorId"
+                [detailView]="false" [panel]="true" *ngIf="addNewItemOverlay"></app-add-item>
+</p-sidebar>
+
+
+<!--Confirmation of change selection-->
+<p-confirmDialog key="changeOption" #option header="Are you sure you want to process?"
+                 icon="confirmation-msg-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="option.reject()"></button>
+    <button type="button" pButton icon="pi pi-check" label="Yes, Continue"
+            (click)="option.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+
+<!--Confirmation of close drawer-->
+<p-confirmDialog key="drawerKey" #drawer header="Are you sure you want to process?"
+                 icon="confirmation-msg-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="drawer.reject()"></button>
+    <button type="button" pButton icon="pi pi-check" label="Yes, Continue"
+            (click)="drawer.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<!--this is a errors content -->
+
+<p-dialog position="center" [(visible)]="isViewErrorContent" (onHide)="isViewErrorContent = false"
+          [resizable]="false" [closable]="true" class="dialog-box-common-wrapper" appendTo="body"
+          [header]="'Upload Summary'"
+          [style]="{width: '50%',contentStyle: {'max-height': '500px', overflow: 'auto'}}"
+          closeOnEscape="false" [modal]="true" [draggable]="false" [baseZIndex]="1000">
+
+  <app-vendor-item-error *ngIf="isViewErrorContent" [responseData]="response" [fromMappingScreen]="true">
+  </app-vendor-item-error>
+
+</p-dialog>

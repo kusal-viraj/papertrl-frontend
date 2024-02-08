@@ -1,0 +1,6 @@
+[
+  {"label": "Inventory", "id": "inventory"},
+  {"label": "Non Inventory", "id": "nonInventory"},
+  {"label": "Service", "id": "service"},
+  {"label": "Other", "id": "other"}
+]

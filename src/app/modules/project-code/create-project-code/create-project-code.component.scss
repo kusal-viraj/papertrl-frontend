@@ -1,0 +1,63 @@
+@import "../../../../scss/color.scss";
+
+.header-text {
+  color: #73828A;
+  margin-top: 5%;
+  margin-bottom: 10%;
+}
+
+@media only screen and (max-width: 1366px) and (min-width: 1200px) {
+  .formButton{
+    padding-left: 2px;
+    padding-right: 0;
+  }
+  .formButton button{
+    padding-left: 2px;
+    padding-right: 0;
+  }
+}
+
+@media only screen and (max-width: 1400px) and (min-width: 1200px) {
+  .resetBtn {
+    width: 100%;
+    padding: 0;
+  }
+}
+
+.menu-label{
+  size: 16px;
+  color: $green;
+  cursor: pointer;
+  font-weight: 600;
+
+}
+
+.role-dropdown-list {
+  padding-top: 10px;
+  margin-right: 25px;
+  padding-left: 5px;
+}
+
+.role-dropdown-icon {
+  right: 10px;
+  padding-top: 10px;
+  position: absolute;
+  z-index: 1;
+}
+
+.role-dropdown-icon:hover {
+  color: $green;
+  z-index: 1;
+}
+
+.role-dropdown-add {
+  color: $green;
+}
+
+p-calendar {
+  width: 100%
+}
+
+.side-bar-drawer-content{
+  min-height: calc(100% - 105px);
+}

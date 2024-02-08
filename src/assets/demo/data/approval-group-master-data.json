@@ -1,0 +1,29 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "approvalGroupId": 1,
+      "name": "Project Manager",
+      "createdBy": "Admin",
+      "createDate": "1/1/2021",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 5,
+      "approvalGroupId": 2,
+      "name": "Account Payable",
+      "createdBy": "Admin",
+      "createDate": "1/1/2021",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 3,
+      "approvalGroupId": 3,
+      "name": "Account Payable",
+      "createdBy": "Admin",
+      "createDate": "1/1/2021",
+      "status": "I"
+    }
+  ],
+  "totalRecords": 3
+}

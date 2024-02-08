@@ -1,0 +1,83 @@
+<div class="field grid mb-2">
+<div class="col-6">
+  <h5 class="module-header-label ">Account Details</h5>
+</div>
+
+  <div  class="col-6 text-right">
+    <div  *ngIf="privilegeService.isAuthorized(appAuthorities.ACCOUNTS_DELETE)"
+          pTooltip="Delete" tooltipPosition="bottom" class=" fa fa-trash side-drawer-icon"
+         (click)="deleteAccount()" ></div>
+    <div  *ngIf="privilegeService.isAuthorized(appAuthorities.ACCOUNTS_EDIT) && accountStatus === 'Active'"
+          pTooltip="Edit" tooltipPosition="bottom" class=" fa fa-pencil side-drawer-icon" (click)="editAccount()" ></div>
+    <div class="  fa fa-close side-drawer-icon"
+         (click)="close()"></div>
+  </div>
+
+</div>
+
+<form [formGroup]="accountDetailViewForm" class="form-margin detail-form" autocomplete="off">
+  <div class="grid p-fluid">
+
+    <div class="field col-6">
+      <label>Account Type</label>
+      <div>{{commonUtil.detailViewIsDash(f.accountTypeName.value, false)}}</div>
+    </div>
+
+    <div class="field col-6">
+      <label>Account Detail Type</label>
+      <div>{{commonUtil.detailViewIsDash(f.accountDetailTypeName.value, false)}}</div>
+    </div>
+
+    <div class="field col-6">
+      <label>Account Number</label>
+      <div>{{commonUtil.detailViewIsDash(f.number.value, false)}}</div>
+    </div>
+
+    <div class="field col-6">
+      <label>Account Name</label>
+      <div>{{f.name.value}}</div>
+    </div>
+
+    <div class="field col-6">
+      <label>Parent Account</label>
+      <div>{{commonUtil.detailViewIsDash(f.parentName.value, false)}}</div>
+    </div>
+
+    <div class="field col-6">
+      <label>Description</label>
+      <div>{{commonUtil.detailViewIsDash(f.description.value, false)}}</div>
+    </div>
+
+    <div class="field col-6">
+      <label>Purchasing Account</label>
+      <div>{{commonUtil.detailViewIsDash(f.purchaseAccountStr.value, false) | titlecase}}</div>
+    </div>
+
+    <div class="field col-6">
+      <label>Expense Account</label>
+      <div>{{commonUtil.detailViewIsDash(f.expenseAccountStr.value, false) | titlecase}}</div>
+    </div>
+
+  </div>
+
+</form>
+
+<!--Edit Account-->
+<p-sidebar styleClass="p-sidebar-sm" [modal]="true" [dismissible]="true" appendTo="body" position="right"
+           class="overflow-side-bar" [(visible)]="isEditAccount" *ngIf="isEditAccount">
+  <ng-template pTemplate="header" class="p-3 ml-3">Edit Account</ng-template>
+  <app-account-create (refreshTable)="isEditAccount = false; getAccountData()" [panel]="true" [detailView]="false"
+                      [accountID]="accountID" [editView]="true"
+                      *ngIf="isEditAccount">
+  </app-account-create>
+</p-sidebar>
+
+<p-confirmDialog #cd header="Are you sure?" icon="conf-delete-icon pi pi-exclamation-triangle"
+                 key="deleteAccountFromDetailView">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cd.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, delete"
+            (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

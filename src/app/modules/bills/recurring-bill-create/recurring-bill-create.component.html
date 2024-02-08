@@ -1,0 +1,1371 @@
+<div class="field pt-2 pl-4 form-header grid">
+  <div class="col-6">
+    <h5 class="module-header-label" *ngIf="!detailView && !editView">
+      Configure
+      Recurring Bill</h5>
+    <h5 class="module-header-label" *ngIf="detailView">Recurring Bill
+      Details</h5>
+    <h5 class="module-header-label" *ngIf="editView">Edit Recurring
+      Bill</h5>
+  </div>
+
+  <div class="col-6 text-right">
+    <div class="fa fa-trash side-drawer-icon"
+         *ngIf="privilegeService.isAuthorized(appAuthorities.RECURRING_BILLS_EDIT) && detailView"
+         pTooltip="Delete" tooltipPosition="bottom" (click)="deleteBill()"></div>
+    <div class="fa fa-pencil side-drawer-icon"
+         *ngIf="privilegeService.isAuthorized(appAuthorities.RECURRING_BILLS_DELETE) && detailView && billStatus === 'Active'"
+         pTooltip="Edit" tooltipPosition="bottom" (click)="editBill()"></div>
+
+
+    <div class="fa fa-close side-drawer-icon"
+         (click)="closeEInvoiceCreateMode()"></div>
+  </div>
+
+</div>
+
+
+<form [formGroup]="createEInvoiceForm" autocomplete="off"
+      class="form-padding pt-7">
+  <h6 class="subHeading mb-6">1. Enter header information</h6>
+
+  <div class="grid mb-5 p-fluid">
+    <div class="field col-12 xl:col-3 lg:col-3">
+      <label class="label-wrapper" for="templateName">Schedule Name*</label>
+      <span class="p-float-label">
+            <input #scheduleName (keyup)="removeSpace.clearSpace(createEInvoiceForm ,'scheduleName')"
+                   formControlName="scheduleName"
+                   id="templateName" type="text"
+                   pInputText>
+          </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="createEInvoiceForm.get('scheduleName').dirty && createEInvoiceForm.get('scheduleName').hasError('required')">
+        Schedule Name is required
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="createEInvoiceForm.get('scheduleName').hasError('maxlength')">
+        Schedule Name must be less than 50 characters
+      </div>
+    </div>
+
+    <div class="field col-12 xl:col-3 lg:col-3">
+      <label class="label-wrapper" for="vendor">Select Vendor*</label>
+      <span class="p-float-label p-fluid">
+          <p-dropdown [virtualScroll]="vendorsList.data.length>20" virtualScrollItemSize="25"
+                      [options]="vendorsList.data"
+                      (onChange)="changeVendorDropDownList($event);
+                      commonUtil.isPressEnterInsideDropdown(selectedVendorName)"
+                      id="vendor" #selectedVendorName showClear="true"
+                      formControlName="vendorId" optionValue="id" optionDisabled="inactive" optionLabel="name"
+                      [autoDisplayFirst]="false" [filter]="true">
+             <ng-template pTemplate="selectedItem">
+               <div>{{selectedVendorName.selectedOption.name}}</div>
+             </ng-template>
+
+             <ng-template pTemplate="footer" *ngIf="privilegeService.isAuthorized(appAuthorities.VENDORS_CREATE)">
+               <div class="grid dp-footer">
+                 <div class="col-12 button-wrapper">
+                   <button pButton class="p-button-sm" label="Add New"
+                           (click)="isAddVendor = true"></button>
+                 </div>
+               </div>
+             </ng-template>
+           </p-dropdown>
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="createEInvoiceForm.get('vendorId').dirty && createEInvoiceForm.get('vendorId').errors">
+        Vendor is required
+      </div>
+    </div>
+
+    <div class="field col-12 lg:col-3 xl:col-3 md:col-4 sm:col-6">
+      <label class="label-wrapper" for="projectCodeId">Select Project/Task<span
+        *ngIf="isAsteriskMarkShown(bill,appFormConstants.PROJECT_CODE_ID)">{{'*'}}</span>
+      </label>
+      <span class="p-float-label">
+           <p-dropdown [virtualScroll]="projectCodeList.data.length>20" virtualScrollItemSize="25"
+                       [options]="projectCodeList.data" id="projectCodeId" optionDisabled="inactive"
+                       inputId="dropdown" appendTo="body" showClear="true" #dpNameProjectTask
+                       (onChange)="changeList('ProjectCodesInHeader', dpNameProjectTask.selectedOption.id, null);
+                       changeProjectCode(dpNameProjectTask);
+                        billUtility.patchProjectTaskToLine(expenseCostDistributionForms, itemCostDistributionForms, dpNameProjectTask.selectedOption.id);
+                       billUtility.loadAccountsAccordingToTheProjectTaskId(createEInvoiceForm.get('projectCodeId').value,null, !editView, templateId);
+                       billUtility.clearAccountWhenClearHeaderProjectTask(expenseCostDistributionForms);
+                       commonUtil.isPressEnterInsideDropdown(dpNameProjectTask)"
+                       (onClear)="billUtility.clearAccountWhenClearHeaderProjectTask(expenseCostDistributionForms)"
+                       formControlName="projectCodeId" optionLabel="name" optionValue="id"
+                       [autoDisplayFirst]="false" [filter]="true">
+             <ng-template pTemplate="selectedItem">
+               <div>{{dpNameProjectTask.selectedOption.name}}</div>
+             </ng-template>
+
+             <ng-template pTemplate="footer"
+                          *ngIf="privilegeService.isAuthorized(appAuthorities.PROJECT_CODES_CREATE)">
+               <div class="grid dp-footer">
+                 <div class="col-12 button-wrapper">
+                   <button pButton class="p-button-sm" label="Add New"
+                           (click)="isAddNewProjectCodes = true"></button>
+                 </div>
+               </div>
+             </ng-template>
+           </p-dropdown>
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="createEInvoiceForm.get('projectCodeId').dirty && createEInvoiceForm.get('projectCodeId').errors">
+        Project/Task is required
+      </div>
+    </div>
+
+
+    <div class="field col-12 xl:col-3 lg:col-3"
+         *ngIf="!detailView || createEInvoiceForm.get('departmentId').value">
+      <label class="label-wrapper" for="departmentId">Select Department<span
+        *ngIf="isAsteriskMarkShown(bill,appFormConstants.DEPARTMENT_ID)">{{'*'}}</span>
+      </label>
+      <span class="p-float-label">
+            <p-dropdown [virtualScroll]="department.data.length>20" virtualScrollItemSize="25"
+                        [options]="department.data" id="departmentId" optionDisabled="inactive"
+                        inputId="dropdown" appendTo="body" showClear="true" #dpNameDepartment
+                        formControlName="departmentId" optionLabel="name" optionValue="id"
+                        [autoDisplayFirst]="false" (onChange)="changedDepartment($event, dpNameDepartment);
+                         commonUtil.patchHeaderDepartmentToLineLevel(createEInvoiceForm, -1, editView,null, true, true);
+                         commonUtil.isPressEnterInsideDropdown(dpNameDepartment)"
+                        [filter]="true">
+
+              <ng-template pTemplate="selectedItem">
+                <div>{{dpNameDepartment.selectedOption.name}}</div>
+              </ng-template>
+
+           <ng-template pTemplate="footer" *ngIf="privilegeService.isAuthorized(appAuthorities.DEPARTMENT_CREATE)">
+               <div class="grid dp-footer">
+                 <div class="col-12 button-wrapper">
+                   <button pButton class="p-button-sm" label="Add New"
+                           (click)="departmentPanel = true"></button>
+                 </div>
+               </div>
+             </ng-template>
+
+            </p-dropdown>
+           <div class="p-invalid text-align-left"
+                *ngIf="bill.departmentId.dirty && bill.departmentId.errors">
+        Department is required
+      </div>
+       </span>
+    </div>
+
+    <div class="field col-12 xl:col-3 lg:col-3">
+      <label class="label-wrapper" for="vendor">Select Payment Term*</label>
+      <span class="p-float-label p-fluid">
+          <p-dropdown [virtualScroll]="termList.data.length>20" virtualScrollItemSize="25" [options]="termList.data"
+                      #dpPaymentTerm
+                      id="term" (onChange)="termManuallyChanged();
+                      commonUtil.isPressEnterInsideDropdown(dpPaymentTerm)"
+                      formControlName="term" optionValue="id" optionLabel="name" [showClear]="true"
+                      [autoDisplayFirst]="false" [filter]="true">
+           </p-dropdown>
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="createEInvoiceForm.get('term').dirty && createEInvoiceForm.get('term').errors">
+        Payment Term is required
+      </div>
+    </div>
+
+    <div class="field col-12 xl:col-3 sm:col-12 lg:col-4 md:col-6"
+         *ngIf="(!detailView || createEInvoiceForm.get('netDaysDue').value) &&
+ createEInvoiceForm.get(appFormConstants.TERM).value === 10">
+      <label class="label-wrapper" for="netDaysDue">Net Days Due</label>
+      <span class="p-float-label">
+              <p-inputNumber formControlName="netDaysDue" mode="decimal" [useGrouping]="false" id="netDaysDue"
+                             [min]="0"></p-inputNumber>
+            </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="createEInvoiceForm.get('netDaysDue').dirty && createEInvoiceForm.get('netDaysDue').errors">
+        Net Days Due is required
+      </div>
+    </div>
+
+    <div class="field col-12 xl:col-3 sm:col-12 lg:col-4 md:col-6"
+         *ngIf="(!detailView || createEInvoiceForm.get('discountPercentage').value) &&
+ createEInvoiceForm.get(appFormConstants.TERM).value === 10">
+      <label class="label-wrapper" for="discountPercentage">Discount Percentage</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input formControlName="discountPercentage" id="discountPercentage" type="text"
+                     currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.'}" maxlength="6"
+                     pInputText>
+            </span>
+      </div>
+    </div>
+
+    <div class="field col-12 xl:col-3 sm:col-12 lg:col-4 md:col-6"
+         *ngIf="(!detailView || createEInvoiceForm.get('discountDaysDue').value) &&
+ createEInvoiceForm.get(appFormConstants.TERM).value === 10">
+      <label class="label-wrapper" for="discountDaysDue">Discount Days Due</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input formControlName="discountDaysDue" numbersOnly id="discountDaysDue" type="text"
+                     pInputText>
+            </span>
+      </div>
+    </div>
+
+    <ng-container class="grid" formArrayName="additionalData" *ngIf="headerAdditionalFieldDetails.length > 0">
+      <ng-container *ngFor="let additionalField of headingSectionArray.controls; let itemIndex = index"
+           [formGroupName]="itemIndex">
+        <app-additional-field-header-items
+          *ngIf="commonUtil.checkUndefinedValues(additionalField.get('fieldValue').value, headerAdditionalFieldDetails[itemIndex].docStatus, false)"
+          [additionalField]="additionalField" [parentForm]="createEInvoiceForm" class="field lg:col-4 xl:col-3 md:col-4 sm:col-6 col-12"
+          (updateAdditionalFieldDropDowns)="updateAdditionalFieldDropDowns($event)" [isCreate]="!editView"
+          [itemIndex]="itemIndex" [additionalFieldHeader]="headerAdditionalFieldDetails">
+        </app-additional-field-header-items>
+      </ng-container>
+    </ng-container>
+
+  </div>
+
+
+  <h6 class="subHeading mb-6">2. How you need to generate bill number</h6>
+
+  <div class="grid mb-5 p-fluid">
+
+    <div class="field col-12 xl:col-2 lg:col-3 text-align-left"
+         *ngIf="!detailView || createEInvoiceForm.get('separatorSymbolId').value">
+      <label class="label-wrapper">Select Separator</label>
+      <span class="p-float-label">
+           <p-dropdown [options]="separatorList.data" id="separatorSymbolId" inputId="template" #selectedSeparatorSymbol
+                       formControlName="separatorSymbolId" optionValue="id" optionLabel="name" [showClear]="true"
+                       (onChange)="commonUtil.validatePrefixAndSuffix(createEInvoiceForm);
+                       commonUtil.isPressEnterInsideDropdown(selectedSeparatorSymbol)"
+                       [autoDisplayFirst]="false" [filter]="true">
+             <ng-template pTemplate="selectedItem">
+               <div>{{selectedSeparatorSymbol.selectedOption.name}}</div>
+             </ng-template>
+
+             <ng-template let-separates pTemplate="item">
+               <div class="grid">
+                 <div class="dropdown-list"
+                      [ngClass]="separates.name == 'Add New' ? ' dropdown-add': null">{{separates.name}}</div>
+                 <i *ngIf="separates.name == 'Add New'" class="pi pi-plus dropdown-icon  dropdown-add"></i>
+               </div>
+             </ng-template>
+           </p-dropdown>
+
+           </span>
+    </div>
+
+    <div class="field col-12 xl:col-2 lg:col-3 text-align-left"
+         *ngIf="!detailView || createEInvoiceForm.get('prefixes').value">
+      <label class="label-wrapper" for="prefixes">Prefix </label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input (keyup)="removeSpace.clearSpace(createEInvoiceForm ,'prefixes');
+                      commonUtil.validatePrefixAndSuffix(createEInvoiceForm)" #prefixValue
+                            formControlName="prefixes" id="prefixes" type="text" pInputText>
+            </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="createEInvoiceForm.get('prefixes').dirty && createEInvoiceForm.get('prefixes').errors">
+        Prefix is required
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="prefixValue.value.length > 49">
+        Prefix must be less than 50 characters
+      </div>
+    </div>
+
+    <div class="field col-12 xl:col-2 lg:col-3 text-align-left">
+      <label class="label-wrapper" for="runningNo">Running Number*</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input  formControlName="runningNo" id="runningNo" type="text" pInputText>
+            </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="createEInvoiceForm.get('runningNo').dirty && createEInvoiceForm.get('runningNo').hasError('required')">
+        Running Number is required
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="createEInvoiceForm.get('runningNo').hasError('maxlength')">
+        Running Number must be less than 10 numbers
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="createEInvoiceForm.get('runningNo').hasError('pattern')">
+        This field only accepts numeric values
+      </div>
+    </div>
+
+    <div class="field col-12 xl:col-2 lg:col-3 text-align-left"
+         *ngIf="!detailView || createEInvoiceForm.get('suffixes').value">
+      <label class="label-wrapper" for="suffix">Suffix</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input (keyup)="removeSpace.clearSpace(createEInvoiceForm ,'suffixes');
+                      commonUtil.validatePrefixAndSuffix(createEInvoiceForm)" #suffixValue
+                            formControlName="suffixes" id="suffix" type="text" pInputText>
+            </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="createEInvoiceForm.get('suffixes').dirty && createEInvoiceForm.get('suffixes').errors">
+        Suffix is required
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="suffixValue.value.length > 49">
+        Suffix must be less than 50 characters
+      </div>
+    </div>
+
+    <div class="field col-12 xl:col-3 lg:col-3 text-align-left">
+      <label class="label-wrapper" for="suffix">Bill Number Pattern Preview</label>
+      <div class="p-inputgroup">
+         <span class="p-float-label">
+          <input pInputText class="disabled" formControlName="billNoPattern" [readOnly]="true">
+         </span>
+      </div>
+    </div>
+
+
+  </div>
+
+
+  <h6 class="subHeading mb-4">3. How often need to create a bill</h6>
+
+  <div class="grid mb-5 p-fluid">
+    <div class="field interval-length col-1">
+          <span class="p-float-label">
+          <p-dropdown [options]="interval.data" [showClear]="false"
+                      formControlName="intervalValue" optionValue="id" optionLabel="name"
+                      [autoDisplayFirst]="false" [filter]="true">
+           </p-dropdown>
+          </span>
+    </div>
+
+
+    <div *ngIf="createEInvoiceForm.get(appFormConstants.INTERVAL_VALUE).value === appConstant.MONTHLY"
+         class="field inline-text col-1 monthly-length">
+      <span>on </span>&nbsp;
+      <ng-template [ngTemplateOutlet]="recurring_day"></ng-template>
+    </div>
+
+
+    <div *ngIf="createEInvoiceForm.get(appFormConstants.INTERVAL_VALUE).value === appConstant.WEEKLY"
+         class="field inline-text col-1 weekly-length">
+      <span>on</span> &nbsp;
+      <ng-template [ngTemplateOutlet]="recurring_day_of_week"></ng-template>
+    </div>
+
+
+    <div *ngIf="createEInvoiceForm.get(appFormConstants.INTERVAL_VALUE).value === appConstant.YEARLY"
+         class="field inline-text col-2 yearly-length">
+      <span>on</span>&nbsp;
+      <span class="p-float-label">
+          <p-dropdown [options]="months.data" [showClear]="!detailView"
+                      formControlName="recurringMonth" optionValue="id" optionLabel="name"
+                      [autoDisplayFirst]="false" [filter]="true">
+           </p-dropdown>
+      </span> &nbsp;
+      <ng-template [ngTemplateOutlet]="recurring_day"></ng-template>
+    </div>
+
+
+    <div *ngIf="createEInvoiceForm.get(appFormConstants.INTERVAL_VALUE).value === appConstant.CUSTOM"
+         class="field inline-text col-2 custom-length">
+      <span> on every</span>&nbsp;
+      <ng-template [ngTemplateOutlet]="generation_frequent"></ng-template>
+
+      <span class="p-float-label">
+          <p-dropdown [options]="customIntervals.data" [showClear]="!detailView"
+                      formControlName="customIntervalValue" optionValue="id" optionLabel="name"
+                      [autoDisplayFirst]="false" [filter]="true">
+           </p-dropdown>
+      </span> &nbsp;
+    </div>
+
+
+    <div class="field inline-text field lg:col-12 xl:col-7 md:col-12 sm:col-12 col-12">
+      <span class="p-float-label">
+          <p-calendar appTabindexMinusOne formControlName="recurringStartDate" class="recurring"
+                      (onSelect)="validateEndDate($event)" [showButtonBar]="true"
+                      dateFormat="mm/dd/yy" [minDate]="today" [showIcon]="true"></p-calendar>
+        <label>Start Date</label>
+      </span> &nbsp;
+
+      <span>end after</span>&nbsp;
+
+      <span class="p-float-label occ-status">
+          <p-dropdown [options]="recurringOccurrence.data" [showClear]="!detailView"
+                      formControlName="occurrenceFrequentStatus" optionValue="id"
+                      optionLabel="name" [autoDisplayFirst]="false" [filter]="true">
+           </p-dropdown>
+      </span> &nbsp;
+
+      <span *ngIf="createEInvoiceForm.get(appFormConstants.OCCURRENCE_FREQUENT_STATUS).value === appConstant.SPEC_DATE"
+            class="p-float-label">
+          <p-calendar appTabindexMinusOne formControlName="recurringEndDate" [minDate]="getMinDate()"
+                      [showButtonBar]="true"
+                      class="recurring" dateFormat="mm/dd/yy" [showIcon]="true"></p-calendar>
+        <label>Select Date</label>
+      </span> &nbsp;
+
+      <span *ngIf="createEInvoiceForm.get(appFormConstants.OCCURRENCE_FREQUENT_STATUS).value === appConstant.NO_OF_OCC"
+            class="p-float-label days-length">
+                     <p-inputNumber class="" maxlength="4" min="0" formControlName="occurrenceFrequent" mode="decimal"
+                                    [useGrouping]="false">
+        </p-inputNumber>
+      </span>
+
+    </div>
+
+    <!--    Template of generation frequent that can be used any where-->
+    <ng-template #generation_frequent class="field inline-text">
+      <span class="p-float-label days-length">
+                <p-inputNumber class="" maxlength="3" min="0" formControlName="generationFrequent" mode="decimal"
+                               [useGrouping]="false">
+        </p-inputNumber>
+
+          </span>&nbsp;
+      <span *ngIf="createEInvoiceForm.get(appFormConstants.INTERVAL_VALUE).value === appConstant.DAILY"> day(s)</span>
+      <span
+        *ngIf="createEInvoiceForm.get(appFormConstants.INTERVAL_VALUE).value === appConstant.MONTHLY"> months(s)</span>
+    </ng-template>
+
+    <!--    Template of recurring day that can be used any where-->
+    <ng-template #recurring_day class="field inline-text">
+      <span class="p-float-label">
+          <p-dropdown [options]="days.data" [showClear]="!detailView"
+                      formControlName="recurringDay" optionValue="id" optionLabel="name"
+                      [autoDisplayFirst]="false" [filter]="true">
+           </p-dropdown>
+          </span>
+    </ng-template>
+
+
+    <!--    Template of weeks that can be used any where-->
+    <ng-template #recurring_day_of_week class="field inline-text">
+      <span class="p-float-label">
+          <p-dropdown [options]="weeks.data" [showClear]="!detailView" formControlName="recurringDayOfWeek"
+                      optionValue="id"
+                      optionLabel="name" [autoDisplayFirst]="false" [filter]="true">
+           </p-dropdown>
+      </span>
+    </ng-template>
+
+
+  </div>
+
+  <h6 class="subHeading mb-4">4. Cost Distribution</h6>
+
+  <p-tabView appSkipTabview>
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <span class="custom-span">Expense Cost Distribution</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <div *ngIf="!showExpenseTableLoader()">
+          <p-table responsiveLayout="scroll" [value]="expenseCostDistributionForms.controls" scrollable="true"
+                   scrollHeight="367px" [resizableColumns]="true" columnResizeMode="expand"
+                   [columns]="customLineItemGrid.expenseTableHeaders.headers" #exptable
+                   [style]="{width:'auto'}" scrollDirection="both" [scrollable]="true" [reorderableColumns]="true"
+                   [tableStyle]="{'min-width': customLineItemGrid.expenseTableHeaders.tableWidth+'px'}"
+                   styleClass="p-datatable-sm p-datatable-striped detail-table"
+                   stateStorage="session" stateKey="{{tableKeyEnum.BILL_EXP_TABLE}}"
+                   (onColReorder)="customLineItemGrid.changedTableState(tableKeyEnum.BILL_EXP_TABLE, appConstant.GRID_RECURRING_BILL_EXPENSE_COST_LINE_ITEM_LIST)"
+                   (onColResize)="customLineItemGrid.changedTableState(tableKeyEnum.BILL_EXP_TABLE, appConstant.GRID_RECURRING_BILL_EXPENSE_COST_LINE_ITEM_LIST)">
+
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let header of columns" [style]="{'width': header.width+'px'}" class="thead-style"
+                    [class]="header.class" pResizableColumn [pResizableColumnDisabled]="!header.resizable"
+                    [pReorderableColumnDisabled]="!header.reorderable" pReorderableColumn
+                    pFrozenColumn [frozen]="header.frozen" alignFrozen="right">{{header.label}}<span
+                  *ngIf="isLineItemAsteriskMark(header.field, appModuleSection.EXPENSE_COST_DISTRIBUTION_SECTION_ID)">{{'*'}}</span>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-i="rowIndex" let-account let-columns="columns"
+                         formArrayName="recurringBillExpenseCostDistributions">
+              <tr [formGroupName]="i" (click)="onExpenseCostDistributionClick(i);
+              billUtility.patchHeaderProjectCodeToLineLevel(account, createEInvoiceForm, false, expenseCostDistributionForms, i);
+              commonUtil.patchHeaderDepartmentToLineLevel(createEInvoiceForm, i, editView, 'recurringBillExpenseCostDistributions',false)">
+
+                <td *ngFor="let col of columns" [class]="col.class" alignFrozen="right" pFrozenColumn [frozen]="col.frozen">
+                  <div class="text-center" *ngIf="col.field === appFormConstants.HASH_NUMBER">
+                    <label>{{i + 1}}</label>
+                  </div>
+                  <div *ngIf="col.field === appFormConstants.PROJECT_CODE">
+                    <p-dropdown [virtualScroll]="projectCodeList.data.length>20" virtualScrollItemSize="25"
+                                [options]="projectCodeList.data" id="{{'projectTask' + i}}" inputId="code"
+                                formControlName="projectId" [showClear]="true" optionDisabled="inactive"
+                                optionLabel="name" optionValue="id" placeholder="Project Task"
+                                [style]="{'width':'100%'}" class="expense-table-dropdown dropdown-label-wrapper"
+                                [autoDisplayFirst]="false" #code appendTo="body"
+                                (onChange)="changeList('ProjectCodesInExpense', code.selectedOption.id, i);
+                               billUtility.loadAccountsAccordingToTheProjectTaskId(code.selectedOption.id, i, !editView, templateId);
+                               billUtility.clearLineLevelAccountWhenClearProjectTask(account); commonUtil.isPressEnterInsideDropdown(code)"
+                                (onClear)="billUtility.clearLineLevelAccountWhenClearProjectTask(account);
+                              billUtility.patchHeaderProjectCodeToLineLevel(account, createEInvoiceForm, true, expenseCostDistributionForms, i)"
+                                (onClick)="billUtility.patchHeaderProjectCodeToLineLevel(account, createEInvoiceForm, false, expenseCostDistributionForms, i)"
+                                [filter]="true">
+                      <ng-template pTemplate="selectedItem">
+                        <div>{{code.selectedOption.name}}</div>
+                      </ng-template>
+
+                      <ng-template pTemplate="footer"
+                                   *ngIf="privilegeService.isAuthorized(appAuthorities.PROJECT_CODES_CREATE)">
+                        <div class="grid dp-footer">
+                          <div class="col-12 button-wrapper">
+                            <button pButton class="p-button-sm" label="Add New"
+                                    (click)="isAddNewProjectCodes = true"></button>
+                          </div>
+                        </div>
+                      </ng-template>
+                    </p-dropdown>
+                  </div>
+
+                  <div *ngIf="col.field === appFormConstants.ACCOUNT_NUMBER">
+                    <p-dropdown [virtualScroll]="billUtility.accountTableAccountListArray[i].data.length > 20"
+                                virtualScrollItemSize="25"
+                                [options]="billUtility.accountTableAccountListArray[i].data" id="{{'account' + i}}"
+                                inputId="account"
+                                *ngIf="account.get('hideAccountNumberInput').value ||
+                              (!account.get('hideAccountNumberInput').value && !account.get('accountNumber').value)"
+                                formControlName="accountId" class="expense-table-dropdown"
+                                [showClear]="true" optionDisabled="inactive"
+                                optionLabel="name" optionValue="id" placeholder="Account Number"
+                                [style]="{'width':'100%'}"
+                                (onChange)="changeList('Account', $event.value, i); getAccountNameForExpenseContributionTable($event.value, i);
+                              commonUtil.isPressEnterInsideDropdown(selectAccountLabel)"
+                                (onClick)="billUtility.conditionallyLoadAccountList(account.get('projectId').value, i, createEInvoiceForm.get('projectCodeId').value)"
+                                [autoDisplayFirst]="false" #selectAccountLabel appendTo="body"
+                                [filter]="true">
+                      <ng-template pTemplate="selectedItem">
+                        <div>{{expenseCostDistributionForms.controls[i].get('accountNumber').value}}</div>
+                      </ng-template>
+
+                      <ng-template pTemplate="footer"
+                                   *ngIf="privilegeService.isAuthorized(appAuthorities.ACCOUNTS_CREATE)">
+                        <div class="grid dp-footer">
+                          <div class="col-12 button-wrapper">
+                            <button pButton class="p-button-sm" label="Add New"
+                                    (click)="isAddNewAccount = true"></button>
+                          </div>
+                        </div>
+                      </ng-template>
+                    </p-dropdown>
+                    <div class="p-inputgroup"
+                         *ngIf="!account.get('hideAccountNumberInput').value && account.get('accountNumber').value">
+                      <input formControlName="accountNumber"
+                             (mouseover)="billUtility.conditionallyLoadAccountList(account.get('projectId').value,
+                           i, createEInvoiceForm.get('projectCodeId').value);
+                           billUtility.animateAccountNumberField(account)"
+                             placeholder="Account Number"
+                             name="accountNumber" id="{{'accountNumber' + i}}" [readOnly]="true"
+                             type="text" pInputText>
+                    </div>
+                  </div>
+
+                  <div *ngIf="col.field === appFormConstants.ACCOUNT_NAME">
+                    <div class="p-inputgroup">
+                      <input formControlName="accountName" (keydown)="navigate($event,'accountName',  i)"
+                             placeholder="Account Name"
+                             name="description" id="{{'accountName' + i}}" [readOnly]="true"
+                             type="text" pInputText>
+                    </div>
+                  </div>
+
+                  <div *ngIf="col.field === appFormConstants.DESCRIPTION">
+                    <div class="p-inputgroup">
+                    <textarea formControlName="description" (keydown)="navigate($event,'description_',  i)"
+                              placeholder="Description" pInputTextarea
+                              (keyup)="removeSpace.clearSpace(expenseCostDistributionForms.controls[i], 'description');
+                              getRuleConfiguration(i, appConstant.EXPENSE_COST_DISTRIBUTION_STR);
+                           getDescriptionWiseAccItem(i, appModuleSection.EXPENSE_COST_DISTRIBUTION_SECTION_ID)"
+                              name="description" id="{{'description_' + i}}"
+                              type="text" pInputText></textarea>
+                    </div>
+                  </div>
+
+                  <div *ngIf="col.field === appFormConstants.DEPARTMENT_ID">
+                    <p-dropdown [virtualScroll]="department.data.length>20" virtualScrollItemSize="25"
+                                optionDisabled="inactive"
+                                [options]="department.data" id="departmentIdItem" placeholder="Department"
+                                (onChange)="changedDepartmentAccount($event, i);
+                              commonUtil.isPressEnterInsideDropdown(dpNameDepartmentAccount)" [style]="{'width':'100%'}"
+                                inputId="dropdown" appendTo="body" showClear="true" #dpNameDepartmentAccount
+                                formControlName="departmentId" optionLabel="name" optionValue="id"
+                                [autoDisplayFirst]="false" [filter]="true">
+                      <ng-template pTemplate="selectedItem">
+                        <div>{{dpNameDepartmentAccount.selectedOption.name}}</div>
+                      </ng-template>
+
+                      <ng-template pTemplate="footer"
+                                   *ngIf="privilegeService.isAuthorized(appAuthorities.DEPARTMENT_CREATE)">
+                        <div class="grid dp-footer">
+                          <div class="col-12 button-wrapper">
+                            <button pButton class="p-button-sm" label="Add New"
+                                    (click)="departmentPanel = true"></button>
+                          </div>
+                        </div>
+                      </ng-template>
+                    </p-dropdown>
+                  </div>
+
+                  <div *ngIf="col.field === appFormConstants.BILLABLE">
+                    <div class="p-inputgroup line-level-checkbox-wrapper">
+                      <div class="field-checkbox ml-6 checkbox-outer-wrapper">
+                        <p-checkbox name="checkBox" formControlName="billable" id="billableExpense_{{i}}"
+                                    [disabled]="detailView"
+                                    binary="true"></p-checkbox>
+                        <label for="billableExpense_{{i}}"></label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="col.field === appFormConstants.TAXABLE">
+                    <div class="p-inputgroup line-level-checkbox-wrapper">
+                      <div class="field-checkbox ml-6 checkbox-outer-wrapper">
+                        <p-checkbox name="checkBox" formControlName="taxable" id="taxableExpense_{{i}}"
+                                    [disabled]="detailView"
+                                    binary="true"></p-checkbox>
+                        <label for="taxableExpense_{{i}}"></label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="col.field === appFormConstants.AMOUNT">
+                    <div class="p-inputgroup">
+                      <input pInputText type="text"
+                             name="amount" id="{{'amount_' + i}}" (keydown)="navigate($event,'amount_',  i)"
+                             (keyup)="(expenseCostDistributionForms.controls.length === (i +1) && expenseCostDistributionForms.controls[i].dirty); getTotalCostDistribution()"
+                             [options]="{ prefix: '', thousands: ',', decimal: '.' }" currencyMask
+                             [readOnly]="detailView" appNoNegativeValues
+                             value="{{expenseCostDistributionForms.controls[i].value.amount | currency: '':''}}"
+                             placeholder="Line Amount"
+                             formControlName="amount">
+                    </div>
+                  </div>
+                  <ng-container formArrayName="additionalData" *ngIf="col.addiField && additionalFieldForExpenseCostDistributions.length > 0">
+                      <app-additional-field-line-items [col]="col" [additionalLineItemField]="customLineItemGrid.getField(col, expenseCostDistributionAdditionalFields(i))"
+                                                       [parentForm]="createEInvoiceForm.get('recurringBillExpenseCostDistributions')"
+                                                       (updateAdditionalFieldDropDowns)="updateAdditionalFieldDropDowns($event)" [isCreate]="!editView"
+                                                       [i]="i" [itemIndex]="customLineItemGrid.getFieldIndex(col, expenseCostDistributionAdditionalFields(i))"
+                                                       [additionalFieldForCostDistributions]="additionalFieldForExpenseCostDistributions"></app-additional-field-line-items>
+                  </ng-container>
+                  <div *ngIf="col.field === appFormConstants.TABLE_ACTION && !detailView" class="text-center pt-2">
+                    <i class="fa fa-trash item-remove-button" *ngIf="expenseCostDistributionForms.length > 1"
+                       (click)="removeExpenseCostDistributionRecord(i); getTotalCostDistribution()"></i>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template *ngIf="!detailView" pTemplate="summary">
+              <div class="grid align-table-footer">
+                <div style="width: 44%">
+                </div>
+
+                <div style="width: 55%; margin-top: 5px" class=" text-right">
+
+                <span class="hyperlink text-right p-text-normal"
+                      (click)="customLineItemGrid.resetTableUserWiseData(appConstant.GRID_RECURRING_BILL_EXPENSE_COST_LINE_ITEM_LIST,
+                       additionalFieldForExpenseCostDistributions)">Reset Table State</span> &nbsp;|&nbsp;
+
+                                <span class="hyperlink text-right p-text-normal"
+                                      (click)="clearExpenseLines(); getTotalCostDistribution()">Clear Lines
+                                </span> &nbsp;|&nbsp;
+
+                  <span class="hyperlink text-right p-text-normal"
+                        (click)="addExpenseFieldOnClick()">Add Line
+                                </span>
+                </div>
+              </div>
+            </ng-template>
+          </p-table>
+        </div>
+        <app-loader [showLoader]="!showExpenseNoDataFound()" [showIcon]="showExpenseNoDataFound()"
+                    [messageContent]="showExpenseNoDataFound() ? 'There are no records found' : null"
+                    [showHeaderMessage]="!showExpenseNoDataFound()"
+                    *ngIf="showExpenseTableLoader()"></app-loader>      </ng-template>
+    </p-tabPanel>
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <span class="custom-span">Item Cost Distribution</span>
+      </ng-template>
+      <div *ngIf="!showItemTableLoader()">
+        <p-table responsiveLayout="scroll" [value]="itemCostDistributionForms.controls" scrollable="true"
+                 scrollHeight="367px" [resizableColumns]="true" columnResizeMode="expand"
+                 [columns]="customLineItemGrid.itemTableHeaders.headers" #exptable
+                 [style]="{width:'auto'}" scrollDirection="both" [scrollable]="true" [reorderableColumns]="true"
+                 [tableStyle]="{'min-width': customLineItemGrid.itemTableHeaders.tableWidth+'px'}"
+                 styleClass="p-datatable-sm p-datatable-striped detail-table"
+                 stateStorage="session" stateKey="{{tableKeyEnum.BILL_ITM_TABLE}}"
+                 (onColReorder)="customLineItemGrid.changedTableState(tableKeyEnum.BILL_ITM_TABLE, appConstant.GRID_RECURRING_BILL_ITEM_COST_LINE_ITEM_LIST)"
+                 (onColResize)="customLineItemGrid.changedTableState(tableKeyEnum.BILL_ITM_TABLE, appConstant.GRID_RECURRING_BILL_ITEM_COST_LINE_ITEM_LIST)">
+
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th *ngFor="let header of columns" [style]="{'width': header.width+'px'}" class="thead-style"
+                  [class]="header.class" pResizableColumn [pResizableColumnDisabled]="!header.resizable"
+                  [pReorderableColumnDisabled]="!header.reorderable" pReorderableColumn
+                  pFrozenColumn [frozen]="header.frozen" alignFrozen="right">{{header.label}}<span
+                *ngIf="isLineItemAsteriskMark(header.field, appModuleSection.ITEM_COST_DISTRIBUTION_SECTION_ID)">{{'*'}}</span>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-i="rowIndex" let-item let-columns="columns"
+                       formArrayName="recurringBillItemCostDistributions">
+            <tr id="tr_{{i}}" [formGroupName]="i" [pEditableRow]="item" (click)="onLItemClick(i);
+            billUtility.patchHeaderProjectCodeToLineLevel(item, createEInvoiceForm, false, itemCostDistributionForms, i);
+            commonUtil.patchHeaderDepartmentToLineLevel(createEInvoiceForm, i, editView,'recurringBillItemCostDistributions',false, true)">
+
+              <td *ngFor="let col of columns" [class]="col.class" alignFrozen="right" pFrozenColumn [frozen]="col.frozen">
+                <div class="text-center" *ngIf="col.field === appFormConstants.HASH_NUMBER">
+                  <label>{{i + 1}}</label>
+                </div>
+                <div *ngIf="col.field === appFormConstants.ITEM_ID">
+                  <p-dropdown [virtualScroll]="vendorRelevantItemList.data.length>20" virtualScrollItemSize="25"
+                              formControlName="itemId"
+                              [autoDisplayFirst]="false" optionDisabled="inactive"
+                              id="{{'itemId' + i}}"
+                              name="productId1" [options]="vendorRelevantItemList.data"
+                              (onChange)="getItemName(dpNameProductId.selectedOption.id, i);
+                             this.accountNumPopulationLines.checkAccountNumber(item.get('projectId').value,item.get('itemId').value,i,itemCostDistributionForms);
+                             changeItemList(dpNameProductId.selectedOption.id, i);
+                            commonUtil.patchSKU(itemCostDistributionForms.controls[i].get('vendorItemNumber'),
+                                                 itemCostDistributionForms.controls[i].get('rate'),
+                                                 dpNameProductId.selectedOption.sku, dpNameProductId.selectedOption.itemCost);
+                                                 commonUtil.isPressEnterInsideDropdown(dpNameProductId)"
+                              appendTo="body" optionValue="id" optionLabel="name" placeholder="Item Number"
+                              [filter]="true" [showClear]="true"
+                              [style]="{'width':'100%'}" #dpNameProductId>
+
+                    <ng-template pTemplate="selectedItem">
+                      <div>{{itemCostDistributionForms.controls[i].get('itemNumber').value}}</div>
+                    </ng-template>
+
+                    <ng-template pTemplate="footer" *ngIf="privilegeService.isAuthorized(appAuthorities.ITEMS_CREATE)">
+                      <div class="grid dp-footer">
+                        <div class="col-12 button-wrapper">
+                          <button pButton class="p-button-sm" label="Add New"
+                                  (click)="addNewItemOverlay = true"></button>
+                        </div>
+                      </div>
+                    </ng-template>
+
+                  </p-dropdown>
+                </div>
+
+                <div *ngIf="col.field === appFormConstants.ITEM_NAME">
+                  <div class="p-inputgroup">
+                    <input formControlName="itemName" (keydown)="navigate($event,'itemName',  i)"
+                           placeholder="Item Name" name="itemName1" id="{{'itemName' + i}}"
+                           type="text" pInputText maxlength="500">
+                  </div>
+                </div>
+
+                <div *ngIf="col.field === appFormConstants.VENDOR_ITEM_NUMBER">
+                  <div class="p-inputgroup">
+                    <input formControlName="vendorItemNumber" (keydown)="navigate($event,'sku',  i);
+                         memoriseItemAcc.accountChanged(itemCostDistributionForms.controls[i]);"
+                           *ngIf="itemCostDistributionForms.controls[i].get('itemId').value === null"
+                           placeholder="Vendor Part Number" name="sku" id="{{'sku' + i}}" maxlength="50"
+                           type="text" pInputText>
+                  </div>
+                  <p-dropdown [virtualScroll]="skuDropDownList[i] ? skuDropDownList[i].data.length > 20 : null"
+                              virtualScrollItemSize="25"
+                              *ngIf="itemCostDistributionForms.controls[i].get('itemId').value !== null"
+                              formControlName="vendorItemNumber" [autoDisplayFirst]="false" id="{{'sku1' + i}}"
+                              name="productId1" class="number-column-table-dropdown"
+                              #skuList
+                              (onChange)="commonUtil.onChangeSkuList(skuList.selectedOption.itemCost,
+                            itemCostDistributionForms.controls[i].get('rate'),
+                            itemCostDistributionForms.controls[i].get('vendorItemNumber').value);
+                            getTotalCostDistribution();
+                            memoriseItemAcc.accountChanged(itemCostDistributionForms.controls[i]);
+                            commonUtil.isPressEnterInsideDropdown(vendorItemNumber)"
+                              appendTo="body" optionValue="name" optionLabel="name"
+                              placeholder="Select Vendor Part Number"
+                              [filter]="true" [options]="skuDropDownList[i] ? skuDropDownList[i].data: []"
+                              [showClear]="true" optionDisabled="inactive"
+                              [style]="{'width':'100%'}" #vendorItemNumber>
+
+                    <ng-template pTemplate="selectedItem">
+                      <div>{{vendorItemNumber.selectedOption.name}}</div>
+                    </ng-template>
+
+                    <ng-template let-item pTemplate="item">
+                      <div class="grid">
+                        <div class="dropdown-list"
+                             [ngClass]="item.id == 0 ? ' dropdown-add': null">{{item.name}}</div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+
+                </div>
+
+                <div *ngIf="col.field === appFormConstants.DESCRIPTION">
+                  <div class="p-inputgroup">
+                  <textarea formControlName="description" placeholder="Description" name="description"
+                            id="{{'itemDescription_' + i}}" pInputTextarea
+                            (keyup)="removeSpace.clearSpace(itemCostDistributionForms.controls[i], 'description');
+                         getDescriptionWiseAccItem(i,appModuleSection.ITEM_COST_DISTRIBUTION_SECTION_ID)"
+                            (keydown)="navigate($event,'itemDescription_',  i)"
+                            type="text" pInputText></textarea>
+                  </div>
+                </div>
+
+                <div *ngIf="col.field === appFormConstants.PROJECT_CODE">
+                  <p-dropdown [virtualScroll]="projectCodeList.data.length>20" virtualScrollItemSize="25"
+                              [options]="projectCodeList.data" id="{{'projectTask_' + i}}" inputId="code"
+                              formControlName="projectId" class="expense-table-dropdown"
+                              optionLabel="name" optionValue="id" placeholder="Project Task"
+                              [style]="{'width':'100%'}" [showClear]="true" optionDisabled="inactive"
+                              [autoDisplayFirst]="false" #code appendTo="body"
+                              (onChange)="changeList('ProjectCodesInItem', code.selectedOption.id, i);
+                            this.accountNumPopulationLines.checkAccountNumber(
+                            item.get('projectId').value,item.get('itemId').value,i,itemCostDistributionForms,createEInvoiceForm);
+                            commonUtil.isPressEnterInsideDropdown(code)"
+                              (onClick)="billUtility.patchHeaderProjectCodeToLineLevel(item, createEInvoiceForm, false, itemCostDistributionForms, i)"
+                              (onClear)="billUtility.patchHeaderProjectCodeToLineLevel(item, createEInvoiceForm, true, itemCostDistributionForms, i)"
+                              [filter]="true">
+                    <ng-template pTemplate="selectedItem">
+                      <div>{{code.selectedOption.name}}</div>
+                    </ng-template>
+
+                    <ng-template pTemplate="footer"
+                                 *ngIf="privilegeService.isAuthorized(appAuthorities.PROJECT_CODES_CREATE)">
+                      <div class="grid dp-footer">
+                        <div class="col-12 button-wrapper">
+                          <button pButton class="p-button-sm" label="Add New"
+                                  (click)="isAddNewProjectCodes = true"></button>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+
+                <div *ngIf="col.field === appFormConstants.ACCOUNT_ID">
+                  <p-dropdown [virtualScroll]="billUtility.accountTableAccountListArray[i].data.length > 20"
+                              virtualScrollItemSize="25"
+                              [options]="billUtility.accountTableAccountListArray[i].data" id="{{'account' + i}}"
+                              inputId="account"
+                              *ngIf="item.get('hideAccountNumberInput').value ||
+                              (!item.get('hideAccountNumberInput').value && !item.get('accountNumber').value)"
+                              formControlName="accountId" class="expense-table-dropdown"
+                              [showClear]="true" optionDisabled="inactive"
+                              optionLabel="name" optionValue="id" placeholder="Account Number"
+                              [style]="{'width':'100%'}"
+                              (onChange)="getAccountNameForExpenseContributionTable($event.value, i,true);"
+                              (onClick)="billUtility.conditionallyLoadAccountList(item.get('projectId').value, i, createEInvoiceForm.get('projectCodeId').value)"
+                              [autoDisplayFirst]="false" #selectAccountLabel appendTo="body"
+                              [filter]="true">
+                    <ng-template pTemplate="selectedItem">
+                      <div>{{itemCostDistributionForms.controls[i].get('accountNumber').value}}</div>
+                    </ng-template>
+
+                    <ng-template pTemplate="footer"
+                                 *ngIf="privilegeService.isAuthorized(appAuthorities.ACCOUNTS_CREATE)">
+                      <div class="grid dp-footer">
+                        <div class="col-12 button-wrapper">
+                          <button pButton class="p-button-sm" label="Add New"
+                                  (click)="isAddNewAccount = true"></button>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                  <div class="p-inputgroup"
+                       *ngIf="!item.get('hideAccountNumberInput').value && item.get('accountNumber').value">
+                    <input formControlName="accountNumber"
+                           (mouseover)="billUtility.conditionallyLoadAccountList(item.get('projectId').value,
+                           i, createEInvoiceForm.get('projectCodeId').value);
+                           billUtility.animateAccountNumberField(item)"
+                           placeholder="Account Number"
+                           name="accountNumber" id="{{'accountNumber' + i}}" [readOnly]="true"
+                           type="text" pInputText>
+                  </div>
+                </div>
+
+                <div *ngIf="col.field === appFormConstants.DEPARTMENT_ID">
+                  <p-dropdown [virtualScroll]="department.data.length>20" virtualScrollItemSize="25"
+                              optionDisabled="inactive"
+                              [options]="department.data" id="departmentIdAccount" placeholder="Department"
+                              (onChange)="changedDepartmentItem($event, i);
+                            commonUtil.isPressEnterInsideDropdown(dpNameDepartmentItem)" [style]="{'width':'100%'}"
+                              inputId="dropdown" appendTo="body" showClear="true" #dpNameDepartmentItem
+                              formControlName="departmentId" optionLabel="name" optionValue="id"
+                              [autoDisplayFirst]="false" [filter]="true">
+
+                    <ng-template pTemplate="selectedItem">
+                      <div>{{dpNameDepartmentItem.selectedOption.name}}</div>
+                    </ng-template>
+
+                    <ng-template pTemplate="footer"
+                                 *ngIf="privilegeService.isAuthorized(appAuthorities.DEPARTMENT_CREATE)">
+                      <div class="grid dp-footer">
+                        <div class="col-12 button-wrapper">
+                          <button pButton class="p-button-sm" label="Add New"
+                                  (click)="departmentPanel = true"></button>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+
+                <div *ngIf="col.field === appFormConstants.BILLABLE">
+                  <div class="p-inputgroup line-level-checkbox-wrapper">
+                    <div class="field-checkbox ml-6 checkbox-outer-wrapper">
+                      <p-checkbox name="checkBox" formControlName="billable" id="billableItem_{{i}}"
+                                  [disabled]="detailView"
+                                  binary="true"></p-checkbox>
+                      <label for="billableExpense_{{i}}"></label>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="col.field === appFormConstants.TAXABLE">
+                  <div class="p-inputgroup line-level-checkbox-wrapper">
+                    <div class="field-checkbox ml-6 checkbox-outer-wrapper">
+                      <p-checkbox name="checkBox" formControlName="taxable" id="taxableItem_{{i}}"
+                                  [disabled]="detailView"
+                                  binary="true"></p-checkbox>
+                      <label for="taxableExpense_{{i}}"></label>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="col.field === appFormConstants.QTY">
+                  <div class="p-inputgroup">
+                    <input formControlName="qty" name="qty" placeholder="Qty" id="{{'qty_' + i}}" type="text"
+                           class="qty-field-alignment"
+                           (keydown)="navigate($event,'qty_',  i)" [readOnly]="detailView"
+                           autocomplete="off" (keyup)="getTotalCostDistribution()"
+                           pInputText appDecimalNumber>
+                  </div>
+                </div>
+
+
+                <div *ngIf="col.field === appFormConstants.RATE">
+                  <div class="p-inputgroup">
+                    <input pInputText type="text" name="rate" placeholder="Cost" autocomplete="off"
+                           id="{{'cost' + i}}" (keydown)="navigate($event,'cost',  i)"
+                           appNoNegativeValues
+                           (keyup)="getTotalCostDistribution()" [readOnly]="detailView"
+                           currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                           formControlName="rate">
+                  </div>
+                </div>
+
+
+                <div *ngIf="col.field === appFormConstants.AMOUNT">
+                  <div class="p-inputgroup">
+                    <input pInputText type="text" (keydown)="navigate($event,'amount',  i)"
+                           name="amount" id="{{'amount' + i}}" currencyMask [autocomplete]="false"
+                           [options]="{ prefix: '', thousands: ',', decimal: '.' }" [readOnly]="true"
+                           placeholder="Line Amount" class="amounts"
+                           formControlName="amount">
+                  </div>
+                </div>
+
+                <ng-container formArrayName="additionalData" *ngIf="col.addiField && additionalFieldForItemCostDistributions.length > 0">
+                    <app-additional-field-line-items [col]="col" [additionalLineItemField]="customLineItemGrid.getField(col, itemDetailsAdditionalFields(i))"
+                                                     [parentForm]="createEInvoiceForm.get('recurringBillItemCostDistributions')"
+                                                     (updateAdditionalFieldDropDowns)="updateAdditionalFieldDropDowns($event)" [isCreate]="!editView"
+                                                     [i]="i" [itemIndex]="customLineItemGrid.getFieldIndex(col, itemDetailsAdditionalFields(i))"
+                                                     [additionalFieldForCostDistributions]="additionalFieldForItemCostDistributions"></app-additional-field-line-items>
+                </ng-container>
+                <div *ngIf="col.field === appFormConstants.TABLE_ACTION &&!detailView" class="text-center pt-2">
+                  <i class="fa fa-trash item-remove-button" *ngIf="itemCostDistributionForms.length > 1"
+                     (click)="removeItem(i); getTotalCostDistribution()"></i>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template *ngIf="!detailView" pTemplate="summary">
+            <div class="grid align-table-footer">
+              <div style="width: 44%">
+              </div>
+
+              <div style="width: 55%; margin-top: 5px" class=" text-right">
+
+                <span class="hyperlink text-right p-text-normal"
+                      (click)="customLineItemGrid.resetTableUserWiseData(appConstant.GRID_RECURRING_BILL_ITEM_COST_LINE_ITEM_LIST,
+                       additionalFieldForItemCostDistributions)">Reset Table State</span> &nbsp;|&nbsp;
+
+                               <span class="hyperlink text-right p-text-normal"
+                                     (click)="clearItemLines(); getTotalCostDistribution()">Clear Lines
+
+                               </span> &nbsp;|&nbsp;
+                <span class="hyperlink text-right p-text-normal"
+                      (click)="addItemOnClick()">Add Line
+                              </span>
+              </div>
+            </div>
+          </ng-template>
+        </p-table>
+      </div>
+      <app-loader [showLoader]="!showItemNoDataFound()" [showIcon]="showItemNoDataFound()"
+                  [messageContent]="showItemNoDataFound() ? 'There are no records found' : null"
+                  [showHeaderMessage]="!showItemNoDataFound()"
+                  *ngIf="showItemTableLoader()"></app-loader>
+    </p-tabPanel>
+
+    <p-tabPanel *ngIf="(detailView || editView) && existingAttachments.length>0">
+      <ng-template pTemplate="header">
+        <span class="custom-span">Files Attached</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <p-table responsiveLayout="scroll" [value]="existingAttachments" scrollable="true" scrollHeight="150px"
+                 styleClass="p-datatable-gridlines p-datatable-md">
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="min-width:300px" class="thead-style" id="fileName">File Name</th>
+              <th style="min-width:300px" class="thead-style" id="fieldName">Field Name</th>
+              <th style="min-width:50px" class="thead-style" id="action1">Action</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-i="rowIndex" let-item>
+            <tr>
+              <td [style]="'height : 30px; width:300px'">
+                <label> {{item.fileName}}</label>
+              </td>
+              <td [style]="'height : 30px; width:300px'">
+                <label> {{item.fieldName}}</label>
+              </td>
+              <td style="width:50px" class="text-center">
+                <i class="fa fa-download download-icon" (click)="downloadAttachment(item)"></i> &nbsp;
+                <i *ngIf="!detailView" class="fa fa-trash download-icon" (click)="deleteAttachmentOnEdit(i)"></i>
+              </td>
+
+            </tr>
+          </ng-template>
+        </p-table>
+      </ng-template>
+    </p-tabPanel>
+
+    <p-tabPanel *ngIf="adHocWorkflowDetail.length">
+      <ng-template pTemplate="header">
+        <span class="custom-span">Approvers ({{ adHocWorkflowDetail.length }})</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <div class="grid" style="padding-top: 25px">
+          <div class="col-12 pb-0 mb-0 pt-0 mt-0 approve-alignment"
+               *ngFor="let adHoc of adHocWorkflowDetail; let adHocIndex = index">
+            <div class="col-5 bold-text text pb-0 mb-0 pt-0 mt-0" [ngClass]="{ 'approve-text': adHoc.completed }">
+              <span>{{ adHocIndex + 1 }}. </span>
+              {{ adHoc.approvalUserName || adHoc.pendingUserName || adHoc.approvalGroupName }}
+              <span *ngIf="adHoc.approvalGroupName && adHoc.approvalUserName">
+              ({{adHoc.approvalGroupName}})
+            </span>
+              <span style="padding-left: 16px;" [ngClass]="commonUtil.getStatusIcon(adHoc)"></span>
+            </div>
+            <div [ngClass]="{ 'approve-text': adHoc.completed }" class="col-2 text text-right pb-0 mb-0 pt-0 mt-0">
+              {{ adHoc.actionDate | date:'MM/dd/yyyy' }}
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </p-tabPanel>
+  </p-tabView>
+
+  <br>
+  <div class="grid justify-content-end">
+    <div class="order-drop-zone p-fluid col-12 xl:col-7 top-marging"
+         *ngIf="detailView ? createEInvoiceForm.get('additionalNotes').value : true">
+      <label class="label-wrapper" for="notes">Additional Notes</label>
+      <div class="p-inputgroup">
+         <span class="w-full">
+            <textarea formControlName="additionalNotes" maxlength="500" id="notes" rows="5" pInputTextarea></textarea>
+          </span>
+      </div>
+    </div>
+
+    <div *ngIf="expenseCostDistributionForms.controls.length !== 0 || itemCostDistributionForms.controls.length !== 0"
+         class="order-amount-fields col-12 offset-0 xl:col-5">
+      <div class="grid" *ngIf="expenseCostDistributionForms.controls.length !== 0">
+        <span class="col-6 lg:col-8 md:col-4 sm:col-5  xl:col-5 amount-text-alignment amount-label mt-1">Expense Cost Distribution Total</span>
+        <div class="col-6 lg:col-4 sm:col-7 md:col-8 xl:col-7">
+          <div class="p-fluid">
+            <input tabindex="-1" pInputText currencyMask [readOnly]="true" placeholder="0.00"
+                   [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                   class="text-right amounts"
+                   formControlName="expenseCostDistributionCostTotal" id="expenseCostDistributionCostTotal" readonly>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid" *ngIf="itemCostDistributionForms.controls.length !== 0">
+        <span class="col-6 lg:col-8 md:col-4 sm:col-5  xl:col-5 amount-text-alignment amount-label mt-1">Item Cost Distribution Total</span>
+        <div class="col-6 lg:col-4 sm:col-7 md:col-8 xl:col-7">
+          <div class="p-fluid">
+            <input tabindex="-1" pInputText currencyMask [readOnly]="true" placeholder="0.00"
+                   [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+                   class="text-right amounts"
+                   formControlName="itemCostDistributionCostTotal" id="itemCostDistributionCostTotal" readonly>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <span
+          class="col-6 lg:col-8 md:col-4 sm:col-5  xl:col-5 amount-text-alignment amount-label mt-1">Bill Amount</span>
+        <div class="col-6 lg:col-4 sm:col-7 md:col-8 xl:col-7">
+          <div class="p-fluid">
+            <input tabindex="-1" pInputText currencyMask placeholder="0.00"
+                   [options]="{prefix: '', thousands: ',', decimal: '.'}"
+                   class="text-right amounts"
+                   formControlName="billAmount" id="billAmount" readonly>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pl-0 mb-5 col-12" *ngIf="detailView ? createEInvoiceForm.get('saveAsApproved').value : true">
+    <p-checkbox name="checkBox" formControlName="saveAsApproved" binary="true"></p-checkbox>
+    <span class="subHeadingColour"> Generate the bill without approval </span>
+  </div>
+
+  <div class="grid" *ngIf="!createEInvoiceForm.get('saveAsApproved').value">
+    <div class="order-drop-zone condition-resize col-12 xl:col-8 lg:col-12 md:col-12 sm:col-12" *ngIf="!detailView">
+
+      <div class="col-12 pl-0">
+        <h6 class="subHeadingColour mb-4">Select Approver(s)</h6>
+      </div>
+      <div class="col-12 pl-0">
+        <div formArrayName="adHocWorkflowDetails" class="condition-resize" *ngIf="adHocWorkflowDetails.length>0">
+
+          <div class="grid" style="min-width: 650px"
+               *ngFor="let adHoc of adHocWorkflowDetails.controls; let adHocIndex=index"
+               [formGroupName]="adHocIndex">
+
+            <div style="display: inline-block; min-width: 80px" class="field col-1" style="padding-top: 25px;">
+              <input tabindex="-1" pInputText formControlName="approvalOrder" class="index-style text-style amounts"
+                     value="{{adHocIndex + 1}}"
+                     readonly>
+            </div>
+
+            <div style="display: inline-block; min-width: 250px" class="field p-fluid col-4">
+              <div class="label-wrapper">Select Approval Group</div>
+              <p-dropdown [virtualScroll]="approvalGroupList.data.length>20" virtualScrollItemSize="25" #dpApprovalGroup
+                          formControlName="approvalGroup"
+                          id="approvalGroup{{adHocIndex}}" optionDisabled="inactive"
+                          [autoDisplayFirst]="false" optionValue="id" optionLabel="name"
+                          (onChange)="this.adHocWorkflowDetails.controls[adHocIndex].get('approvalUser').reset();
+                          commonUtil.isPressEnterInsideDropdown(dpApprovalGroup)"
+                          [showClear]="true" appendTo="body" placeholder="Select Approval Group"
+                          [options]="approvalGroupList.data" [filter]="true">
+              </p-dropdown>
+              <div class="p-invalid text-align-left" *ngIf="adHocWorkflowDetails.controls[adHocIndex].get('approvalGroup').dirty
+            && adHocWorkflowDetails.controls[adHocIndex].get('approvalGroup').errors">
+                Approval Group Required
+              </div>
+            </div>
+            <div class="field p-fluid  text-center p-2 label-wrapper" style="padding-top: 33px !important;">or</div>
+
+            <div style="display: inline-block; min-width: 250px" class="field p-fluid col-2 ">
+              <div class="label-wrapper">Select Approval User</div>
+              <p-dropdown [virtualScroll]="approvalUserList.data.length>20" virtualScrollItemSize="25" #dpApprovalUser
+                          formControlName="approvalUser" optionDisabled="inactive"
+                          id="approvalUser{{adHocIndex}}"
+                          (onChange)="this.adHocWorkflowDetails.controls[adHocIndex].get('approvalGroup').reset();
+                          commonUtil.isPressEnterInsideDropdown(dpApprovalUser)"
+                          optionValue="id" optionLabel="name" appendTo="body" placeholder="Select Approval User"
+                          [options]="approvalUserList.data" [filter]="true" [showClear]="true">
+              </p-dropdown>
+              <div class="p-invalid text-align-left" *ngIf="adHocWorkflowDetails.controls[adHocIndex].get('approvalUser').dirty
+            && adHocWorkflowDetails.controls[adHocIndex].get('approvalUser').errors">
+                Approval User Required
+              </div>
+            </div>
+
+            <div style="display: inline-block; min-width: 50px" *ngIf="!detailView" class="field col-2"
+                 style="padding-top: 24px;">
+              <button tabindex="-1" pButton type="button" class="p-button-sm p-button-borderless" iconPos="left"
+                      icon="fa-solid fa-trash-can"
+                      *ngIf="adHocWorkflowDetails.controls.length > 1"
+                      (click)="removeAdHocWorkflow(adHocIndex)">
+              </button>&nbsp;
+              <button tabindex="-1" pButton type="button" class="p-button-sm p-button-borderless" iconPos="left"
+                      icon="fa-solid fa-plus"
+                      *ngIf="adHocIndex == (adHocWorkflowDetails.controls.length-1)"
+                      (click)="addAdHocWorkflowDetail()">
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div *ngIf="!detailView" class="grid" style="height: calc(100vh - 30rem);">
+    <div class="col-12 xl:col-12 top-marging">
+      <ngx-dropzone accept="application/pdf,image/png,image/jpeg,image/jpg"
+                    (change)="changeFileList($event)" class="drop-zone-style"
+                    style="height: 234px; background-color: #f4fbfa">
+        <ngx-dropzone-label class="dp-zone-big-text-wrapper p-text-normal">Drop File(s) Here To Append <br><br>
+          <span class="dp-zone-small-text-wrapper p-text-normal">(We only accept PDF, JPG JPEG and PNG formats, all the other formats will be ignored)</span>
+        </ngx-dropzone-label>
+        <ngx-dropzone-preview class="preview-file" *ngFor="let f of attachments" [removable]="true"
+                              (removed)="onRemove(f)">
+          <ngx-dropzone-label class="uploaded-file-name">{{ f.name }}</ngx-dropzone-label>
+        </ngx-dropzone-preview>
+      </ngx-dropzone>
+    </div>
+  </div>
+</form>
+
+<div class="grid footer form-footer-button" *ngIf="!detailView">
+  <div class="col-12 button-set-wrapper">
+    <div class="pull-right">
+      <button pButton type="button" (click)="resetEInvoiceForm()" label="Reset" [disabled]="isLoading"
+              class="p-button-outlined p-button-sm" icon="fa-solid fa-rotate-right"></button>&nbsp;
+
+      <button pButton class="p-button-sm" [disabled]="isLoading" *ngIf="!editView"
+              (click)="createUpdateTemplate('C')" type="button"
+              [icon]="isLoading ? 'pi pi-spin pi-spinner': 'fa-solid fa-share-from-square'" iconPos="left"
+              label="Create Schedule"></button>
+
+      <button pButton class="p-button-sm" [disabled]="isLoading" *ngIf="editView"
+              (click)="createUpdateTemplate('U')" type="button"
+              [icon]="isLoading ? 'pi pi-spin pi-spinner': 'pi pi-save'" iconPos="left"
+              label="Save"></button>
+    </div>
+  </div>
+</div>
+
+<!--Add New Uom-->
+<p-sidebar styleClass="p-sidebar-sm" *ngIf="addNewUOM" appendTo="body" [dismissible]="true" [modal]="true"
+           position="right" class="overflow-side-bar" [(visible)]="addNewUOM">
+  <app-add-uom (updatedUoms)="getUomList(); addNewUOM = false" *ngIf="addNewUOM"></app-add-uom>
+</p-sidebar>
+
+<!--Create New Vendor-->
+<p-sidebar styleClass="p-sidebar-sm" position="right" [modal]="true" [dismissible]="true" appendTo="body"
+           *ngIf="isAddVendor"
+           [(visible)]="isAddVendor">
+  <ng-template pTemplate="header">Create Vendor</ng-template>
+  <app-add-vendor (refreshVendorList)="getVendorList()" *ngIf="isAddVendor"></app-add-vendor>
+</p-sidebar>
+
+<!--Item Create-->
+<p-sidebar styleClass="p-sidebar-lg" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           class="overflow-side-bar" *ngIf="addNewItemOverlay" [(visible)]="addNewItemOverlay">
+  <ng-template pTemplate="header">Create Item</ng-template>
+  <app-add-item (emittedTabIndex)="getVendorItemList(this.selectedVendorId); addNewItemOverlay = false "
+                [editView]="false"
+                [detailView]="false" [panel]="true" *ngIf="addNewItemOverlay"
+                [vendorId]="selectedVendorId"></app-add-item>
+</p-sidebar>
+
+
+<!--Add New Account-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" appendTo="body" [modal]="true" position="right"
+           class="overflow-side-bar" *ngIf="isAddNewAccount" [(visible)]="isAddNewAccount">
+  <ng-template pTemplate="header">Account Information</ng-template>
+  <app-add-account (updatedAccountList)="getAccounts()"
+                   [detailView]="false" [editView]="false" [panel]="true" *ngIf="isAddNewAccount"></app-add-account>
+</p-sidebar>
+
+<!--Add New Project Code-->
+<p-sidebar styleClass="p-sidebar-sm" *ngIf="isAddNewProjectCodes" [dismissible]="true" appendTo="body" [modal]="true"
+           position="right" class="overflow-side-bar"
+           [(visible)]="isAddNewProjectCodes">
+  <ng-template pTemplate="header">Create Project</ng-template>
+  <app-create-new-project-code (updatedParentCodeList)="getProjectTaskList()"
+                               *ngIf="isAddNewProjectCodes">
+  </app-create-new-project-code>
+</p-sidebar>
+
+
+<!--Create New Department-->
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           class="overflow-side-bar"
+           *ngIf="departmentPanel" [(visible)]="departmentPanel">
+  <ng-template pTemplate="header">Create Department</ng-template>
+  <app-add-department (updateDepartments)="getDepartment(); departmentPanel = false"
+                      *ngIf="departmentPanel"></app-add-department>
+</p-sidebar>
+
+<!--Create New DropDown-->
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" (onHide)="addNewDropDown = false" position="right" [modal]="true"
+           [dismissible]="true" *ngIf="addNewDropDown" [(visible)]="addNewDropDown">
+  <ng-template pTemplate="header">Create New DropDown Option</ng-template>
+  <app-additional-field-add-new [field]="selectedAdditionalField" *ngIf="addNewDropDown" [needToRemoveAddNew]="true"
+                                (closedComponent)="addNewDropDown = false"></app-additional-field-add-new>
+</p-sidebar>
+
+<!--add configured rule-->
+<p-overlayPanel #overlayPanel [dismissable]="true" [showCloseIcon]="false" appendTo="body"
+                styleClass="add-rule-overlay">
+  <ng-template pTemplate>
+
+    <div class="grid col-12 pr-0">
+
+      <div class="col-8 pt-0 pb-0">
+        <label (click)="addNewRule()" class="add-new-label">Add Rule</label>
+      </div>
+    </div>
+
+    <div *ngFor="let rule of ruleDetails; let i=index">
+      <div class="grid col-12 pr-0 pt-0 pb-0 add-rule-content-wrapper">
+        <div class="col-8 p-as-center">
+          <label> {{rule.name}}</label>
+        </div>
+        <div class="col-4">
+          <button class="apply-button pull-right" pButton label="Apply" (click)="applyRule(rule)"></button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</p-overlayPanel>
+
+<p-sidebar [showCloseIcon]="false" [fullScreen]="true" [modal]="false" *ngIf="isAddRue"
+           [(visible)]="isAddRue" appendTo="body">
+  <app-workflow-create *ngIf="isAddRue" (isClickCloseButton)="isAddRue = false"
+                       [isFromBill]="true"></app-workflow-create>
+</p-sidebar>
+
+<p-confirmDialog #cdD key="recurringBillDeleteFromDetailView" header="Are you sure?"
+                 icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cdD.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, Delete it"
+            (click)="cdD.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<!--Confirmation Massage change the project code-->
+<p-dialog  [(visible)]="commonUtil.isConfirmation" [modal]="true"  [style]="{ width: '36vw'}"
+          [closable]="false"  class="isConfirmation">
+  <ng-template pTemplate="header">
+      <span class="text-xl font-bold" style="font-size: 17px !important;padding: 20px; padding-bottom: 0">
+        Do you want to overwrite any existing {{commonUtil.sectionName}} in
+        <span>
+        the line items?
+        </span>
+      </span>
+  </ng-template>
+
+  <ng-container>
+    <ul style="padding: 0 8px 0 8px;" *ngIf="commonUtil.sectionName === 'project codes'
+     || commonUtil.sectionName === 'department codes'">
+      <li class="m-1" *ngIf="commonUtil.sectionName === 'project codes'">
+        {{appConstant.PROJECT_CODES_CONFIRMATION_MASSAGE_NO}}</li>
+      <li class="m-1 pt-2" *ngIf="commonUtil.sectionName === 'project codes'">
+        {{appConstant.PROJECT_CODES_CONFIRMATION_MASSAGE_YES}}</li>
+      <li class="m-1" *ngIf="commonUtil.sectionName === 'department codes'">
+        {{appConstant.DEPARTMENT_CODES_CONFIRMATION_MASSAGE_YES}}</li>
+      <li class="m-1 pt-2" *ngIf="commonUtil.sectionName === 'department codes'">
+        {{appConstant.DEPARTMENT_CODES_CONFIRMATION_MASSAGE_NO}}</li>
+    </ul>
+  </ng-container>
+
+  <div class="col-12 pt-3">
+    <div class="pull-right">
+      <button pButton type="button" style="padding: 0.625rem 3.75rem;"
+              label="No" (click)="commonUtil.overWriteData('No',this.createEInvoiceForm,expenseCostDistributionForms.controls, itemCostDistributionForms.controls)"
+              class="p-button-outlined p-button-sm margin-right" ></button>&nbsp;
+      <button pButton type="button" style="padding: 0.625rem 3.75rem;"
+              (click)="commonUtil.overWriteData('Yes',this.createEInvoiceForm,expenseCostDistributionForms.controls, itemCostDistributionForms.controls);"  class="p-button-sm"
+              iconPos="left" label="Yes"></button>
+    </div>
+  </div>
+</p-dialog>

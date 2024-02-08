@@ -1,0 +1,36 @@
+<div class="side-bar-drawer-content p-3">
+<form [formGroup]="expenseTypeForm" class="mt-3" (ngSubmit)="createNewExpenseType()">
+  <div class="grid p-fluid">
+
+    <div [ngClass]="'field col-12'">
+      <div>
+        <span>
+          <label class="label-wrapper" for="uom">Enter Expense Type* </label>
+          <input formControlName="name" id="uom" type="text" pInputText maxlength="50"
+                 (keyup)="removeSpace.clearSpace(expenseTypeForm, 'name')">
+
+        </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="expenseTypeForm.get('name').dirty && expenseTypeForm.get('name').errors">
+        Expense Type is required
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+
+
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" label="Reset" (click)="reset()" [disabled]="loading"
+              class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+      <button pButton type="button" (click)="createNewExpenseType()" class="p-button-sm" iconPos="left"
+              [disabled]="loading" [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-plus'"
+              label="Create"></button>
+    </div>
+  </div>
+  </div>
+

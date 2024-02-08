@@ -1,0 +1,59 @@
+<div class="grid mt-1" [class.back-ground-white]="createAccountBtn || uploadAccountBtn">
+  <!--    <h5 class="menu-label col-12 subHeadingGreen" (click)="toggleCreateUser('cu')">Accounts</h5>-->
+  <div class="col-6">
+        <h5 [hidden]="listAccountBtn || uploadAccountBtn " class="module-header-label ml-5 col-12">Create Accounts</h5>
+    <app-table-header-action-buttons
+      [componentInstance]="accountListComponent"
+      [hidden]="!listAccountBtn" *ngIf="privilegeService.isAuthorizedMultiple
+        ([appAuthorities.ACCOUNTS_DETAIL_VIEW,appAuthorities.ACCOUNTS_ACTIVATE,
+        appAuthorities.ACCOUNTS_INACTIVATE,appAuthorities.ACCOUNTS_DELETE,appAuthorities.ACCOUNTS_EDIT])  && accountListComponent"
+      [tableSupportBase]="accountListComponent?.tableSupportBase"
+      (refresh)="accountListComponent?.loadData(accountListComponent.tableSupportBase.searchFilterDto)"
+      (showFilters)="accountListComponent.showFilter = !accountListComponent?.showFilter;
+      accountListComponent.showFilterColumns = false"
+      (showColumns)="accountListComponent.showFilterColumns = !accountListComponent?.showFilterColumns; accountListComponent.showFilter = false"
+      (delete)="accountListComponent.deleteAccountList()"
+      (inactive)="accountListComponent.inactiveAccountList()"
+      (active)="accountListComponent.activeAccountList()"
+      [visibleActions]="accountListComponent?.availableHeaderActions"
+      [moduleName]="AppAnalyticsConstants.MODULE_NAME_ACCOUNT"
+    >
+    </app-table-header-action-buttons>
+  </div>
+
+  <div class="col-6 text-right">
+
+
+    <button pButton class="p-button-outlined mr-2"
+            *ngIf="!listAccountBtn && privilegeService.isAuthorized(appAuthorities.ACCOUNTS_DETAIL_VIEW)"
+            label="View Account List" (click)="toggleCreateUser('vl')"></button>
+    <button pButton class="p-button-outlined mr-2"
+            *ngIf="!uploadAccountBtn && privilegeService.isAuthorized(appAuthorities.ACCOUNTS_UPLOAD)"
+            label="Upload Account List" (click)="toggleCreateUser('ul')"></button>
+    <button pButton class="p-button-sm mr-2"
+            *ngIf="!createAccountBtn && privilegeService.isAuthorized(appAuthorities.ACCOUNTS_CREATE)"
+            label="Create Account" (click)="toggleCreateUser('cu')"></button>
+  </div>
+
+
+  <div class="col-12 p-0 pl-2">
+    <app-account-list #accountListComponent [hidden]="!listAccountBtn" *ngIf="privilegeService.isAuthorizedMultiple
+    ([appAuthorities.ACCOUNTS_DETAIL_VIEW,appAuthorities.ACCOUNTS_ACTIVATE,
+    appAuthorities.ACCOUNTS_INACTIVATE,appAuthorities.ACCOUNTS_DELETE,appAuthorities.ACCOUNTS_EDIT])"></app-account-list>
+  </div>
+
+
+  <div class="col-12 card-height" *ngIf="createAccountBtn || uploadAccountBtn">
+    <div class="grid">
+      <div class="col-12 p-5 mt-5">
+
+
+        <app-account-create (emittedTabIndex)="getTabAfterSuccess($event)" #accountCreateComponent
+                            *ngIf="createAccountBtn && privilegeService.isAuthorized(appAuthorities.ACCOUNTS_CREATE)"></app-account-create>
+        <app-account-upload (successEmitter)="refreshTableData()"
+                            *ngIf="uploadAccountBtn && privilegeService.isAuthorized(appAuthorities.ACCOUNTS_UPLOAD)"></app-account-upload>
+      </div>
+    </div>
+  </div>
+
+</div>

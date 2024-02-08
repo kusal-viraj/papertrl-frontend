@@ -1,0 +1,79 @@
+<form [formGroup]="createTaskForm" (ngSubmit)="submitTask(createTaskForm.value)">
+
+  <h6 class="subHeadingColour">Item/Service Information</h6><br>
+
+  <div class="grid p-fluid">
+
+    <div  class="field col-12 lg:col-4">
+      <span class="p-float-label">
+          <p-dropdown inputId="itemType" formControlName="tenantId" id="tenantId" [autoDisplayFirst]="false"
+                      [showClear]="true" optionValue="id" #dpName1
+                      [options]="taskSettingsUtil.tenantIdList.data" [filter]="true"
+                      optionLabel="name">
+             <ng-template pTemplate="selectedItem">
+               <div>{{dpName1.selectedOption.name}}</div>
+             </ng-template>
+           </p-dropdown>
+          <label for="tenantId">Select Tenant ID* </label>
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="createTaskForm.get('tenantId').dirty && createTaskForm.get('tenantId').errors">
+        Tenant ID is required
+      </div>
+    </div>
+
+    <div class="field col-12 lg:col-4">
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input formControlName="title" id="title" type="text"
+                            pInputText>
+                     <label for="title">Task Name* </label>
+                   </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="createTaskForm.get('title').dirty && createTaskForm.get('title').errors">
+        Task Name is required
+      </div>
+    </div>
+
+    <div  class="field col-12 lg:col-4">
+      <span class="p-float-label">
+          <p-dropdown inputId="itemType" formControlName="commonUrlId" id="commonUrlId" [autoDisplayFirst]="false"
+                      [showClear]="true" optionValue="id" #dpName
+                      [options]="taskSettingsUtil.commonUrlIdList.data" [filter]="true"
+                      optionLabel="name">
+             <ng-template pTemplate="selectedItem">
+               <div>{{dpName.selectedOption.name}}</div>
+             </ng-template>
+           </p-dropdown>
+          <label for="tenantId">Select URL* </label>
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="createTaskForm.get('commonUrlId').dirty && createTaskForm.get('commonUrlId').errors">
+        URL is Required
+      </div>
+    </div>
+
+    <div [ngClass]="'field col-12'">
+      <div class="p-inputgroup">
+          <span class="p-float-label">
+            <textarea formControlName="description" id="description" maxlength="300"  rows="1" pInputTextarea></textarea>
+             <label for="description">Description</label>
+          </span>
+      </div>
+    </div>
+
+  </div>
+  <div class="grid">
+    <div class="col-12" style="margin-top: 3%">
+      <div class="pull-right">
+        <button pButton type="button" label="Reset" (click)="resetTaskForm()" class="p-button-outlined
+         p-button-sm margin-right button-responsive-mobile" icon="fa-solid fa-rotate-right"></button>&nbsp;
+        <button pButton type="submit" class="p-button-sm button-responsive-mobile" iconPos="left" icon="pi pi-plus" label="Create Task">
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+
+

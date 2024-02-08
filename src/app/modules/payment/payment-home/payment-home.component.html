@@ -1,0 +1,52 @@
+<div [class.back-ground-white]="uploadBillPayment">
+  <div class="grid mt-1">
+    <div class="col-6  mb-1">
+      <app-table-header-action-buttons [hidden]="!listBillPayment" *ngIf="isBillPaymentTable()
+                                       && transactionListComponent" [componentInstance]="transactionListComponent"
+                                       [tableSupportBase]="transactionListComponent?.tableSupportBase"
+                                       (refresh)="transactionListComponent?.loadData(transactionListComponent.tableSupportBase.searchFilterDto)"
+                                       (showFilters)="transactionListComponent.showFilter = !transactionListComponent.showFilter;
+                                       transactionListComponent.showFilterColumns = false; transactionListComponent?.gridService.dropDownSubject.next(true)"
+                                       (showColumns)="transactionListComponent.showFilterColumns = !transactionListComponent.showFilterColumns; transactionListComponent.showFilter = false"
+                                       (export)="transactionListComponent.bulkExportAll()"
+                                       (cancel)="transactionListComponent.bulkCancel()"
+                                       (quickApprove)="transactionListComponent.bulkApprove()"
+                                       [visibleActions]="transactionListComponent?.availableHeaderActions"
+                                       [moduleName]="AppAnalyticsConstants.MODULE_NAME_PAYMENT"
+      ></app-table-header-action-buttons>
+    </div>
+    <div class="col-6 text-right">
+
+      <button pButton class="p-button-outlined mr-3" *ngIf="!uploadBillPayment &&
+                privilegeService.isAuthorized(appAuthorities.PAYMENT_UPLOAD)" iconPos="right"
+              icon="pi pi-angle-down"
+              label="Upload Offline Transactions" (click)="menu.toggle($event)"></button>
+
+      <p-menu appendTo="body" #menu [popup]="true" [model]="menuItems"></p-menu>
+
+      <button pButton class="p-button-outlined mr-3" *ngIf="!listBillPayment && isBillPaymentTable()"
+              iconPos="left" label="View Transaction List" (click)="toggleBillPayment('lb')"></button>
+
+      <button pButton class="p-button mr-3 pay-btn" *ngIf="!createBillPayment &&
+               privilegeService.isAuthorized(appAuthorities.PAYMENT_CREATE)" iconPos="left"
+              label="Pay" (click)="toggleBillPayment('cb')"></button>
+    </div>
+  </div>
+  <div class="height" *ngIf="uploadBillPayment &&
+                privilegeService.isAuthorized(appAuthorities.PAYMENT_UPLOAD)">
+    <app-payment-offline-upload [documentId]="documentId"></app-payment-offline-upload>
+  </div>
+</div>
+
+<app-transaction-list [hidden]="!listBillPayment" #transactionListComponent
+                      *ngIf="isBillPaymentTable()"></app-transaction-list>
+
+
+<p-sidebar [modal]="false" [showCloseIcon]="false" [dismissible]="true" position="right" appendTo="body" [fullScreen]="true" [(visible)]="createBillPayment"
+           (onHide)="changeAfterSuccess()" *ngIf="createBillPayment" styleClass="payment-drawer">
+<!--  <ng-template pTemplate="header">Create Payment</ng-template>-->
+  <app-create-payment
+    (successEmit)="transactionListComponent.loadData(transactionListComponent.tableSupportBase.searchFilterDto); changeAfterSuccess()"
+    (closeEmit)="changeAfterSuccess()"
+    *ngIf="createBillPayment && privilegeService.isAuthorized(appAuthorities.PAYMENT_CREATE)"></app-create-payment>
+</p-sidebar>

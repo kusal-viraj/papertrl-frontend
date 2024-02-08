@@ -1,0 +1,30 @@
+@import "../../../../scss/color.scss";
+
+.card-custom-po {
+  padding: 2rem;
+}
+
+.po-heading {
+  size: 16px;
+  color: $green;
+  cursor: pointer;
+  font-weight: 600;
+  margin-left: -5px;
+}
+
+@media screen and (max-width: 600px) {
+ .screen-change-btn {
+   width: 100%;
+   text-align: center;
+ }
+  .screen-change-btn{
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 1200px){
+  //.item-list-responsive-screen-change{
+  //  width: 100%;
+  //  overflow: auto;
+  //}
+}

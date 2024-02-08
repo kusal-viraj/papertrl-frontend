@@ -1,0 +1,42 @@
+<form [formGroup]="mileageRateConfigurationForm">
+
+  <div class="grid mt-3">
+
+    <div class="col-3">
+      <label class="label-wrapper" for="mileageRate">Mileage Rate* </label>
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+          <input formControlName="mileageRate" id="mileageRate" type="text" pInputText
+                 currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' , precision: 3,  allowNegative:false}"
+                 maxlength="19"
+                 (keyup)="removeSpace.clearSpace(mileageRateConfigurationForm, 'mileageRate')">
+        </span>
+      </div>
+
+      <div class="p-invalid text-align-left"
+           *ngIf="mileageRateConfigurationForm.get('mileageRate').dirty &&
+           mileageRateConfigurationForm.get('mileageRate').hasError('required')">
+        Mileage Rate is required
+      </div>
+
+      <div class="p-invalid text-align-left"
+           *ngIf="mileageRateConfigurationForm.get('mileageRate').hasError('maxlength')">
+        Mileage Rate must be less than 20 numbers
+      </div>
+
+    </div>
+
+    <div class="col-9" style="
+    padding-top: 22px;
+">
+        <button pButton type="button" label="Reset" (click)="resetForm()"
+                [disabled]="loading"
+                class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+        <button pButton type="submit" class="p-button-sm" iconPos="left"
+                [disabled]="loading" [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-save'"
+                label="Save" (click)="createMileageRate()"></button>
+    </div>
+
+  </div>
+
+</form>

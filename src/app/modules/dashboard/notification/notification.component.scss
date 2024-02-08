@@ -1,0 +1,67 @@
+
+.notifications-menu {
+  height: 425px;
+  overflow-y: auto;
+}
+
+.close-mark {
+  //border-radius: 5px;
+  border-radius: 50%;
+  padding: 15px;
+  align-self: center;
+  text-align: center;
+}
+
+.close-mark:hover {
+  cursor: pointer;
+  background-color: #e9ecef;
+}
+
+.clear-all {
+  padding-top: 10px;
+  align-self: center;
+  text-align: center;
+  background-color: #f1f1f1;
+  height: 37px;
+}
+
+.clear-all:hover {
+  cursor: pointer;
+  background-color: #e9ecef;
+}
+
+.no-click-items {
+  background-color: transparent !important;
+  cursor: not-allowed !important;
+}
+
+.user-name {
+  margin-top: 0;
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+
+.footer {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: white;
+}
+
+.notification-detail {
+  font-size: 13px;
+}
+
+.notification-icon {
+  font-size: 16px;
+}
+
+.notification-item {
+  width: calc(100% - 60px) !important;
+}

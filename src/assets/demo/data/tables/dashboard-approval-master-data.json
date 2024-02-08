@@ -1,0 +1,45 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "vendorName": "Vendor ",
+      "documentType": "Bill",
+      "documentNo": "HB5614",
+      "date": "17/12/2020",
+      "totalAmount": "3000.00"
+    },
+    {
+      "id": 1,
+      "vendorName": "Vendor ",
+      "documentType": "Bill",
+      "documentNo": "HB5614",
+      "date": "17/12/2020",
+      "totalAmount": "3000.00"
+    },
+    {
+      "id": 1,
+      "vendorName": "Vendor ",
+      "documentType": "Bill",
+      "documentNo": "HB5614",
+      "date": "17/12/2020",
+      "totalAmount": "3000.00"
+    },
+    {
+      "id": 1,
+      "vendorName": "Vendor ",
+      "documentType": "Bill",
+      "documentNo": "HB5614",
+      "date": "17/12/2020",
+      "totalAmount": "3000.00"
+    },
+    {
+      "id": 1,
+      "vendorName": "Vendor ",
+      "documentType": "Bill",
+      "documentNo": "HB5614",
+      "date": "17/12/2020",
+      "totalAmount": "3000.00"
+    }
+  ],
+  "totalRecords": 5
+}

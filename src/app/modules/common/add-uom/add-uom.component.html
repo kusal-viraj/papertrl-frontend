@@ -1,0 +1,47 @@
+<div class="side-bar-drawer-content pt-4 p-3">
+<form [formGroup]="createUOMForm" (ngSubmit)="createNewUOM(createUOMForm)">
+  <div class="grid mt-3 p-fluid">
+    <div class="field col-12">
+      <div>
+        <span>
+          <label class="label-wrapper" for="uom">Name* </label>
+          <input formControlName="unit" id="uom" type="text" pInputText
+                 (keyup)="removeSpace.clearSpace(createUOMForm, 'unit')">
+
+        </span>
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="createUOMForm.get('unit').dirty && createUOMForm.get('unit').hasError('required')">
+        UOM is required
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="createUOMForm.get('unit').hasError('maxlength')">UOM name must be less than 10 characters
+      </div>
+    </div>
+
+    <div class="field col-12">
+      <label  class="label-wrapper" for="salesDescription">Enter Sales Description</label>
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+          <textarea formControlName="description" (keyup)="removeSpace.clearSpace(createUOMForm, 'description')" maxlength="100"
+                    id="salesDescription" rows="3"
+                    pInputTextarea></textarea>
+        </span>
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+  <div class="pull-right">
+    <button pButton type="button" label="Reset" (click)="resetUOMForm()" [disabled]="loading"
+            class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+    <button pButton type="button" (click)="createNewUOM(createUOMForm)" class="p-button-sm" iconPos="left"
+            [disabled]="loading" [icon]="loading ? 'pi pi-spin pi-spinner': 'pi pi-plus'" label="Create UOM"></button>
+  </div>
+  </div>
+</div>
+
+<!--Notification Messages-->
+<p-toast position="bottom-right" key="bs"></p-toast>
+

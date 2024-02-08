@@ -1,0 +1,19 @@
+[
+  {
+    "id": "LESS_THAN_30",
+    "name": "<30"
+  },
+  {
+    "id": "BETWEEN_30_60",
+    "name": "30-60"
+  },
+  {
+    "id": "BETWEEN_60_90",
+    "name": "60-90"
+  },
+  {
+    "id": "OVERDUE",
+    "name": "OVERDUE"
+  }
+]
+

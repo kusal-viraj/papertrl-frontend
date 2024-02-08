@@ -1,0 +1,39 @@
+<p-sidebar styleClass="p-sidebar-sm" [modal]="true" [dismissible]="true" appendTo="body" (onHide)="closeDrawer.emit()"
+           position="right"
+           [(visible)]="panelShow">
+
+  <h6>Audit Trail</h6>
+  <h5 class="subHeadingColour">{{heading}}</h5>
+
+  <p-timeline [value]="auditTrial" styleClass="customized-timeline" align="left">
+    <ng-template pTemplate="marker" let-event>
+			<span class="custom-marker p-shadow-2">
+                <i [ngClass]="event.statusId.icon"></i>
+            </span>
+    </ng-template>
+
+
+    <ng-template pTemplate="content" let-event>
+
+      <div [style]="'padding-bottom: 0'" class="col-6"><h6 class="subHeadingColour"></h6></div>
+
+      <div class="grid">
+        <div [style]="'padding-top: 0; color: #A1ACB1'"
+             class="col-12"> {{event.statusId.name}} <b> {{event.userName}} </b></div>
+
+        <br>
+        <div [style]="'padding-bottom: 0; color: #A1ACB1; text-align: left; font-size: 13px' "
+             class="col-12"><i>{{event.actionDate | date:dateFormatter.DATE_TIME_FORMAT}}</i></div>
+
+      </div>
+
+      <div class="card card-comment p-shadow-4" *ngIf="event.comment">
+                <span
+                  *ngFor="let singleComment of event?.comment.split('</br>')">{{singleComment}}
+                  <br></span>
+      </div>
+
+    </ng-template>
+
+  </p-timeline>
+</p-sidebar>

@@ -1,0 +1,174 @@
+.product-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  width: 100%;
+  flex-wrap: nowrap;
+
+  .product-list-detail {
+    flex: 1 1 0;
+  }
+}
+.p-vertual-wrap {
+  margin-top: 1%;
+  margin-left: 1px;
+}
+
+.list-data-wrap {
+  padding: 5px;
+}
+
+.emailed-by {
+  font-size: 12px;
+  color: #999999;
+  padding-top: 0.75rem!important;
+}
+
+.email-body {
+  font-size: 12px;
+  color: #555555;
+  font-weight: bold;
+}
+
+.email-body .expand-icon-wrap{
+  color: #666666;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.active-recoard {
+  background: #EDF7FF 0% 0% no-repeat padding-box;
+}
+
+.costume-checkbox {
+  left: 0.5rem;
+  color: #b2b2b2;
+  transition-duration: 0.2s;
+  vertical-align: super !important;
+}
+
+.process-data-wrap {
+  width: 100%
+}
+
+.costume-checkbox-wrap {
+  align-self: self-end;
+  margin-top: 16px;
+}
+
+.custome-checkbox {
+  margin-top: -28px;
+}
+
+.background-color {
+  background: #EDF7FF;
+  float: left;
+  position: relative;
+  width: 100%;
+  padding: 0 15px 14px 15px;
+  clear: left;
+}
+
+.background-color-wrap{
+  float: left;
+  position: relative;
+  width: 100%;
+  clear: left;
+  padding: 0 15px 14px 15px;
+}
+
+.background-color-expand {
+  background: #EDF7FF;
+  min-height: 200px !important;
+}
+
+.attachments-style-default {
+  color: black;
+  background: #f5f5f5;
+  border: 1px solid #bcbcbc;
+}
+
+.attachments-style-click {
+  border: 1px solid #bcbcbc;
+  color: black;
+  background: #d2d2d2;
+}
+
+.inner-wrapper {
+  width: 100%;
+  position: relative;
+  float: left;
+  clear: left;
+
+  .costume-checkbox-wrap {
+    float: left;
+  }
+
+  .mail-item {
+    float: left;
+  }
+
+  .ellipsis-icon-wrap {
+    float: left;
+  }
+}
+
+.outer-wrapper{
+  width: 100%;
+  float: left;
+  clear: left;
+
+  .attachment-chips-wrap{
+    float: left;
+    width: 100%;
+    max-height: 300px;
+    overflow: auto;
+    .attachments-style-default{
+      float: left;
+      width: auto;
+    }
+  }
+}
+.total-record-wrapper{
+  font-size: 14px;
+  color: #999999;
+  bottom: 0;
+  text-align: center;
+}
+
+.ellipsis-icon-wrap {
+  margin-top: 21px !important;
+  float: right !important;
+  cursor: pointer;
+}
+
+.ellipsis-icon-wrap .pi-ellipsis-v {
+  width: 6px;
+  height: 23px;
+  font-weight: bold;
+  color: #999999;
+}
+
+.inactive-email-box .fa-envelope-open-o {
+  width: 6px;
+  height: 23px;
+  font-weight: normal;
+  color: #999999;
+}
+.active-email-box .fa-envelope-open-o {
+  width: 6px;
+  height: 23px;
+  font-weight: bold;
+  color: #202124;
+}
+
+
+.attachments-style{
+  border-radius: 4px;
+  padding: 7px;
+  margin-left: 4px;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+

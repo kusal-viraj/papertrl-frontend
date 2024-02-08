@@ -1,0 +1,49 @@
+<p-sidebar [draggable]="false" [fullScreen]="true" [modal]="true" class="generate-bill-wrapper"
+           [(visible)]="visibleDialog" [showCloseIcon]="false">
+
+  <ng-template pTemplate>
+    <div class="grid pt-2  form-header">
+      <div class="col-6">
+        <h5 class="popup-header-label ">Create Bill(s)</h5>
+      </div>
+      <div class="col-6 text-right">
+        <div class=" fa fa-close side-drawer-icon"
+             (click)="onCloseModal()"></div>
+      </div>
+    </div>
+    <button pButton (click)="left()" pRipple class="pull-right left-btn p-button-rounded p-button-text"
+            type="button" icon="pi pi-angle-left" iconPos="left"></button>
+
+    <button pButton (click)="right()" pRipple class="pull-right right-btn p-button-rounded p-button-text"
+            type="button" icon="pi pi-angle-right" iconPos="left"></button>
+
+    <p-tabView styleClass="tabview-custom bill-tabs pt-8" [(activeIndex)]="activeIndex">
+      <p-tabPanel *ngFor="let item of transactionList; let i = index" [selected]="i == 0">
+        <ng-template pTemplate="header">
+          <div class="grid headers">
+            <div class="col-12 pb-0  text-center">
+              <span>{{item.vendorName}}</span>
+            </div>
+            <div class="col-12 text-center">
+              <span>{{item.totalAmount | number: '1.2-2'}}</span>
+            </div>
+            <div class="col-12 pt-0 text-center">
+              <span>{{item.trxCount}} </span> <span> Transaction(s)</span>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <app-credit-card-bill-create-form (isClickCloseButton)="onClose.emit()" #cardBillCreateFormComponent
+                                            (updateGrid)="updateGridAndRemoveCard()" [id]="'element_' + i"
+                                            [element]="getElement(i)"
+                                            (emitCountTotal)="updateTotalAndCount($event)"
+                                            [vendorId]="transactionList[activeIndex].vendorId">
+          </app-credit-card-bill-create-form>
+        </ng-template>
+      </p-tabPanel>
+    </p-tabView>
+  </ng-template>
+
+</p-sidebar>
+
+

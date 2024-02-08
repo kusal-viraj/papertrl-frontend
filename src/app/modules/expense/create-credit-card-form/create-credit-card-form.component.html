@@ -1,0 +1,117 @@
+
+<form [formGroup]="formGroup" autocomplete="off"  [class.m-2]="panel" [class.side-bar-drawer-content]="panel" class="add-credit-card">
+    <div class="grid" [class.mt-2]="panel">
+      <div class="col-12">
+        <h6 *ngIf="(!editView || createView) && !panel" class="subHeadingColour">Add Credit Card</h6>
+<!--        <div *ngIf="editView && !createView" class="subHeadingGreen">Edit Credit Card</div>-->
+      </div>
+      <div [class]="editView ? 'col-12 field' : 'col-3 xl:col-3 lg:col-3 md:col-6 sm:col-12'">
+        <div class="p-fluid">
+            <span>
+              <label class="label-wrapper" for="cardNo">Card Number (Last 4 - 6 digits)*</label>
+             <p-inputMask mask="999999" [autoClear]="false" minlength="4" class="card-no" formControlName="cardNo"
+                          id="cardNo"></p-inputMask>
+
+            </span>
+        </div>
+
+        <div class="p-invalid text-align-left"
+             *ngIf="formGroup.get('cardNo').dirty && formGroup.get('cardNo').errors">
+          Card Number is required
+        </div>
+      </div>
+      <div [class]="editView ? 'col-12 field' : 'col-3 xl:col-3 lg:col-3 md:col-6 sm:col-12'">
+    <span class="p-fluid">
+      <label class="label-wrapper" for="receiptNumber">Select Employee*</label>
+          <p-dropdown [virtualScroll]="employees.data.length>20" virtualScrollItemSize="25"
+                      [options]="employees.data" id="receiptNumber"
+                      (onChange)="employee = selectedEmployeeName.selectedOption"
+                      #selectedEmployeeName optionDisabled="inactive"
+                      formControlName="employee" optionLabel="name" [showClear]="true"
+                      [autoDisplayFirst]="false" optionValue="id" [filter]="true">
+
+             <ng-template pTemplate="selectedItem">
+               <div>{{selectedEmployeeName.selectedOption.name}}</div>
+             </ng-template>
+
+           </p-dropdown>
+
+        </span>
+        <div class="p-invalid text-align-left"
+             *ngIf="formGroup.get('employee').dirty && formGroup.get('employee').errors">
+          Employee is required
+        </div>
+      </div>
+
+      <div [class]="editView ? 'col-12 field' : 'col-3 xl:col-3 lg:col-3 md:col-6 sm:col-12'">
+         <span class=" p-fluid">
+               <label class="label-wrapper" for="vendor">Vendor</label>
+            <p-dropdown [virtualScroll]="vendorList.data.length > 20" virtualScrollItemSize="25" [options]="vendorList.data"
+                        id="vendor" #selectedVendorName optionDisabled="inactive" [filter]="true"
+                        (onChange)="changeVendorList(selectedVendorName.selectedOption.id)" optionLabel="name"
+                        formControlName="vendorId" optionValue="id" [autoDisplayFirst]="false">
+
+              <ng-template pTemplate="selectedItem">
+                <div>{{selectedVendorName.selectedOption.name}}</div>
+              </ng-template>
+
+                <ng-template pTemplate="footer">
+                  <div class="grid dp-footer">
+                    <div class="col-12 button-wrapper">
+                      <button pButton class="p-button-sm" label="Add New"
+                              *ngIf="privilegeService.isAuthorized(appAuthorities.VENDORS_CREATE)"
+                              (click)="addNewVendor = true;"></button>
+                    </div>
+                  </div>
+                </ng-template>
+            </p-dropdown>
+
+         </span>
+      </div>
+
+      <div *ngIf="!panel" [class]="editView ? 'col-12 text-right' : 'col-4 xl:col-3 pt-4 lg:col-3 md:col-12 sm:col-12 p-text-md-right ' +
+       'p-text-sm-right p-text-lg-left p-text-xl-left'">
+
+        <button pButton type="button" (click)="resetForm()" label="Reset" class="p-button-outlined p-button-sm"
+                [disabled]="isLoading" icon="fa-solid fa-rotate-right"></button>
+
+        <button pButton class="p-button-sm ml-2" [disabled]="isLoading" *ngIf="!editView || createView"
+                (click)="submitForm()" type="button" [icon]="isLoading ? 'pi pi-spin pi-spinner':
+              'pi pi-plus'" iconPos="left" label="Add Card"></button>
+
+        <button pButton class="p-button-sm ml-2" [disabled]="isLoading" *ngIf="editView && !createView"
+                (click)="submitForm()" type="button" [icon]="isLoading ? 'pi pi-spin pi-spinner':
+              'pi pi-save'" iconPos="left" label="Save"></button>
+      </div>
+    </div>
+  </form>
+
+
+<ng-container *ngIf="panel">
+  <div class="grid panel-footer footer">
+    <div class="col-12 button-set-wrapper form-footer-button">
+      <div class="pull-right">
+
+          <button pButton type="button" (click)="resetForm()" label="Reset" class="p-button-outlined p-button-sm"
+                  [disabled]="isLoading" icon="fa-solid fa-rotate-right"></button>
+
+          <button pButton class="p-button-sm ml-2" [disabled]="isLoading" *ngIf="!editView || createView"
+                  (click)="submitForm()" type="button" [icon]="isLoading ? 'pi pi-spin pi-spinner':
+              'pi pi-plus'" iconPos="left" label="Add Card"></button>
+
+          <button pButton class="p-button-sm ml-2" [disabled]="isLoading" *ngIf="editView && !createView"
+                  (click)="submitForm()" type="button" [icon]="isLoading ? 'pi pi-spin pi-spinner':
+              'pi pi-save'" iconPos="left" label="Save"></button>
+        </div>
+      </div>
+    </div>
+</ng-container>
+
+
+<!--Create New Vendor-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" appendTo="body" [modal]="true" position="right"
+           class="overflow-side-bar" *ngIf="addNewVendor"
+           [(visible)]="addNewVendor">
+   <ng-template pTemplate="header">Create Vendor</ng-template>
+  <app-add-vendor (refreshVendorList)="getVendorList()" *ngIf="addNewVendor"></app-add-vendor>
+</p-sidebar>

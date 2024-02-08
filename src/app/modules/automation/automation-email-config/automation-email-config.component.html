@@ -1,0 +1,66 @@
+<form [formGroup]="emailConfig">
+
+  <div class="grid p-fluid">
+
+    <div class="field xl:col-6 lg:col-9 md:col-12 sm:col-12">
+      <label  class="label-wrapper" for="emailAddress">Email Address*</label>
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+          <textarea formControlName="emailAddress" id="emailAddress" rows="1"
+                    (keyup)="removeFieldSpace(emailConfig.get('emailAddress'))"
+                    maxlength="500"
+                    [readonly]="false" pInputTextarea></textarea>
+        </span>
+      </div>
+      <div class="p-invalid  text-align-left"
+           *ngIf="emailConfig.get('emailAddress').dirty && emailConfig.get('emailAddress').errors">
+        <div *ngIf="emailConfig.get('emailAddress').errors.required">Email Address is required</div>
+        <div *ngIf="emailConfig.controls['emailAddress'].hasError">Email must be a valid email address</div>
+      </div>
+    </div>
+
+    <div class="xl:col-offset-6 lg:col-offset-3 md:col-offset-0 sm:col-offset-0 "></div>
+
+    <div class="field xl:col-6 lg:col-9 md:col-12 sm:col-12">
+      <label class="label-wrapper" for="emailSubject">Email Subject*</label>
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+          <input formControlName="emailSubject" id="emailSubject" type="text"
+                 maxlength="100"
+                 (keyup)="removeFieldSpace(emailConfig.get('emailSubject'))" pInputText>
+        </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="emailConfig.get('emailSubject').dirty && emailConfig.get('emailSubject').errors">
+        Email subject is required
+      </div>
+    </div>
+
+    <div class="xl:col-offset-6 lg:col-offset-3 md:col-offset-0 sm:col-offset-0 "></div>
+    <div class="field xl:col-6 lg:col-9 md:col-12 sm:col-12">
+      <label class="label-wrapper" for="emailAddress">Email Content*</label>
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+            <textarea formControlName="emailContent" id="emailContent" rows="3"
+                      maxlength="60000"
+                      (keyup)="removeFieldSpace(emailConfig.get('emailContent'))"
+                      [readonly]="false" pInputTextarea></textarea>
+        </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="emailConfig.get('emailContent').dirty && emailConfig.get('emailContent').errors">
+        Email content is required
+      </div>
+    </div>
+
+    <div class="col-12">
+      <hr>
+    </div>
+
+    <div class="field col-12 xl:col-12 lg:col-12 md:col-12 sm:col-12"
+         *ngIf="actionIndex===(automationActionConfig.length-1) && !isDetailView">
+      <p class="more-info" (click)="addActionDropDown()"> Add More Action <em class="pi pi-plus"></em></p>
+    </div>
+  </div>
+
+</form>

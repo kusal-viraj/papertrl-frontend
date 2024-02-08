@@ -1,0 +1,38 @@
+{
+  "reportNumber":"1651DDW",
+  "submitDate":"18/10/2020",
+  "submitBy": "Paul",
+  "reportName": "Report 1",
+  "totalAmount": 6000,
+  "approvalStatus":"Pending",
+  "pdfUrl":"../assets/sampleInvoice.pdf",
+  "expenses": [
+    {
+      "receiptNumber": "DSA124",
+      "date": "18/10/2020",
+      "projectTask": "Task 1",
+      "expenseClient": "Expense 1",
+      "expenseType": "Expense Type 1",
+      "merchant": "Merchant 1",
+      "amount": 2000
+    },
+    {
+      "receiptNumber": "DSA12784",
+      "date": "18/10/2020",
+      "projectTask": "Task 2",
+      "expenseClient": "Expense 2",
+      "expenseType": "Expense Type 2",
+      "merchant": "Merchant 2",
+      "amount": 2000
+    },
+    {
+      "receiptNumber": "DSA12554",
+      "date": "18/10/2020",
+      "projectTask": "Task 3",
+      "expenseClient": "Expense 3",
+      "expenseType": "Expense Type 3",
+      "merchant": "Merchant 3",
+      "amount": 2000
+    }
+  ]
+}

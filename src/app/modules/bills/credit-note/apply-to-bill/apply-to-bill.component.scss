@@ -1,0 +1,78 @@
+@import '../../../../../scss/color';
+
+.form-outer-padding{
+  padding: 20px 20px 0 20px !important;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 1px !important;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-inputtext {
+  border: none;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-inputtext:focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown {
+  border: none;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown:focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown:not(.p-disabled).p-focus {
+  border: 1px solid;
+}
+
+.table-scroll ::ng-deep .p-datatable .p-datatable-tbody > tr > td .p-dropdown.p-dropdown-open {
+  border: 1px solid;
+}
+
+.item-remove-button {
+  color: #9c9c9c;
+  cursor: pointer;
+}
+
+.btn-behaviour:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: bold !important;
+}
+
+
+.alignment-with-item-table{
+  margin-top: 22px;;
+}
+
+.amount-label-wrapper{
+  text-align: right;
+  align-self: center;
+}
+
+.apply-credit-wrapper{
+  .field {
+    margin-bottom: 1px;
+
+    label {
+      font-size: 11px;
+      color: $grey;
+      margin-bottom: 1px;
+    }
+
+    div {
+      font-size: 13px;
+    }
+  }
+}
+
+.credit-amount-field-wrapper{
+  font-size: 14px !important;
+}
+
+.item-remove-icon {
+  margin-top: 0.6rem;
+}

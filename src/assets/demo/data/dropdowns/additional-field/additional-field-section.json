@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "label": "Header Section"
+  },
+  {
+    "id": 2,
+    "label": "Line Item Section"
+  },
+  {
+    "id": 3,
+    "label": "Additional Field Section"
+  }
+]

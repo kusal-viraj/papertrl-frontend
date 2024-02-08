@@ -1,0 +1,63 @@
+@import '../../../../scss/table-responsive';
+@import "../../../../scss/color.scss";
+
+.overlay-panel {
+  width: 500px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+
+  .topic {
+    font-size: 14px;
+  }
+
+  .grid {
+    flex-grow: 1 !important;
+  }
+
+  .loading-wrapper {
+    position: relative;
+    text-align: center;
+    height: 200px;
+
+    em {
+      font-size: 50px;
+      opacity: 0.8 !important;
+      margin-top: 5%;
+      color: $green;
+    }
+  }
+
+  .payment-details {
+    label{
+      display: none;
+    }
+  }
+
+  .payment-details {
+    padding-left: 6px;
+
+    &:nth-child(2) {
+      .data-cell {
+        label{
+          display: block !important;
+        }
+        div {
+          margin-top: 15px !important;
+        }
+      }
+    }
+
+    &:nth-child(odd) {
+      background: $light-gray-2;
+    }
+
+    .data-cell {
+      div {
+        margin-top: 2px;
+        margin-bottom: 2px;
+      }
+    }
+  }
+}
+

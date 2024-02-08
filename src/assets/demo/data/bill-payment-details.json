@@ -1,0 +1,10 @@
+{
+  "vendorName": "Ladvo Computers(PVT)Ltd",
+  "billNo": "INV023231",
+  "billAmount": 2000.00,
+  "billDate": "2021/01/26",
+  "paymentAmount": 1500.00,
+  "discountAmount": 0.05,
+  "paymentMethod": "Cash"
+}
+

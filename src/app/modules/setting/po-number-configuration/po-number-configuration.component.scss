@@ -1,0 +1,32 @@
+.costume-checkbox{
+  left: 0.5rem;
+  color: #b2b2b2;
+  transition-duration: 0.2s;
+  vertical-align: super;
+}
+.disabled {
+  width: 100%;
+  background-color: #f8f9fa
+}
+
+.drawer-content {
+  height: calc(100% - 105px);
+}
+
+@media screen and (max-width: 1366px) {
+.filed-section{
+  position: relative;
+  top: -21px;
+}
+
+  .button-section{
+    position: relative;
+    top: -32px;
+
+  }
+
+  .drawer-content{
+    height: calc(100% - 43px);
+  }
+
+}

@@ -1,0 +1,63 @@
+{
+  "advancedFilters": [],
+  "columns": [
+    {
+      "field": "action",
+      "header": "Action",
+      "isSortable": false,
+      "isReOrderable": false,
+      "isReSizable": false,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "actionButton",
+      "canHide": false
+    },
+    {
+      "field": "tenantId",
+      "header": "Tenant Id",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "dropdown",
+      "canHide": true,
+      "placeholder": "Tenant Id"
+    },
+    {
+      "field": "ownerName",
+      "header": "Owner's Name",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Owner's Name"
+    },
+    {
+      "field": "ownerEmail",
+      "header": "Owner's Email",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Owner's Email"
+    }
+  ],
+  "state": {
+    "first": 0,
+    "rows": 10,
+    "columnWidths": "100,220,220,220",
+    "columnOrder": [
+      "action",
+      "tenantId",
+      "ownerName",
+      "ownerEmail"
+    ]
+  }
+}

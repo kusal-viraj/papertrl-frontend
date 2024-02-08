@@ -1,0 +1,58 @@
+[
+  {
+    "id": "1",
+    "label": "Submitted"
+  },
+  {
+    "id": "2",
+    "label": "Edited & Resubmitted"
+  },
+  {
+    "id": "3",
+    "label": "Approved"
+  },
+  {
+    "id": "4",
+    "label": "Rejected"
+  },
+  {
+    "id": "5",
+    "label": "Approval Skipped"
+  },
+  {
+    "id": "6",
+    "label": "Deleted"
+  },
+  {
+    "id": "7",
+    "label": "Sent to Vendor"
+  },
+  {
+    "id": "8",
+    "label": "Created"
+  },
+  {
+    "id": "9",
+    "label": "Uploaded"
+  },
+  {
+    "id": "10",
+    "label": "Reassigned"
+  },
+  {
+    "id": "10",
+    "label": "Unapproved"
+  },
+  {
+    "id": "11",
+    "label": "Voided"
+  },
+  {
+    "id": "12",
+    "label": "Marked as Mailed"
+  },
+  {
+    "id": "13",
+    "label": "Applied to Different Invoice"
+  }
+]

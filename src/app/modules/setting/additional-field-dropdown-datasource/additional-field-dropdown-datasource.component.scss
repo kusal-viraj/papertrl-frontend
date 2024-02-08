@@ -1,0 +1,63 @@
+@import "../../../../scss/color.scss";
+
+.btn-trash {
+  background-color: #D0D5D8;
+  opacity: 1;
+}
+
+.btn-trash:hover {
+  background-color: #8c8e91;
+  opacity: 1;
+}
+
+.download-link {
+  text-align: center;
+  color: $green;
+  font-weight: bolder;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: #ffffff;
+}
+
+
+.options-height{
+  max-height: 553px;
+  overflow-y: scroll;
+}
+
+.footer {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: #ffffff;
+}
+
+.edit-additional-field{
+  min-height: calc(100vh - 105px);
+}
+
+.p-input-custom {
+  width: 50% !important;
+}
+
+.custom-field {
+  position: relative;
+  right: 32px;
+}
+
+.custom-btn-column {
+  display: flex;
+  justify-content: space-between;
+  width: 6rem;
+  height: 5rem;
+}

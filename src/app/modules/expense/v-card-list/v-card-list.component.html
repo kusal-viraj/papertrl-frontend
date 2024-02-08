@@ -1,0 +1,190 @@
+<div class="table-wrapper">
+  <p-table responsiveLayout="scroll" id="columnSelect" #dt [columns]="selectedColumns" (onColReorder)="onTableChanged()"
+           (onColResize)="onTableChanged()" [hidden]="tableSupportBase.isVisibleTable"
+           (onFilter)="tableSupportBase.onFilter(dt)" (onSort)="tableSupportBase.onSort(dt)"
+           (onRowSelect)="tableSupportBase.rowSelected(dt,null)" (onRowUnselect)="tableSupportBase.rowSelected(dt,null)"
+           [(selection)]="tableSupportBase.rows" [value]="tableSupportBase.dataSource" columnResizeMode="expand"
+           dataKey="id" [reorderableColumns]="true" [rowHover]="true" [lazy]="true" (onLazyLoad)="loadData($event)"
+           [responsive]="false" selectionMode="multiple" scrollHeight="flex" [scrollable]="true"
+           stateStorage="session" stateKey="{{tableKeyEnum.VCARD_TABLE_KEY}}" [rows]="25"
+           [showCurrentPageReport]="true" [contextMenu]="cm"
+           [rowsPerPageOptions]="[25, 50, 75]" [loading]="tableSupportBase.loading" [resizableColumns]="true"
+           styleClass="p-datatable-sm p-datatable-striped no-grid-lines"
+           [totalRecords]="tableSupportBase.totalRecords" [paginator]="true" *ngIf="tableSupportBase.minWidth"
+           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [filterDelay]="0">
+
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns" pResizableColumn [pResizableColumnDisabled]="!col.isReSizable"
+            [ngStyle]="{'text-align': col.align}"
+            [pReorderableColumnDisabled]="!col.isReOrderable" pReorderableColumn
+            [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn
+            [pSortableColumnDisabled]="!col.isSortable" pSortableColumn="{{col.sortableField}}"
+            class="sort-icon-wrapper">
+          <div class="grid">
+            <div class="col-12">
+              <div *ngIf="col.searchType == enums.CHECKBOX">
+                <p-tableHeaderCheckbox (click)="tableSupportBase.rowSelected(dt,null)"></p-tableHeaderCheckbox>
+              </div>
+              <span *ngIf="col.searchType !== enums.CHECKBOX">{{col.header}}</span>
+              <p-sortIcon class="grid-sort-icon" *ngIf="col.isSortable" field="{{col.sortableField}}"></p-sortIcon>
+            </div>
+            <div class="col-12">
+              <span app-table-inline-column-filters [tableSupportBase]="tableSupportBase" [dt]="dt"
+                    [columns]="columns" [col]="col"></span>
+            </div>
+          </div>
+        </th>
+      </tr>
+
+<!--      <tr>-->
+<!--        <th *ngFor="let col of columns" [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn>-->
+<!--          <span app-table-inline-column-filters [tableSupportBase]="tableSupportBase" [dt]="dt"-->
+<!--                [columns]="columns" [col]="col"></span>-->
+<!--        </th>-->
+<!--      </tr>-->
+    </ng-template>
+
+
+    <ng-template pTemplate="body" let-customer let-columns="columns">
+      <tr (wheel)="tableSupportBase.scrollHideActionMenu(cm)" [pContextMenuRow]="customer" (contextmenu)="actionButtonClick(customer);
+       tableSupportBase.setContextMenuActionBtnList(actionButtonList(customer))">
+        <td *ngFor="let col of columns; let in=index" [ngStyle]="{'text-align': col.align}"
+            [class.td-border]="in === 0" [class.td-border-selected]="customer.selected && in === 0"
+            [style]="'width:' + col.columnWidth  + 'px'"
+            [class.freeze-right]="col.frozenDirection == 'right'"
+            [ngClass]="col.searchType == enums.ACTION_BUTTON ? 'vendor-table-action-btn' : null"
+            pFrozenColumn [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection">
+          <span class="p-column-title">{{col.header}}</span>
+
+          <span *ngIf="col.field == enums.CHECKBOX">
+          <p-tableCheckbox #checkbox [value]="customer"></p-tableCheckbox>
+        </span>
+
+          <span *ngIf="col.searchType ==  enums.ACTION_BUTTON" class="td-actionButton">
+          <button type="button" pButton class="grid-action-btn p-button-text" icon="pi pi-ellipsis-v"
+                  [disabled]="actionButtonList(customer).length === 0"
+                  (click)="menu.toggle($event); actionButtonClick(customer)"></button>
+          <p-menu #menu [popup]="true" appendTo="body"
+                  [model]="actionButtonList(customer)"></p-menu>
+        </span>
+
+          <span (click)="tdClick(col.field, customer, $event)" [ngClass]="isClassHover(col.field) ? 'selectedHover': null">
+          <span *ngIf="col.field == 'vcard.status'" class="capitalize">
+            <li [class]="'mr-2 status-style status-'  + tableSupportBase.getStatus(customer[col.field])"></li>
+            {{tableSupportBase.getStatus(customer[col.field]) | titlecase}}
+          </span>
+
+
+             <span class="white-space-normal break-word" *ngIf="col.field !== 'vcard.status' && col.field !== 'acc.isPurchaseAccount' &&
+              col.field !== 'acc.isExpenseAccount'">{{customer[col.field]}}
+            </span>
+        </span>
+
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <div class="text-center grid table-empty-data">
+        <div class="col-12">
+          <i class="fa-solid fa-magnifying-glass"></i><br>
+          <p>There are no records found</p>
+        </div>
+      </div>
+    </ng-template>
+  </p-table>
+</div>
+<div class="no-data-show" *ngIf="tableSupportBase.isVisibleTable == true">
+  <span class="fa fa-search"></span>
+  <div style="margin-top: 1%">There are no transactions matching the criteria</div>
+</div>
+
+<!--Audit Trail-->
+<app-v-card-audit-trail *ngIf="auditTrailPanel" [auditTrial]="auditTrail" [panelShow]="auditTrailPanel"
+                        (closeDrawer)="auditTrailPanel = false" [cardNo]="activeAction['vcard.cardNumber']"
+                        [heading]="activeAction['vcard.nickName']"></app-v-card-audit-trail>
+
+<p-confirmDialog (onHide)="formGroup.get('cancelReason').reset()" #cd header="Are you sure?"
+                 icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <form [formGroup]="formGroup">
+      <div class="grid" style="width: 500px">
+        <div class="col-12 text-left">
+          <span class="p-fluid">
+                <label class="label-wrapper">Reason*</label>
+                <input formControlName="cancelReason" blockSpace maxlength="255" type="text" pInputText>
+             <div class="p-invalid "
+                  *ngIf="formGroup.get('cancelReason').dirty && formGroup.get('cancelReason').errors">Reason is required
+              </div>
+          </span>
+        </div>
+        <div *ngIf="cardRelatedData && cardRelatedData.length !== 0" class="col-12 mt-3 text-left">
+          <p><b>The cancellation of this card will also result in the cancellation of the following transactions.</b></p>
+          <div class="scrollable-content">
+            <table>
+              <thead>
+              <tr>
+                <th>Reference No</th>
+                <th>Document No</th>
+                <th class="amount">Amount</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of cardRelatedData; let i = index">
+                <td>{{item.txnRef}}</td>
+                <td>{{item.docNo}}</td>
+                <td class="amount">{{item.amount | number : '1.2-2'}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-12">
+          <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+                  (click)="cd.reject(); formGroup.get('cancelReason').reset()" [disabled]="cancelLoading"></button>
+          <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, Cancel"
+                  (click)="submitCancelVCard(cd);" [loading]="cancelLoading"></button>
+        </div>
+      </div>
+    </form>
+  </p-footer>
+</p-confirmDialog>
+
+
+<app-v-card-edit *ngIf="detailView" [editFromAction]="editVcard"
+                 (closeDetailView)="detailView = false; editVcard = false"
+                 (updateGrid)="loadData(tableSupportBase.searchFilterDto)" [detailView]="detailView"
+                 [id]="activeAction.id" [statusActive]="activeAction['vcard.status'] === enums.STATUS_ACTIVE">
+</app-v-card-edit>
+
+<!--For detail view from service-->
+<app-v-card-edit [hideEditAction]="true"></app-v-card-edit>
+
+<!--Action Buttons-->
+
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           (onHide)="showFilter= false"
+           [fullScreen]="false" [(visible)]="showFilter" transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)">
+  <ng-template pTemplate="header">Advance Filter</ng-template>
+  <app-table-column-filters [dt]="table" [columns]="tableSupportBase.filterEnabledColumns"
+                            (closeDrawer)="showFilter = false"
+                            [tableSupportBase]="tableSupportBase"></app-table-column-filters>
+</p-sidebar>
+
+<p-sidebar styleClass="p-sidebar-sm table-column-sidebar" appendTo="body" [modal]="true" [dismissible]="true"
+           position="right"
+           (onHide)="showFilterColumns= false" transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)"
+           [fullScreen]="false" [(visible)]="showFilterColumns">
+  <ng-template pTemplate="header">Columns</ng-template>
+  <app-table-column-toggle [cols]="selectedColumns" (selectionsUpdated)="selectedColumns = $event"
+                           [tableInstance]="table" (restoreTable)="loadTableData()"
+                           [tableKey]="tableKeyEnum.VCARD_TABLE_KEY"
+                           [gridName]="appConstant.GRID_VCARD_LIST"
+                           [hiddenOptions]="tableSupportBase.hiddenInOptions"
+                           (updateColOrder)="onTableChanged($event)"></app-table-column-toggle>
+</p-sidebar>
+
+<!--Context Menu-->
+<p-contextMenu #cm appendTo="body" (onShow)="tableSupportBase.hideActionMenu(menu)"
+               [model]="tableSupportBase.contextMenuActionList"></p-contextMenu>

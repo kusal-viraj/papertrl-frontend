@@ -1,0 +1,10 @@
+.side-bar-drawer-content {
+  min-height: calc(100vh - 138px);
+}
+
+.switch-address {
+  display: grid;
+  grid-auto-flow: column;
+  align-items: center;
+  gap: 0.5rem;
+}

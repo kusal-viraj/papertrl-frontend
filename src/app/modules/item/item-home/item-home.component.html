@@ -1,0 +1,51 @@
+<div class="grid mt-1" [class.back-ground-white]="isViewUploadItemContent || isViewCreateItemContent">
+  <!--      <h5 class="menu-label menu-Item col-12" (click)="toggleCreateUser('cu')">Items</h5>-->
+  <div class="col-6">
+    <h5 [hidden]="isViewListItemContent || isViewUploadItemContent " class="module-header-label ml-5 col-12">Create Item</h5>
+    <app-table-header-action-buttons [hidden]="isViewCreateItemContent != isViewUploadItemContent "
+                                     [componentInstance]="itemListComponent" *ngIf="itemListComponent && isTable()"
+                                     [tableSupportBase]="itemListComponent?.tableSupportBase"
+                                     (delete)="itemListComponent.deleteItemList()"
+                                     (inactive)="itemListComponent.inactiveItemList()"
+                                     (active)="itemListComponent.activeItemList()"
+                                     (refresh)="itemListComponent?.loadData(itemListComponent.tableSupportBase.searchFilterDto)"
+                                     (showFilters)="itemListComponent.showFilter = !itemListComponent?.showFilter;
+                                     itemListComponent.showFilterColumns = false"
+                                     (showColumns)="itemListComponent.showFilterColumns = !itemListComponent?.showFilterColumns; itemListComponent.showFilter = false"
+                                     [visibleActions]="itemListComponent?.availableHeaderActions"
+                                     [moduleName]="AppAnalyticsConstants.MODULE_NAME_ITEM"
+                                     >
+
+    </app-table-header-action-buttons>
+
+  </div>
+  <div class="col-6 pr-2 text-right">
+    <button pButton class="p-button-outlined mr-2"
+            *ngIf="!isViewListItemContent && privilegeService.isAuthorized(appAuthorities.ITEMS_DETAIL_VIEW)"
+            label="View Item List" (click)="toggleCreateUser('vl')"></button>
+    <button pButton class="p-button-outlined mr-2"
+            *ngIf="!isViewUploadItemContent && privilegeService.isAuthorized(appAuthorities.ITEMS_UPLOAD)"
+            label="Upload Item List" (click)="toggleCreateUser('ul')"></button>
+    <button pButton class="p-button-sm mr-2"
+            *ngIf="!isViewCreateItemContent && privilegeService.isAuthorized(appAuthorities.ITEMS_CREATE)"
+            label="Create Item" (click)="toggleCreateUser('cu')"></button>
+  </div>
+
+
+  <div class="col-12 p-0">
+    <app-item-list #itemListComponent [hidden]="!isViewListItemContent" *ngIf="isTable()"></app-item-list>
+  </div>
+
+  <div class="col-12" *ngIf="isViewCreateItemContent || isViewUploadItemContent">
+
+      <div class="col-12 p-5">
+        <app-item-create (emittedTabIndex)="getTabAfterSuccess($event)" *ngIf="isViewCreateItemContent &&
+      privilegeService.isAuthorized(appAuthorities.ITEMS_CREATE)"></app-item-create>
+        <app-item-upload *ngIf="isViewUploadItemContent && privilegeService.isAuthorized(appAuthorities.ITEMS_UPLOAD)"
+                         (successEmitter)="refreshTableData()"></app-item-upload>
+      </div>
+
+  </div>
+
+</div>
+

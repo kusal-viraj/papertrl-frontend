@@ -1,0 +1,92 @@
+{
+  "reportName": "Report-1",
+  "businessPurpose": "my first bossiness",
+  "notes": "he cost of inventory includes the cost of purchased merchandise, less discounts that are taken, plus any duties and transportation costs paid by the purchaser.",
+  "netAmount": "10000.00",
+  "approverFormArray": [
+    {
+      "approver": {
+        "label": "Approver-1",
+        "id": "NY"
+      }
+    }
+  ],
+  "expenseDetails": [
+    {
+      "receiptController": "",
+      "date": "Thu Jan 14 2021 00:00:00 GMT+0530 (India Standard Time)",
+      "merchant": "merchant-1",
+      "projectTask": {
+        "label": "Task-1",
+        "id": "NY"
+      },
+      "expenseType": {
+        "label": "Type-1",
+        "id": "tp1"
+      },
+      "amount": "1000.00"
+    },
+    {
+      "receiptController": "",
+      "date": "Thu Jan 14 2021 00:00:00 GMT+0530 (India Standard Time)",
+      "merchant": "merchant-1",
+      "projectTask": {
+        "label": "Task-1",
+        "id": "NY"
+      },
+      "expenseType": {
+        "label": "Type-1",
+        "id": "tp1"
+      },
+      "amount": "1000.00"
+    },
+    {
+      "receiptController": "",
+      "date": "Thu Jan 14 2021 00:00:00 GMT+0530 (India Standard Time)",
+      "merchant": "merchant-1",
+      "projectTask": {
+        "label": "Task-1",
+        "id": "NY"
+      },
+      "expenseType": {
+        "label": "Type-1",
+        "id": "tp1"
+      },
+      "amount": "1000.00"
+    },
+    {
+      "receiptController": "",
+      "date": "Thu Jan 14 2021 00:00:00 GMT+0530 (India Standard Time)",
+      "merchant": "merchant-1",
+      "projectTask": {
+        "label": "Task-1",
+        "id": "NY"
+      },
+      "expenseType": {
+        "label": "Type-1",
+        "id": "tp1"
+      },
+      "amount": "1000.00"
+    },
+    {
+      "receiptController": "",
+      "date": "Thu Jan 14 2021 00:00:00 GMT+0530 (India Standard Time)",
+      "merchant": "merchant-1",
+      "projectTask": {
+        "label": "Task-1",
+        "id": "NY"
+      },
+      "expenseType": {
+        "label": "Type-1",
+        "id": "tp1"
+      },
+      "amount": "1000.00"
+    }
+  ],
+  "additionAttachments": [
+    {
+      "attachmentController": null,
+      "description": "Inventory cost includes the costs to order and hold inventory, as well as to administer the related paperwork. This cost is examined by management as part of its evaluation of how much inventory to keep on hand."
+    }
+  ]
+}

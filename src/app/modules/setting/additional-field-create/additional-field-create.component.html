@@ -1,0 +1,496 @@
+<h6 class="subHeading mt-3">Additional Field Information</h6><br>
+<form class="addtionFiled-wrapper" [formGroup]="additionalFieldForm" (ngSubmit)="additionalFieldSubmit(true)">
+
+  <div class="grid p-fluid">
+    <div class="field col-12 xl:col-3 lg:col-3 md:col-6 sm:col-12">
+      <label class="label-wrapper" for="section">Select Document Type And Section</label>
+      <span class="p-float-label">
+        <p-multiSelect [options]="additionalFieldUtility.sections" [group]="true" optionValue="value"
+                       formControlName="documentRelation" optionDisabled="inactive" optionLabel="label"
+                       (onChange)="documentTypeChanged($event);" id="section" appendTo="body"
+                       optionGroupChildren="items" class="responsive-multiselect" [maxSelectedLabels]="1">
+          <ng-template let-group pTemplate="group">
+            <div class="flex p-ai-center">
+              <span class="m-2 font-bold">{{group.label}}</span>
+            </div>
+          </ng-template>
+        </p-multiSelect>
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="additionalFieldForm.get('documentRelation').dirty && additionalFieldForm.get('documentRelation').errors">
+        Section is required
+      </div>
+    </div>
+
+    <div class="field col-12 xl:col-2 lg:col-3 md:col-6 sm:col-12">
+      <label class="label-wrapper" for="fieldTypeId">Select Field Type* </label>
+      <span class="p-float-label">
+          <p-dropdown inputId="dropdown" formControlName="fieldTypeId" id="fieldTypeId"
+                      [autoDisplayFirst]="false" showClear="true" appendTo="body"
+                      [options]="additionalFieldUtility.fieldType" #me
+                      (onChange)="viewFieldTypeProperty($event,me)"
+                      optionLabel="name" optionValue="id"></p-dropdown>
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="additionalFieldForm.get('fieldTypeId').dirty && additionalFieldForm.get('fieldTypeId').errors">
+        Field Type is required
+      </div>
+    </div>
+
+    <div class="field col-12 xl:col-3 lg:col-2 md:col-6 sm:col-12"
+         *ngIf="isAvailableValidations(fieldProperty.VALIDATION_NAME)">
+      <label class="label-wrapper" for="fieldName">Field Name (Display Name)* </label>
+      <span class="p-float-label">
+          <input formControlName="fieldName" id="fieldName" type="text" pInputText
+                 (keyup)="removeSpaces.clearSpace(additionalFieldForm, 'fieldName'); checkMaxLength();"
+                 (change)="checkMaxLength()"
+                 [ngClass]="{ 'ng-invalid ng-dirty':f1.fieldName.dirty && f1.fieldName.errors || isFieldNameLengthExceeds}">
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="additionalFieldForm.get('fieldName').dirty && additionalFieldForm.get('fieldName').errors">
+        Field Name is required
+      </div>
+      <div *ngIf="isFieldNameLengthExceeds">
+        <div class="p-invalid text-align-left">Field Name length should be lower than 20</div>
+      </div>
+    </div>
+
+    <div class="field  col-12 xl:col-1 lg:col-1  md:col-6 sm:col-12"
+         *ngIf="isAvailableValidations(fieldProperty.VALIDATION_REQUIRED)">
+      <div class="label-wrapper">Required</div>
+      <p-checkbox class="costume-checkbox " formControlName="required" [binary]="true" ></p-checkbox>
+    </div>
+
+    <div class="field  col-12 xl:col-2 lg:col-2  md:col-6 sm:col-12"
+         *ngIf="showExportCheck()">
+      <div class="label-wrapper">Include in Export Report</div>
+      <p-checkbox class="costume-checkbox " formControlName="appearOnExport" [binary]="true" ></p-checkbox>
+    </div>
+
+  </div>
+
+  <div class="grid p-fluid" *ngIf="additionalFieldProperties.length>0">
+    <div class="col-12">
+      <hr>
+      <h6 class="subHeading">{{fieldType}} Properties</h6>
+    </div>
+  </div>
+
+  <div class="grid p-fluid">
+
+    <div class="field col-12 xl:col-3 lg:col-2 md:col-6 sm:col-12"
+         *ngIf="isAvailableValidations(fieldProperty.VALIDATION_DATA_SOURCE)">
+      <label class="label-wrapper" for="datasource">Select Data Source*</label>
+        <span class="p-float-label">
+           <p-dropdown [options]="additionalFieldUtility.dataSources" id="datasource" [autoDisplayFirst]="false"
+                       [group]="true"
+                       inputId="dropdown" showClear="true" formControlName="dataSourceId" optionLabel="label"
+                       optionValue="id" appendTo="body" [filter]="true" (onChange)="changedDatasourceSelection($event)">
+
+             <ng-template let-property pTemplate="item">
+                 <div class="grid">
+                     <div class="dropdown-list p-px-4"
+                          [ngClass]="property.id == 0 ? ' dropdown-add': null">{{property.label}}</div>
+                     <em *ngIf="property.id == 0" class="pi pi-plus dropdown-icon dropdown-add"
+                         (click)="addNewOption()"></em>
+                     <em *ngIf="property.id != 0 && !property.isPredefined"
+                         (click)="openDatasourceEditDrawer(property.id)"
+                         class="fa fa-pencil-square-o dropdown-icon"></em>
+                 </div>
+             </ng-template>
+
+           </p-dropdown>
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="additionalFieldForm.get('dataSourceId').dirty && additionalFieldForm.get('dataSourceId').errors">
+        Data Source is required
+      </div>
+    </div>
+
+    <div class="field col-12 xl:col-2 lg:col-3 md:col-6 sm:col-12"
+         *ngIf="isAvailableValidations(fieldProperty.VALIDATION_MAX_LENGTH)">
+      <label  class="label-wrapper" for="maxLength">Enter Max Length* </label>
+         <span class="p-float-label">
+          <input formControlName="maxLength" id="maxLength" type="number" pInputText
+                 (keyup)="checkMaxLength();" (change)="checkMaxLength()"
+                 [ngClass]="{ 'ng-invalid ng-dirty':f1.maxLength.dirty && f1.maxLength.errors || isMaxlengthExceeds || isMaxlengthZero}">
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="additionalFieldForm.get('maxLength').dirty && additionalFieldForm.get('maxLength').errors">
+        Max Length is required
+      </div>
+      <div *ngIf="isMaxlengthExceeds">
+        <div class="p-invalid text-align-left">Max Length should be lower than 300</div>
+      </div>
+      <div *ngIf="isMaxlengthZero">
+        <div class="p-invalid text-align-left">Max Length should be greater than zero</div>
+      </div>
+    </div>
+
+    <div class="field col-12 xl:col-2 lg:col-3 md:col-6 sm:col-12"
+         *ngIf="isAvailableValidations(fieldProperty.VALIDATION_DISPLAY_ORDER)">
+      <label  class="label-wrapper" for="maxLength">Display Order* </label>
+         <span class="p-float-label">
+          <input formControlName="displayOrder" id="displayOrder" type="number" pInputText
+                 (keyup)="checkMaxLength();" (change)="checkMaxLength()"
+                 [ngClass]="{ 'ng-invalid ng-dirty':f1.displayOrder.dirty && f1.displayOrder.errors || isDisplayOrderZero}">
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="additionalFieldForm.get('displayOrder').dirty && additionalFieldForm.get('displayOrder').errors">
+        Display Order is required
+      </div>
+      <div *ngIf="isDisplayOrderZero">
+        <div class="p-invalid text-align-left">Display order should be greater than zero</div>
+      </div>
+      <div *ngIf="isDisplayOrderMaxValue">
+        <div class="p-invalid text-align-left">Display order less than 50 numbers</div>
+      </div>
+    </div>
+
+    <div class="field col-12 xl:col-2 lg:col-3 md:col-6 sm:col-12"
+         *ngIf="isAvailableValidations(fieldProperty.VALIDATION_DATA_TYPE)">
+      <label class="label-wrapper" for="dataType">Select Data Type*</label>
+      <span class="p-float-label">
+        <p-dropdown inputId="dropdown" formControlName="dataType" id="dataType" [autoDisplayFirst]="false"
+                    [options]="additionalFieldUtility.fieldDataType" showClear="true"
+                    optionValue="id" optionLabel="label"></p-dropdown>
+      </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="additionalFieldForm.get('dataType').dirty && additionalFieldForm.get('dataType').errors">
+        Data Type is required
+      </div>
+    </div>
+
+    <div class="field col-12 xl:col-3 lg:col-4 md:col-6 sm:col-12"
+         *ngIf="isAvailableValidations(fieldProperty.VALIDATION_MULTIPLE_CREATE_NEW)">
+      <label class="label-wrapper" for="dataType">Select Additional Options</label>
+       <span class="p-float-label">
+        <p-multiSelect inputId="dropdown" formControlName="dropdownProperty" id="dropdownProperty"
+                       [options]="additionalFieldUtility.dropdownProperties"
+                       (onChange)="changeDropDownProperty($event);validateOptionsAccordingToChangeDropDownProperty()"
+                       optionValue="id" optionLabel="label"></p-multiSelect>
+      </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="additionalFieldForm.get('dropdownProperty').dirty && additionalFieldForm.get('dropdownProperty').errors">
+        Additional Option is required
+      </div>
+    </div>
+
+    <div class="field col-12 xl:col-2 lg:col-3 md:col-6 sm:col-12"
+         *ngIf="isAvailableValidations(fieldProperty.VALIDATIONS_ROWS)">
+      <label class="label-wrapper" for="rowCount">Enter Row Count* </label>
+         <span class="p-float-label">
+          <input formControlName="rowCount" id="rowCount" type="number" pInputText
+                 (keyup)="checkMaxLength();" (change)="checkMaxLength()"
+                 [ngClass]="{ 'ng-invalid ng-dirty':f1.rowCount.dirty && f1.rowCount.errors || isRowCountExceeds || isRowCountZero}">
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="additionalFieldForm.get('rowCount').dirty && additionalFieldForm.get('rowCount').errors">
+        Row Count is required
+      </div>
+      <div *ngIf="isRowCountExceeds">
+        <div class="p-invalid text-align-left">Row Count should be lower than 10</div>
+      </div>
+      <div *ngIf="isRowCountZero">
+        <div class="p-invalid text-align-left">Row Count should be greater than zero</div>
+      </div>
+    </div>
+
+    <div class="field col-12 xl:col-2 lg:col-3 md:col-4 sm:col-12"
+         *ngIf="isAvailableValidations(fieldProperty.VALIDATIONS_VALUE)">
+      <label class="label-wrapper" for="rowCount">Enter Value* </label>
+         <span class="p-float-label">
+          <input formControlName="value" id="value" type="text" pInputText
+                 (keyup)="removeSpaces.clearSpace(additionalFieldForm, 'value')"
+                 [ngClass]="{ 'ng-invalid ng-dirty':f1.value.dirty && f1.value.errors}">
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="additionalFieldForm.get('value').dirty && additionalFieldForm.get('value').errors">
+        Value is required
+      </div>
+    </div>
+
+    <div class="field col-12 xl:col-2 lg:col-3 md:col-6 sm:col-12"
+         *ngIf="isAvailableValidations(fieldProperty.VALIDATIONS_ACCEPT)">
+      <label class="label-wrapper" for="dataType">Select File Type*</label>
+      <span class="p-float-label">
+        <p-multiSelect inputId="dropdown" formControlName="fileTypes" id="fileType"
+                       [options]="additionalFieldUtility.fileTypes" [showClear]="false"
+                       optionValue="id" optionLabel="label"></p-multiSelect>
+      </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="additionalFieldForm.get('fileTypes').dirty && additionalFieldForm.get('fileTypes').errors">
+        File Type is required
+      </div>
+    </div>
+
+
+    <div class="field col-12 xl:col-2 lg:col-1  md:col-6 sm:col-12" style="display: flex; text-align: center"
+         *ngIf="isAllowedToMarkFieldShowOnReport && additionalFieldForm.get('fieldTypeId').value !== 6">
+      <p-checkbox class="costume-checkbox " formControlName="appearOnReport"
+                  (onChange)="checkAdditionalFieldCountOnPOReport()" [binary]="true"
+                  label="Show On PO Report">
+      </p-checkbox>
+    </div>
+
+    <div class="field col-12 xl:col-3 lg:col-2 md:col-6 sm:col-12"
+         *ngIf="isCheckedShowOnPOReport">
+      <label class="label-wrapper" for="fieldName">Field Name Shown In PO Report*</label>
+      <span class="p-float-label">
+          <input formControlName="headerAppearOnReport"
+                 (keyup)="removeSpaces.clearSpace(additionalFieldForm, 'headerAppearOnReport')"
+                 id="fieldNameOnReport" type="text" pInputText>
+        </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="additionalFieldForm.get('headerAppearOnReport').dirty && additionalFieldForm.get('headerAppearOnReport').hasError('required')">
+        Field Name Shown In PO Report is required
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="additionalFieldForm.get('headerAppearOnReport').hasError('maxlength')">
+        Field Name Shown In PO Report must be less than 6 characters
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="grid p-fluid" *ngIf="isAvailableValidations(fieldProperty.VALIDATION_OPTION) ">
+    <div class="col-12">
+      <hr>
+      <h6 class="subHeadingColour">Add Option</h6>
+    </div>
+
+    <div class="field col-12 xl:col-5 lg:col-8 md:col-12 sm:col-12">
+
+      <div formArrayName="options" *ngIf="dataOption.length>0">
+        <div class="grid p-fluid"
+             *ngFor="let option of dataOption.controls; let  optionIndex =index"
+             [formGroupName]="optionIndex">
+
+          <div class="field col-8 col-8 xl:col-8 md:col-6 sm:col-6 lg:col-8">
+            <label class="label-wrapper" for="optionValue">Option {{!option.get('optionValue').valid ? '*' : ''}} </label>
+          <span class="p-float-label">
+            <input id="optionValue" (keyup)="removeSpace.clearSpace(option, 'optionValue')" maxlength="50"
+                   formControlName="optionValue" type="text" pInputText/>
+          </span>
+            <div class="p-invalid text-align-left"
+                 *ngIf="option.get('optionValue').dirty && option.get('optionValue').errors">
+              Option is required
+            </div>
+            <div class="p-invalid text-align-left"
+                 *ngIf="checkOptionAvailability(option, dataOption.controls, optionIndex)">
+              Option Cannot be Duplicated
+            </div>
+          </div>
+          <div class="col-4 xl:col-4 lg:col-4 md:col-6 sm:col-6" style="padding-top: 27px;">
+            <div class="grid">
+              <div *ngIf="dataOption.controls.length > 1" class="col-6 trash-button-wrapper"
+                   [style]="{'padding-right': 0}">
+                <button pButton type="button" class="p-button-sm p-button-borderless" iconPos="left"
+                        icon="fa-solid fa-trash-can"
+                        *ngIf="dataOption.controls.length > 1"
+                        (click)="removeOption(optionIndex, option)">
+                </button>
+              </div>
+              <div *ngIf="optionIndex === (dataOption.controls.length-1)" class="col-6 plus-button-wrapper"
+                   [style]="{'padding-left': '10px'}">
+                <button pButton type="button" class="p-button-sm p-button-borderless" iconPos="left"
+                        icon="fa-solid fa-plus"
+                        [disabled]="dataOption.invalid && isSelectAll"
+                        *ngIf="optionIndex == (dataOption.controls.length-1)"
+                        (click)="addOptionFormController()"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid p-fluid" *ngIf="tableSupportBase.totalRecords>0">
+    <div class="col-12">
+      <hr>
+      <a class="subHeadings">
+        <h6 (click)="onShowExistingAdditionalFields()"  class="subHeadings">There are {{tableSupportBase.totalRecords}} existing additional field(s)</h6>
+      </a>
+    </div>
+  </div>
+
+  <div class="grid   form-footer-button">
+    <div class="col-12 pr-4">
+      <div class="pull-right">
+        <button pButton type="button" label="Reset" (click)="reset()" [disabled]="isProgressCreateEvent"
+                class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+
+        <button pButton type="submit" [icon]="!isProgressCreateEvent ? 'pi pi-plus': 'pi pi-spinner'"
+                [disabled]="isProgressCreateEvent"
+                class="p-button-sm" iconPos="left" icon="pi pi-plus" label="Create Field"></button>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="existingAdditionalFields">
+  <ng-template class="existingAdditionalFields" [ngTemplateOutlet]="existingAdditionalFields"></ng-template>
+  </div>
+
+</form>
+
+<p-sidebar styleClass="p-sidebar-md" class="overflow-side-bar" [modal]="true" [dismissible]="true" position="right"
+           *ngIf="dataSourceDrawer" [(visible)]="dataSourceDrawer">
+  <ng-template pTemplate="header" *ngIf="openEditView">Edit Data Source</ng-template>
+  <ng-template pTemplate="header" *ngIf="!openEditView">Create Data Source</ng-template>
+  <app-additional-field-dropdown-datasource (closeModal)="closeModal();" [isEditView]="openEditView"
+                                            [selectedDatasourceId]="selectedDataSourceId"
+                                            *ngIf="dataSourceDrawer"></app-additional-field-dropdown-datasource>
+</p-sidebar>
+
+<!-- Edit Additional Fields-->
+<app-additional-field-edit [additionalFieldID]="additionalFieldId" [editView]="isViewEditMode"
+                           (afterSuccess)="getTableData(); isViewEditMode = false"
+                           *ngIf="isViewEditMode" (closeAdditionalFieldEditMode)="isViewEditMode = false">
+</app-additional-field-edit>
+<p-toast position="bottom-right" key="bc"></p-toast>
+
+
+<!--Create Additional Field-->
+
+<p-confirmDialog #draft key="additionalFieldCreate" header="Are you sure?" appendTo="body"
+                 icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="draft.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, Print it"
+            (click)="draft.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+
+<!--Existing Additional Fields View-->
+<p-dialog position="center"
+          [resizable]="false" [closable]="true"  appendTo="body" [(visible)]="showExistingAdditionalFields"
+          class="credit-note-details-wrapper"
+          [style]="{width: '65vw', minWidth: '600px'}" closeOnEscape="false" [modal]="true" [draggable]="false"
+          [baseZIndex]="1000" >
+  <ng-template pTemplate="header">
+    <h5 class="popup-header-label">Existing Additional Fields</h5>
+  </ng-template>
+  <ng-template class="existingAdditionalFields" [ngTemplateOutlet]="existingAdditionalFields"></ng-template>
+</p-dialog>
+
+<!--Existing Additional Fields Table-->
+<ng-container>
+<ng-template #existingAdditionalFields >
+  <p-table responsiveLayout="scroll" *ngIf="tableShow" [value]="tableSupportBase.dataSource"
+           [rowHover]="true" [lazy]="true" (onLazyLoad)="loadData($event)" #dt paginatorDropdownAppendTo="body"
+           [rows]="25" [showCurrentPageReport]="true" [responsive]="false" columnResizeMode="expand"
+           [rowsPerPageOptions]="[25, 50, 75]" [loading]="tableSupportBase.loading" [resizableColumns]="false" [tableStyle]="{'min-width': tableSupportBase.minWidth}"
+           [totalRecords]="tableSupportBase.totalRecords" [paginator]="true" [scrollable]="true"
+           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [filterDelay]="0"
+           styleClass="p-datatable-sm p-datatable-striped no-grid-lines" scrollHeight="300px">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="min-width:200px" pSortableColumn="dc.moduleId" class="sort-icon-wrapper" id="tDocument">Document
+          <p-sortIcon class="grid-sort-icon" field="dc.moduleId"></p-sortIcon>
+        </th>
+        <th style="min-width:200px" pSortableColumn="dc.sectionId" class="sort-icon-wrapper" id="tSection">Section
+          <p-sortIcon class="grid-sort-icon" field="dc.sectionId"></p-sortIcon>
+        </th>
+        <th style="min-width:200px" pSortableColumn="field.fieldTypeName" class="sort-icon-wrapper" id="type">Field Type
+          Name
+          <p-sortIcon class="grid-sort-icon" field="field.fieldTypeName"></p-sortIcon>
+        </th>
+        <th style="min-width:200px" pSortableColumn="field.fieldName" class="sort-icon-wrapper" id="name">Field Name
+          <p-sortIcon class="grid-sort-icon" field="field.fieldName"></p-sortIcon>
+        </th>
+        <th style="min-width:200px" pSortableColumn="field.required" class="sort-icon-wrapper" id="rStatus">Required
+          <p-sortIcon class="grid-sort-icon" field="field.required"></p-sortIcon>
+        </th>
+        <th style="min-width:200px" pSortableColumn="field.displayOrder" class="sort-icon-wrapper" id="display_order">
+          Display
+          order
+          <p-sortIcon class="grid-sort-icon" field="field.displayOrder"></p-sortIcon>
+        </th>
+        <th style="min-width:200px" pSortableColumn="field.maxLength" class="sort-icon-wrapper" id="mx_length">Max Length
+          <p-sortIcon class="grid-sort-icon" field="field.maxLength"></p-sortIcon>
+        </th>
+        <th style="min-width:200px" pSortableColumn="field.rowCount" class="sort-icon-wrapper" id="rw_count">Row Count
+          <p-sortIcon class="grid-sort-icon" field="field.rowCount"></p-sortIcon>
+        </th>
+        <th style="min-width:200px" pSortableColumn="field.value" class="sort-icon-wrapper" id="value">Value
+          <p-sortIcon class="grid-sort-icon" field="field.value"></p-sortIcon>
+        </th>
+        <th style="min-width:200px" pSortableColumn="field.dataType" class="sort-icon-wrapper" id="dtype">Data Type
+          <p-sortIcon class="grid-sort-icon" field="field.dataType"></p-sortIcon>
+        </th>
+        <th style="min-width:200px" pSortableColumn="dc.status" class="sort-icon-wrapper" id="aStatus">Status
+          <p-sortIcon class="grid-sort-icon" field="dc.status"></p-sortIcon>
+        </th>
+        <th style="min-width:200px" pSortableColumn="field.fileTypes" class="sort-icon-wrapper" id="fileTypes">File Types
+          <p-sortIcon class="grid-sort-icon" field="field.fileTypes"></p-sortIcon>
+        </th>
+        <th [frozen]="true" [alignFrozen]="'right'" pFrozenColumn
+            style="min-width:50px" class="text-center subHeadingGreen" id="action"></th>
+
+
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item let-i="rowIndex">
+      <tr>
+        <td style="min-width:200px">
+          {{item['doctype.documentType']}}
+        </td>
+
+        <td style="min-width:200px">
+          {{item.fieldSection_}}
+        </td>
+
+        <td style="min-width:200px">
+          {{item.fieldType_}}
+        </td>
+
+        <td style="min-width:200px" class="text-center">
+          {{item.fieldName_}}
+        </td>
+        <td style="min-width:200px" class="text-center">
+        <span>
+          <li [class]="'mr-2 status-style status-'  + tableSupportBase.getStatus(item.requiredStatus_)"></li>
+          {{tableSupportBase.getStatus(item.requiredStatus_)  | titlecase}}
+        </span>
+        </td>
+        <td style="min-width:200px">
+          {{item.displayOrder}}
+        </td>
+        <td style="min-width:200px">
+          {{item.maxLength}}
+        </td>
+        <td style="min-width:200px">
+          {{item.rowCount}}
+        </td>
+        <td style="min-width:200px">
+          <span app-read-more-text [fieldValue]="item.value" [maxCharacters]="200 / 7"></span>
+        </td>
+        <td style="min-width:200px">
+          {{item.dataType ? appConstant.DATA_TYPE_PATTERN_MAP.get(item.dataType) : ''}}
+        </td>
+        <td style="min-width:200px" class="text-center">
+       <span>
+          <li [class]="'mr-2 status-style status-'  + tableSupportBase.getStatus(item.status_)"></li>
+         {{tableSupportBase.getStatus(item.status_)  | titlecase}}
+        </span>
+        </td>
+        <td style="min-width:200px">
+          {{item.fileTypes ? getReadableFleTypes(item.fileTypes) : ''}}
+        </td>
+        <td style="min-width:50px" pFrozenColumn [frozen]="true" [alignFrozen]="'right'" class="text-center">
+          <button type="button" pButton class="grid-action-btn p-button-text" icon="pi pi-ellipsis-v" iconPos="right"
+                  (click)="menu.toggle($event); actionButtonClick(item)"></button>
+          <p-menu #menu [popup]="true" appendTo="body"
+                  [model]="tableSupportBase.actionButtonList(item['activeStatus'])"></p-menu>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</ng-template>
+</ng-container>

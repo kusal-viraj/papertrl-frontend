@@ -1,0 +1,32 @@
+[
+  {
+    "action": "EXPORT",
+    "label": "Export",
+    "icon": "fa fa-share",
+    "active": false
+  },
+  {
+    "action": "DOWNLOAD",
+    "label": "Download",
+    "icon": "fa fa-download",
+    "active": false
+  },
+  {
+    "action": "DELETE",
+    "label": "Delete",
+    "icon": "fa fa-trash",
+    "active": false
+  },
+  {
+    "action": "REJECT",
+    "label": "Reject",
+    "icon": "fa fa-minus-circle",
+    "active": false
+  },
+  {
+    "action": "QUICK_APPROVE",
+    "label": "Quick Approve",
+    "icon": "pi pi-check",
+    "active": false
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {"reportId":"1", "type":"Type1",  "reportName":"Cash Requirement Report"},
+  {"reportId":"2", "type":"Type2",  "reportName":"Vendor List Report"},
+  {"reportId":"3", "type":"Type3",  "reportName":"User Overview Report"},
+  {"reportId":"4", "type":"Type4",  "reportName":"AP Detail Report"},
+  {"reportId":"5", "type":"Type5",  "reportName":"Cash Requirement Report"},
+  {"reportId":"6", "type":"Type6",  "reportName":"Vendor List Report"},
+  {"reportId":"7", "type":"Type7",  "reportName":"User Overview Report"},
+  {"reportId":"8", "type":"Type8",  "reportName":"AP Detail Report"},
+  {"reportId":"9", "type":"Type9",  "reportName":"Cash Requirement Report"},
+  {"reportId":"10", "type":"Type10",  "reportName":"Vendor List Report"},
+  {"reportId":"11", "type":"Type11",  "reportName":"User Overview Report"},
+  {"reportId":"12", "type":"Type12",  "reportName":"AP Detail Report"}
+]

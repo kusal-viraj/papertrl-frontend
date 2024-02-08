@@ -1,0 +1,206 @@
+
+  <form *ngIf="privilegeService.isAuthorized(appAuthorities.CUSTOMERS_SEND_REQUEST)" style="margin-top: 3%"
+        [formGroup]="invitationForm" (ngSubmit)="onSubmit(invitationForm)"
+        [hidden]="tableSupportBase.isVisibleTable">
+
+    <div class="grid ml-4">
+
+      <div [ngClass]="'field col-12 xl:col-3 p-fluid'">
+        <label class="label-wrapper" for="approvalGroup">Select Customers* </label>
+        <span class="p-float-label">
+           <p-multiSelect [options]="customers.data" id="approvalGroup" optionValue="otherName" display="chip"
+                          appendTo="body"
+                          inputId="approvalGroup" #select
+                          formControlName="customerIds" optionLabel="name" [showToggleAll]="true"
+                          [filter]="true">
+             <ng-template pTemplate="selectedItem">
+                <div>{{invitationForm.get('customerIds').value.name}}</div>
+             </ng-template>
+
+             <ng-template let-values pTemplate="item">
+                 <div class="grid">
+                     <div class="dropdown-list"
+                          [ngClass]="values.id == 0 ? ' dropdown-add': null">{{values.name}}</div>
+                 </div>
+             </ng-template>
+           </p-multiSelect>
+        </span>
+
+
+        <div class="p-invalid text-align-left"
+             *ngIf="invitationForm.get('customerIds').dirty && invitationForm.get('customerIds').errors">
+          At least one customer must be selected
+        </div>
+      </div>
+
+      <div class="col-12 xl:col-7 pt-5 text-right p-text-xl-left">
+        <button pButton type="button" label=" " (click)="resetForm()" [disabled]="btnLoading"
+                class="p-button-outlined mr-2 p-button-sm reset-button-responsive">
+          <div style="width: 100%"><span class="fa-solid fa-rotate-right"></span> &nbsp; Reset</div>
+        </button>
+
+        <button pButton type="submit" class="p-button-sm p-fluid"
+                label=" " [disabled]="btnLoading">
+          <div style="width: 100%"><span [class]="btnLoading ? 'pi pi-spin pi-spinner': 'fa-solid fa-paper-plane'"></span> &nbsp;
+            Send Request
+          </div>
+        </button>
+      </div>
+    </div>
+  </form>
+
+
+  <p-toast position="bottom-right" key="vi"></p-toast>
+
+
+  <h6 class="subHeadingColour ml-4">Existing Customer Requests</h6><br>
+
+  <app-table-header-action-buttons
+    [tableSupportBase]="tableSupportBase" [componentInstance]="this"
+    (refresh)="loadData(tableSupportBase.searchFilterDto)"
+    (delete)="deleteRequestBulk()"
+    (reSentRequest)="resentRequestBulk()"
+    (showFilters)="showFilter = !showFilter; showFilterColumns = false"
+    (showColumns)="showFilterColumns = !showFilterColumns; showFilter = false"
+    [visibleActions]="availableHeaderActions">
+  </app-table-header-action-buttons>
+
+  <div class="grid">
+    <div class="col-12 lg:col-10 xl:col-10">
+      <div class="grid">
+        <div class="ml-2 bulkButtons" *ngFor="let value of bulkButtonList; let i = index">
+          <button class=" p-button-outlined p-button-sm" *ngIf="privilegeService.isAuthorized(value.authCode)"
+                  [disabled]="!customSelection.length > 0"
+                  icon="{{value.icon}}" label="{{value.label}}" id="{{value.action}}"
+                  pButton (click)="bulkButtonAction(value.action)"></button>&nbsp;
+        </div>
+        <p-menu #menu [popup]="true" [model]="buttonValueInVendorTabResponsive"></p-menu>
+        <button type="button" class="bulkActionBtn p-button-outlined ml-2 p-button-sm" pButton
+                icon="pi pi-chevron-down"
+                label="Bulk Actions" (click)="menu.toggle($event)"></button>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="table-wrapper">
+  <p-table responsiveLayout="scroll" id="columnSelect" #dt [columns]="selectedColumns" (onColResize)="onTableChanged()"
+           [hidden]="tableSupportBase.isVisibleTable" (onSort)="tableSupportBase.onSort(dt)"
+           (onColReorder)="onTableChanged()" [(selection)]="tableSupportBase.rows" [value]="tableSupportBase.dataSource"
+           columnResizeMode="expand" (onRowSelect)="rowSelected()" (onRowUnselect)="rowSelected()"
+           dataKey="id" [reorderableColumns]="true" [rowHover]="true" [lazy]="true" (onLazyLoad)="loadData($event)"
+           [responsive]="false" selectionMode="multiple" scrollHeight="flex" [scrollable]="true"
+           stateStorage="session" stateKey="{{tableKeyEnum.VENDOR_INVITATION_TABLE_KEY}}" [rows]="25"
+           [showCurrentPageReport]="true" (onFilter)="tableSupportBase.onFilter(dt)"
+           [rowsPerPageOptions]="[25, 50, 75]" [loading]="tableSupportBase.loading" [resizableColumns]="true"
+           [totalRecords]="tableSupportBase.totalRecords" [paginator]="true" *ngIf="tableSupportBase.minWidth"
+           styleClass="p-datatable-sm p-datatable-striped no-grid-lines"
+           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [filterDelay]="0">
+
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns" pResizableColumn [pResizableColumnDisabled]="!col.isReSizable"
+            [ngStyle]="{'text-align': col.align}"
+            [pReorderableColumnDisabled]="!col.isReOrderable" pReorderableColumn
+            [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn
+            [pSortableColumnDisabled]="!col.isSortable" pSortableColumn="{{col.sortableField}}" class="sort-icon-wrapper">
+          <div class="grid">
+            <div class="col-12">
+              <span *ngIf="col.searchType !== enums.CHECKBOX">{{col.header}}</span>
+              <p-sortIcon class="grid-sort-icon" *ngIf="col.isSortable" field="{{col.sortableField}}"></p-sortIcon>
+            </div>
+            <div class="col-12">
+              <span app-table-inline-column-filters [tableSupportBase]="tableSupportBase" [dt]="dt"
+                    [columns]="columns" [col]="col"></span>
+            </div>
+          </div>
+        </th>
+      </tr>
+
+<!--      <tr>-->
+<!--        <th *ngFor="let col of columns" [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn>-->
+<!--          <span app-table-inline-column-filters [tableSupportBase]="tableSupportBase" [dt]="dt"-->
+<!--                [columns]="columns" [col]="col"></span>-->
+<!--        </th>-->
+<!--      </tr>-->
+    </ng-template>
+
+    <ng-template pTemplate="body" let-customer let-columns="columns">
+      <tr>
+        <td *ngFor="let col of columns; let i=index" [ngStyle]="{'text-align': col.align}"
+            [class.freeze-right]="col.frozenDirection == 'right'" [ngClass]="col.searchType == enums.ACTION_BUTTON ? 'vendor-table-action-btn' : null"
+            [class.td-border]="i === 0" [class.td-border-selected]="customer.selected && i === 0" [style]="'width:' + col.columnWidth  + 'px'"
+            [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn>
+          <span class="p-column-title">{{col.header}}</span>
+
+          <span *ngIf="col.field == enums.CHECKBOX && customer['rel.status'] !== enums.STATUS_APPROVED">
+          <p-tableCheckbox [value]="customer"></p-tableCheckbox>
+        </span>
+
+          <span *ngIf="col.searchType ==  enums.ACTION_BUTTON && customer['rel.status'] != enums.STATUS_APPROVED"
+                class="td-actionButton">
+          <button type="button" pButton class="grid-action-btn p-button-text" icon="pi pi-ellipsis-v"
+                  [disabled]="tableSupportBase.actionButtonList(customer['rel.status']).length === 0"
+                  (click)="menu.toggle($event); actionButtonClick(customer)"></button>
+          <p-menu #menu [popup]="true" appendTo="body"
+                  [model]="tableSupportBase.actionButtonList(customer['rel.status'])"></p-menu>
+        </span>
+
+          <span *ngIf="col.field == 'rel.status'" class="capitalize">
+        <li [class]="'mr-2 status-style status-'  + tableSupportBase.getStatus(customer[col.field])"></li>
+            {{tableSupportBase.getStatus(customer[col.field]) | titlecase}}
+        </span>
+
+          <span class="white-space-normal break-word" *ngIf="col.field !== 'rel.status'">{{customer[col.field]}}</span>
+        </td>
+      </tr>
+    </ng-template>
+
+
+    <ng-template pTemplate="emptymessage">
+      <div class="text-center grid table-empty-data">
+          <div class="col-12">
+            <i class="fa-solid fa-magnifying-glass"></i><br>
+            <p>There are no records found</p>
+          </div>
+      </div>
+    </ng-template>
+  </p-table>
+
+  <div class="no-data-show" *ngIf="tableSupportBase.isVisibleTable == true">
+    <span class="fa fa-search"></span>
+    <div style="margin-top: 1%">There are no transactions matching the criteria</div>
+  </div>
+  </div>
+
+  <p-toast position="bottom-right" key="customer"></p-toast>
+  <p-confirmDialog #cd header="Are you sure?" key="customer" icon="conf-delete-icon pi pi-exclamation-triangle">
+    <p-footer>
+      <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+              (click)="cd.reject()"></button>
+      <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, Delete it"
+              (click)="cd.accept()"></button>
+    </p-footer>
+  </p-confirmDialog>
+
+
+
+<!--Action Buttons-->
+
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" [modal]="true" [dismissible]="true" position="right" (onHide)="showFilter= false"
+           [fullScreen]="false" [(visible)]="showFilter" transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)">
+  <ng-template pTemplate="header">Advance Filter</ng-template>
+  <app-table-column-filters [dt]="table" [columns]="tableSupportBase.filterEnabledColumns" (closeDrawer)="showFilter = false"
+                            [tableSupportBase]="tableSupportBase"></app-table-column-filters>
+</p-sidebar>
+
+<p-sidebar styleClass="p-sidebar-sm table-column-sidebar" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           (onHide)="showFilterColumns= false" transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)"
+           [fullScreen]="false" [(visible)]="showFilterColumns">
+    <ng-template pTemplate="header">Columns</ng-template>
+  <app-table-column-toggle [cols]="selectedColumns" (selectionsUpdated)="selectedColumns = $event"
+                           [tableInstance]="table" (restoreTable)="loadTableData()"
+                           [tableKey]="tableKeyEnum.VENDOR_INVITATION_TABLE_KEY"
+                           [gridName]="appConstant.GRID_CUSTOMER_INVITATION_LIST"
+                           [hiddenOptions]="tableSupportBase.hiddenInOptions"
+                           (updateColOrder)="onTableChanged($event)"></app-table-column-toggle>
+</p-sidebar>

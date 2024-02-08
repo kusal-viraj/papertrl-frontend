@@ -1,0 +1,23 @@
+[
+  {
+    "action": "APPROVE",
+    "label": "Approve",
+    "icon": "pi pi-check",
+    "active": false,
+    "authCode": "VENDORS_APPROVE_VENDOR_REQUEST"
+  },
+  {
+    "action": "REJECT",
+    "label": "Reject",
+    "icon": "fa fa-minus-circle",
+    "active": false,
+    "authCode": "VENDORS_REJECT_VENDOR_REQUEST"
+  },
+  {
+    "action": "DELETE",
+    "label": "Delete",
+    "icon": "fa fa-trash",
+    "active": false,
+    "authCode": "VENDORS_DELETE_VENDOR_REQUEST"
+  }
+]

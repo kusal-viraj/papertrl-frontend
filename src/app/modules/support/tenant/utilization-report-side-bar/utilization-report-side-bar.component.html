@@ -1,0 +1,50 @@
+<div class="side-bar-drawer-content">
+<div class="utilization-report p-3">
+<div class="grid p-fluid">
+
+  <!-- report filters -->
+  <form class="tenantList" [formGroup]="filterTransactionsDtaForm">
+    <div class="col-12">
+    <span class="field">
+       <label class="label-wrapper" >Select Tenant / Portal</label>
+       <p-multiSelect [options]="tenantList" appendTo="body" optionLabel="name"
+                      optionValue="id" virtualScrollItemSize="20" [virtualScroll]="true" [filter]="true"
+                      id="multiselect" formControlName="tenantList">
+  </p-multiSelect>
+       <div class="p-invalid text-align-left"
+            *ngIf="filterTransactionsDtaForm.get('tenantList').dirty && filterTransactionsDtaForm.get('tenantList').errors">
+        Tenant / Portal is required
+      </div>
+    </span>
+    </div>
+    <div class="col-12">
+          <span class="field">
+             <label class="label-wrapper" >Select Date</label>
+             <div class="p-inputgroup">
+              <p-calendar appendTo="body" name="dueDate" [showIcon]="true" id="dueDate"
+                          selectionMode="range" formControlName="dateRange" dateFormat="yy-mm-dd" dataType="string"
+                          [numberOfMonths]="2" [showButtonBar]="true" [readonlyInput]="true"></p-calendar>
+             </div>
+            <div class="p-invalid text-align-left"
+                 *ngIf="filterTransactionsDtaForm.get('dateRange').dirty && filterTransactionsDtaForm.get('dateRange').errors">
+        Date is required
+      </div>
+          </span>
+    </div>
+  </form>
+</div>
+
+</div>
+</div>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" label="Reset to default" (click)="filterTransactionsDtaForm.reset()"
+              class="p-button-borderless mr-1 p-button-sm"></button>
+      <button pButton type="button" (click)="submitFormData()" [disabled]="isProgress"
+              class="p-button-sm" label="Generate Report"></button>
+    </div>
+
+  </div>
+</div>

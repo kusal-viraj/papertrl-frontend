@@ -1,0 +1,35 @@
+
+
+    <p-tabView (onChange)="tabChanged(tabIndex)" [(activeIndex)]="tabIndex" styleClass="tabview-custom p-0-tabview">
+      <p-tabPanel>
+        <ng-template pTemplate="header">
+          <span class="custom-span">Integration Systems</span>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <app-integration-system-list *ngIf="!createSystem"></app-integration-system-list>
+        </ng-template>
+      </p-tabPanel>
+      <p-tabPanel>
+        <ng-template pTemplate="header">
+          <span class="custom-span">Integration Configurations</span>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <app-integration-configuration-list *ngIf="!createConfig"></app-integration-configuration-list>
+        </ng-template>
+      </p-tabPanel>
+    </p-tabView>
+
+
+
+<!--Create Configuration-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" [modal]="true" position="right" [(visible)]="createConfig"
+           *ngIf="createConfig">
+  <ng-template pTemplate="header">System Configuration</ng-template>
+  <app-integration-configuration-create *ngIf="createConfig" (success)="createConfig = false"></app-integration-configuration-create>
+</p-sidebar>
+
+<!--Create System-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" [modal]="true" position="right" [(visible)]="createSystem"
+           *ngIf="createSystem">
+  <app-integration-system-create *ngIf="createSystem" (success)="createSystem = false"></app-integration-system-create>
+</p-sidebar>

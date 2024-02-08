@@ -1,0 +1,158 @@
+<p-sidebar styleClass="p-sidebar-lg" [modal]="true" [dismissible]="true" appendTo="body" (onHide)="closeDrawer.emit()"
+           position="right" baseZIndex="1011"
+           [(visible)]="panelShow">
+  <ng-template pTemplate="header">Audit Trail <span class="heading subHeadingColour" *ngIf="heading"> ({{heading}}
+    )</span></ng-template>
+
+  <!--  <h4 class="subHeadingGreen">Audit Trail <span class="heading subHeadingColour" *ngIf="heading">({{heading}})</span></h4>-->
+  <!--  <h5 class="subHeadingColour"></h5>-->
+
+  <p-timeline [value]="auditTrial" align="alternate" styleClass="customized-timeline mb-4">
+    <ng-template pTemplate="marker" let-event>
+			<span class="custom-marker p-shadow-2" [style.backgroundColor]="'#3bb2ac'">
+                <i [ngClass]="event.statusId.icon"></i>
+            </span>
+    </ng-template>
+    <ng-template pTemplate="content" let-event>
+      <p-card>
+        <div class="grid">
+          <div *ngIf="event.undoAction && event.header" class="col-12 pb-0 audit-topic">
+            {{event.statusId.name}} <b> {{event.header}} </b> by <b> {{event.userName}} </b></div>
+
+          <div *ngIf="event.undoAction && !event.header" class="col-12 pb-0 audit-topic">
+            {{event.statusId.name}} <b> {{tableSupportBase.getStatus(event.undoStatus) | titlecase}} Status </b> by
+            <b> {{event.userName}} </b></div>
+
+          <div *ngIf="!event.undoAction" class="col-12 pb-0 audit-topic">
+            {{event.statusId.name}} <b> {{event.userName}} </b></div>
+
+          <div *ngIf="event.automationName" class="col-12 pb-0 p-text-italic audit-auto-topic">
+            Following the automation<b> {{event.automationName}} </b></div>
+          <br>
+          <div
+            class="col-12 p-text-italic audit-date">{{event.actionDate | date:dateFormatter.DATE_TIME_FORMAT}}</div>
+        </div>
+        <br>
+
+
+        <ng-container *ngIf="event.comment">
+          <p class="audit-cmt" *ngFor="let singleComment of event?.comment.split('</br>')">{{singleComment}}<br></p>
+        </ng-container>
+        <!--        <ng-container *ngIf="!event.comment">-->
+        <!--          <p class="p-text-italic audit-cmt">No Information</p>-->
+        <!--        </ng-container>-->
+
+
+        <ng-container *ngIf="event.expenseDistributionsChanges && event.expenseDistributionsChanges.length !== 0">
+          <h5 class="col-12 pb-0 font-bold cost-topic">Expense Cost Distribution</h5>
+          <div class="table-width">
+            <p-table responsiveLayout="scroll" [value]="event.expenseDistributionsChanges"
+                     scrollable="true" scrollHeight="150px"
+                     styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="min-width:180px" id="accoun">Account Number</th>
+                  <th style="min-width:180px" id="accname">Project Code</th>
+                  <th style="min-width:180px" id="departmentAcc">Department</th>
+                  <th style="min-width:150px" class="detail-table-header-right" id="poAccAmount">Line Amount</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-item let-i="rowIndex">
+                <tr [ngClass]="item.changed ? 'table-row-highlight' : ''">
+                  <td class="text-left">
+                    {{item.number}}
+                  </td>
+
+                  <td class="text-left">
+                    {{item.projectCode}}
+                  </td>
+
+                  <td class="text-left">
+                    {{item.department}}
+                  </td>
+
+                  <td class="text-right">
+                    {{item.amount | number:'1.2-2'}}
+                  </td>
+
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </ng-container>
+
+
+        <ng-container *ngIf="event.itemDistributionsChanges && event.itemDistributionsChanges.length !== 0">
+          <h5 class="col-12 pb-0 font-bold cost-topic">Item Cost Distribution</h5>
+          <div class="table-width">
+            <p-table responsiveLayout="scroll" [value]="event.itemDistributionsChanges" class="remove-border-style"
+                     scrollable="true" scrollHeight="150px" [style]="{width:'auto'}"
+                     styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="min-width:200px" id="item">Item Number</th>
+                  <th style="min-width:200px" id="code">Project Code</th>
+                  <th style="min-width:200px" id="departmentItem">Department</th>
+                  <th style="min-width:180px" id="account">Account Number</th>
+                  <th style="min-width:120px" id="qtyItem">Quantity</th>
+                  <th style="min-width:120px" id="costItem">Cost</th>
+                  <th style="min-width:180px" class="detail-table-header-right" id="lineAmt">Line Amount</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-item let-i="rowIndex">
+                <tr [ngClass]="item.changed ? 'table-row-highlight' : ''">
+                  <td class="text-left">
+                    {{item.number}}
+                  </td>
+
+                  <td class="text-left">
+                    {{item.projectCode}}
+                  </td>
+
+                  <td class="text-left">
+                    {{item.department}}
+                  </td>
+
+                  <td class="text-left">
+                      {{item.itemAccountNumber}}
+                  </td>
+
+                  <td class="text-left">
+                    {{item.qty | number:'1.2-2'}}
+                  </td>
+
+                  <td class="text-left">
+                    {{item.cost | number:'1.2-2'}}
+                  </td>
+
+                  <td class="text-right">
+                    {{item.amount | number:'1.2-2'}}
+                  </td>
+
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </ng-container>
+
+        <!--        <ng-container *ngIf="event.expenseDistributionsChanges.length !== 0">-->
+        <!--          <div class="col-12 pb-0 font-bold audit-date">Expense Cost Distribution</div>-->
+        <!--          <div class="col-12" *ngFor="let item of event.expenseDistributionsChanges">-->
+        <!--            <div class="col-12 pb-0 p-text-italic audit-cmt">Number: {{item.number}}</div>-->
+        <!--            <div class="col-12 pb-0 p-text-italic audit-cmt">Amount: {{item.amount}}</div>-->
+        <!--          </div>-->
+        <!--        </ng-container>-->
+
+        <!--        <ng-container *ngIf="event.itemDistributionsChanges.length !== 0">-->
+        <!--          <div class="col-12 pb-0 font-bold audit-date">Item Cost Distribution</div>-->
+        <!--          <div class="col-12" *ngFor="let item of event.itemDistributionsChanges">-->
+        <!--            <div class="col-12 pb-0 p-text-italic audit-cmt">Number: {{item.number}}</div>-->
+        <!--            <div class="col-12 pb-0 p-text-italic audit-cmt">Amount: {{item.amount}}</div>-->
+        <!--          </div>-->
+        <!--        </ng-container>-->
+      </p-card>
+    </ng-template>
+  </p-timeline>
+</p-sidebar>

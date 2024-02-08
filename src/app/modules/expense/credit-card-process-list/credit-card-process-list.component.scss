@@ -1,0 +1,39 @@
+@import '../../../../scss/table-responsive';
+@import "../../../../scss/color.scss";
+
+.max-width {
+  width: 100% !important;
+}
+
+.receipt-select {
+  .col-1 {
+    align-self: center;
+  }
+}
+
+.link {
+  color: $secondary-blue;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.pop-up-header {
+  width: 100%;
+}
+
+th {
+  overflow-wrap: break-word !important;
+  white-space: normal !important;
+}
+
+.table-wrapper {
+  height: calc(100vh - 268px);
+}
+.project-dropdown ::ng-deep .p-dropdown .p-inputtext {
+  max-width: 250px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

@@ -1,0 +1,112 @@
+<form style="margin-top: 3%" [formGroup]="vendorInvitationForm" (ngSubmit)="onSubmit(vendorInvitationForm)"
+      [hidden]="tableSupportBase.isVisibleTable">
+
+  <div class="grid p-fluid">
+
+    <div class="field col-12 xl:col-3">
+      <label class="label-wrapper" for="vendorName">Vendor Name*</label>
+      <div #actualTarget class="p-inputgroup">
+            <span class="p-float-label">
+                     <input autocomplete="off"
+                            (keyup)="removeFieldSpace(f.vendorName)"
+                            formControlName="vendorName" id="vendorName" type="text"
+                            maxlength="100"
+                            pInputText>
+
+                   </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="vendorInvitationForm.get('vendorName').dirty && vendorInvitationForm.get('vendorName').errors">
+        Vendor Name is required
+      </div>
+    </div>
+
+    <div class="field col-12 xl:col-3">
+      <label class="label-wrapper" for="vendorName">Contact Name*</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input formControlName="contactName" id="contactName" type="text"
+                            pInputText (keyup)="removeFieldSpace(f.contactName)">
+                   </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="vendorInvitationForm.get('contactName').dirty && vendorInvitationForm.get('contactName').hasError('required')">
+        Contact Name is required
+      </div>
+      <div class="p-invalid text-align-left" *ngIf="vendorInvitationForm.get('contactName').hasError('maxlength')">
+        Contact Name must be less than 50 characters
+      </div>
+    </div>
+
+    <div class="field col-12 xl:col-3">
+      <label class="label-wrapper" for="emailAddress">Email Address*</label>
+      <div class="p-inputgroup">
+            <span class="p-float-label">
+                     <input formControlName="emailAddress" id="emailAddress" type="text"
+                            pInputText (keyup)="removeFieldSpace(f.emailAddress); checkEmailAvailability()">
+                   </span>
+      </div>
+      <div class="p-invalid text-align-left"
+           *ngIf="vendorInvitationForm.get('emailAddress').dirty && vendorInvitationForm.get('emailAddress').errors">
+        <div *ngIf="vendorInvitationForm.get('emailAddress').errors.required">Email Address is required</div>
+        <div *ngIf="vendorInvitationForm.get('emailAddress').hasError('emailValidate')">Email must be a valid
+          email address
+        </div>
+      </div>
+      <div class="p-invalid text-align-left">
+        <div *ngIf="isExistingCommunityVendor">This vendor already exist in the vendor community</div>
+        <div *ngIf="isExistingInvitation">This vendor has already been requested</div>
+      </div>
+
+    </div>
+
+    <div class="formButton col-12  xl:col-1" style="padding-top: 27px;">
+      <button pButton type="button" label="Reset" (click)="restForm()"
+              class="p-button-outlined p-button-sm ">
+      </button>
+    </div>
+    <div class="formButton col-12  xl:col-2"  style="padding-top: 24px;">
+      <button pButton type="submit" class="p-button-sm p-fluid"
+              [disabled]="isClickSendAndInvitationButton" [loading]="isClickSendAndInvitationButton"
+              label="Send Invitation">
+      </button>
+    </div>
+  </div>
+</form>
+
+<p-overlayPanel styleClass="vendorOverlay" #vendorOverlay [dismissable]="true" [showCloseIcon]="false">
+  <ng-template pTemplate>
+    <p [style]="{'color':'$green', 'font-size':'14px'}"><b>Existing Vendors In Vendor Community</b></p><br>
+    <table>
+      <div *ngFor="let vendor of suggestions; let i=index">
+        <tr>
+          <th class="th-border" rowspan="2">
+            <div [style]="{'color':'#959595','margin-bottom': '8px','font-size': '16px'}">
+              <i class="fa fa-user"></i> &nbsp;{{vendor.vendorName}}</div>
+            <div [style]="{'color':'#959595','margin-bottom': '8px','font-weight': 'normal', 'font-size': '15px'}">
+              <i class="pi pi-envelope"></i> &nbsp;{{vendor.address}}</div>
+            <div [style]="{'color':'#959595','margin-bottom': '8px','font-weight': 'normal', 'font-size': '15px'}">
+              <i class="fa fa-map-marker"></i> &nbsp;{{vendor.email}}</div>
+          </th>
+          <td class="td-border" [style]="{'min-width': '150px', 'text-align': 'center'}">
+            <button [style]="{'padding': '4px'}" (click)="addTolLocal(vendor.id)" pButton
+                    class="p-button-sm p-button-link" label="Add to Local"></button>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-border" [style]="{'min-width': '150px', 'text-align': 'center'}">
+            <button [style]="{'padding': '4px'}" (click)="detailView(vendor.id)" pButton
+                    class="p-button-sm p-button-link" label="Detail View"></button>
+          </td>
+        </tr>
+      </div>
+    </table>
+  </ng-template>
+</p-overlayPanel>
+
+<p-sidebar [showCloseIcon]="true" *ngIf="vendorDetail" position="right" styleClass="p-sidebar-sm" [modal]="false"
+           [(visible)]="vendorDetail">
+  <ng-template pTemplate="header">Vendor Detail View</ng-template>
+  <app-vendor-detail-drawer [vendorId]="vendorId" *ngIf="vendorDetail"></app-vendor-detail-drawer>
+</p-sidebar>
+<p-toast position="bottom-right" key="vi"></p-toast>

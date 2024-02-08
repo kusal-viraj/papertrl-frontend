@@ -1,0 +1,75 @@
+<div class="side-bar-drawer-content p-4">
+<form [formGroup]="changeBillPaymentForm" (ngSubmit)="changePayment()">
+
+  <div class="grid p-fluid">
+
+    <div [ngClass]="'field col-12'">
+      <span>
+          <label  class="label-wrapper" for="vendor">Select Vendor * </label>
+           <p-dropdown [virtualScroll]="vendorList.data.length>20" virtualScrollItemSize="25" [options]="vendorList.data" id="vendor"
+                       inputId="dropdown" appendTo="body" showClear="true" #dpName1
+                       formControlName="vendorId" optionLabel="name" optionValue="id"
+                       [autoDisplayFirst]="false" (onChange)="changedVendorSelection($event)"
+                       [filter]="true">
+
+             <ng-template pTemplate="selectedItem">
+               <div>{{dpName1.selectedOption.name}}</div>
+             </ng-template>
+
+             <ng-template let-vendor pTemplate="item">
+                 <div class="grid">
+                     <div class="dropdown-list"
+                          [ngClass]="vendor.id === 0 ? ' dropdown-add': null">{{vendor.name}}</div>
+                     <em *ngIf="vendor.name == 'Create New'" class="pi pi-plus dropdown-icon dropdown-add"></em>
+                 </div>
+             </ng-template>
+
+           </p-dropdown>
+
+        </span>
+
+      <div class="p-invalid text-align-left"
+           *ngIf="changeBillPaymentForm.get('vendorId').dirty && changeBillPaymentForm.get('vendorId').errors">
+        Vendor is required
+      </div>
+
+    </div>
+
+    <div [ngClass]="'field col-12'">
+      <span>
+        <label  class="label-wrapper" for="billNumber">Select Bill Number * </label>
+        <p-dropdown [virtualScroll]="billPaymentUtility.vendorRelatedBills.data.length>20" virtualScrollItemSize="25"
+                    inputId="dropdown" formControlName="billId" id="billNumber" [autoDisplayFirst]="false" #dpName2
+                    [options]="billPaymentUtility.vendorRelatedBills.data" [filter]="true" optionLabel="name"
+                    optionValue="id"
+                    showClear="true">
+
+        </p-dropdown>
+
+      </span>
+
+      <div class="p-invalid text-align-left"
+           *ngIf="changeBillPaymentForm.get('billId').dirty && changeBillPaymentForm.get('billId').errors">
+        Bill Number is required
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+
+<div class="grid panel-footer footer">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" label="Reset" (click)="reset()"
+              class="p-button-outlined p-button-sm margin-right" ></button>&nbsp;
+      <button pButton type="button" (click)="changePayment()" class="p-button-sm" label="Save"></button>
+    </div>
+  </div>
+  </div>
+
+
+
+
+
+<!--Notification Messages-->
+<p-toast position="top-right" key="bc5"></p-toast>

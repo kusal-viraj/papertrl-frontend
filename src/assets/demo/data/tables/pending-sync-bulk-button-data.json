@@ -1,0 +1,8 @@
+[
+  {
+    "action": "SYNC",
+    "label": "Sync",
+    "icon": "fa fa-refresh",
+    "active": false
+  }
+]

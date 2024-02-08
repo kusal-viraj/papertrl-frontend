@@ -1,0 +1,166 @@
+<p-tabView (onChange)="tabChanged(tabIndex)" [(activeIndex)]="tabIndex" styleClass="tabview-custom p-0-tabview">
+
+  <p-tabPanel *ngIf="userModule()">
+    <ng-template pTemplate="header">
+      <span class="custom-span">Users</span>
+    </ng-template>
+    <ng-template pTemplate="content">
+      <div class="grid">
+        <div class="col-6">
+        <h5 [hidden]="listUserBtn || uploadUserBtn " class="module-header-label ml-5 col-12">Create User</h5>
+
+          <app-table-header-action-buttons
+            [hidden]="!listUserBtn"
+            [componentInstance]="userManageComponent" *ngIf="userManageComponent"
+            [tableSupportBase]="userManageComponent?.tableSupportBase"
+            (refresh)="userManageComponent?.loadData(userManageComponent.tableSupportBase.searchFilterDto)"
+            (delete)="userManageComponent.deleteUserList()"
+            (inactive)="userManageComponent.inactiveUserList()"
+            (active)="userManageComponent.activeUserList()"
+            (showFilters)="userManageComponent.showFilter = !userManageComponent?.showFilter;
+            userManageComponent.showFilterColumns = false"
+            (showColumns)="userManageComponent.showFilterColumns = !userManageComponent?.showFilterColumns; userManageComponent.showFilter = false"
+            [visibleActions]="userManageComponent?.availableHeaderActions"></app-table-header-action-buttons>
+        </div>
+        <div class="col-6 text-right screen-change-btn" style="text-align: right">
+          <button pButton class="p-button mr-3"
+                  *ngIf="!createUserBtn && privilegeService.isAuthorized(appAuthorities.USERS_CREATE)"
+                  label="Create User" (click)="toggleCreateUser('cu')"></button>
+
+          <button pButton class="p-button-outlined mr-3"
+                  *ngIf="!listUserBtn && privilegeService.isAuthorized(appAuthorities.USERS_DETAIL_VIEW)"
+                  label="View User List" (click)="toggleCreateUser('vl')"></button>
+
+          <button pButton class="p-button-outlined mr-3"
+                  *ngIf="!uploadUserBtn && privilegeService.isAuthorized(appAuthorities.USERS_UPLOAD)"
+                  label="Upload User List" (click)="toggleCreateUser('ul')"></button>
+        </div>
+      </div>
+
+      <app-user-manage #userManageComponent [hidden]="!listUserBtn" *ngIf="privilegeService.isAuthorizedMultiple(
+          [appAuthorities.USERS_DETAIL_VIEW, appAuthorities.USERS_EDIT, appAuthorities.USERS_DELETE, appAuthorities.USERS_UNLOCK,
+          appAuthorities.USERS_INACTIVATE, appAuthorities.USERS_ACTIVATE ])"></app-user-manage>
+      <app-user-create (emittedTabIndex)="changeAfterSuccess($event)"
+                       *ngIf="createUserBtn  && privilegeService.isAuthorized(appAuthorities.USERS_CREATE)"></app-user-create>
+      <app-user-upload
+        *ngIf="uploadUserBtn  && privilegeService.isAuthorized(appAuthorities.USERS_UPLOAD)"></app-user-upload>
+    </ng-template>
+  </p-tabPanel>
+
+
+  <p-tabPanel *ngIf="roleModule() && !isPortal">
+    <ng-template pTemplate="header">
+      <span class="custom-span">Roles</span>
+    </ng-template>
+
+    <ng-template pTemplate="content">
+      <div class="grid">
+        <div class="col-6">
+          <h5 [hidden]="!createRole" class="module-header-label ml-5 col-12">Create Role</h5>
+
+          <app-table-header-action-buttons
+            [hidden]="createRole"
+            [componentInstance]="roleManageComponent" *ngIf="roleManageComponent"
+            [tableSupportBase]="roleManageComponent?.tableSupportBase"
+            (refresh)="roleManageComponent?.loadData(roleManageComponent.tableSupportBase.searchFilterDto)"
+            (delete)="roleManageComponent.deleteRoleList()"
+            (inactive)="roleManageComponent.inActivateRoleList()"
+            (active)="roleManageComponent.activateRoleList()"
+            (showFilters)="roleManageComponent.showFilter = !roleManageComponent?.showFilter;
+            roleManageComponent.showFilterColumns = false"
+            (showColumns)="roleManageComponent.showFilterColumns = !roleManageComponent?.showFilterColumns; roleManageComponent.showFilter = false"
+            [visibleActions]="roleManageComponent?.availableHeaderActions"></app-table-header-action-buttons>
+
+        </div>
+        <div class="col-6 screen-change-btn" style="text-align: right">
+          <button pButton class="p-button"
+                  *ngIf="!createRole && privilegeService.isAuthorized(appAuthorities.ROLES_CREATE)"
+                  label="Create Role" (click)="toggleCreateRole()"></button>
+
+          <button pButton class="p-button-outlined"
+                  *ngIf="createRole && privilegeService.isAuthorized(appAuthorities.ROLES_DETAIL_VIEW)"
+                  label="View Role List" (click)="toggleCreateRole()"></button>
+        </div>
+      </div>
+
+      <app-role-manage #roleManageComponent [hidden]="createRole" *ngIf="privilegeService.isAuthorizedMultiple([appAuthorities.ROLES_DETAIL_VIEW,
+          appAuthorities.ROLES_EDIT, appAuthorities.ROLES_ACTIVATE, appAuthorities.ROLES_INACTIVATE, appAuthorities.ROLES_DELETE])"></app-role-manage>
+
+      <app-role-create (closeModal)="createRole = false; roleService.updateTableData.next(true)" #roleCreateComponent
+                       *ngIf="createRole && privilegeService.isAuthorized(appAuthorities.ROLES_CREATE)"></app-role-create>
+    </ng-template>
+  </p-tabPanel>
+
+
+  <p-tabPanel *ngIf="portalRoleModule() && isPortal">
+    <ng-template pTemplate="header">
+      <span class="custom-span">Roles</span>
+    </ng-template>
+
+    <ng-template pTemplate="content">
+      <div class="grid">
+        <div class="col-6">
+          <app-table-header-action-buttons
+            [hidden]="createPortalRole"
+            [componentInstance]="portalRoleListComponent" *ngIf="portalRoleListComponent"
+            [tableSupportBase]="portalRoleListComponent?.tableSupportBase"
+            (refresh)="portalRoleListComponent?.loadData(portalRoleListComponent.tableSupportBase.searchFilterDto)"
+            (delete)="portalRoleListComponent.deleteRoleList()"
+            (inactive)="portalRoleListComponent.inActivateRoleList()"
+            (active)="portalRoleListComponent.activateRoleList()"
+            (showFilters)="portalRoleListComponent.showFilter = !portalRoleListComponent?.showFilter;
+            portalRoleListComponent.showFilterColumns = false"
+            (showColumns)="portalRoleListComponent.showFilterColumns = !portalRoleListComponent?.showFilterColumns; portalRoleListComponent.showFilter = false"
+            [visibleActions]="portalRoleListComponent?.availableHeaderActions"></app-table-header-action-buttons>
+
+        </div>
+        <div class="col-6 screen-change-btn" style="text-align: right">
+          <button pButton class="p-button"
+                  *ngIf="!createPortalRole && privilegeService.isAuthorized(appAuthorities.ROLES_CREATE)"
+                  label="Create Role" (click)="toggleCreatePortalRole()"></button>
+
+          <button pButton class="p-button-outlined"
+                  *ngIf="createPortalRole && privilegeService.isAuthorized(appAuthorities.ROLES_DETAIL_VIEW)"
+                  label="View Role List" (click)="toggleCreatePortalRole()"></button>
+        </div>
+      </div>
+
+      <app-portal-role-create (closeModal)=" roleService.updatePortalTableData.next(true); createPortalRole=false;"
+                              *ngIf="createPortalRole && privilegeService.isAuthorized(appAuthorities.ROLES_CREATE)"></app-portal-role-create>
+
+      <app-portal-role-list [hidden]="createPortalRole" #portalRoleListComponent *ngIf="privilegeService.isAuthorizedMultiple([appAuthorities.ROLES_DETAIL_VIEW,
+          appAuthorities.ROLES_EDIT, appAuthorities.ROLES_ACTIVATE, appAuthorities.ROLES_INACTIVATE, appAuthorities.ROLES_DELETE])"></app-portal-role-list>
+    </ng-template>
+  </p-tabPanel>
+
+  <p-tabPanel *ngIf="aGroupModule() && isNotVendor">
+
+    <ng-template pTemplate="header">
+      <span class="custom-span">Approval Groups</span>
+    </ng-template>
+    <ng-template pTemplate="content">
+
+      <div class="grid">
+        <div class="col-12 screen-change-btn" style="text-align: right">
+          <button pButton class="p-button-outlined" [label]="'View Approval Group List'"
+                  *ngIf="isUploadApprovalGroup && privilegeService.isAuthorizedMultiple(
+                      [appAuthorities.APPROVAL_GROUPS_CREATE, appAuthorities.APPROVAL_GROUPS_INACTIVATE, appAuthorities.APPROVAL_GROUPS_DELETE,
+                      appAuthorities.APPROVAL_GROUPS_EDIT, appAuthorities.APPROVAL_GROUPS_ACTIVATE]) "
+                  (click)="changeApprovalGroupAction('SHOW_LIST')"></button>
+
+          <button pButton class="p-button-outlined" [label]="'Upload Approval Groups'"
+                  *ngIf="isListApprovalGroup && privilegeService.isAuthorized(appAuthorities.APPROVAL_GROUPS_UPLOAD)"
+                  (click)="changeApprovalGroupAction('UPLOAD_LIST')"></button>
+
+        </div>
+      </div>
+      <app-approval-group-list [hidden]="!isListApprovalGroup" *ngIf="privilegeService.isAuthorizedMultiple(
+                      [appAuthorities.APPROVAL_GROUPS_CREATE, appAuthorities.APPROVAL_GROUPS_INACTIVATE, appAuthorities.APPROVAL_GROUPS_DELETE,
+                      appAuthorities.APPROVAL_GROUPS_EDIT, appAuthorities.APPROVAL_GROUPS_ACTIVATE])"></app-approval-group-list>
+
+      <app-approval-group-upload
+        *ngIf="isUploadApprovalGroup && privilegeService.isAuthorized(appAuthorities.APPROVAL_GROUPS_UPLOAD)"></app-approval-group-upload>
+    </ng-template>
+  </p-tabPanel>
+</p-tabView>
+

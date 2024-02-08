@@ -1,0 +1,9 @@
+[
+  {
+    "action": "DELETE",
+    "label": "Delete",
+    "icon": "fa fa-trash",
+    "active": false,
+    "authCode": "ITEMS_DELETE"
+  }
+]

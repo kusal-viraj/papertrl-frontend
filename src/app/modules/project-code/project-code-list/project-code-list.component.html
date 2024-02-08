@@ -1,0 +1,157 @@
+<div class="projectCode-table-wrapper">
+
+<p-treeTable id="columnSelect" #dt [value]="files" [columns]="selectedColumns" [paginator]="true" [rows]="25"
+             selectionMode="multiple" [reorderableColumns]="true" (onFilter)="tableSupportBase.onFilter(dt)"
+             [(contextMenuSelection)]="tableSupportBase.selectedContextActionData" [contextMenu]="cm"
+             [(selection)]="tableSupportBase.rows" *ngIf="isProjectCodeTableVisible()" [resizableColumns]="true"
+             [lazy]="true" styleClass="p-treetable-md p-treetable p-treetable-gridlines  p-treetable-tbody project-code-table"
+             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+             [scrollable]="true" (onLazyLoad)="loadData($event)" [totalRecords]="totalRecords" [loading]="loading">
+
+  <ng-template pTemplate="header" let-columns>
+
+    <tr>
+      <th *ngFor="let col of columns" id="col1" ttReorderableColumn
+          [ttReorderableColumnDisabled]="col.field === 'action'" style="'width': '200px'"
+          [ngStyle]="col.field === 'action' ? {'text-align': col.align, 'color': '$green', 'width': '220px'} :{'text-align': 'center', 'width': '230px'}"
+          [ttSortableColumn]="col.isSortable ? col.field : null">
+        {{col.header}}
+        <p-treeTableSortIcon *ngIf="col.isSortable" field="{{col.sortableField}}"></p-treeTableSortIcon>
+      </th>
+    </tr>
+
+    <tr>
+      <th *ngFor="let col of columns" ttReorderableColumn id="treeFilter">
+        <div *ngIf="col.searchType == enums.MULTISELECT" class="p-fluid">
+          <p-multiSelect [options]="getMultiSelectValues(col)" [virtualScroll]="getMultiSelectValues(col).length > 20"
+                         virtualScrollItemSize="25"
+                         placeholder="Any" appendTo="body" optionLabel="name" optionValue="id"
+                         (onChange)="dt.filter($event.value, col.field, 'contains')">
+            <ng-template let-option pTemplate="item">
+              <div class="p-multiselect-representative-option">
+                <span class="ml-1">{{option.name}}</span>
+              </div>
+            </ng-template>
+          </p-multiSelect>
+        </div>
+        <div *ngIf="col.searchType == enums.INPUT" class="p-fluid">
+            <span class="p-input-icon-left">
+	          <i class="pi pi-search"></i>
+          <input pInputText type="text" [placeholder]="col.placeholder"
+                 [value]="dt.filters[ col.field]?.value === undefined ? null : dt.filters[ col.field]?.value"
+                 (input)="dt.filter($event.target.value, col.field, 'contains')"
+                 class="p-column-filter">
+            </span>
+        </div>
+
+        <div *ngIf="col.searchType == enums.NUMERIC" class="p-fluid">
+          <div class="p-inputgroup">
+            <input type="text" pInputText placeholder="0.00" #val1 [options]="{prefix: '', thousands: '', decimal: '.'}"
+                   currencyMask [(ngModel)]="col.value"
+                   (keyup)="tableSupportBase.filterRange(dt, val1.value, val2.value, col.field, $event)">
+
+            <span class="p-inputgroup-addon field-clear-button">< ></span>
+
+            <input type="text" pInputText placeholder="0.00" #val2 [options]="{prefix: '', thousands: '', decimal: '.'}"
+                   currencyMask [(ngModel)]="col.value2"
+                   (keyup)="tableSupportBase.filterRange(dt, val1.value, val2.value, col.field, $event)">
+          </div>
+        </div>
+
+        <div *ngIf="col.searchType == enums.DATE" class="p-fluid" [style]="{'text-align': 'center'}">
+          <p-calendar (onSelect)="tableSupportBase.onDateSelect(dt, selectedLaw.value, col.field)" #selectedLaw
+                      (onClearClick)="dt.filter('', col.field, 'contains')"
+                      appendTo="body" name="{{col.fieldID}}" selectionMode="range" [numberOfMonths]="2"
+                      [showButtonBar]="true" styleClass="p-column-filter" [placeholder]="col.placeholder"
+                      [readonlyInput]="true" dateFormat="yy-mm-dd" [(ngModel)]="col.value"></p-calendar>
+        </div>
+
+        <div *ngIf="col.searchType == enums.DROPDOWN" class="p-fluid">
+          <p-dropdown [options]="col.dropdownValues" optionValue="id" optionLabel="name"
+                      [ngModel]="dt.filters[col.field]?.value === undefined ? null : dt.filters[ col.field]?.value"
+                      (onChange)="dt.filter($event.value, col.field, 'equals')" [filter]="true"
+                      appendTo="body" styleClass="p-column-filter" [placeholder]="col.placeholder" [showClear]="true">
+          </p-dropdown>
+        </div>
+      </th>
+    </tr>
+
+  </ng-template>
+
+  <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+    <tr (wheel)="tableSupportBase.scrollHideActionMenu(cm)" [ttContextMenuRow]="rowNode" (contextmenu)="actionButtonClick(rowData);
+tableSupportBase.setContextMenuActionBtnList(tableSupportBase.actionButtonList(rowData['appCode.status']))
+" [ttSelectableRow]="rowNode" [ttRow]="rowNode" class="columnWidth">
+      <td *ngFor="let col of columns let i=index"
+          [ngStyle]="col.searchType == enums.ACTION_BUTTON ? {'text-align': 'left'} : {'text-align': col.align}"
+          [class.freeze-right]="col.frozenDirection == 'right'" [ngClass]="col.searchType == enums.ACTION_BUTTON ? 'vendor-table-action-btn actionBtnWidth' : 'columnWidth'">
+
+        <span *ngIf="col.searchType ==  enums.ACTION_BUTTON" >
+          <p-treeTableToggler class="text-left" [rowNode]="rowNode" *ngIf="i ==0"></p-treeTableToggler>
+          <button type="button" pButton class="p-button-outlined p-button-sm" icon="pi pi-chevron-down" iconPos="right"
+                  [disabled]="tableSupportBase.actionButtonList(rowData['appCode.status']).length === 0"
+                  label="Action" (click)="menu.toggle($event); actionButtonClick(rowData)"></button>
+          <p-menu #menu [popup]="true" appendTo="body"
+                  [model]="tableSupportBase.actionButtonList(rowData['appCode.status'])">
+          </p-menu>
+        </span>
+
+        <span *ngIf="col.field == 'appCode.status'" class="capitalize">
+            <li [class]="'mr-2 status-style status-'  + tableSupportBase.getStatus(rowData[col.field])"></li>
+          {{tableSupportBase.getStatus(rowData[col.field]) | titlecase}}
+          </span>
+
+        <span class="table-data" *ngIf="col.field !== 'appCode.status' && col.field !== 'appCode.description'" [innerHTML]="rowData[col.field]"></span>
+        <span class="table-data white-space-normal break-word" app-read-more-text [fieldValue]="rowData[col.field]"
+              [maxCharacters]="150" *ngIf="col.field === 'appCode.description'"></span>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td style="width: 2980px" [attr.colspan]="13">No Data found.</td>
+    </tr>
+  </ng-template>
+</p-treeTable>
+
+<div class="no-data-show" *ngIf="tableSupportBase.isVisibleTable == true">
+  <span class="fa fa-search"></span>
+  <div style="margin-top: 1%">There are no transactions matching the criteria</div>
+</div>
+
+</div>
+
+<!--Edit Project Code-->
+<p-sidebar styleClass="p-sidebar-sm" [dismissible]="true" [modal]="true" position="right" class="overflow-side-bar"
+           *ngIf="isEditView" [(visible)]="isEditView">
+  <ng-template pTemplate="header">Edit Project Code</ng-template>
+  <app-create-project-code #editProjectCodeComponent
+    [panel]="true" [isEdit]="true" [isDetailVIew]="false" (isRefresh)="getNewUpdatedData();"
+                           [projectCodeID]="id" *ngIf="isEditView"></app-create-project-code>
+</p-sidebar>
+
+<p-dialog position="center" [(visible)]="isDetailView" (onHide)="isDetailView = false"
+          *ngIf="isDetailView"
+          [resizable]="false" [closable]="false" [styleClass]="'p-bill-detail-view'"
+          [style]="{width: '65vw', minWidth: '600px'}" closeOnEscape="false" [modal]="true" [draggable]="false"
+          [baseZIndex]="1000">
+
+  <app-project-detail-view (closeDrawerEmit)="isDetailView = false" *ngIf="isDetailView"
+                           (isDeleteEmitter)="loadData(tableSupportBase.searchFilterDto)"
+                           [projectCodeStatus]="activeAction['appCode.status']" [projectCodeID]="id">
+  </app-project-detail-view>
+
+</p-dialog>
+
+
+<p-confirmDialog key="prjCodeTable" #cd header="Are you sure?" icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cd.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, delete"
+            (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<!--Context Menu-->
+<p-contextMenu #cm appendTo="body"  (onShow)="tableSupportBase.hideActionMenu(menu)" [model]="tableSupportBase.contextMenuActionList"></p-contextMenu>

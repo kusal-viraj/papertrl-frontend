@@ -1,0 +1,210 @@
+{
+  "advancedFilters": [
+    {
+      "field": "reportNumber",
+      "header": "Report Number",
+      "searchType": "input"
+    },
+    {
+      "field": "reportName",
+      "header": "Report Name",
+      "searchType": "input"
+    },
+    {
+      "field": "submitDate",
+      "header": "Submit Date",
+      "searchType": "date"
+    },
+    {
+      "field": "approvalUser",
+      "header": "Approval User",
+      "searchType": "input"
+    },
+    {
+      "field": "totalAmount",
+      "header": "Total Amount",
+      "searchType": "input"
+    },
+    {
+      "field": "status",
+      "header": "Status",
+      "searchType": "dropdown",
+      "dropdownValues": [
+        {
+          "label": "PENDING",
+          "value": "P"
+        },
+        {
+          "label": "APPROVED",
+          "value": "A"
+        },
+        {
+          "label": "REJECT",
+          "value": "R"
+        }
+      ]
+    },
+    {
+      "field": "exportStatus",
+      "header": "Export Status",
+      "searchType": "dropdown",
+      "dropdownValues": [
+        {
+          "label": "Exported",
+          "value": "e"
+        },
+        {
+          "label": "Not-Exported",
+          "value": "ne"
+        }
+      ]
+    }
+  ],
+  "columns": [
+    {
+      "field": "checkbox",
+      "header": null,
+      "columnShow": true,
+      "isSortable": false,
+      "isReOrderable": false,
+      "isReSizable": false,
+      "canHide": false,
+      "align": "center",
+      "searchType": "checkbox"
+    },
+    {
+      "field": "action",
+      "header": "Action",
+      "isSortable": false,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "actionButton",
+      "canHide": false
+    },
+    {
+      "field": "reportNumber",
+      "header": "Report Number",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Report Number"
+    },
+    {
+      "field": "reportName",
+      "header": "Report Name",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Report Name"
+    },
+    {
+      "field": "submitDate",
+      "header": "Submit Date",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "date",
+      "canHide": true,
+      "placeholder": "Submit Date"
+    },
+    {
+      "field": "approvalUser",
+      "header": "Approval User",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "input",
+      "canHide": true,
+      "placeholder": "Approval User"
+    },
+    {
+      "field": "totalAmount",
+      "header": "Total Amount",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "numeric",
+      "canHide": true,
+      "placeholder": "Total Amount"
+    },
+    {
+      "field": "status",
+      "header": "Status",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": true,
+      "align": "center",
+      "searchType": "dropdown",
+      "canHide": true,
+      "placeholder": "All",
+      "dropdownValues": [
+        {
+          "label": "Pending",
+          "value": "P"
+        },
+        {
+          "label": "Approved",
+          "value": "A"
+        },
+        {
+          "label": "Reject",
+          "value": "R"
+        }
+      ]
+    },
+    {
+      "field": "exportStatus",
+      "header": "Export Status",
+      "isSortable": true,
+      "isReOrderable": true,
+      "isReSizable": true,
+      "columnShow": false,
+      "align": "center",
+      "searchType": "dropdown",
+      "canHide": true,
+      "placeholder": "All",
+      "dropdownValues": [
+        {
+          "label": "Not Exported",
+          "value": "ne"
+        },
+        {
+          "label": "Exported",
+          "value": "e"
+        }
+      ]
+    }
+  ],
+  "state": {
+    "first": 0,
+    "rows": 10,
+    "columnWidths": "50,100,220,218,214,218,218,219",
+    "columnOrder": [
+      "checkbox",
+      "action",
+      "reportNumber",
+      "reportName",
+      "submitDate",
+      "approvalUser",
+      "totalAmount",
+      "status"
+    ]
+  }
+}

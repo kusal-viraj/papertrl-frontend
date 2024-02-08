@@ -1,0 +1,35 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "itemType1": "Inventory",
+      "category": "Category 1",
+      "itemNo": "0001",
+      "itemName": "Item 1",
+      "taxability": "Non Taxable",
+      "sellingPrice": "500.0",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 2,
+      "itemType": "Inventory",
+      "category": "Category 2",
+      "itemNo": "0002",
+      "itemName": "Item 2",
+      "taxability": "Non Taxable",
+      "sellingPrice": "300.0",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 3,
+      "itemType": "Non Inventory",
+      "category": "Category 3",
+      "itemNo": "0003",
+      "itemName": "Item 3",
+      "taxability": "Non Taxable",
+      "sellingPrice": "400.0",
+      "status": "I"
+    }
+  ],
+  "totalRecords": 3
+}

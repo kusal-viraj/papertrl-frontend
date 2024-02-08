@@ -1,0 +1,158 @@
+{
+  "menu": [
+    {
+      "label": "Home",
+      "icon": "fa fa-home",
+      "items": [
+        {
+          "label": "Dashboard",
+          "icon": "fa fa-th-large",
+          "routerLink": [
+            "dashboardS"
+          ]
+        },
+        {
+          "label": "Admin Portal",
+          "icon": "fa fa-key",
+          "routerLink": [
+            "admin"
+          ],
+          "items": [
+            {
+              "routerLink": ["admin", {"tab": 0}],
+              "label": "User",
+              "icon": "fa fa-user"
+            },
+            {
+              "routerLink":["admin", {"tab": 1}],
+              "label": "Role",
+              "icon": "fa fa-lock"
+            }
+          ]
+        },
+        {
+          "label": "System Support",
+          "icon": "fa fa-life-ring",
+          "routerLink": [
+            "support"
+          ],
+          "items": [
+            {
+              "routerLink": ["task-settings"],
+              "label": "Task",
+              "icon": "fa fa-tasks"
+            },
+            {
+              "routerLink":["tenant"],
+              "label": "Tenant",
+              "icon": "fa fa-database"
+            },
+            {
+              "routerLink": ["active-current-logins"],
+              "label": "Active Current Logins",
+              "icon": "fa fa-unlock"
+            },
+            {
+              "routerLink": ["trial-config"],
+              "label": "Trial Config",
+              "icon": "fa fa-wrench"
+            },
+            {
+              "routerLink":["integration"],
+              "label": "Integration Configuration",
+              "icon": "fa fa-plug"
+            },
+            {
+              "routerLink":["email"],
+              "label": "Email",
+              "icon": "fa fa-envelope"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+
+  "slimMenu": [
+    {
+      "label": "Dashboard",
+      "icon": "fa fa-th-large",
+      "routerLink": [
+        "dashboardS"
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Admin",
+      "icon": "fa fa-key",
+      "routerLink": [
+        "admin"
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Task",
+      "icon": "fa fa-tasks",
+      "routerLink": [
+        "task-settings"
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Tenant",
+      "icon": "fa fa-database",
+      "routerLink": [
+        "tenant"
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Active Current Logins",
+      "icon": "fa fa-unlock",
+      "routerLink": [
+        "active-current-logins"
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Trial Configuration",
+      "icon": "fa fa-wrench",
+      "routerLink": [
+        "trial-config"
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Integration Configuration",
+      "icon": "fa fa-wrench",
+      "routerLink": [
+        "integration"
+      ]
+    },
+    {
+      "separator": true
+    },
+    {
+      "label": "Email",
+      "icon": "fa fa-envelope",
+      "routerLink": [
+        "email"
+      ]
+    },
+    {
+      "separator": true
+    }
+  ]
+}
