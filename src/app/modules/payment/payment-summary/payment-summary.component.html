@@ -19,21 +19,21 @@
             {{data.transactionList[0].payee}}
           </div>
           <div class="col-6 text-right p-type">
-            {{getPaymentTypeName(data.txnType)}}
+            {{getPaymentTypeName(data.txnType)}} <span *ngIf="data.paymentChannel">{{data.paymentChannel}}</span>
           </div>
         </div>
 
         <div class="col-12 transactions" *ngFor="let transaction of data.transactionList; let i = index">
           <div class="grid">
             <div class="col-3 pt-0 pb-0">
-              <div class="mb-3 bold-text" *ngIf="i == 0">Document No.</div>
-              {{transaction.docNo}}
+              <div class="mb-3 bold-text" *ngIf="i == 0">{{fromCreate? 'Document No.' : 'Reference No.'}}</div>
+              <span *ngIf="fromCreate">{{transaction.docNo}}</span> <span *ngIf="!fromCreate">{{transaction.txnRef}}</span>
             </div>
-            <div class="col-3 pt-0 pb-0">
-              <div class="mb-3 bold-text" *ngIf="i == 0">Due Date</div>
-              {{transaction.dueDate}}
+            <div class="col-3 pt-0 pb-0" [class]="fromCreate ? 'col-3' : 'col-6'">
+              <div class="mb-3 bold-text" *ngIf="i == 0">{{fromCreate? 'Due Date' : 'Uploaded Date'}}</div>
+             <span *ngIf="fromCreate">{{transaction.dueDate}}</span> <span *ngIf="!fromCreate">{{transaction.uploadedDate}}</span>
             </div>
-            <div class="col-3 text-right pt-0 pb-0">
+            <div class="col-3 text-right pt-0 pb-0" *ngIf="fromCreate">
               <div class="mb-3 bold-text" *ngIf="i == 0">Discount</div>
               {{commonUtil.detailViewIsDash(transaction.disc, true) | number : '1.2-2'}}
             </div>
@@ -91,7 +91,7 @@
 
 <div class="grid footer fixed m-0">
   <div class="col-12 xl:col-3 lg:col-3 md:col-6 sm:col-12 pl-4 text-left">
-    <img *ngIf="paymentDetails.providerLogo" [src]="getLogo(paymentDetails.providerLogo)"/>
+<!--    <img *ngIf="paymentDetails.providerLogo" [src]="getLogo(paymentDetails.providerLogo)"/>-->
   </div>
   <div class="col-12 xl:col-3 lg:col-3 md:col-6 sm:col-12">
     <div class="col-12 topic" *ngIf="isSchedule">
@@ -112,6 +112,6 @@
   </div>
   <div class="col-12 xl:col-3 lg:col-3 md:col-6 sm:col-12 btn">
     <button pButton (click)="submit()" [icon]="buttonDetails.icon" [label]="'Confirm & '+ buttonDetails.label"
-            class="p-button-sm" [loading]="loadingConfirm"></button>
+            class="p-button-lg" [loading]="loadingConfirm"></button>
   </div>
 </div>

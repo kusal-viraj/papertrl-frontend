@@ -7,10 +7,7 @@
     <ng-template pTemplate="content">
       <div class="grid">
         <div class="col-6">
-        <h5 [hidden]="listUserBtn || uploadUserBtn " class="module-header-label ml-5 col-12">Create User</h5>
-
           <app-table-header-action-buttons
-            [hidden]="!listUserBtn"
             [componentInstance]="userManageComponent" *ngIf="userManageComponent"
             [tableSupportBase]="userManageComponent?.tableSupportBase"
             (refresh)="userManageComponent?.loadData(userManageComponent.tableSupportBase.searchFilterDto)"
@@ -23,27 +20,18 @@
             [visibleActions]="userManageComponent?.availableHeaderActions"></app-table-header-action-buttons>
         </div>
         <div class="col-6 text-right screen-change-btn" style="text-align: right">
-          <button pButton class="p-button mr-3"
-                  *ngIf="!createUserBtn && privilegeService.isAuthorized(appAuthorities.USERS_CREATE)"
+          <button pButton class="p-button mr-3" *ngIf="privilegeService.isAuthorized(appAuthorities.USERS_CREATE)"
                   label="Create User" (click)="toggleCreateUser('cu')"></button>
 
-          <button pButton class="p-button-outlined mr-3"
-                  *ngIf="!listUserBtn && privilegeService.isAuthorized(appAuthorities.USERS_DETAIL_VIEW)"
-                  label="View User List" (click)="toggleCreateUser('vl')"></button>
-
-          <button pButton class="p-button-outlined mr-3"
-                  *ngIf="!uploadUserBtn && privilegeService.isAuthorized(appAuthorities.USERS_UPLOAD)"
+          <button pButton class="p-button-outlined mr-3" *ngIf="privilegeService.isAuthorized(appAuthorities.USERS_UPLOAD)"
                   label="Upload User List" (click)="toggleCreateUser('ul')"></button>
         </div>
       </div>
 
-      <app-user-manage #userManageComponent [hidden]="!listUserBtn" *ngIf="privilegeService.isAuthorizedMultiple(
+      <app-user-manage #userManageComponent *ngIf="privilegeService.isAuthorizedMultiple(
           [appAuthorities.USERS_DETAIL_VIEW, appAuthorities.USERS_EDIT, appAuthorities.USERS_DELETE, appAuthorities.USERS_UNLOCK,
           appAuthorities.USERS_INACTIVATE, appAuthorities.USERS_ACTIVATE ])"></app-user-manage>
-      <app-user-create (emittedTabIndex)="changeAfterSuccess($event)"
-                       *ngIf="createUserBtn  && privilegeService.isAuthorized(appAuthorities.USERS_CREATE)"></app-user-create>
-      <app-user-upload
-        *ngIf="uploadUserBtn  && privilegeService.isAuthorized(appAuthorities.USERS_UPLOAD)"></app-user-upload>
+
     </ng-template>
   </p-tabPanel>
 
@@ -56,10 +44,8 @@
     <ng-template pTemplate="content">
       <div class="grid">
         <div class="col-6">
-          <h5 [hidden]="!createRole" class="module-header-label ml-5 col-12">Create Role</h5>
 
           <app-table-header-action-buttons
-            [hidden]="createRole"
             [componentInstance]="roleManageComponent" *ngIf="roleManageComponent"
             [tableSupportBase]="roleManageComponent?.tableSupportBase"
             (refresh)="roleManageComponent?.loadData(roleManageComponent.tableSupportBase.searchFilterDto)"
@@ -74,20 +60,14 @@
         </div>
         <div class="col-6 screen-change-btn" style="text-align: right">
           <button pButton class="p-button"
-                  *ngIf="!createRole && privilegeService.isAuthorized(appAuthorities.ROLES_CREATE)"
+                  *ngIf="privilegeService.isAuthorized(appAuthorities.ROLES_CREATE)"
                   label="Create Role" (click)="toggleCreateRole()"></button>
-
-          <button pButton class="p-button-outlined"
-                  *ngIf="createRole && privilegeService.isAuthorized(appAuthorities.ROLES_DETAIL_VIEW)"
-                  label="View Role List" (click)="toggleCreateRole()"></button>
         </div>
       </div>
 
-      <app-role-manage #roleManageComponent [hidden]="createRole" *ngIf="privilegeService.isAuthorizedMultiple([appAuthorities.ROLES_DETAIL_VIEW,
+      <app-role-manage #roleManageComponent *ngIf="privilegeService.isAuthorizedMultiple([appAuthorities.ROLES_DETAIL_VIEW,
           appAuthorities.ROLES_EDIT, appAuthorities.ROLES_ACTIVATE, appAuthorities.ROLES_INACTIVATE, appAuthorities.ROLES_DELETE])"></app-role-manage>
 
-      <app-role-create (closeModal)="createRole = false; roleService.updateTableData.next(true)" #roleCreateComponent
-                       *ngIf="createRole && privilegeService.isAuthorized(appAuthorities.ROLES_CREATE)"></app-role-create>
     </ng-template>
   </p-tabPanel>
 
@@ -164,3 +144,21 @@
   </p-tabPanel>
 </p-tabView>
 
+<p-sidebar styleClass="p-sidebar-lg upload-one-file" [modal]="true" [dismissible]="true" appendTo="body" position="right"
+           class="overflow-side-bar" [(visible)]="createUser" *ngIf="createUser">
+  <ng-template pTemplate="header">Create User</ng-template>
+  <app-user-create (refreshTable)="refreshUserList(); createUser = false" [panel]="true"
+                   [detailView]="false" [editView]="false"></app-user-create>
+</p-sidebar>
+
+<p-sidebar styleClass="p-sidebar-md " [modal]="true" [dismissible]="true" appendTo="body" position="right"
+           class="overflow-side-bar" [(visible)]="uploadUser" *ngIf="uploadUser">
+  <ng-template pTemplate="header">Upload Users</ng-template>
+  <app-user-upload *ngIf="privilegeService.isAuthorized(appAuthorities.USERS_UPLOAD)"></app-user-upload>
+</p-sidebar>
+
+<p-sidebar styleClass="p-sidebar-lg" [modal]="true" [dismissible]="true" position="right" class="overflow-side-bar"
+           [(visible)]="createRole" *ngIf="createRole" appendTo="body">
+  <ng-template pTemplate="header">Create Role</ng-template>
+  <app-role-create [panel]="true" (closeModal)="createRole = false; roleService.updateTableData.next(true)"></app-role-create>
+</p-sidebar>

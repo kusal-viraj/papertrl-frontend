@@ -22,7 +22,7 @@ export class PayemntTypeHomeComponent implements OnInit {
   toggle(tl: string) {
     if (tl === 'pc') {
       this.createPayType = true;
-      this.listPayTypes = false;
+      this.listPayTypes = true;
 
     } else if (tl === 'pl') {
       this.createPayType = false;

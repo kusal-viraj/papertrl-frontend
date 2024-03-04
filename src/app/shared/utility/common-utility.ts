@@ -27,6 +27,8 @@ declare let gtag: Function;
 export class CommonUtility {
 
 
+
+
   constructor() {
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
@@ -44,6 +46,8 @@ export class CommonUtility {
   public sectionName: any;
   public formGroup: FormGroup;
   public codeId: any;
+  public isCheck: any;
+  public isACH: any;
   public isProjectCodeAvailable: any;
   public isDepartmentAvailable: any;
   private isValue: string;
@@ -780,7 +784,7 @@ export class CommonUtility {
    * this method can be used to get payment information validate status
    * @param form to module form
    */
-  isValidPaymentInfo(form: UntypedFormGroup) {
+  isValidPaymentInfoUsBank(form: UntypedFormGroup) {
     let acceptedPaymentTypes: any [];
     acceptedPaymentTypes = form.get('acceptedPaymentTypes').value;
     if (acceptedPaymentTypes === null || acceptedPaymentTypes?.length === 0) {
@@ -791,6 +795,18 @@ export class CommonUtility {
       form.get('accountRoutingNumber').value === null);
   }
 
+  isValidPaymentInfo(parentForm, form?: any) {
+    const selectedPaymentTypeIds = form.controls
+      .filter(control => control.get('selected').value === true)
+      .map(control => control.get('paymentTypeId').value);
+    if (selectedPaymentTypeIds === null || selectedPaymentTypeIds?.length === 0) {
+      return false;
+    }
+    return (parentForm.get('companyName').value === null || parentForm.get('recipientType').value === null ||
+      parentForm.get('accountType').value === null || parentForm.get('accountNumber').value === null ||
+      parentForm.get('accountRoutingNumber').value === null);
+  }
+
   /**
    * this method can be used to notify required field on payment section
    * @param acceptedPaymentTypes to selected payment types
@@ -798,9 +814,9 @@ export class CommonUtility {
   onAcceptedPaymentTypesChange(acceptedPaymentTypes: any []) {
     this.isSelectedVirtualCardACHCheck = !!(acceptedPaymentTypes.includes(1) || acceptedPaymentTypes.includes(2) ||
       acceptedPaymentTypes.includes(3));
-
     this.isSelectedACH = !!acceptedPaymentTypes.includes(1);
-
+    this.isCheck = acceptedPaymentTypes.includes(AppConstant.TWO);
+    this.isACH =  acceptedPaymentTypes.includes(AppConstant.ONE);
     this.isSelectedACHCheck = !!(acceptedPaymentTypes.includes(1) || acceptedPaymentTypes.includes(2));
   }
 

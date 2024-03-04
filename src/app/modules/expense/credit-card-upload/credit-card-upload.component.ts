@@ -506,4 +506,8 @@ export class CreditCardUploadComponent implements OnInit {
     }
     group.get('employee').patchValue(option);
   }
+
+  onClear(option, group: AbstractControl<any>) {
+    group.get('employee').patchValue(null);
+  }
 }

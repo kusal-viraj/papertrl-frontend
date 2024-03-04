@@ -1,4 +1,14 @@
-import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnInit,
+  Output,
+  QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 import {AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {TreeNode} from 'primeng/api';
 import {NotificationService} from '../../../shared/services/notification/notification.service';
@@ -11,6 +21,7 @@ import {SubAccountRoleGrantPrivileges} from '../../../shared/dto/portal/sub-acco
 import {AppResponseStatus} from '../../../shared/enums/app-response-status';
 import {EventEmitterService} from '../../../shared/services/common/event-emitter/event-emitter.service';
 import {RemoveSpace} from "../../../shared/helpers/remove-space";
+import {TreeCheckboxComponent} from "../tree-checkbox/tree-checkbox.component";
 
 
 @Component({
@@ -22,15 +33,15 @@ export class PortalRoleCreateComponent implements OnInit {
 
   @Output() closeModal = new EventEmitter<boolean>();
 
+  @ViewChild('treeCheckboxComponent') public treeCheckboxComponent: TreeCheckboxComponent;
+  @ViewChildren('subAccountTreeCheckboxComponent') public subAccountTreeCheckboxComponents: QueryList<TreeCheckboxComponent>;
 
   public createRoleForm: UntypedFormGroup;
-  public removeSpaces: RemoveSpace = new RemoveSpace();
 
-  public privilegedSubAccountList: any[] = [];
   public portalRolePrivilegeDto: PortalUserRole = new PortalUserRole();
-  public rolePrivilegeNode: TreeNode[];
+  public treeNodes: TreeNode[];
 
-  public subAccountsWithRoles: any[];
+  public subAccountsWithTreeNodes: any[];
 
   public loading = false;
 
@@ -60,64 +71,35 @@ export class PortalRoleCreateComponent implements OnInit {
    * load structures and data
    */
   async init() {
+    this.getInitialPortalMenuList();
+    await this.getSubAccountRoleWisePrivilegeStructure(this.id);
+
     if (this.editView || this.detailView || this.isClone) {
-      await this.getPortalRoleWisePrivilegeStructure();
-      await this.getSubAccountRoleWisePrivilegeStructure(this.id);
       await this.getRoleDataDetails();
-      await this.getPrivilegedSubAccountList(this.id);
-    } else {
-      await this.getInitialPortalMenuList();
-      await this.getSubAccountRoleWisePrivilegeStructure(0);
     }
     this.createEmptySubAccountRolesList();
     if (this.isClone) {
-      this.portalRolePrivilegeDto.subAccountPrivilegeList.forEach(value => {
-        this.loadSubAccountPrivileges(value);
-      })
+      this.portalRolePrivilegeDto.subAccountPrivilegeList.forEach((value, index) => {
+        this.loadSubAccountPrivileges(value, index);
+      });
     }
   }
 
 
   /**
-   * This method can be use for get portal menu privileges when create new role
+   * This method can be used for get portal menu privileges when create new role
    * @private
    */
-  private getInitialPortalMenuList(): Promise<unknown> {
-    return new Promise<void>(resolve => {
-      this.roleService.getPortalMenuList().subscribe((res: any) => {
-          if (res.status === AppConstant.HTTP_RESPONSE_STATUS_SUCCESS) {
-            this.rolePrivilegeNode = res.body.data;
-            resolve();
-          }
-        }, (error => {
-          this.notificationService.errorMessage(error);
-          resolve();
-        })
-      );
-    })
+  private getInitialPortalMenuList() {
+    this.roleService.getPortalMenuList().subscribe((res: any) => {
+        if (res.status === AppConstant.HTTP_RESPONSE_STATUS_SUCCESS) {
+          this.treeNodes = res.body.data;
+        }
+      }, (error => {
+        this.notificationService.errorMessage(error);
+      })
+    );
   }
-
-  /**
-   * This method can be use for get portal menu privileges when edit role
-   * @private
-   */
-  private getPortalRoleWisePrivilegeStructure(): Promise<unknown> {
-    return new Promise<void>(resolve => {
-      this.roleService.getPortalRoleWisePrivilegeStructure(this.id).subscribe((res: any) => {
-          if (res.status === AppConstant.HTTP_RESPONSE_STATUS_SUCCESS) {
-            this.rolePrivilegeNode = res.body.data;
-            this.roleName = res.body.roleName;
-            resolve();
-          }
-        }, (error => {
-          this.notificationService.errorMessage(error);
-          resolve();
-        })
-      );
-    })
-
-  }
-
 
   /**
    * This method can be use for get sub account role privileges when update role
@@ -127,15 +109,14 @@ export class PortalRoleCreateComponent implements OnInit {
     return new Promise<void>(resolve => {
       this.roleService.getSubAccountRoleWisePrivilegeStructure(id).subscribe((res: any) => {
         if (res.status === AppConstant.HTTP_RESPONSE_STATUS_SUCCESS) {
-          this.subAccountsWithRoles = res.body
+          this.subAccountsWithTreeNodes = res.body;
           resolve();
         }
       }, error => {
         this.notificationService.errorMessage(error);
         resolve();
       });
-    })
-
+    });
   }
 
 
@@ -143,12 +124,13 @@ export class PortalRoleCreateComponent implements OnInit {
    * This method use for get Sub Account List With role privileges
    */
   createEmptySubAccountRolesList() {
-    this.subAccountsWithRoles.forEach(((value) => {
+    this.subAccountsWithTreeNodes.forEach(((value) => {
       const subAccountPrivilegeDto: SubAccountRoleGrantPrivileges = new SubAccountRoleGrantPrivileges();
       subAccountPrivilegeDto.subAccountId = value.getSubAccountId;
       subAccountPrivilegeDto.subAccountName = value.subAccountName;
       subAccountPrivilegeDto.rolePrivilegeList = value.roleItemContainerDtoV2.data;
       subAccountPrivilegeDto.modified = false;
+      subAccountPrivilegeDto.hasPrivilege = value.hasPrivilege;
       this.portalRolePrivilegeDto.subAccountPrivilegeList.push(subAccountPrivilegeDto);
     }));
   }
@@ -158,23 +140,23 @@ export class PortalRoleCreateComponent implements OnInit {
    * Get Role Data Information
    */
   getRoleDataDetails() {
-    return new Promise<void>(resolve => {
-      if (!this.isClone) {
-        this.createRoleForm.get('roleName').patchValue(this.roleName);
-      }
+    return new Promise(resolve => {
       this.roleService.getPortalRoleSelectedMenu(this.id).subscribe((res: any) => {
           if (res.status === AppConstant.HTTP_RESPONSE_STATUS_SUCCESS) {
-            this.portalRolePrivilegeDto.previlageList = res.body.data;
+            if (!this.isClone) {
+              this.createRoleForm.get('roleName').patchValue(res.body.roleName);
+            }
+            this.treeCheckboxComponent.selectNodes(res.body.privilegeList, this.treeNodes);
           } else {
             this.notificationService.infoMessage(res.body.message);
           }
-          resolve();
+          resolve(true);
         }, (error => {
           this.notificationService.errorMessage(error);
-          resolve();
+          resolve(true);
         })
       );
-    })
+    });
   }
 
 
@@ -185,25 +167,10 @@ export class PortalRoleCreateComponent implements OnInit {
     this.loading = true;
     if (this.createRoleForm.valid) {
       this.portalRolePrivilegeDto.roleName = this.createRoleForm.get('roleName').value;
-      if (this.portalRolePrivilegeDto.previlageList) {
-        for (const entry of this.portalRolePrivilegeDto.previlageList) {
-          entry.__proto__ = null;
-          entry.children = null;
-          entry.parent = null;
-        }
-      }
-      this.portalRolePrivilegeDto.subAccountPrivilegeList.forEach((value, index) => {
-        for (const entry of value.rolePrivilegeList) {
-          entry.__proto__ = null;
-          entry.children = null;
-          entry.parent = null;
-        }
+      this.portalRolePrivilegeDto.privilegeList = this.treeCheckboxComponent.getSelectedKeys(this.treeNodes);
 
-        for (const entry of value.subAccountPrivilegeList) {
-          entry.__proto__ = null;
-          entry.children = null;
-          entry.parent = null;
-        }
+      this.portalRolePrivilegeDto.subAccountPrivilegeList.forEach((value, index) => {
+        value.subAccountPrivilegeList = this.treeCheckboxComponent.getSelectedKeys(value.rolePrivilegeList);
       });
 
       if (this.editView) {
@@ -225,15 +192,12 @@ export class PortalRoleCreateComponent implements OnInit {
     this.roleService.createPortalRole(portalRolePrivilegeDto).subscribe((res: any) => {
       if (res.status === AppConstant.HTTP_RESPONSE_STATUS_CREATED) {
         this.notificationService.successMessage(HttpResponseMessage.ROLE_CREATED_SUCCESSFULLY);
-        this.resetRoleCreation();
         this.closeModal.emit();
-        this.loading = false;
         this.eventEmitterService.loadSubAccounts();
       } else {
-        this.resetRoleCreation();
-        this.loading = false;
         this.notificationService.infoMessage(res.body.message);
       }
+      this.loading = false;
     }, (error) => {
       this.loading = false;
       this.notificationService.errorMessage(error);
@@ -247,15 +211,12 @@ export class PortalRoleCreateComponent implements OnInit {
     this.roleService.updatePortalRole(portalRolePrivilegeDto).subscribe((res: any) => {
       if (res.status === AppConstant.HTTP_RESPONSE_STATUS_SUCCESS) {
         this.notificationService.successMessage(HttpResponseMessage.ROLE_UPDATED_SUCCESSFULLY);
-        this.resetRoleCreation();
         this.closeModal.emit();
         this.eventEmitterService.loadSubAccounts();
-        this.loading = false;
       } else {
-        this.resetRoleCreation();
-        this.loading = false;
         this.notificationService.infoMessage(res.body.message);
       }
+      this.loading = false;
     }, (error) => {
       this.loading = false;
       this.notificationService.errorMessage(error);
@@ -267,7 +228,7 @@ export class PortalRoleCreateComponent implements OnInit {
    */
   resetRoleCreation() {
     this.createRoleForm.reset();
-    this.portalRolePrivilegeDto.previlageList = [];
+    this.portalRolePrivilegeDto.privilegeList = [];
     this.portalRolePrivilegeDto.subAccountPrivilegeList = [];
     this.init();
 
@@ -276,12 +237,13 @@ export class PortalRoleCreateComponent implements OnInit {
   /**
    * This method use for get sub account privileges
    * @param subAccount
+   * @param i index
    */
-  loadSubAccountPrivileges(subAccount: SubAccountRoleGrantPrivileges) {
-    if (this.editView || this.detailView || this.isClone) {
+  loadSubAccountPrivileges(subAccount: SubAccountRoleGrantPrivileges, i: number) {
+    if ((this.editView || this.detailView || this.isClone) && !subAccount.modified) {
       this.roleService.getSelectedRolePrivilegeList(this.id, subAccount.subAccountId).then((res: any) => {
         if (res.status === AppConstant.HTTP_RESPONSE_STATUS_SUCCESS) {
-          subAccount.subAccountPrivilegeList = res.body.data;
+          this.subAccountTreeCheckboxComponents.toArray()[i].selectNodes(res.body.privilegeList, subAccount.rolePrivilegeList);
           subAccount.modified = true;
         } else {
           this.notificationService.errorMessage(res.body.message);
@@ -293,22 +255,6 @@ export class PortalRoleCreateComponent implements OnInit {
 
   }
 
-  private getPrivilegedSubAccountList(roleId) {
-    return new Promise<void>(resolve => {
-      this.roleService.getPrivilegedSubAccountList(roleId).subscribe((res: any) => {
-        if (res.status === AppConstant.HTTP_RESPONSE_STATUS_SUCCESS) {
-          this.privilegedSubAccountList = res.body;
-        } else {
-          this.notificationService.infoMessage(res.body.message);
-        }
-        resolve();
-      }, error => {
-        this.notificationService.errorMessage(error);
-        resolve();
-      });
-    })
-  }
-
 
   /**
    * This method use for highlight privileged sub accounts
@@ -316,12 +262,15 @@ export class PortalRoleCreateComponent implements OnInit {
    */
   isPrivilegeAvailable(subAccount: SubAccountRoleGrantPrivileges) {
     if (this.editView || this.detailView || this.isClone) {
-      if (subAccount.modified) {
-        return subAccount.subAccountPrivilegeList.length === 0 ? 'headerNoData' : '';
+      if (!subAccount.modified) {
+        return subAccount.hasPrivilege ? '' : 'role-accordion-header-text-light';
       }
-      return !this.privilegedSubAccountList.includes(subAccount.subAccountId) ? 'headerNoData' : '';
-    } else {
-      return subAccount.subAccountPrivilegeList.length === 0 ? 'headerNoData' : '';
     }
+    for (let node of subAccount.rolePrivilegeList) {
+      if (node.indeterminate || node.selected) {
+        return '';
+      }
+    }
+    return 'role-accordion-header-text-light';
   }
 }

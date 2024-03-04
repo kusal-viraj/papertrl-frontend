@@ -120,6 +120,7 @@
 <!--Clone Role-->
 <p-sidebar *ngIf="cloneRole" [modal]="true" [dismissible]="true" position="right" class="overflow-side-bar"
            [(visible)]="cloneRole" styleClass="p-sidebar-lg">
+  <ng-template pTemplate="header">Clone Role</ng-template>
   <app-role-clone [id]="roleId" (closeModal)="roleEdited()" *ngIf="cloneRole"></app-role-clone>
 </p-sidebar>
 

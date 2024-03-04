@@ -112,6 +112,7 @@ export class InboxHomeComponent implements OnInit, AfterViewInit {
   @ViewChild('inputValue') public inputValue: ElementRef;
   public searchValues: any [] = [];
   public uploadingStatus = false;
+  public isVisibleAttachedToModal = false;
 
   constructor(public notificationService: NotificationService, public inboxService: InboxService,
               public billSubmitService: BillSubmitService, public privilegeService: PrivilegeService,
@@ -983,4 +984,20 @@ export class InboxHomeComponent implements OnInit, AfterViewInit {
         }
       }
     }
+
+  sendRequestToSupport() {
+    this.inboxService.sendEmailToSupport().subscribe((res: any) => {
+      if (res.status === AppConstant.HTTP_RESPONSE_STATUS_SUCCESS) {
+        this.notificationService.successMessage(HttpResponseMessage.ACTION_COMPLETED_SUCCESSFULLY);
+      } else {
+        this.notificationService.infoMessage(res.body.message);
+      }
+    }, error => {
+      this.notificationService.errorMessage(error);
+    });
+  }
+
+  saveAttachedToFormData() {
+    this.isVisibleAttachedToModal = true;
+  }
 }

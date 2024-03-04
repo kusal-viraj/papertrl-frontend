@@ -1,14 +1,5 @@
-import {
-  Component,
-  Input,
-  OnInit,
-  EventEmitter,
-  Output,
-  ChangeDetectorRef,
-  ViewChild,
-  ElementRef, AfterViewInit, AfterContentInit
-} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {MustMatch} from '../../../shared/helpers/password-validate';
 import {UserService} from '../../../shared/services/user/user.service';
 import {DropdownDto} from '../../../shared/dto/common/dropDown/dropdown-dto';
@@ -31,6 +22,7 @@ import {VendorService} from '../../../shared/services/vendors/vendor.service';
 import {AppEnumConstants} from '../../../shared/enums/app-enum-constants';
 import {PaymentTypeService} from '../../../shared/services/support/payment-type.service';
 import {AppAnalyticsConstants} from "../../../shared/enums/app-analytics-constants";
+import {PaymentService} from "../../../shared/services/payments/payment.service";
 
 @Component({
   selector: 'app-user-create',
@@ -38,7 +30,7 @@ import {AppAnalyticsConstants} from "../../../shared/enums/app-analytics-constan
   styleUrls: ['./user-create.component.scss']
 })
 
-export class UserCreateComponent implements OnInit, AfterViewInit{
+export class UserCreateComponent implements OnInit, AfterViewInit {
   public userUtility = new UserUtility(this.messageService, this.userService, this.privilegeService,
     this.notificationService, this.departmentService, this.billsService);
 
@@ -85,19 +77,23 @@ export class UserCreateComponent implements OnInit, AfterViewInit{
   public accountType: DropdownDto = new DropdownDto();
   public allPaymentTypeList: DropdownDto = new DropdownDto();
   public selectedPaymentTypes: DropdownDto = new DropdownDto();
+  public paymentProviders: DropdownDto = new DropdownDto();
   public createUserForm: UntypedFormGroup;
   public userMasterDto: UserMasterDto = new UserMasterDto();
   public removeSpaces: RemoveSpace = new RemoveSpace();
+  public appConstant = new AppConstant();
   public expression = new RegExp(AppPatternValidations.EMAIL_PATTERN);
   public approvalGroups: DropdownDto = new DropdownDto();
   public statuses: DropdownDto[] = [];
+  public paymentMailOption: any[] = [];
   public commonUtil = new CommonUtility();
 
   constructor(public formBuilder: UntypedFormBuilder, public userService: UserService, public notificationService: NotificationService,
-              public messageService: MessageService, public changeDetect: ChangeDetectorRef, public privilegeService: PrivilegeService,
+              public messageService: MessageService, public privilegeService: PrivilegeService,
               public departmentService: DepartmentService, public billsService: BillsService, public vendorService: VendorService,
-              public paymentTypeService: PaymentTypeService) {
+              public paymentTypeService: PaymentTypeService, public paymentService: PaymentService) {
     this.getPaymentDropDownList();
+    this.getPaymentProviders();
   }
 
   ngOnInit(): void {
@@ -130,11 +126,12 @@ export class UserCreateComponent implements OnInit, AfterViewInit{
       this.userMasterDto = formValues;
     });
     this.createUserForm.get('country').patchValue(AppEnumConstants.DEFAULT_COUNTRY);
-    if (!this.panel) {
+    if (!this.editView && !this.detailView) {
       this.setDefaultValue();
     }
     this.getUserData();
     this.focusFirstElementAfterTabChange();
+    this.getMailOptionStatus();
   }
 
   /**
@@ -210,8 +207,10 @@ export class UserCreateComponent implements OnInit, AfterViewInit{
       accountNumber: [{value: AppConstant.NULL_VALUE, disabled: this.detailView}],
       accountRoutingNumber: [{value: AppConstant.NULL_VALUE, disabled: this.detailView}],
       preferredPaymentTypeId: [{value: AppConstant.NULL_VALUE, disabled: this.detailView}],
-      acceptedPaymentTypes: [null],
-      showRemit: [false],
+      showRemit: [{value: false, disabled: this.detailView}],
+      mailOption: [{value: AppConstant.ONE, disabled: this.detailView}],
+      checkToBeMail: [{value: false, disabled: this.detailView}],
+      acceptedPaymentTypes: this.formBuilder.array([]),
     }, {
       validator: [
         MustMatch('password', 'confirmPassword')
@@ -236,12 +235,22 @@ export class UserCreateComponent implements OnInit, AfterViewInit{
     if (this.editView || this.detailView) {
       this.userService.getUser(this.id).subscribe((res: any) => {
         if (AppResponseStatus.STATUS_SUCCESS === res.status) {
-          setTimeout(() => {
-            this.setPreferredPaymentType(res.body?.acceptedPaymentTypes);
-            this.createUserForm.patchValue(res.body);
-            this.commonUtil.onAcceptedPaymentTypesChange(res.body?.acceptedPaymentTypes);
-            this.validPaymentInfo();
-          }, 500);
+          const arr = [];
+          this.acceptedPaymentTypes.controls.forEach((x, index) => {
+            const tempType = res.body.acceptedPaymentTypes.find(r => r?.paymentTypeId === x.get('paymentTypeId').value);
+            if (tempType) {
+              arr[index] = {
+                paymentTypeId: tempType.paymentTypeId,
+                selected: true,
+                providerId: tempType.providerId
+              };
+            }
+          });
+          res.body.acceptedPaymentTypes = arr;
+          this.createUserForm.patchValue(res.body);
+          this.setPreferredPaymentType();
+          this.commonUtil.onAcceptedPaymentTypesChange(res.body?.acceptedPaymentTypes);
+
           if (res.body.rAddressLine1 || res.body.rAddressLine2 || res.body.rCity || res.body.rState || res.body.rZipCode ||
             res.body.rCountry) {
             this.createUserForm.get('showRemit').patchValue(true);
@@ -300,7 +309,9 @@ export class UserCreateComponent implements OnInit, AfterViewInit{
    */
   resetUserForm() {
     this.isEmailAvailable = true;
+    this.acceptedPaymentTypes.controls = [];
     this.createUserForm.reset();
+    this.setAcceptedPaymentTypeForm();
     this.createUserForm.get('country').patchValue(AppEnumConstants.DEFAULT_COUNTRY);
     if (!this.editView) {
       this.setDefaultValue();
@@ -329,17 +340,15 @@ export class UserCreateComponent implements OnInit, AfterViewInit{
    * Add New Role
    */
   addNewRoleClicked() {
-      if (this.isPortal) {
-        this.createPortalRole = true;
-      } else {
-        this.createRole = true;
-      }
-      this.approvalGroupPanel = false;
-      this.displayRoles = false;
-      this.viewRole = false;
+    if (this.isPortal) {
+      this.createPortalRole = true;
+    } else {
+      this.createRole = true;
+    }
+    this.approvalGroupPanel = false;
+    this.displayRoles = false;
+    this.viewRole = false;
   }
-
-
 
 
   /**
@@ -359,22 +368,6 @@ export class UserCreateComponent implements OnInit, AfterViewInit{
    * @param multiSelect to multiSelect dropdown
    */
   approvalGroupChanged(event: any, multiSelect) {
-    // if (event.itemValue === 0 || event.value === 0) {
-    //   const prevGroups = this.createUserForm.get('approvalGroups').value;
-    //   this.createUserForm.get('approvalGroups').reset();
-    //   this.approvalGroupPanel = true;
-    //   this.displayRoles = false;
-    //   this.createRole = false;
-    //   this.viewRole = false;
-    //   setTimeout(() => {
-    //     prevGroups.forEach((value, index) => {
-    //       if (value === 0) {
-    //         prevGroups.splice(index, 1);
-    //       }
-    //       this.createUserForm.get('approvalGroups').patchValue(prevGroups);
-    //     });
-    //   }, 300);
-    // }
     if (multiSelect.allChecked) {
 
       let idArray: number [] = [];
@@ -406,7 +399,7 @@ export class UserCreateComponent implements OnInit, AfterViewInit{
   updateUser(userDto) {
     this.btnLoading = true;
     userDto.profilePic = userDto.file;
-    this.userMasterDto.telephoneNo = this.commonUtil.getTelNo(this.createUserForm, 'telephoneNo');
+    userDto.telephoneNo = this.commonUtil.getTelNo(this.createUserForm, 'telephoneNo');
     userDto.file = [];
     const password = this.createUserForm.get('password').clearValidators();
     const confirmPassword = this.createUserForm.get('confirmPassword').clearValidators();
@@ -423,7 +416,7 @@ export class UserCreateComponent implements OnInit, AfterViewInit{
             localStorage.setItem(AppConstant.SESSION_USER_ATTR, JSON.stringify(activeUser));
             this.userService.getUpdatedProfilePicPath.next(userDto);
           }
-          if (res?.body?.message){
+          if (res?.body?.message) {
             this.notificationService.infoMessage(res.body.message);
           }
           this.btnLoading = false;
@@ -452,9 +445,10 @@ export class UserCreateComponent implements OnInit, AfterViewInit{
     this.userService.createUser(userDto).subscribe((res: any) => {
       if (res.status === AppConstant.HTTP_RESPONSE_STATUS_CREATED) {
         this.btnLoading = false;
-        if (res?.body?.message){
+        if (res?.body?.message) {
           this.notificationService.infoMessage(res.body.message);
         }
+        this.refreshTable.emit('USER_UPDATED');
         this.notificationService.successMessage(HttpResponseMessage.USER_CREATED_SUCCESSFULLY);
         this.createUserForm.reset();
         this.emittedTabIndex.emit({tabIndex: 0, visible: true});
@@ -544,8 +538,9 @@ export class UserCreateComponent implements OnInit, AfterViewInit{
   getPaymentDropDownList() {
     this.paymentTypeService.getPaymentDropDownList().subscribe((res: any) => {
       if (AppResponseStatus.STATUS_SUCCESS === res.status) {
-        this.allPaymentTypeList.data = res.body;
-        this.setPreferredPaymentType(this.createUserForm.get('acceptedPaymentTypes').value);
+        this.allPaymentTypeList.data = res.body.filter(item => item.id ===
+          this.appConstant.ACH_PAYMENT_TYPE || item.id === AppConstant.CHECK_PAYMENT_TYPE);
+        this.setAcceptedPaymentTypeForm();
       }
     }, error => {
       this.notificationService.errorMessage(error);
@@ -553,14 +548,17 @@ export class UserCreateComponent implements OnInit, AfterViewInit{
   }
 
   /**
-   * this method can be used to set selected type list
+   * This method use for get payment Provider list
    */
-
-  setPreferredPaymentType(accPaymentTypes: any) {
-    if (accPaymentTypes) {
-      this.selectedPaymentTypes.data = this.allPaymentTypeList.data.filter(item => accPaymentTypes?.includes(item.id));
-    }
-    this.validatePostalAddress(accPaymentTypes);
+  getPaymentProviders() {
+    this.paymentService.getPaymentProviders().subscribe({
+      next: (res: any) => {
+        if (AppResponseStatus.STATUS_SUCCESS === res.status) {
+          this.paymentProviders.data = res.body;
+        }
+      },
+      error: err => this.notificationService.errorMessage(err)
+    });
   }
 
   /**
@@ -579,9 +577,10 @@ export class UserCreateComponent implements OnInit, AfterViewInit{
    * this method can be used to get payment information validate status
    */
   validPaymentInfo() {
-    let acceptedPaymentTypes: any [];
-    acceptedPaymentTypes = this.createUserForm.get('acceptedPaymentTypes').value;
-    if (acceptedPaymentTypes === null || acceptedPaymentTypes?.length === 0) {
+    const selectedPaymentTypeIds = this.acceptedPaymentTypes.controls
+      .filter(control => control.get('selected').value === true)
+      .map(control => control.get('paymentTypeId').value);
+    if (selectedPaymentTypeIds === null || selectedPaymentTypeIds?.length === 0) {
       return false;
     }
     return (this.createUserForm.get('recipientFirstName').value === null ||
@@ -590,21 +589,96 @@ export class UserCreateComponent implements OnInit, AfterViewInit{
   }
 
   ngAfterViewInit(): void {
-     this.email.nativeElement.focus();
+    this.email.nativeElement.focus();
   }
 
   /**
    * This method can be used focus the first element after user go to another tab and come again
    */
 
-  focusFirstElementAfterTabChange(){
+  focusFirstElementAfterTabChange() {
     this.userService.changeMainTabSet.subscribe(x => {
-      if (x && x === AppAnalyticsConstants.CREATE_USER){
+      if (x && x === AppAnalyticsConstants.CREATE_USER) {
         setTimeout(() => {
           this.email.nativeElement.focus();
         }, 0);
       }
     });
   }
+
+
+  setAcceptedPaymentTypeForm() {
+    for (let i = 0; this.allPaymentTypeList.data.length > i; i++) {
+      this.addAcceptedPaymentTypes(this.allPaymentTypeList.data[i]);
+    }
+  }
+
+  public get acceptedPaymentTypes() {
+    return this.createUserForm.get('acceptedPaymentTypes') as UntypedFormArray;
+  }
+
+  addAcceptedPaymentTypes(data: any) {
+    const addHocWorkflowDetail = this.formBuilder.group({
+      selected: [{value: false, disabled: this.detailView}],
+      paymentTypeId: [{value: AppConstant.NULL_VALUE, disabled: this.detailView}],
+      providerId: [{value: AppConstant.NULL_VALUE, disabled: this.detailView}],
+      name: [{value: AppConstant.NULL_VALUE, disabled: this.detailView}]
+    });
+    addHocWorkflowDetail.get('paymentTypeId').patchValue(data.id);
+    addHocWorkflowDetail.get('name').patchValue(data.name);
+    addHocWorkflowDetail.get('selected').patchValue(false);
+    this.acceptedPaymentTypes.push(addHocWorkflowDetail);
+  }
+
+  /**
+   * this method can be used to set selected type list
+   */
+
+  setPreferredPaymentType() {
+    const selectedPaymentTypeIds = this.acceptedPaymentTypes.controls
+      .filter(control => control.get('selected').value === true)
+      .map(control => control.get('paymentTypeId').value);
+    const selectedPaymentTypes = this.acceptedPaymentTypes.controls
+      .filter(control => control.get('selected').value === true);
+    if (selectedPaymentTypeIds) {
+      this.selectedPaymentTypes.data = [];
+      for (const type of selectedPaymentTypes) {
+        const obj = {id: type.value.paymentTypeId, name: type.value.name};
+        this.selectedPaymentTypes.data.push(obj);
+      }
+    }
+    this.commonUtil.onAcceptedPaymentTypesChange(selectedPaymentTypeIds)
+
+    this.validatePostalAddress(selectedPaymentTypeIds);
+  }
+
+  acceptedPaymentTypeSelected(data, i: number) {
+    this.setPreferredPaymentType();
+  }
+
+  getMailOptionStatus(){
+    this.paymentService.getPaymentMailOption().subscribe((res: any) => {
+      if (res.status === AppConstant.HTTP_RESPONSE_STATUS_SUCCESS) {
+        this.paymentMailOption = res.body;
+      }
+    });
+  }
+
+  get fieldValueCheckToBeMail() {
+    return (this.createUserForm.get('checkToBeMail'));
+  }
+
+  get fieldValueMailOption() {
+    return (this.createUserForm.get('mailOption'));
+  }
+
+  get fieldValueAccountType() {
+    return (this.createUserForm.get('accountType'));
+  }
+
+  get fieldValueRecipientType() {
+    return (this.createUserForm.get('recipientType'));
+  }
+
 
 }

@@ -20,13 +20,26 @@
       <label class="label-wrapper" for="systemId">System*</label>
       <span class="p-float-label">
             <p-dropdown id="systemId" #dropdown formControlName="systemId" [autoDisplayFirst]="false"
-                        (onChange)="systemChanged(dropdown.selectedOption.otherData)"
+                        (onChange)="systemChanged(dropdown.selectedOption.otherData,dropdown.selectedOption.id, true)"
                         [options]="systemList.data" [filter]="true"
                         optionValue="id" optionLabel="name"></p-dropdown>
       </span>
       <div class="p-invalid text-align-left"
            *ngIf="configurationForm.get('systemId').dirty && configurationForm.get('systemId').errors">
         System is required
+      </div>
+    </div>
+
+    <div class="field col-12" *ngIf="showIntegratedPayableUserIds">
+      <label class="label-wrapper" for="integratedPayableUserId">Integrated Payable User Types*</label>
+      <span class="p-float-label">
+            <p-dropdown id="integratedPayableUserId" formControlName="integratedPayableUserId" [autoDisplayFirst]="false"
+                        [options]="integrationUserTypes.data" [filter]="true"
+                        optionValue="id" optionLabel="userTypes"></p-dropdown>
+      </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="configurationForm.get('integratedPayableUserId').dirty && configurationForm.get('integratedPayableUserId').errors">
+        Integrated Payable User Types is required
       </div>
     </div>
 

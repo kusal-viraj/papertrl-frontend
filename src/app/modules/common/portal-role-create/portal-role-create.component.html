@@ -10,10 +10,8 @@
       <label class="label-wrapper" for="roleName">Role Name*</label>
       <div class="p-inputgroup">
             <span class="p-float-label">
-                     <input formControlName="roleName"
-                            (keyup)="removeSpaces.clearSpace(createRoleForm, 'roleName');" [readOnly]="detailView"
-                            id="roleName" type="text"
-                            pInputText>
+                     <input formControlName="roleName" blockSpace [readOnly]="detailView"
+                            id="roleName" type="text" pInputText>
                    </span>
       </div>
       <div class="p-invalid text-align-left"
@@ -26,31 +24,27 @@
       </div>
     </div>
   </div>
-  <div class="grid">
 
+  <div class="grid">
     <div [ngClass]="panel? 'col-12': 'col-12 xl:col-3 lg:col-4 md:col-6 sm:col-12'">
       <p-fieldset
-        [style]="(editView ||detailView )?{'height': 'calc(100vh - 217px)', 'overflow-y': 'auto'}:{'height': 'calc(100vh - 357px)', 'overflow-y': 'auto'}"
-        class="overflowCustom" legend="Portal Privileges">
-        <p-tree [value]="rolePrivilegeNode" [filter]="true" selectionMode="{{detailView ? false :'checkbox'}}"
-                [(selection)]="portalRolePrivilegeDto.previlageList"></p-tree>
+        [style]="(editView ||detailView || isClone)?{'height': 'calc(100vh - 220px)', 'overflow-y': 'auto'}:{'height': 'calc(100vh - 357px)', 'overflow-y': 'auto'}"
+         legend="Portal Privileges">
+        <app-tree-checkbox #treeCheckboxComponent [nodes]="treeNodes"></app-tree-checkbox>
       </p-fieldset>
     </div>
 
     <div [ngClass]="panel? 'col-12':'col-12 xl:col-9 lg:col-8 md:col-6 sm:col-12'">
       <p-fieldset
-        [style]="(editView ||detailView )?{'height': 'calc(100vh - 217px)', 'overflow-y': 'auto'}:{'height': 'calc(100vh - 357px)', 'overflow-y': 'auto'}"
-        class="overflowCustom"
+        [style]="(editView ||detailView || isClone)?{'height': 'calc(100vh - 220px)', 'overflow-y': 'auto'}:{'height': 'calc(100vh - 357px)', 'overflow-y': 'auto'}"
         legend="Sub Accounts Privileges">
 
-        <p-accordion *ngFor=" let subAccount of portalRolePrivilegeDto.subAccountPrivilegeList;" (onOpen)="loadSubAccountPrivileges(subAccount)">
+        <p-accordion *ngFor=" let subAccount of portalRolePrivilegeDto.subAccountPrivilegeList; let i = index" (onOpen)="loadSubAccountPrivileges(subAccount, i)">
           <div *ngIf="detailView ? subAccount.subAccountPrivilegeList : true">
             <p-accordionTab [ngClass]="isPrivilegeAvailable(subAccount)" header="{{subAccount.subAccountName}}">
               <div class="grid">
                 <div [ngClass]=" 'col-12 xl:col-12 lg:col-12 md:col-12 sm:col-12'">
-                  <p-tree [value]="subAccount.rolePrivilegeList" [filter]="true"
-                          selectionMode="{{detailView ? false :'checkbox'}}"
-                          [(selection)]="subAccount.subAccountPrivilegeList"></p-tree>
+                  <app-tree-checkbox #subAccountTreeCheckboxComponent [nodes]="subAccount.rolePrivilegeList" [detailView]="detailView"></app-tree-checkbox>
                 </div>
               </div>
             </p-accordionTab>

@@ -1,16 +1,10 @@
 <form [formGroup]="createRoleForm" (ngSubmit)="onSubmit()" autocomplete="off"
-      [class]="!editView && !detailView ? 'height p-3' : 'side-bar-drawer-content p-3'" >
-<!--  <h6 *ngIf="!panel" class="subHeadingColour p-pb-4 p-m-0">Create Role</h6>-->
-  <div class="grid mt-1 p-fluid">
+      [class]="!editView && !detailView ? 'height p-3' : 'side-bar-drawer-content p-3'">
+  <div class="grid p-fluid">
     <div [ngClass]="panel ? 'col-12':'col-4'">
       <div>
-            <span>
-              <label class="label-wrapper" for="roleName">Role Name*</label>
-                     <input formControlName="roleName" (keyup)="checkRoleNameAvailability()" [readOnly]="detailView"
-                            id="roleName" type="text"
-                            pInputText>
-
-                   </span>
+        <label class="label-wrapper" for="roleName">Role Name*</label>
+        <input formControlName="roleName" [readOnly]="detailView" id="roleName" type="text" pInputText>
       </div>
       <div class="p-invalid text-align-left"
            *ngIf="createRoleForm.get('roleName').dirty && createRoleForm.get('roleName').hasError('required')">
@@ -20,9 +14,6 @@
            *ngIf="createRoleForm.get('roleName').hasError('maxlength')">
         Role Name must be less than 50 characters
       </div>
-      <div class="p-invalid text-align-left" *ngIf="isRoleNameAvailable">
-        Role name already exist, Please enter new one
-      </div>
     </div>
   </div>
 
@@ -30,28 +21,25 @@
     <div [ngClass]="'col-12'">
       <p-fieldset
         [style]="!panel ? {'height': 'calc(100vh - 365px)', 'overflow-y': 'auto'}:{'height': 'calc(100vh - 215px)', 'overflow-y': 'auto'}"
-        class="overflowCustom" legend="System Privileges">
-        <p-tree [value]="privilegeFiles" [filter]="true" selectionMode="{{detailView ? false :'checkbox'}}"
-                [(selection)]="privilegeNode"></p-tree>
+        legend="System Privileges">
+        <app-tree-checkbox #treeCheckboxComponent [nodes]="treeNodes" [detailView]="detailView"></app-tree-checkbox>
       </p-fieldset>
     </div>
 
   </div>
 </form>
 
-<div  class="grid" [class]="panel ? 'panel-footer footer' : ''" *ngIf="!detailView">
-  <div  class="col-12 button-set-wrapper form-footer-button" [ngClass]="panel? 'button-alignment':'panel-footer'">
-      <div class=" pull-right ">
-        <button pButton type="button"  icon="fa-solid fa-rotate-right" (click)="resetRoleCreation()"
-                label="Reset"
-                class="p-button-outlined p-button-sm" [disabled]="btnLoading"></button>&nbsp;&nbsp;
-        <button pButton type="submit" *ngIf="!editView && !detailView" class="p-button-sm" (click)="onSubmit()"
-                label="Create Role" [icon]="btnLoading ? 'pi pi-spin pi-spinner': 'pi pi-plus'"
-                [disabled]="btnLoading"></button>
-        <button pButton type="submit" *ngIf="editView" [disabled]="btnLoading" (click)="onSubmit()"
-                [icon]="btnLoading ? 'pi pi-spin pi-spinner': 'pi pi-save'" class="p-button-sm" label="Save"></button>
-      </div>
+<div class="grid" [class]="panel ? 'panel-footer footer' : ''" *ngIf="!detailView">
+  <div class="col-12 button-set-wrapper form-footer-button" [ngClass]="panel? 'button-alignment':'panel-footer'">
+    <div class=" pull-right ">
+      <button pButton type="button" icon="fa-solid fa-rotate-right" (click)="resetRoleCreation()"
+              label="Reset"
+              class="p-button-outlined p-button-sm" [disabled]="btnLoading"></button>&nbsp;&nbsp;
+      <button pButton type="submit" *ngIf="!editView && !detailView" class="p-button-sm" (click)="onSubmit()"
+              label="Create Role" [icon]="btnLoading ? 'pi pi-spin pi-spinner': 'pi pi-plus'"
+              [disabled]="btnLoading"></button>
+      <button pButton type="submit" *ngIf="editView" [disabled]="btnLoading" (click)="onSubmit()"
+              [icon]="btnLoading ? 'pi pi-spin pi-spinner': 'pi pi-save'" class="p-button-sm" label="Save"></button>
     </div>
+  </div>
 </div>
-<!--Notification Messages-->
-<p-toast position="bottom-right" key="rm"></p-toast>

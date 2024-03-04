@@ -68,8 +68,10 @@
                              [(ngModel)]="att.isChecked">
                  </p-checkbox>
               </span>
-              <span (click)="attachmentOnClick(att, attIndex, toProcessData)">
-              {{att.fileName}}
+              <span (click)="attachmentOnClick(att, attIndex, toProcessData)"
+                     [pTooltip]="att.fileName"
+                    tooltipPosition="top">
+             {{ (att.fileName.length > 30) ? (att.fileName | slice:0:30) + '...' : att.fileName }}
               </span>
               <span class="pi pi-ellipsis-v" [class.p-disabled]="isProgressView || clickToProcessedListAttachmentId !== att.id"
                     [hidden]="!privilegeService.isAuthorizedMultiple([appAuthorities.INBOX_DELETE, appAuthorities.INBOX_ATTACH_TO])"
@@ -97,14 +99,16 @@
 
 <!--Attached to dialog box-------------------------------------------------------------------------------------------->
 
-<p-dialog class="attached-to-dialog-wrapper p-dialog-wrapper" [(visible)]="isVisibleAttachedToModal"
-          (onHide)="resetAttachedToForm()" [style]="{width: '30vw'}"
-          position="center" [draggable]="true" [closable]="true" [modal]="true">
-  <ng-template  pTemplate="header">
-    <span style="font-size: 14px; font-weight: bold;">
-       Attach to
-    </span>
-  </ng-template>
+<p-dialog class="attached-to-dialog-wrapper p-dialog-wrapper" [(visible)]="isVisibleAttachedToModal || isVisibleAttached"
+          (onHide)="resetAttachedToForm(); isVisible.emit()" [style]="{width: '30vw'}"
+          position="center" [draggable]="true"   [closable]="false" [modal]="true">
+  <div class="grid">
+    <h5 class="module-header-label  col-6"> Attach to</h5>
+    <div class="col-6 pull-right text-right">
+      <div class="fa fa-close side-drawer-icon"
+           (click)="whenCloseDrawer()"></div>
+    </div>
+  </div>
   <form [formGroup]="attachedToForm" class="p-pt-3" [class.p-disabled]="isSaveButtonEventInProgress">
 
     <div class="field col-12 pl-0">

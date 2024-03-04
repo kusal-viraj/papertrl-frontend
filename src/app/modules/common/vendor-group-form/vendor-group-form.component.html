@@ -1,24 +1,19 @@
-<form [class.side-bar-drawer-content]="panel" [formGroup]="form"
-      [hidden]="tableSupportBase.isVisibleTable">
-
+<form class="side-bar-drawer-content p-3" [formGroup]="form">
   <div class="grid p-fluid mt-2" [class.p-3]="panel">
-
-    <div class="field" [class]="panel? 'col-12' : 'col-12 xl:col-3'">
+    <div class="field col-12">
       <label  class="label-wrapper" for="name">Name*</label>
       <div class="p-inputgroup">
             <span class="p-float-label">
                      <input autocomplete="off" blockSpace formControlName="name" id="name" type="text"
                             maxlength="100" pInputText>
-
-                   </span>
+            </span>
       </div>
-      <div class="p-invalid text-align-left"
-           *ngIf="form.get('name').dirty && form.get('name').errors">
+      <div class="p-invalid text-align-left" *ngIf="form.get('name').dirty && form.get('name').errors">
         Name is required
       </div>
     </div>
 
-    <div class="field" [class]="panel? 'col-12' : 'col-12 xl:col-3'">
+    <div class="field col-12">
       <label class="label-wrapper" for="approvalGroup">Select Vendor</label>
         <span class="p-float-label">
            <p-multiSelect [virtualScroll]="vendorsList.data.length > 20" virtualScrollItemSize="25"
@@ -41,7 +36,7 @@
                                 (click)="isAddVendor = true"></button>
                       </div>
                     </div>
-                  </ng-template>
+             </ng-template>
 
            </p-multiSelect>
         </span>
@@ -56,30 +51,16 @@
       <p-chips disabled="true" [ngModelOptions]="{standalone: true}" [ngModel]="vendorNameList"></p-chips>
     </div>
 
-    <ng-container *ngIf="!panel">
-      <div class="formButton" [class]="panel? 'col-6' : 'col-12  xl:col-1'" style="padding-top: 26px;">
-        <button pButton type="button" label="Reset" (click)="restForm()" class="p-button-outlined p-button-sm ">
-        </button>
-      </div>
-      <div class="formButton" [class]="panel? 'col-6' : 'col-12  xl:col-2'"  style="padding-top: 24px;">
-        <button pButton type="submit" class="p-button-sm p-fluid" [label]="editView? 'Save': 'Create Group'"
-               (click)="onSubmit(form)" [disabled]="buttonLoading" [loading]="buttonLoading">
-        </button>
-      </div>
-    </ng-container>
   </div>
 </form>
 
-
-<div *ngIf="panel" class="grid panel-footer footer">
-  <div class="col-12 button-set-wrapper form-footer-button">
+<div class="grid footer form-footer-button">
+  <div class="col-12 button-set-wrapper">
     <div class="pull-right">
-      <button pButton type="button" label="Reset" (click)="restForm()" class="p-button-outlined mr-1 p-button-sm ">
-      </button>
+      <button pButton type="button" label="Reset" (click)="restForm()" class="p-button-outlined p-button-sm mr-2"></button>
 
       <button pButton type="submit" class="p-button-sm p-fluid" [label]="editView? 'Save': 'Create Group'"
-              [disabled]="buttonLoading" [loading]="buttonLoading" (click)="onSubmit(form)">
-      </button>
+              (click)="onSubmit(form)" [disabled]="buttonLoading" [loading]="buttonLoading"></button>
     </div>
   </div>
 </div>

@@ -114,13 +114,12 @@
 
 
     <div class="field xl:col-3 lg:col-3 md:col-4 sm:col-6 col-12">
-          <span>
-            <label class="label-wrapper" for="poDate">PO Date</label>
-            <input formControlName="poDate" (keyup)="removeSpaces.clearSpace(createPurchaseOrderReceiptForm,'poDate')"
-                   [readOnly]="true" id="poDate" type="text"
-                   pInputText>
 
-          </span>
+            <label class="label-wrapper" for="poDate">PO Date</label>
+            <p-calendar formControlName="poDate" (keyup)="removeSpaces.clearSpace(createPurchaseOrderReceiptForm,'poDate')"
+                    id="poDate" dateFormat="mm/dd/yy"></p-calendar>
+
+
     </div>
 
     <div class="field xl:col-3 lg:col-3 md:col-4 sm:col-6 col-12"

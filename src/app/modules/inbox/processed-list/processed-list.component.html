@@ -51,8 +51,10 @@
           <div *ngFor="let att of processData.attachmentList; let attIndex=index">
             <span class="attachments-style attachments-style-default"
                   [class]="(clickProcessedListAttachmentId === att.id) ? 'attachments-style-click': ''">
-              <span (click)="attachmentOnClick(att, attIndex, processesList)">
-              {{att.fileName}}
+              <span (click)="attachmentOnClick(att, attIndex, processesList)"
+                    [pTooltip]="att.fileName"
+                    tooltipPosition="top">
+              {{ (att.fileName.length > 30) ? (att.fileName | slice:0:30) + '...' : att.fileName }}
               </span>
               <span [pTooltip]="'Move to “To Process”'" (click)="moveToProcess(att.id)"
                     [class.p-disabled]="clickProcessedListAttachmentId !== att.id"

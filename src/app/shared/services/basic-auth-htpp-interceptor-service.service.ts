@@ -95,7 +95,7 @@ export class BasicAuthHttpInterceptorServiceService implements HttpInterceptor {
   }
 
   private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
-    if (!request.url.includes('oauth/token') && localStorage.getItem(AppConstant.REFRESH_TOKEN) && AppConstant.STRING_TRUE === localStorage.getItem(AppConstant.REMEMBER_ME)) {
+    if (!request.url.includes('oauth/token') && localStorage.getItem(AppConstant.REFRESH_TOKEN)) {
       if (!this.tokenRevalidateService.refreshToken) {
         this.refreshTokenSubject.next(null);
         this.tokenRevalidateService.refreshToken = true;

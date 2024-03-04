@@ -77,6 +77,11 @@
         <label>Is 1099 Vendor?</label>
         <div>{{vendor.tenNinetyNine ? 'Yes' : 'No'}}</div>
       </div>
+
+      <div class="field col-4">
+        <label>Remittance Email Address</label>
+        <div>{{commonUtil.detailViewIsDash(vendor.remittanceEmail, false)}}</div>
+      </div>
     </div>
     <div class="grid p-fluid mt-1" *ngIf="additionalDataBasicInfo.length>0">
       <ng-container formArrayName="additionalDataBasicInfo">
@@ -118,31 +123,20 @@
       <div class="col-12">
         <h6 class="subHeadingColour p-m-0">Payment Information</h6>
       </div>
-
       <div class="field col-4">
-        <label>Accepted Payment Type(s)</label>
-        <div>{{commonUtil.detailViewIsDash(vendor.acceptedPaymentTypesStr, false)}}</div>
-      </div>
-
-      <div class="field col-4">
-        <label>Preferred Payment Type</label>
-        <div>{{commonUtil.detailViewIsDash(vendor.preferredPaymentTypeStr, false)}}</div>
-      </div>
-
-      <div class="field col-4">
-        <label>Name</label>
+        <label>Company Name</label>
         <div>{{commonUtil.detailViewIsDash(vendor.companyName, false)}}</div>
       </div>
 
-      <div class="field col-4">
-        <label>Recipient Type</label>
-        <div>{{commonUtil.detailViewIsDash(vendor.recipientType, false)}}</div>
-      </div>
+<!--      <div class="field col-4">-->
+<!--        <label>Recipient Type</label>-->
+<!--        <div>{{commonUtil.detailViewIsDash(vendor.recipientType, false)}}</div>-->
+<!--      </div>-->
 
-      <div class="field col-4">
-        <label>Account Type</label>
-        <div>{{commonUtil.detailViewIsDash(vendor.accountType, false)}}</div>
-      </div>
+<!--      <div class="field col-4">-->
+<!--        <label>Account Type</label>-->
+<!--        <div>{{commonUtil.detailViewIsDash(vendor.accountType, false)}}</div>-->
+<!--      </div>-->
 
       <div class="field col-4">
         <label>Account Number</label>
@@ -153,12 +147,6 @@
         <label>Bank Identification Number / Routing Number</label>
         <div>{{commonUtil.detailViewIsDash(vendor.accountRoutingNumber, false)}}</div>
       </div>
-
-      <div class="field col-4">
-        <label>Remittance Email</label>
-        <div>{{commonUtil.detailViewIsDash(vendor.remittanceEmail, false)}}</div>
-      </div>
-
     </div>
     <div class="grid p-fluid mt-1" *ngIf="additionalDataPaymentInfo.length>0">
       <ng-container formArrayName="additionalDataPaymentInfo">
@@ -173,6 +161,42 @@
         </ng-container>
       </ng-container>
     </div>
+
+    <div class="field payment-type" *ngIf="vendor.acceptedPaymentTypes.length > 0">
+      <label class="col-12">Accepted Payment Type(s)</label>
+      <p-tabView>
+        <p-tabPanel *ngFor="let paymentType of vendor.acceptedPaymentTypes">
+          <ng-template pTemplate="header">
+            <span class="custom-span">{{ paymentType.paymentTypeName }}</span>
+          </ng-template>
+          <ng-template pTemplate="content">
+            <div class="payment-details grid">
+              <div class="col-4">
+                <label>Preferred Payment Channel</label>
+                <p>{{commonUtil.detailViewIsDash(paymentType.paymentProviderName,false)}}</p>
+              </div>
+              <div class="col-4">
+                <label>Remittance Email</label>
+                <p>{{commonUtil.detailViewIsDash(paymentType.remittanceEmail,false)}}</p>
+              </div>
+              <div class="col-4">
+                <label>Check Processing Method</label>
+                <p>{{commonUtil.detailViewIsDash(vendor.mailOptionName,false)}}</p>
+              </div>
+              <div class="col-4" *ngIf="paymentType.paymentTypeName === 'ACH'">
+                <label>Recipient Type</label>
+                <p>{{commonUtil.detailViewIsDash(vendor.recipientType,false)}}</p>
+              </div>
+              <div class="col-4" *ngIf="paymentType.paymentTypeName === 'ACH'">
+                <label>Account Type</label>
+                <p>{{commonUtil.detailViewIsDash(vendor.accountType,false)}}</p>
+              </div>
+            </div>
+          </ng-template>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+
   </div>
 
   <div class="basic mt-5">

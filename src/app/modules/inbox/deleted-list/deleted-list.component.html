@@ -59,8 +59,10 @@
           <div *ngFor="let att of deletedList.attachmentList; let attIndex=index">
             <span class="attachments-style attachments-style-default"
                   [class]="(clickDeletedListAttachmentId === att.id) ? 'attachments-style-click': ''">
-              <span (click)="attachmentOnClick(att, attIndex, deletedList)">
-              {{att.fileName}}
+              <span (click)="attachmentOnClick(att, attIndex, deletedList)"
+                    [pTooltip]="att.fileName"
+                    tooltipPosition="top">
+               {{ (att.fileName.length > 30) ? (att.fileName | slice:0:30) + '...' : att.fileName }}
               </span>
               <span class="pi pi-ellipsis-v" *ngIf="privilegeService.isAuthorizedMultiple(
               [appAuthorities.INBOX_DELETE, appAuthorities.INBOX_ATTACH_TO])"
@@ -81,6 +83,8 @@
   </ng-template>
 
 </p-virtualScroller>
+<div class="total-record-wrapper" *ngIf="deletedDataListLength !== appConstant.ZERO">Total Records: {{totalRecords}}</div>
+
 
 <!--View permenate delete confirmstion modal-->
 <p-confirmDialog key="deletedList" #cd header="Are you sure?" icon="conf-delete-icon pi pi-exclamation-triangle">

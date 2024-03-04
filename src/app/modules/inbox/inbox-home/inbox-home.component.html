@@ -1,4 +1,5 @@
-<div class="grid p-fluid main-card-grid" style="background-color: #f4f6f9">
+<div class="grid p-fluid main-card-grid" [class]="customerEmailAddress
+ !== 'Email Not Configured' ? '' : '#f4f6f9'">
   <div class="col-4 pr-0 emails-viewer-wrap child-card-outer-div">
     <div class="col-12">
       <div class="popup-header-label">
@@ -21,7 +22,14 @@
               isProgressPermanentDeleteAction || isProgressToProcessDeleteAction"
         class="pl-2  edit-text fa fa-pencil">
   </span>
-      <div class="col-12" style="padding-top: 20px">
+
+      <button (click)="sendRequestToSupport()" [disabled]="isProgressSendRequest || customerEmailAddressSplit.length > 87 || !isValidEmail"
+              [icon]="isProgressSendRequest ? 'pi pi-spin pi-spinner': 'fa-solid fa-paper-plane'"
+              class="p-button-sm pl-2 config-btn" *ngIf="customerEmailAddress === 'Email Not Configured.'"
+              iconPos="left"
+              label="Send Configuration Request" pButton type="submit"></button>
+
+      <div class="col-12" style="padding-top: 20px" *ngIf="customerEmailAddress !== 'Email Not Configured.'">
         <div *ngIf="privilegeService.isAuthorized(appAuthorities.INBOX_SEARCH)" class="search-field-wrap">
           <div class="p-inputgroup pl-1">
                         <span class="p-input-icon-left" style="width:100%">
@@ -36,7 +44,7 @@
         </div>
       </div>
 
-      <div class="col-12">
+      <div class="col-12" *ngIf="customerEmailAddress !== 'Email Not Configured.'">
         <div class="action-btn-top text-right">
           <button (click)="refreshTabCurrentData()" [disabled]="isVisibleProgressBar || splitEventIsInProgress
                 ||isProgressSendToBillSegregated || isProgressSendToBillNotSegregated ||
@@ -52,7 +60,13 @@
                 class="fa-solid fa-paper-plane"
                 pTooltip="Send to Process Bill"
                 tooltipPosition="bottom"></span>
-          <!--              <span class="pi pi-paperclip" pTooltip="Attach to" tooltipPosition="bottom"></span>-->
+
+          <span class="pi pi-paperclip" *ngIf="tabIndex === 0 && privilegeService.isAuthorized(appAuthorities.INBOX_REVIEW)"
+                [class.p-disabled]="isVisibleProgressBar || splitEventIsInProgress || !isEnabledToProcessTabButton ||
+                isProgressSendToBillNotSegregated || isProgressSendToBillSegregated||
+                isProgressToProcessDeleteAction || !isAllowedToSendToBillOption"
+                pTooltip="Attach to" (click)="saveAttachedToFormData()" tooltipPosition="bottom"></span>
+
           <span (click)="loadingToUploadScreen('upload')" class="fa-solid fa-upload"
                 pTooltip="Upload" tooltipPosition="bottom"></span>
           <span (click)="recoverEmail()"
@@ -90,7 +104,7 @@
 
     </div>
 
-    <div class=" child-card child-card-email">
+    <div class=" child-card child-card-email" *ngIf="customerEmailAddress !== 'Email Not Configured.'">
       <div class="col-12 pl-0  card-padding">
         <p-tabView #tabSet (onChange)="onTabChange(tabIndex)"
                    [(activeIndex)]="tabIndex"
@@ -116,6 +130,8 @@
                                    [isProgressOtherFileDownload]="isDisabledDownloadLink"
                                    [searchValue]="searchValue"
                                    [selectedEmailIdList]="emailIdList"
+                                   [isVisibleAttached]="isVisibleAttachedToModal"
+                                   (isVisible)="isVisibleAttachedToModal = false"
                                    id="toProcess">
               </app-to-process-list>
             </ng-template>
@@ -166,7 +182,7 @@
 
   </div>
 
-  <div class="col-8 child-card-outer-div pdf-viewer-wrap pl-0 p-0">
+  <div class="col-8 child-card-outer-div pdf-viewer-wrap pl-0 p-0"  *ngIf="customerEmailAddress !== 'Email Not Configured.'">
     <div *ngIf="isPdfFileType" [class]="isVisibleProgressBar &&
         !(isViewEmailBodyInToProcessList || isViewEmailBodyInProcessList || isViewEmailBodyInDeletedList) && !hideAttachmentView ?
          'card child-card child-card-progress' : 'card child-card'">

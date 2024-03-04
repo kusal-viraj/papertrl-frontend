@@ -651,6 +651,13 @@ export class HttpResponseMessage {
   public static PO_REPORT_ORIENTATION_MODE_ACCORDING_TO_FIELD_COUNT = 'Additional fields for portrait mode cannot exceed 3. ' +
     '<br> Would you like to print the report in landscape mode instead?';
 
+  // Funding account management
+  public static FUNDING_ACCOUNT_CREATED_SUCCESSFULLY = 'Funding account created successfully.';
+  public static FUNDING_ACCOUNT_UPDATED_SUCCESSFULLY = 'Funding account updated successfully.';
+  public static FUNDING_ACCOUNT_DELETED_SUCCESSFULLY = 'Funding account deleted successfully.';
+  public static FUNDING_ACCOUNT_ACTIVATED_SUCCESSFULLY = 'Funding account activated successfully.';
+  public static FUNDING_ACCOUNT_INACTIVATED_SUCCESSFULLY = 'Funding account inactivated successfully.';
+  public static FUNDING_ACCOUNT_MARK_AS_DEFAULT_SUCCESSFULLY = ' has been set as your default funding account.';
 
   constructor() {
   }

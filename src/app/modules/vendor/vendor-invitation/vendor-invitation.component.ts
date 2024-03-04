@@ -50,6 +50,7 @@ export class VendorInvitationComponent implements OnInit, OnDestroy {
   public showFilterColumns = false;
   public availableHeaderActions = [];
   public appConstant: AppConstant = new AppConstant();
+  public createInvitationPanel = false;
 
 
   /**

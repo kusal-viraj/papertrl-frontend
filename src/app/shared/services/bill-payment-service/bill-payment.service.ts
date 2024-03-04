@@ -135,9 +135,10 @@ export class BillPaymentService {
       searchFilterDto, {observe: 'response', withCredentials: true});
   }
 
-  getApprovedDocuments(searchFilterDto: TableSearchFilterDataDto, documentType) {
-    return this.httpClient.post(ApiEndPoint.API_URL + `/payment_service/sec_search_approved_document_list_by_document_type/${documentType}`,
-      searchFilterDto, {observe: 'response', withCredentials: true});
+  getApprovedDocuments(searchFilterDto: TableSearchFilterDataDto, documentType, fundingAccount) {
+    fundingAccount = fundingAccount ? fundingAccount : 0;
+    return this.httpClient.post(ApiEndPoint.API_URL + `/payment_service/sec_search_approved_document_list_by_document_type`,
+      searchFilterDto, {observe: 'response', withCredentials: true, params: {documentType, fundingAccount}});
   }
 
   getVendorBillPaymentTableData(searchFilterDto: TableSearchFilterDataDto, vendorId) {

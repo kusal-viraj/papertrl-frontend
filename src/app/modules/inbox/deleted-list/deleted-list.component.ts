@@ -62,7 +62,7 @@ export class DeletedListComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize() {
-    this.screenHeight = window.innerHeight - 330;
+    this.screenHeight = window.innerHeight - 350;
   }
 
   constructor(public notificationService: NotificationService, public billSubmitService: BillSubmitService, public billsService: BillsService,

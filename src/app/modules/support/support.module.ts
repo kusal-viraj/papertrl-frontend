@@ -50,6 +50,12 @@ import {AutoCompleteModule} from "primeng/autocomplete";
 import { UtilizationReportSideBarComponent } from './tenant/utilization-report-side-bar/utilization-report-side-bar.component';
 import {CommonImplModule} from "../common/common-impl.module";
 import {ContextMenuModule} from "primeng/contextmenu";
+import { TenantEditComponent } from './tenant/tenant-edit/tenant-edit.component';
+import {LabelModule} from '@progress/kendo-angular-label';
+import {NgxIntlTelInputModule} from 'ngx-intl-tel-input';
+import {ToastModule} from 'primeng/toast';
+import {CheckboxModule} from 'primeng/checkbox';
+import {RadioButtonModule} from 'primeng/radiobutton';
 
 
 
@@ -58,7 +64,9 @@ import {ContextMenuModule} from "primeng/contextmenu";
     PackageHomeComponent, PackageListComponent, PackageCreateComponent, TaskHomeComponent, TaskListComponent, TaskCreateComponent,
     TenantHomeComponent, TenantListComponent, TenantCreateComponent, TrialConfigComponent, SupportDashboardComponent,
     IntegrationHomeComponent, IntegrationSystemListComponent, IntegrationConfigurationListComponent,
-    IntegrationConfigurationCreateComponent, IntegrationSystemCreateComponent, PayemntTypeHomeComponent, PaymentTypeListComponent, CreatePaymentTypeComponent, PaymentProviderHomeComponent, PaymentProviderListComponent, PaymentProviderCreateComponent, UtilizationReportSideBarComponent],
+    IntegrationConfigurationCreateComponent, IntegrationSystemCreateComponent, PayemntTypeHomeComponent,
+    PaymentTypeListComponent, CreatePaymentTypeComponent, PaymentProviderHomeComponent, PaymentProviderListComponent,
+    PaymentProviderCreateComponent, UtilizationReportSideBarComponent, TenantEditComponent],
     imports: [
         CommonModule,
         SupportRoutingModule,
@@ -83,7 +91,12 @@ import {ContextMenuModule} from "primeng/contextmenu";
         DashboardModule,
         AutoCompleteModule,
         CommonImplModule,
-        ContextMenuModule
+        ContextMenuModule,
+        LabelModule,
+        NgxIntlTelInputModule,
+        ToastModule,
+        CheckboxModule,
+        RadioButtonModule
     ]
 })
 export class SupportModule {

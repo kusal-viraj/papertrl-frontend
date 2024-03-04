@@ -85,7 +85,9 @@ export class PaymentSummaryComponent implements OnInit, OnDestroy {
         tempArr.push(transaction);
       }
     });
-    this.paymentForm.transactionList = tempArr;
+    if (this.fromCreate){
+      this.paymentForm.transactionList = tempArr;
+    }
     this.onSubmit.emit(this.paymentForm);
   }
 

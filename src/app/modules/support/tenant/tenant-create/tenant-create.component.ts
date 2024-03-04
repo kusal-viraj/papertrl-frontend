@@ -32,6 +32,7 @@ export class TenantCreateComponent implements OnInit {
   public cities = [];
   public states = [];
   public timeZoneList: DropdownDto = new DropdownDto();
+  public tenantPackageNameList: DropdownDto = new DropdownDto();
 
   @Output() refreshTable = new EventEmitter();
 
@@ -72,7 +73,7 @@ export class TenantCreateComponent implements OnInit {
       dbMaxLife: [this.tenantUtility.dbMaxLife, Validators.required],
       dbDefaultAutoCommit: [this.tenantUtility.dbDefaultAutoCommit, Validators.required],
       userAuthType: [AppConstant.NULL_VALUE, Validators.required],
-
+      packageId: [null, Validators.required],
       adProviderUrl: [AppConstant.NULL_VALUE],
       adSecurityAuth: [AppConstant.NULL_VALUE],
       adOuDcParam: [AppConstant.NULL_VALUE],
@@ -98,6 +99,7 @@ export class TenantCreateComponent implements OnInit {
     });
 
     this.getAvailableSftpServers();
+    this.getPackagesDetails();
   }
 
   /**
@@ -125,6 +127,18 @@ export class TenantCreateComponent implements OnInit {
         this.notificationService.errorMessage(error);
         reject();
       });
+    });
+  }
+
+  getPackagesDetails(){
+    this.tenantService.getPackagesDetails().subscribe((res: any) => {
+      if (AppResponseStatus.STATUS_SUCCESS === res.status) {
+        this.tenantPackageNameList.data = res.body;
+      } else {
+        this.notificationService.errorMessage(res.body.message);
+      }
+    }, error => {
+      this.notificationService.errorMessage(error);
     });
   }
 

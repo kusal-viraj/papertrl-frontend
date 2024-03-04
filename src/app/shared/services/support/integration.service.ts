@@ -118,4 +118,11 @@ export class IntegrationService {
     });
   }
 
+  /**
+   * This service use to get integrated payable user type list
+   */
+  getIntegrationUserTypes() {
+    return this.httpClient.get(ApiEndPoint.API_URL + '/integration/sec_get_integrated_payment_user_types', {withCredentials: true});
+  }
+
 }

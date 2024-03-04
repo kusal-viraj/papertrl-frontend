@@ -1,1906 +1,947 @@
-<div style="margin-top: 8px" xmlns="http://www.w3.org/1999/html"
-     xmlns="http://www.w3.org/1999/html">
-  <form [formGroup]="vendorCreateForm" autocomplete="off"
-        [ngClass]="vendorHome.isOpenEditPage? 'margin-top': null">
+<div class="form-height p-2 pt-0">
+  <form [formGroup]="vendorCreateForm" autocomplete="off">
     <div class="p-fluid">
-      <div class="col-12 grid">
-        <div class="xl:col-12">
-          <h6 style="color: #73828A">Basic Information</h6>
+      <div *ngIf="commonUtil.isValidPaymentInfo(vendorCreateForm, acceptedPaymentTypes)"
+           class="grid payment-fields-invalid m-0 mb-3 mt-4">
+        <div class="col-12">
+          <span class="fa fa-question-circle"></span> Please note that the below-highlighted fields need to be
+          configured in order to complete your payment setup with the selected payment type(s).
         </div>
-        <div class="field col-12 xl:col-4">
-          <label class="label-wrapper" for="vendorName">Vendor Name*</label>
-          <div #actualTarget class="p-inputgroup">
+      </div>
+      <p-accordion [activeIndex]="0" class="borderless-accordion">
+
+        <p-accordionTab header="Basic Information">
+          <div class="grid">
+            <div class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="vendorName">Vendor Name*</label>
+              <div #actualTarget class="p-inputgroup">
             <span class="p-float-label">
-              <input autocomplete="off"
-                     (keyup)="removeSpace.clearSpace(vendorCreateForm, 'name'); !this.vendorHome.isOpenEditPage ? toggleOverlay($event, actualTarget) : null"
-                     (paste)="removeSpace.clearSpace(vendorCreateForm, 'name')" formControlName="name" maxlength="150"
-                     #vendorNameInput
-                     id="vendorName" type="text" pInputText>
+              <input #vendorNameInput (keyup)="!this.isVendorEdit ? toggleOverlay($event, actualTarget) : null"
+                     autocomplete="off" blockSpace formControlName="name" id="vendorName" maxlength="150" pInputText
+                     type="text">
 
             </span>
-          </div>
-          <div class="p-invalid text-align-left"
-               *ngIf="vendorCreateForm.get('name').dirty && vendorCreateForm.get('name').hasError('required')">
-            Vendor Name is required
-          </div>
-          <div class="p-invalid text-align-left" *ngIf="vendorCreateForm.get('name').hasError('maxlength')">
-            Vendor Name must be less than 150 characters
-          </div>
-        </div>
-
-        <div class="field col-12 xl:col-4">
-          <label class="label-wrapper" for="vendorCode">Vendor Code</label>
-          <div class="p-inputgroup">
-            <span class="p-float-label">
-              <input formControlName="vendorCode"
-                     (keyup)="checkVendorCodeAvailability(); removeSpace.clearSpace(vendorCreateForm, 'vendorCode')"
-                     id="vendorCode" type="text"
-                     pInputText>
-            </span>
-          </div>
-          <div class="p-invalid text-align-left" *ngIf="isVendorCodeAvailable">
-            Vendor Code already exist, Please enter new one
-          </div>
-          <div class="p-invalid text-align-left" *ngIf="vendorCreateForm.get('vendorCode').hasError('maxlength')">
-            Vendor Code must be less than 50 characters
-          </div>
-        </div>
-
-        <div class="field col-12 xl:col-4">
-          <label class="label-wrapper" for="contactName">Contact Name </label>
-          <div class="p-inputgroup">
-            <span class="p-float-label">
-              <input maxlength="150" formControlName="contactPerson"
-                     (keyup)="removeSpace.clearSpace(vendorCreateForm, 'contactPerson')"
-                     id="contactName" type="text" pInputText>
-            </span>
-          </div>
-          <div class="p-invalid text-align-left" *ngIf="vendorCreateForm.get('contactPerson').hasError('maxlength')">
-            Contact Name must be less than 150 characters
-          </div>
-        </div>
-
-        <div class="field col-12 xl:col-4">
-          <label class="label-wrapper" for="contactNumber">Contact Number </label>
-          <app-country-code-validation [telephoneFormControl]="vendorCreateForm.get('contactNumber')">
-          </app-country-code-validation>
-          <div *ngIf="vendorCreateForm.get('contactNumber').hasError('validatePhoneNumber')"
-               class="p-invalid text-align-left">
-            Invalid Contact Number
-          </div>
-        </div>
-
-        <div class="field col-12 xl:col-4">
-          <label class="label-wrapper" for="faxNumber">Fax Number </label>
-          <div class="p-inputgroup">
-            <span class="p-float-label">
-              <input formControlName="fax" id="faxNumber" (keyup)="removeSpace.clearSpace(vendorCreateForm, 'fax')"
-                     type="text" pInputText>
-            </span>
-          </div>
-          <div class="p-invalid text-align-left" *ngIf="vendorCreateForm.get('fax').hasError('maxlength')">
-            Fax Number must be less than 50 characters
-          </div>
-        </div>
-
-        <div class="field col-12 xl:col-4">
-          <label class="label-wrapper" for="faxNumber">Email Address* </label>
-          <div class="p-inputgroup">
-            <span class="p-float-label">
-               <input maxlength="150" (keyup)="checkEmailAvailability();
-                removeSpace.clearSpace(vendorCreateForm, 'email')" formControlName="email"
-                      id="emailAddress" type="text"
-                      pInputText [readOnly]="isSocialEmailDisabled">
-            </span>
-          </div>
-          <div class="p-invalid  text-align-left"
-               *ngIf="vendorCreateForm.get('email').dirty && vendorCreateForm.get('email').errors">
-            <div *ngIf="vendorCreateForm.get('email').errors.required">Email Address is required</div>
-            <div *ngIf="vendorCreateForm.controls['email'].hasError('emailValidate')">Email must be a valid
-              email address
+              </div>
+              <div *ngIf="vendorCreateForm.get('name').dirty && vendorCreateForm.get('name').hasError('required')"
+                   class="p-invalid text-align-left">
+                Vendor Name is required
+              </div>
+              <div *ngIf="vendorCreateForm.get('name').hasError('maxlength')" class="p-invalid text-align-left">
+                Vendor Name must be less than 150 characters
+              </div>
             </div>
-          </div>
-          <div class="p-invalid text-align-left" *ngIf="isEmailAvailable">
-            Email already exist, Please enter new one
-          </div>
-          <div class="p-invalid text-align-left" *ngIf="vendorCreateForm.get('email').hasError('maxlength')">
-            Email must be less than 150 characters
-          </div>
-        </div>
 
-        <div class="field col-12 xl:col-4">
-          <label class="label-wrapper" for="ccEmailAddress">CC Email Address </label>
-          <div class="p-inputgroup">
+            <div class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="vendorCode">Vendor Code</label>
+              <div class="p-inputgroup">
             <span class="p-float-label">
-              <input formControlName="ccEmail" maxlength="150"
-                     (keyup)="removeSpace.clearSpace(vendorCreateForm, 'ccEmail')" id="ccEmailAddress"
-                     type="text" pInputText>
+              <input (keyup)="checkVendorCodeAvailability(); removeSpace.clearSpace(vendorCreateForm, 'vendorCode')"
+                     formControlName="vendorCode"
+                     id="vendorCode" pInputText
+                     type="text">
             </span>
-          </div>
-          <div class="p-invalid  text-align-left"
-               *ngIf="vendorCreateForm.get('ccEmail').dirty && vendorCreateForm.get('ccEmail').errors">
-            <div *ngIf="vendorCreateForm.controls['ccEmail'].hasError('emailValidate')">Email must be a valid
-              email address
+              </div>
+              <div *ngIf="isVendorCodeAvailable" class="p-invalid text-align-left">
+                Vendor Code already exist, Please enter new one
+              </div>
+              <div *ngIf="vendorCreateForm.get('vendorCode').hasError('maxlength')" class="p-invalid text-align-left">
+                Vendor Code must be less than 50 characters
+              </div>
             </div>
-          </div>
-          <div class="p-invalid text-align-left" *ngIf="vendorCreateForm.get('ccEmail').hasError('maxlength')">
-            CC-Email must be less than 150 characters
-          </div>
-        </div>
+
+            <div class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="contactName">Contact Name </label>
+              <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input (keyup)="removeSpace.clearSpace(vendorCreateForm, 'contactPerson')" formControlName="contactPerson"
+                     id="contactName"
+                     maxlength="150" pInputText type="text">
+            </span>
+              </div>
+              <div *ngIf="vendorCreateForm.get('contactPerson').hasError('maxlength')"
+                   class="p-invalid text-align-left">
+                Contact Name must be less than 150 characters
+              </div>
+            </div>
+
+            <div class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="contactNumber">Contact Number </label>
+              <app-country-code-validation [telephoneFormControl]="vendorCreateForm.get('contactNumber')">
+              </app-country-code-validation>
+              <div *ngIf="vendorCreateForm.get('contactNumber').hasError('validatePhoneNumber')"
+                   class="p-invalid text-align-left">
+                Invalid Contact Number
+              </div>
+            </div>
+
+            <div class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="faxNumber">Fax Number </label>
+              <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input (keyup)="removeSpace.clearSpace(vendorCreateForm, 'fax')" formControlName="fax" id="faxNumber"
+                     pInputText type="text">
+            </span>
+              </div>
+              <div *ngIf="vendorCreateForm.get('fax').hasError('maxlength')" class="p-invalid text-align-left">
+                Fax Number must be less than 50 characters
+              </div>
+            </div>
+
+            <div class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="faxNumber">Email Address* </label>
+              <div class="p-inputgroup">
+            <span class="p-float-label">
+               <input (keyup)="checkEmailAvailability();
+                removeSpace.clearSpace(vendorCreateForm, 'email')" [readOnly]="isSocialEmailDisabled" formControlName="email"
+                      id="emailAddress" maxlength="150"
+                      pInputText type="text">
+            </span>
+              </div>
+              <div *ngIf="vendorCreateForm.get('email').dirty && vendorCreateForm.get('email').errors"
+                   class="p-invalid  text-align-left">
+                <div *ngIf="vendorCreateForm.get('email').errors.required">Email Address is required</div>
+                <div *ngIf="vendorCreateForm.controls['email'].hasError('emailValidate')">Email must be a valid
+                  email address
+                </div>
+              </div>
+              <div *ngIf="isEmailAvailable" class="p-invalid text-align-left">
+                Email already exist, Please enter new one
+              </div>
+              <div *ngIf="vendorCreateForm.get('email').hasError('maxlength')" class="p-invalid text-align-left">
+                Email must be less than 150 characters
+              </div>
+            </div>
+
+            <div class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="ccEmailAddress">CC Email Address </label>
+              <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input (keyup)="removeSpace.clearSpace(vendorCreateForm, 'ccEmail')" formControlName="ccEmail"
+                     id="ccEmailAddress" maxlength="150"
+                     pInputText type="text">
+            </span>
+              </div>
+              <div *ngIf="vendorCreateForm.get('ccEmail').dirty && vendorCreateForm.get('ccEmail').errors"
+                   class="p-invalid  text-align-left">
+                <div *ngIf="vendorCreateForm.controls['ccEmail'].hasError('emailValidate')">Email must be a valid
+                  email address
+                </div>
+              </div>
+              <div *ngIf="vendorCreateForm.get('ccEmail').hasError('maxlength')" class="p-invalid text-align-left">
+                CC-Email must be less than 150 characters
+              </div>
+            </div>
 
 
-        <div class="field col-12 xl:col-4">
-          <label class="label-wrapper" for="approvalGroup">Select Vendor Group</label>
-          <span class="p-float-label">
-               <p-multiSelect [virtualScroll]="vendorsGroupList.data.length > 20" virtualScrollItemSize="25"
-                              appMultiselectFocus
-                              [options]="vendorsGroupList.data" id="approvalGroup" optionValue="id"
-                              optionDisabled="inactive" class="responsive-multiselect" #multiSelect
-                              (onChange)="vendorGroupChanged($event, multiSelect )"
-                              inputId="approvalGroup" formControlName="vendorGroupIdList" optionLabel="name"
-                              [showToggleAll]="true" [filter]="true">
+            <div class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="approvalGroup">Select Vendor Group</label>
+              <span class="p-float-label">
+               <p-multiSelect #multiSelect (onChange)="vendorGroupChanged($event, multiSelect )"
+                              [filter]="true"
+                              [options]="vendorsGroupList.data" [showToggleAll]="true" [virtualScroll]="vendorsGroupList.data.length > 20"
+                              appMultiselectFocus class="responsive-multiselect" formControlName="vendorGroupIdList"
+                              id="approvalGroup"
+                              inputId="approvalGroup" optionDisabled="inactive" optionLabel="name"
+                              optionValue="id" virtualScrollItemSize="25">
 
                  <ng-template let-vendorAccount pTemplate="item">
                    <div class="grid">
-                     <div class="dropdown-list">{{vendorAccount.name}}</div>
+                     <div class="dropdown-list">{{ vendorAccount.name }}</div>
                    </div>
                  </ng-template>
 
-                 <ng-template pTemplate="footer"
-                              *ngIf="privilegeService.isAuthorized(appAuthorities.VENDOR_GROUP_CREATE)">
+                 <ng-template *ngIf="privilegeService.isAuthorized(appAuthorities.VENDOR_GROUP_CREATE)"
+                              pTemplate="footer">
                     <div class="grid dp-footer">
                       <div class="col-12 button-wrapper">
-                        <button pButton class="p-button-sm" label="Add New"
-                                (click)="createVendorGroup = true"></button>
+                        <button (click)="createVendorGroup = true" class="p-button-sm" label="Add New"
+                                pButton></button>
                       </div>
                     </div>
                   </ng-template>
 
                </p-multiSelect>
             </span>
-        </div>
+            </div>
 
-        <div class="field col-12 xl:col-4">
-          <label class="label-wrapper" for="term">Select Payment Term</label>
-          <span class="p-float-label p-fluid">
-              <p-dropdown #paymentTerm [options]="termList.data" id="term" [autoDisplayFirst]="false" [filter]="true"
-                          (onChange)="commonUtil.isPressEnterInsideDropdown(paymentTerm)"
-                          formControlName="term" optionValue="id" optionLabel="name" [showClear]="true">
+            <div class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="term">Select Payment Term</label>
+              <span class="p-float-label p-fluid">
+              <p-dropdown #paymentTerm (onChange)="commonUtil.isPressEnterInsideDropdown(paymentTerm)" [autoDisplayFirst]="false" [filter]="true" [options]="termList.data"
+                          [showClear]="true"
+                          formControlName="term" id="term" optionLabel="name" optionValue="id">
                </p-dropdown>
 
             </span>
-        </div>
+            </div>
 
-        <div class="field col-12 xl:col-3"
-             *ngIf="vendorCreateForm.get(appFormConstants.TERM).value === 10">
-          <label class="label-wrapper" for="netDaysDue">Net Days Due</label>
-          <div class="p-inputgroup">
-            <span class="p-float-label">
-              <input formControlName="netDaysDue" numbersOnly id="netDaysDue" type="text"
-                     pInputText>
-            </span>
-          </div>
-
-          <div class="p-invalid text-align-left"
-               *ngIf="vendorCreateForm.get('netDaysDue').dirty &&
-           vendorCreateForm.get('netDaysDue').hasError('required')">
-            Net Days Due is required
-          </div>
-          <div class="p-invalid text-align-left"
-               *ngIf="vendorCreateForm.get('netDaysDue').dirty && vendorCreateForm.get('netDaysDue').hasError('min')">
-            Invalid net days due
-          </div>
-        </div>
-
-        <div class="field col-12 xl:col-3"
-             *ngIf="vendorCreateForm.get(appFormConstants.TERM).value === 10">
-          <label class="label-wrapper" for="discountPercentage">Discount Percentage</label>
-          <div class="p-inputgroup">
-            <span class="p-float-label">
-              <input formControlName="discountPercentage" id="discountPercentage" type="text" pInputText
-                     currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.'}" maxlength="6">
-            </span>
-          </div>
-        </div>
-
-
-        <div class="field col-12 xl:col-3"
-             *ngIf="vendorCreateForm.get(appFormConstants.TERM).value === 10">
-          <label class="label-wrapper" for="discountDaysDue">Discount Days Due</label>
-          <div class="p-inputgroup">
-            <span class="p-float-label">
-              <input formControlName="discountDaysDue" numbersOnly id="discountDaysDue" type="text" pInputText>
-            </span>
-          </div>
-        </div>
-
-
-        <div class="field col-12 xl:col-4" *ngIf="isConfidential">
-          <label class=" label-wrapper" for="confidential">Is Confidential Vendor?</label>
-          <div class="p-inputgroup">
-            <p-checkbox name="confidential" [ngModelOptions]="{standalone: true}" binary="true"
-                        class="costume-checkbox-wrapper"
-                        [(ngModel)]="vendorDto.confidential" id="confidential"></p-checkbox>
-          </div>
-        </div>
-
-        <div class="field col-12 xl:col-1">
-          <label class=" label-wrapper" for="confidential">Is 1099 Vendor?</label>
-          <div class="p-inputgroup">
-            <p-checkbox name="confidential" binary="true" class="costume-checkbox-wrapper"
-                        formControlName="tenNinetyNine" id="confidential"></p-checkbox>
-          </div>
-        </div>
-
-        <ng-container class="grid col-12" formArrayName="additionalDataBasicInfo"
-                      *ngIf="additionalDataBasicInfo.length > 0">
-
-
-          <ng-container
-            *ngFor="let additionalField of vendorAdditionalDataArrayInBasicInformation.controls; let i=index"
-            [formGroupName]="i">
-
-     <span class="field col-12 xl:col-3 md:col-3"
-           *ngIf="commonUtil.checkUndefinedValues(additionalField.get('fieldValue').value,
-           additionalDataBasicInfo[i].docStatus, false)">
-
-
-      <div *ngIf="appFieldType.LABEL === additionalDataBasicInfo[i].fieldTypeId">
-         <label class="label-wrapper">{{additionalDataBasicInfo[i].fieldName}}</label>
-        <span class="p-float-label">
-            <input type="text" class="form-control" pInputText
-                   [readonly]="true" readonly [value]="additionalDataBasicInfo[i].value">
-
-        </span>
-
-      </div>
-
-      <div *ngIf="appFieldType.TEXT_BOX === additionalDataBasicInfo[i].fieldTypeId">
-         <label class="label-wrapper"
-                for="input1_{{i}}">{{additionalDataBasicInfo[i].fieldName}}
-           {{additionalDataBasicInfo[i].required ? '*' : ''}}</label>
-        <div class="p-inputgroup">
-            <span class="p-float-label">
-              <input formControlName="fieldValue" type="text" pInputText id="input1_{{i}}"
-                     [maxLength]="additionalDataBasicInfo[i].maxLength" class="place-holder-width"
-                     [pKeyFilter]="commonUtil.buildRegex(additionalDataBasicInfo[i].dataType)"
-                     maxlength="{{additionalDataBasicInfo[i].maxLength}}"
-                     (keyup)="removeSpace.clearSpace(additionalField, 'fieldValue')">
-            </span>
-        </div>
-      </div>
-
-      <div>
-        <div
-          *ngIf="appFieldType.TEXT_AREA === additionalDataBasicInfo[i].fieldTypeId">
-           <label class="label-wrapper"
-                  for="notes1_{{i}}">{{additionalDataBasicInfo[i].fieldName}}
-             {{additionalDataBasicInfo[i].required ? '*' : ''}}</label>
-      <div class="p-inputgroup">
-          <span class="p-float-label">
-            <textarea formControlName="fieldValue" id="notes1_{{i}}" rows="{{additionalDataBasicInfo[i].rowCount}}"
-                      pInputTextarea
-                      [maxLength]="additionalDataBasicInfo[i].maxLength"
-                      class="place-holder-width"
-                      (keyup)="removeSpace.clearSpace(additionalField, 'fieldValue')"></textarea>
-          </span>
-      </div>
-    </div>
-      </div>
-
-            <div
-              *ngIf="appFieldType.DROP_DOWN_FIELD === additionalDataBasicInfo[i].fieldTypeId && additionalDataBasicInfo[i].multiple === 'A'">
-                 <label class="label-wrapper" for="multiselect_{{i}}">Select {{additionalDataBasicInfo[i].fieldName}}
-                   {{additionalDataBasicInfo[i].required ? '*' : ''}}</label>
-      <span class="p-float-label">
-           <p-multiSelect [options]="additionalDataBasicInfo[i].optionsList.data" id="multiselect_{{i}}"
-                          appMultiselectFocus optionDisabled="inactive"
-                          optionValue="id" inputId="multiselect_{{i}}" #multiSelect appendTo="body"
-                          (onChange)="addNewAdditionalDropDownOption($event,additionalDataBasicInfo[i],additionalField, multiSelect)"
-                          (onClick)="commonUtil.isAllowedToTriggerClickEvent(multiSelect, additionalDataBasicInfo[i]) ? addNewAdditionalDropDownOption($event,additionalDataBasicInfo[i],additionalField, multiSelect): null"
-                          formControlName="fieldValue" optionLabel="name" [showToggleAll]="true" [filter]="true">
-             <ng-template pTemplate="selectedItem">
-                <div>{{additionalField.get('fieldValue').value.name}}</div>
-             </ng-template>
-
-             <ng-template let-multiselect pTemplate="item">
-                 <div class="grid">
-                     <div class="dropdown-list">{{multiselect.name}}</div>
-                 </div>
-             </ng-template>
-
-              <ng-template pTemplate="footer" *ngIf="additionalDataBasicInfo[i].createNew === 'A'">
-                    <div class="grid dp-footer">
-                      <div class="col-12 button-wrapper">
-                        <button pButton class="p-button-sm" label="Add New"
-                                (click)="addNewDropDown = true;
-                           setSelectedAdditionalField(additionalDataBasicInfo[i])"></button>
-                      </div>
-                    </div>
-                  </ng-template>
-
-           </p-multiSelect>
-        </span>
-      </div>
-
-      <div
-        *ngIf="appFieldType.DROP_DOWN_FIELD === additionalDataBasicInfo[i].fieldTypeId && additionalDataBasicInfo[i].multiple != 'A'">
-        <label class="label-wrapper"
-               for="dropdown1_{{i}}">Select {{additionalDataBasicInfo[i].fieldName}}
-          {{additionalDataBasicInfo[i].required ? '*' : ''}}</label>
-      <span class="p-float-label">
-           <p-dropdown [options]="additionalDataBasicInfo[i].optionsList.data" [showClear]="true" #dropdown1
-                       class="vendor-dropdown" [virtualScroll]="true" virtualScrollItemSize="25" appendTo="body"
-                       (onChange)="addNewAdditionalDropDownOption($event,additionalDataBasicInfo[i],additionalField, dropdown1);
-                       commonUtil.isPressEnterInsideDropdown(dropdown1)" optionDisabled="inactive"
-                       id="dropdown1_{{i}}" optionValue="id" optionLabel="name" [autoDisplayFirst]="false"
-                       formControlName="fieldValue" inputId="dropdown_{{i}}" [filter]="true">
-
-             <ng-template pTemplate="selectedItem">
-                <div>{{dropdown1.selectedOption.name}}</div>
-             </ng-template>
-
-              <ng-template pTemplate="footer" *ngIf="additionalDataBasicInfo[i].createNew === 'A'">
-                    <div class="grid dp-footer">
-                      <div class="col-12 button-wrapper">
-                        <button pButton class="p-button-sm" label="Add New"
-                                (click)="addNewDropDown = true;
-                                setSelectedAdditionalField(additionalDataBasicInfo[i])"></button>
-                      </div>
-                    </div>
-                  </ng-template>
-           </p-dropdown>
-        </span>
-      </div>
-
-        <div *ngIf="appFieldType.FILE_INPUT === additionalDataBasicInfo[i].fieldTypeId">
-           <label class="label-wrapper" for="fileText">Upload {{additionalDataBasicInfo[i].fieldName}} Here
-             {{additionalDataBasicInfo[i].required ? '*' : ''}}</label>
+            <div *ngIf="vendorCreateForm.get(appFormConstants.TERM).value === 10"
+                 class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="netDaysDue">Net Days Due</label>
               <div class="p-inputgroup">
-              <span class="p-float-label">
-              <input [id]="'fileUploadH1'+ i" #fileInput1
-                     (change)="commonUtil.changeFileInput($event,additionalField, additionalDataBasicInfo[i],false, fileInput1)"
-                     type="file" class="place-holder-width"
-                     accept="{{additionalDataBasicInfo[i].fileTypes}}" hidden>
-              <input id="fileText1" formControlName="attachment" readonly type="text"
-                     (click)="fileUploadClick('fileUploadH1', i)"
-                     (keydown.enter)="fileUploadClick('fileUploadH1', i)"
-                     style="border-radius: 6px 0 0 6px !important;"
-                     class="place-holder-width"
-                     [value]="fileInput1.files[0] ? fileInput1.files[0].name : null" pInputText>
-              <button tabindex="-1" style="margin: 0 !important;height: 31px !important;" type="button" pButton
-                      label="Browse" class="p-button file-browse p-button-sm"
-                      (click)="fileUploadClick('fileUploadH1', i)"></button>
-           <button tabindex="-1" *ngIf="fileInput1.files[0] != null" pButton type="button"
-                   class="p-button-outlined p-button-sm"
-                   icon="fa fa-close"
-                   (click)="fileInput1.value = null; commonUtil.changeFileInput($event,additionalField, null,false, fileInput1)"></button>
-             </span>
-              </div>
-        </div>
-       <div *ngIf="appFieldType.DATE_FIELD=== additionalDataBasicInfo[i].fieldTypeId">
-         <label class="label-wrapper" for="dateField1_{{i}}">{{additionalDataBasicInfo[i].fieldName}}
-           {{additionalDataBasicInfo[i].required ? '*' : ''}} </label>
-      <div class="p-inputgroup">
             <span class="p-float-label">
-              <p-calendar appTabindexMinusOne formControlName="fieldValue" id="dateField1_{{i}}"
-                          class="place-holder-width" [showButtonBar]="true"
-                          (onSelect)="formatDate($event, i, 'basic')" [showIcon]="true"></p-calendar>
-               <button pButton type="button" class="p-button p-button-sm clear-button"
-                       icon="fa fa-close" (click)="additionalField.get('fieldValue').reset()"></button>
+              <input formControlName="netDaysDue" id="netDaysDue" numbersOnly pInputText
+                     type="text">
             </span>
-      </div>
-       </div>
-
-              <div *ngIf="appFieldType.RADIO_BUTTON === additionalDataBasicInfo[i].fieldTypeId">
-            <span
-              class="label-wrapper">{{additionalDataBasicInfo[i].fieldName}}  {{additionalDataBasicInfo[i].required ? '*' : ''}}</span>
-                <div class="grid col-12" [style]="{'align-items': 'center'}">
-                  <div class="radio-container" *ngFor="let option of additionalDataBasicInfo[i].options">
-                    <label>
-                      <input id="male1" type="radio" value="{{option.optionValue}}" class="radioButton"
-                             formControlName="fieldValue">
-                      <span style="margin-left: 0.2rem; margin-right: 0.5rem"
-                            for="male1">{{' ' + option.optionValue}}</span>
-                    </label>
-                  </div>
-                </div>
               </div>
 
-                 <div *ngIf="appFieldType.CHECK_BOX === additionalDataBasicInfo[i].fieldTypeId">
-        <div class="p-inputgroup" style="position:relative">
-     <div class="field-checkbox">
-           <p-checkbox name="checkBox" formControlName="fieldValue" id="binary1" binary="true"></p-checkbox>
-          <label
-            for="binary1">{{additionalDataBasicInfo[i].fieldName}}{{additionalDataBasicInfo[i].required ? '*' : ''}}</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="p-invalid text-align-left"
-           *ngIf="(additionalField.get('fieldValue').errors && additionalField.get('fieldValue').dirty) ||
-(additionalField.get('attachment').errors && additionalField.get('attachment').dirty)">
-
-         <div *ngIf="additionalField.get('fieldValue').dirty
-             && additionalField.get('fieldValue').hasError('required')"> {{additionalDataBasicInfo[i].fieldName}}
-           is required
-            </div>
-
-            <div *ngIf="additionalField.get('attachment').dirty
-             && additionalField.get('attachment').hasError('required')"> {{additionalDataBasicInfo[i].fieldName}}
-              is required
-            </div>
-
-        <div *ngIf="additionalField.get('fieldValue').hasError('isValidate')">
-          Field require ({{appConstant.DATA_TYPE_PATTERN_MAP.get(additionalDataBasicInfo[i].dataType)}}) type
-        </div>
-      </div>
-
-
-    </span>
-          </ng-container>
-        </ng-container>
-
-        <div class="xl:col-9 empty-div"></div>
-      </div>
-
-      <div class="col-12 grid">
-
-        <div class="xl:col-12">
-          <h6 style="color: #73828A">Supplier Diversity Information</h6>
-        </div>
-
-        <div class="col-12">
-          <p class="subHeadingColour">A diverse supplier is defined as a U.S. privately held company that is 51% owned
-            and operated by a woman,
-            minority, veteran, disable veteran, person with a disability or a member of the lesbian, gay, bisexual or
-            transgender (LGBT) community.</p>
-          <br>
-        </div>
-
-        <div class="field col-12 xl:col-3">
-          <div class="grid">
-            <div class="pb-0 pt-2 col-12">Are you a diverse supplier?</div>
-            <div class="pb-0 pt-2 col-4">
-              <div class="field-radiobutton vendor-radio-container">
-                <input name="diverseSupplier" [value]="true"
-                       (click)="vendorCreateForm.get('diverseSupplier').patchValue(true)" id="city3" type="radio"
-                       class="radioButton" formControlName="diverseSupplier">
-                <label for="city3">Yes</label>
+              <div *ngIf="vendorCreateForm.get('netDaysDue').dirty &&
+           vendorCreateForm.get('netDaysDue').hasError('required')"
+                   class="p-invalid text-align-left">
+                Net Days Due is required
+              </div>
+              <div *ngIf="vendorCreateForm.get('netDaysDue').dirty && vendorCreateForm.get('netDaysDue').hasError('min')"
+                   class="p-invalid text-align-left">
+                Invalid net days due
               </div>
             </div>
-            <div class="pb-0 pt-2 col-6">
-              <div class="field-radiobutton vendor-radio-container">
-                <input name="diverseSupplier" id="city4" [value]="false" type="radio" class="radioButton"
-                       formControlName="diverseSupplier">
-                <label for="city4">No</label>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <div class="field col-12 xl:col-3" [hidden]="!vendorCreateForm.get('diverseSupplier').value">
-          <label class="label-wrapper" for="paymentType">Select Classification* </label>
-          <span class="p-float-label">
-            <p-multiSelect [virtualScroll]="classification.data.length >20" virtualScrollItemSize="25"
-                           appMultiselectFocus
-                           inputId="dropdown" formControlName="classificationIdList" id="classification"
-                           [options]="classification.data" [filter]="true" optionLabel="name" optionValue="id">
-            </p-multiSelect>
-          </span>
-          <div class="p-invalid text-align-left"
-               *ngIf="vendorCreateForm.get('classificationIdList').dirty && vendorCreateForm.get('classificationIdList').hasError('required')">
-            Classification is required
-          </div>
-        </div>
-
-
-        <div class="field col-12 xl:col-6" [hidden]="!vendorCreateForm.get('diverseSupplier').value">
-          <label class="label-wrapper" for="fileText">Attach Diversity Certification</label>
-          <div class="p-inputgroup">
-            <span class="p-float-label">
-            <input id="classificationUpload" #diversity accept="application/pdf"
-                   (change)="classificationUpload($event, diversity)" type="file" multiple hidden>
-            <input readonly onClick="document.getElementById('classificationUpload').click()"
-                   formControlName="classificationAttachmentListNames"
-                   (keydown.enter)="document.getElementById('classificationUpload').click()"
-                   style="border-radius: 6px 0 0 6px !important;"
-                   type="text" pInputText [value]="getClassificationAttachmentNames(diversity)">
-
-            <button tabindex="-1" style="margin: 0 !important;height: 31px !important;" type="button" pButton
-                    label="Browse" class="p-button file-browse p-button-sm"
-                    onClick="document.getElementById('classificationUpload').click()"></button>
-                   <button tabindex="-1" pButton type="button" class="p-button-outlined p-button-sm"
-                           *ngIf="diversity.value"
-                           icon="fa fa-close"
-                           (click)="diversity.value = null; vendorCreateForm.get('classificationAttachmentList').reset()"></button>
-           </span>
-          </div>
-        </div>
-
-
-      </div>
-
-      <div class="col-12 grid payment-fields-invalid" *ngIf="commonUtil.isValidPaymentInfo(vendorCreateForm)">
-        <div>
-          <span class="fa fa-question-circle"></span> Please note that the below-highlighted fields need to be configured
-          in order to complete your payment setup with the selected payment type(s).
-        </div>
-
-      </div>
-
-      <div class="col-12 grid">
-
-        <div class="xl:col-12">
-          <h6 style="color: #73828A">Payment Information</h6>
-        </div>
-
-        <div class="field col-12 xl:col-4">
-          <label class="label-wrapper" for="accountRoutingNumber">Accepted Payment Type(s)</label>
-          <div class="p-inputgroup">
-            <p-multiSelect [options]="allPaymentTypeList.data"
-                           id="paymentInformation"
-                           optionValue="id" inputId="paymentInformation"
-                           #accPaymentTypes appendTo="body"
-                           (onChange)="setPreferredPaymentType(accPaymentTypes.value); commonUtil.onAcceptedPaymentTypesChange(vendorCreateForm.get('acceptedPaymentTypes').value)"
-                           (onClear)="setPreferredPaymentType(accPaymentTypes.value); commonUtil.isValidPaymentInfo(vendorCreateForm)"
-                           formControlName="acceptedPaymentTypes" optionLabel="name" [showToggleAll]="true"
-                           [filter]="true">
-              <ng-template pTemplate="selectedItem">
-                <div>{{vendorCreateForm.get('acceptedPaymentTypes').value.name}}</div>
-              </ng-template>
-
-              <ng-template let-multiselect pTemplate="item">
-                <div class="grid">
-                  <div class="dropdown-list"
-                       [ngClass]="multiselect.id == 0 ? ' dropdown-add': null">{{multiselect.name}}</div>
-                  <em *ngIf="multiselect.name == 'Add New'"
-                      class="pi pi-plus dropdown-icon dropdown-add"></em>
-                </div>
-              </ng-template>
-            </p-multiSelect>
-          </div>
-        </div>
-
-
-        <div class="field col-12 xl:col-4">
-          <label class="label-wrapper" for="accountRoutingNumber">Preferred Payment Type</label>
-          <div class="p-inputgroup">
-
-            <p-dropdown #paymentType [options]="selectedPaymentTypes.data" id="preferredPaymentType"
-                        [autoDisplayFirst]="false"
-                        [filter]="true"
-                        formControlName="preferredPaymentTypeId" optionValue="id" optionLabel="name" [showClear]="true"
-                        (onChange)="commonUtil.isPressEnterInsideDropdown(paymentType)">
-            </p-dropdown>
-
-          </div>
-        </div>
-
-        <div class="field col-12 xl:col-4">
-          <label class="label-wrapper" for="vendorName">Name</label>
-          <div #actualTarget class="p-inputgroup"
-               [ngClass]="{'isSelectedCheck': commonUtil.isSelectedVirtualCardACHCheck && !vendorCreateForm.get('companyName').value}">
-            <span class="p-float-label">
-              <input autocomplete="off" blockSpace formControlName="companyName" maxlength="22"
-                     id="name" type="text" pInputText>
-            </span>
-          </div>
-          <small class="block">This field will be used for (ACH, Checks, Virtual Cards).</small>
-        </div>
-
-        <div class="field col-12 xl:col-4">
-          <label class="label-wrapper" for="recipientType">Recipient Type</label>
-          <span class="p-float-label">
-            <p-dropdown #recipient [virtualScroll]="recipientType.data.length >20" virtualScrollItemSize="25"
-                        inputId="dropdown"
-                        (onChange)="commonUtil.isPressEnterInsideDropdown(recipient)"
-                        formControlName="recipientType" id="recipientType"
-                        [ngClass]="{'isSelectedCheck': commonUtil.isSelectedACH && !vendorCreateForm.get('recipientType').value}"
-                        [autoDisplayFirst]="false" optionDisabled="inactive" showClear="true"
-                        [options]="recipientType.data" [filter]="true" optionLabel="name" optionValue="id">
-            </p-dropdown>
-          </span>
-          <small class="block">This field will be used for (ACH).</small>
-        </div>
-
-        <div class="field col-12 xl:col-4">
-          <label class="label-wrapper" for="accountType">Account Type</label>
-          <span class="p-float-label">
-            <p-dropdown [virtualScroll]="accountType.data.length >20" virtualScrollItemSize="25" inputId="dropdown"
-                        formControlName="accountType" id="accountType" [autoDisplayFirst]="false"
-                        optionDisabled="inactive" showClear="true" #accountT
-                        [ngClass]="{'isSelectedCheck': commonUtil.isSelectedACH && !vendorCreateForm.get('accountType').value}"
-                        [options]="accountType.data" [filter]="true" optionLabel="name" optionValue="id"
-                        (onChange)="commonUtil.isPressEnterInsideDropdown(accountT)">
-            </p-dropdown>
-          </span>
-          <small class="block">This field will be used for (ACH).</small>
-        </div>
-
-        <div class="field col-12 xl:col-4">
-          <label class="label-wrapper" for="accountNumber">Account Number</label>
-          <div #actualTarget class="p-inputgroup"
-               [ngClass]="{'isSelectedCheck': commonUtil.isSelectedACHCheck && !vendorCreateForm.get('accountNumber').value}">
-            <span class="p-float-label">
-              <input autocomplete="off" blockSpace formControlName="accountNumber"
-                     (paste)="onPaste($event)" maxlength="17"
-                     id="accountNumber" type="text" pKeyFilter="pint" pInputText>
-            </span>
-          </div>
-          <small class="block">This field will be used for (ACH, Checks).</small>
-        </div>
-
-        <div class="field col-12 xl:col-4">
-          <label class="label-wrapper" for="accountRoutingNumber">Bank Identification Number / Routing Number</label>
-          <div #actualTarget class="p-inputgroup"
-               [ngClass]="{'isSelectedCheck': commonUtil.isSelectedACHCheck && !vendorCreateForm.get('accountRoutingNumber').value}">
-            <span class="p-float-label">
-              <input autocomplete="off" blockSpace formControlName="accountRoutingNumber" maxlength="9"
-                     (paste)="onPaste($event)" id="accountRoutingNumber" type="text" pKeyFilter="pint" pInputText>
-            </span>
-          </div>
-          <small class="block">This field will be used for (ACH, Checks).</small>
-        </div>
-
-        <span class="field col-12 xl:col-6" style="margin-top: 20px">
-          <p-inputSwitch class="custom-checkbox" [styleClass]="vendorCreateForm.get('remitEmailSwitchEnable').value ? 'card-overflow': null"
-                         formControlName="remitEmailSwitchEnable"></p-inputSwitch>
-          <span
-            class="col-10 costume-checkbox">Please check if the remit email address is different from above Email</span>
-        </span>
-
-
-        <div class="field col-12 xl:col-12" style="padding: 0"
-             *ngIf="vendorCreateForm.get('remitEmailSwitchEnable').value">
-          <div class="field col-12 xl:col-4">
-            <label class="label-wrapper" for="remitEmailAddress">Remittance Email Address*</label>
-            <div class="p-inputgroup">
-              <span class="p-float-label">
-                <input maxlength="150" formControlName="remittanceEmail" id="remitEmailAddress" type="text"
-                       pInputText blockSpace>
-              </span>
-            </div>
-            <div class="p-invalid text-align-left"
-                 *ngIf="vendorCreateForm.get('remittanceEmail').dirty &&
-                 vendorCreateForm.get('remittanceEmail').hasError('required')">
-              Remittance Email Address is required
-            </div>
-            <div class="p-invalid text-align-left"
-                 *ngIf="vendorCreateForm.controls['remittanceEmail'].hasError('emailValidate')">Remittance Email must be
-              a valid
-              email address
-            </div>
-          </div>
-        </div>
-
-
-        <ng-container class="grid col-12" formArrayName="additionalDataPaymentInfo"
-                      *ngIf="additionalDataPaymentInfo.length > 0">
-
-
-          <ng-container
-            *ngFor="let additionalField of vendorAdditionalDataArrayInPaymentInformation.controls; let i=index"
-            [formGroupName]="i">
-
-        <span class="field col-12 xl:col-4 md:col-3"
-              *ngIf="commonUtil.checkUndefinedValues(additionalField.get('fieldValue').value,
-           additionalDataPaymentInfo[i].docStatus, false)">
-
-
-      <div *ngIf="appFieldType.LABEL === additionalDataPaymentInfo[i].fieldTypeId">
-         <label class="label-wrapper">{{additionalDataPaymentInfo[i].fieldName}}</label>
-        <span class="p-float-label">
-            <input type="text" class="form-control" pInputText
-                   [readonly]="true" readonly [value]="additionalDataPaymentInfo[i].value">
-        </span>
-
-      </div>
-
-      <div *ngIf="appFieldType.TEXT_BOX === additionalDataPaymentInfo[i].fieldTypeId">
-        <label class="label-wrapper"
-               for="input_payment_{{i}}">{{additionalDataPaymentInfo[i].fieldName}}
-          {{additionalDataPaymentInfo[i].required ? '*' : ''}}</label>
-        <div class="p-inputgroup">
-            <span class="p-float-label">
-              <input formControlName="fieldValue" type="text" pInputText id="input_payment_{{i}}"
-                     [maxLength]="additionalDataPaymentInfo[i].maxLength" class="place-holder-width"
-                     [pKeyFilter]="commonUtil.buildRegex(additionalDataPaymentInfo[i].dataType)"
-                     maxlength="{{additionalDataPaymentInfo[i].maxLength}}"
-                     (keyup)="removeSpace.clearSpace(additionalField, 'fieldValue')">
-            </span>
-        </div>
-      </div>
-
-      <div>
-        <div
-          *ngIf="appFieldType.TEXT_AREA === additionalDataPaymentInfo[i].fieldTypeId">
-          <label class="label-wrapper"
-                 for="notes_payment_{{i}}">{{additionalDataPaymentInfo[i].fieldName}}
-            {{additionalDataPaymentInfo[i].required ? '*' : ''}}</label>
-      <div class="p-inputgroup">
-          <span class="p-float-label">
-            <textarea formControlName="fieldValue" id="notes_payment_{{i}}"
-                      rows="{{additionalDataPaymentInfo[i].rowCount}}" pInputTextarea
-                      [maxLength]="additionalDataPaymentInfo[i].maxLength"
-                      class="place-holder-width"
-                      (keyup)="removeSpace.clearSpace(additionalField, 'fieldValue')"></textarea>
-          </span>
-      </div>
-    </div>
-      </div>
-
-          <div
-            *ngIf="appFieldType.DROP_DOWN_FIELD === additionalDataPaymentInfo[i].fieldTypeId && additionalDataPaymentInfo[i].multiple === 'A'">
-             <label class="label-wrapper" for="multiselect_{{i}}">Select {{additionalDataPaymentInfo[i].fieldName}}
-               {{additionalDataPaymentInfo[i].required ? '*' : ''}}</label>
-      <span class="p-float-label">
-           <p-multiSelect [options]="additionalDataPaymentInfo[i].optionsList.data" optionDisabled="inactive"
-                          id="additionalDataPaymentDropdownMultiSelect_{{i}}"
-                          optionValue="id" inputId="additionalDataPaymentDropdownMultiSelect_{{i}}"
-                          #additionalDataPaymentDropdownMultiSelect appendTo="body"
-                          (onChange)="addNewAdditionalDropDownOption($event,additionalDataPaymentInfo[i],additionalField, additionalDataPaymentDropdownMultiSelect)"
-                          (onClick)="commonUtil.isAllowedToTriggerClickEvent(additionalDataPaymentDropdownMultiSelect, additionalDataPaymentInfo[i]) ?
-                          addNewAdditionalDropDownOption($event,additionalDataPaymentInfo[i],additionalField, additionalDataPaymentDropdownMultiSelect): null"
-                          formControlName="fieldValue" optionLabel="name" [showToggleAll]="true" [filter]="true">
-             <ng-template pTemplate="selectedItem">
-                <div>{{additionalField.get('fieldValue').value.name}}</div>
-             </ng-template>
-
-             <ng-template let-multiselect pTemplate="item">
-                 <div class="grid">
-                     <div class="dropdown-list">{{multiselect.name}}</div>
-                 </div>
-             </ng-template>
-
-              <ng-template pTemplate="footer" *ngIf="additionalDataPaymentInfo[i].createNew === 'A'">
-                    <div class="grid dp-footer">
-                      <div class="col-12 button-wrapper">
-                        <button pButton class="p-button-sm" label="Add New"
-                                (click)="addNewDropDown = true;
-                           setSelectedAdditionalField(additionalDataPaymentInfo[i])"></button>
-                      </div>
-                    </div>
-                  </ng-template>
-
-           </p-multiSelect>
-
-        </span>
-      </div>
-
-
-      <div
-        *ngIf="appFieldType.DROP_DOWN_FIELD === additionalDataPaymentInfo[i].fieldTypeId && additionalDataPaymentInfo[i].multiple != 'A'">
-           <label class="label-wrapper"
-                  for="dropdown1_{{i}}">Select {{additionalDataPaymentInfo[i].fieldName}}
-             {{additionalDataPaymentInfo[i].required ? '*' : ''}}</label>
-      <span class="p-float-label">
-           <p-dropdown [options]="additionalDataPaymentInfo[i].optionsList.data" [showClear]="true"
-                       #additionalDataPaymentDropdown appendTo="body" optionDisabled="inactive"
-                       class="vendor-dropdown" [virtualScroll]="true" virtualScrollItemSize="25"
-                       (onChange)="addNewAdditionalDropDownOption($event,additionalDataPaymentInfo[i],additionalField, additionalDataPaymentDropdown);
-                       commonUtil.isPressEnterInsideDropdown(additionalDataPaymentDropdown)"
-                       id="dropdown1_payment_{{i}}" optionValue="id" optionLabel="name" [autoDisplayFirst]="false"
-                       formControlName="fieldValue" inputId="dropdown1_payment_{{i}}" [filter]="true">
-
-             <ng-template pTemplate="selectedItem">
-                <div>{{additionalDataPaymentDropdown.selectedOption.name}}</div>
-             </ng-template>
-
-             <ng-template let-multiselect pTemplate="item">
-                 <div class="grid">
-                     <div class="dropdown-list">{{multiselect.name}}</div>
-                 </div>
-             </ng-template>
-
-              <ng-template pTemplate="footer" *ngIf="additionalDataBasicInfo[i].createNew === 'A'">
-                    <div class="grid dp-footer">
-                      <div class="col-12 button-wrapper">
-                        <button pButton class="p-button-sm" label="Add New"
-                                (click)="addNewDropDown = true;
-                           setSelectedAdditionalField(additionalDataBasicInfo[i])"></button>
-                      </div>
-                    </div>
-                  </ng-template>
-
-           </p-dropdown>
-        </span>
-      </div>
-
-        <div *ngIf="appFieldType.FILE_INPUT === additionalDataPaymentInfo[i].fieldTypeId">
-           <label class="label-wrapper" for="fileText">Upload {{additionalDataPaymentInfo[i].fieldName}} Here
-             {{additionalDataPaymentInfo[i].required ? '*' : ''}}</label>
+            <div *ngIf="vendorCreateForm.get(appFormConstants.TERM).value === 10"
+                 class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="discountPercentage">Discount Percentage</label>
               <div class="p-inputgroup">
-              <span class="p-float-label">
-              <input [id]="'fileUploadH2'+ i" #fileInput2
-                     (change)="commonUtil.changeFileInput($event,additionalField, additionalDataPaymentInfo[i],false, fileInput2)"
-                     type="file" class="place-holder-width"
-                     accept="{{additionalDataPaymentInfo[i].fileTypes}}" hidden>
-              <input id="fileText_payment" formControlName="attachment" readonly type="text"
-                     (click)="fileUploadClick('fileUploadH2', i)"
-                     (keydown.enter)="fileUploadClick('fileUploadH2', i)"
-                     style="border-radius: 6px 0 0 6px !important;"
-                     class="place-holder-width"
-                     [value]="fileInput2.files[0] ? fileInput2.files[0].name : null" pInputText>
-              <button tabindex="-1" style="margin: 0 !important;height: 31px !important;" type="button" pButton
-                      label="Browse" class="p-button file-browse p-button-sm"
-                      (click)="fileUploadClick('fileUploadH2', i)"></button>
-           <button tabindex="-1" pButton type="button" class="p-button-outlined p-button-sm"
-                   icon="fa fa-close" *ngIf="fileInput2.files[0] != null"
-                   (click)="fileInput2.value = null;
-                   commonUtil.changeFileInput($event,additionalField, null,false, fileInput2)"></button>
-             </span>
-              </div>
-        </div>
-
-      <div *ngIf="appFieldType.DATE_FIELD=== additionalDataPaymentInfo[i].fieldTypeId">
-          <label class="label-wrapper" for="dateField1_{{i}}">{{additionalDataPaymentInfo[i].fieldName}}
-            {{additionalDataPaymentInfo[i].required ? '*' : ''}} </label>
-      <div class="p-inputgroup">
             <span class="p-float-label">
-              <p-calendar appTabindexMinusOne formControlName="fieldValue" id="dateField_payment_{{i}}"
-                          class="place-holder-width" [showButtonBar]="true"
-                          (onSelect)="formatDate($event, i, 'payment')" [showIcon]="true"></p-calendar>
-               <button pButton type="button" class="p-button p-button-sm clear-button"
-                       icon="fa fa-close" (click)="additionalField.get('fieldValue').reset()"></button>
+              <input [options]="{ prefix: '', thousands: ',', decimal: '.'}" currencyMask formControlName="discountPercentage" id="discountPercentage"
+                     maxlength="6" pInputText type="text">
             </span>
-      </div>
-    </div>
-
-              <div *ngIf="appFieldType.RADIO_BUTTON === additionalDataPaymentInfo[i].fieldTypeId ">
-                <div class="grid col-12" [style]="{'align-items': 'center'}">
-                    <div>
-            <span
-              class="label-wrapper">{{additionalDataPaymentInfo[i].fieldName}}  {{additionalDataPaymentInfo[i].required ? '*' : ''}}</span>
-          </div>
-                  <div class="radio-container" *ngFor="let option of additionalDataPaymentInfo[i].options">
-                    <label>
-                      <input id="radio_payment" type="radio" value="{{option.optionValue}}" class="radioButton"
-                             formControlName="fieldValue">
-                      <span style="margin-left: 0.2rem; margin-right: 0.5rem"
-                            for="radio_payment">{{' ' + option.optionValue}}</span>
-                    </label>
-                  </div>
-                </div>
               </div>
-
-                 <div *ngIf="appFieldType.CHECK_BOX === additionalDataPaymentInfo[i].fieldTypeId">
-                     <label class="label-wrapper"
-                            for="binary_payment">{{additionalDataPaymentInfo[i].fieldName}}{{additionalDataPaymentInfo[i].required ? '*' : ''}}</label>
-        <div class="p-inputgroup" style="position:relative">
-     <div class="field-checkbox">
-           <p-checkbox name="checkBox" formControlName="fieldValue" id="binary_payment" binary="true"></p-checkbox>
-
-          </div>
-        </div>
-      </div>
-
-      <div class="p-invalid text-align-left"
-           *ngIf="(additionalField.get('fieldValue').errors && additionalField.get('fieldValue').dirty) ||
-(additionalField.get('attachment').errors && additionalField.get('attachment').dirty)">
-
-         <div *ngIf="additionalField.get('fieldValue').dirty
-             && additionalField.get('fieldValue').hasError('required')"> {{additionalDataPaymentInfo[i].fieldName}}
-           is required
             </div>
 
-            <div *ngIf="additionalField.get('attachment').dirty
-             && additionalField.get('attachment').hasError('required')"> {{additionalDataPaymentInfo[i].fieldName}}
-              is required
-            </div>
 
-        <div *ngIf="additionalField.get('fieldValue').hasError('isValidate')">
-          Field require ({{appConstant.DATA_TYPE_PATTERN_MAP.get(additionalDataPaymentInfo[i].dataType)}}) type
-        </div>
-      </div>
-
-        </span>
-          </ng-container>
-        </ng-container>
-
-      </div>
-
-      <div class="col-12 grid">
-        <div class="xl:col-12">
-          <h6 style="color: #73828A">Postal Address</h6>
-        </div>
-
-        <div class="field col-12 xl:col-6">
-          <label class="label-wrapper" for="addressLine1">Address Line1 </label>
-          <div class="p-inputgroup"
-               [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !vendorCreateForm.get('address_line_1').value) ? 'isSelectedCheck':''">
-            <span class="p-float-label">
-              <input formControlName="address_line_1" maxlength="300" id="addressLine1"
-                     (keyup)="removeSpace.clearSpace(vendorCreateForm, 'address_line_1')" type="text" pInputText>
-            </span>
-          </div>
-          <small
-            *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !vendorCreateForm.get('address_line_1').value)"
-            class="block">Please provide your Address Line1 (max 35 characters).</small>
-          <div class="p-invalid text-align-left"
-               *ngIf="vendorCreateForm.get('address_line_1').dirty && vendorCreateForm.get('address_line_1').errors">
-            Address Line1 is required
-          </div>
-        </div>
-
-        <div class="field col-12 xl:col-6">
-          <label class="label-wrapper" for="addressLine2">Address Line2 </label>
-          <div class="p-inputgroup">
-            <span class="p-float-label">
-              <input formControlName="address_line_2" maxlength="300"
-                     (keyup)="removeSpace.clearSpace(vendorCreateForm, 'address_line_2')"
-                     id="addressLine2" type="text" pInputText>
-            </span>
-          </div>
-        </div>
-
-        <div class="field col-12 xl:col-3">
-          <label class="label-wrapper" for="city">City</label>
-          <span class="p-float-label">
-          <p-autoComplete delay="100" [minLength]="1" maxlength="200"
-                          [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !vendorCreateForm.get('city').value) ? 'isSelectedCheck':''"
-                          (keyup)="removeSpace.clearSpace(vendorCreateForm, 'city')"
-                          [style]="{'width':'100%'}" formControlName="city"
-                          [suggestions]="filteredGroups" [autoHighlight]="true" id="city"
-                          (completeMethod)="filterCities($event)"
-                          [multiple]="false" [dropdown]="false">
-          </p-autoComplete>
-          </span>
-          <small
-            *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !vendorCreateForm.get('city').value)"
-            class="block">Please provide your City (max 30 characters).</small>
-        </div>
-
-        <div class="field col-12 xl:col-3">
-          <label class="label-wrapper" for="state">State</label>
-          <span class="p-float-label">
-          <p-autoComplete delay="100" [minLength]="1" maxlength="200"
-                          [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !vendorCreateForm.get('state').value) ? 'isSelectedCheck':''"
-                          (keyup)="removeSpace.clearSpace(vendorCreateForm, 'state')"
-                          [style]="{'width':'100%'}" formControlName="state"
-                          [suggestions]="filteredGroups" [autoHighlight]="true" id="state"
-                          (completeMethod)="filterStates($event)"
-                          [multiple]="false" [dropdown]="false">
-          </p-autoComplete>
-            </span>
-          <small
-            *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !vendorCreateForm.get('state').value)"
-            class="block">Please provide your State.</small>
-        </div>
-
-        <div class="field col-12 xl:col-3">
-          <label class="label-wrapper" for="zipCode">Zip Code </label>
-          <div class="p-inputgroup"
-               [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !vendorCreateForm.get('zipcode').value) ? 'isSelectedCheck':''">
-            <span class="p-float-label">
-              <input formControlName="zipcode" (keyup)="removeSpace.clearSpace(vendorCreateForm, 'zipcode')"
-                     id="zipCode" type="text" pInputText>
-            </span>
-          </div>
-          <small
-            *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !vendorCreateForm.get('zipcode').value)"
-            class="block">Please provide your Zip Code (max 10 characters).</small>
-          <div class="p-invalid text-align-left" *ngIf="vendorCreateForm.get('zipcode').hasError('maxlength')">
-            Zip Code must be less than 30 characters
-          </div>
-        </div>
-
-        <div class=" field col-12 xl:col-3">
-          <label class="label-wrapper" for="country">Select Country*</label>
-          <span class="p-float-label">
-               <p-dropdown #sCountry id="country" formControlName="country" showClear="true" [virtualScroll]="true"
-                           (onChange)="commonUtil.isPressEnterInsideDropdown(sCountry)"
-                           virtualScrollItemSize="25"
-                           [autoDisplayFirst]="false" [options]="countries" [filter]="true" appendTo="body"
-                           optionLabel="name" optionValue="id"></p-dropdown>
-
-           </span>
-          <div class="p-invalid text-align-left"
-               *ngIf="vendorCreateForm.get('country').dirty && vendorCreateForm.get('country').errors">
-            Country is required
-          </div>
-        </div>
-
-        <ng-container class="grid col-12" formArrayName="additionalDataPostalAddress"
-                      *ngIf="additionalDataPostalAddress.length>0">
-
-          <ng-container class="field col-12 xl:col-3 md:col-3"
-                        *ngFor="let additionalField of vendorAdditionalDataArrayInPostalAddress.controls; let i=index"
-                        [formGroupName]="i">
-
-              <span class="field col-12 xl:col-3 md:col-3"
-                    *ngIf="commonUtil.checkUndefinedValues(additionalField.get('fieldValue').value,
-           additionalDataPostalAddress[i].docStatus, false)">
-
-      <div *ngIf="appFieldType.LABEL === additionalDataPostalAddress[i].fieldTypeId">
-         <label class="label-wrapper">{{additionalDataPostalAddress[i].fieldName}}</label>
-        <span class="p-float-label">
-            <input type="text" class="form-control" pInputText
-                   [readonly]="true" readonly [value]="additionalDataPostalAddress[i].value">
-        </span>
-
-      </div>
-
-      <div *ngIf="appFieldType.TEXT_BOX === additionalDataPostalAddress[i].fieldTypeId">
-           <label class="label-wrapper"
-                  for="input2_{{i}}">{{additionalDataPostalAddress[i].fieldName}}
-             {{additionalDataPostalAddress[i].required ? '*' : ''}}</label>
-        <div class="p-inputgroup">
-            <span class="p-float-label">
-              <input formControlName="fieldValue" type="text" pInputText id="input2_{{i}}"
-                     [maxLength]="additionalDataPostalAddress[i].maxLength" class="place-holder-width"
-                     [pKeyFilter]="commonUtil.buildRegex(additionalDataPostalAddress[i].dataType)"
-                     maxlength="{{additionalDataPostalAddress[i].maxLength}}"
-                     (keyup)="removeSpace.clearSpace(additionalField, 'fieldValue')">
-            </span>
-        </div>
-      </div>
-
-      <div>
-        <div
-          *ngIf="appFieldType.TEXT_AREA === additionalDataPostalAddress[i].fieldTypeId">
-          <label class="label-wrapper"
-                 for="notes2_{{i}}">{{additionalDataPostalAddress[i].fieldName}}
-            {{additionalDataPostalAddress[i].required ? '*' : ''}}</label>
-      <div class="p-inputgroup">
-          <span class="p-float-label">
-            <textarea formControlName="fieldValue" id="notes2_{{i}}" rows="{{additionalDataPostalAddress[i].rowCount}}"
-                      pInputTextarea
-                      [maxLength]="additionalDataPostalAddress[i].maxLength"
-                      class="place-holder-width"
-                      (keyup)="removeSpace.clearSpace(additionalField, 'fieldValue')"></textarea>
-          </span>
-      </div>
-    </div>
-      </div>
-
-                <div
-                  *ngIf="appFieldType.DROP_DOWN_FIELD === additionalDataPostalAddress[i].fieldTypeId && additionalDataPostalAddress[i].multiple === 'A'">
-                    <label class="label-wrapper"
-                           for="multiselect_{{i}}">Select {{additionalDataPostalAddress[i].fieldName}}
-                      {{additionalDataPostalAddress[i].required ? '*' : ''}}</label>
-      <span class="p-float-label">
-           <p-multiSelect [options]="additionalDataPostalAddress[i].optionsList.data" id="multiSelect2_{{i}}" optionDisabled="inactive"
-                          optionValue="id" inputId="multiselect_{{i}}" #multiSelect2 appendTo="body"
-                          (onChange)="addNewAdditionalDropDownOption($event,additionalDataPostalAddress[i],additionalField, multiSelect2)"
-                          (onClick)="commonUtil.isAllowedToTriggerClickEvent(multiSelect2, additionalDataPostalAddress[i])?
-                          addNewAdditionalDropDownOption($event,additionalDataPostalAddress[i],additionalField, multiSelect2): null"
-                          formControlName="fieldValue" optionLabel="name" [showToggleAll]="true" [filter]="true">
-             <ng-template pTemplate="selectedItem">
-                <div>{{additionalField.get('fieldValue').value.name}}</div>
-             </ng-template>
-
-             <ng-template let-multiselect pTemplate="item">
-                 <div class="grid">
-                     <div class="dropdown-list">{{multiselect.name}}</div>
-                 </div>
-             </ng-template>
-
-              <ng-template pTemplate="footer" *ngIf="additionalDataPostalAddress[i].createNew === 'A'">
-                    <div class="grid dp-footer">
-                      <div class="col-12 button-wrapper">
-                        <button pButton class="p-button-sm" label="Add New"
-                                (click)="addNewDropDown = true;
-                           setSelectedAdditionalField(additionalDataPostalAddress[i])"></button>
-                      </div>
-                    </div>
-                  </ng-template>
-
-           </p-multiSelect>
-        </span>
-      </div>
-
-
-      <div
-        *ngIf="appFieldType.DROP_DOWN_FIELD === additionalDataPostalAddress[i].fieldTypeId && additionalDataPostalAddress[i].multiple != 'A'">
-         <label class="label-wrapper"
-                for="dropdown2_{{i}}">Select {{additionalDataPostalAddress[i].fieldName}}
-           {{additionalDataPostalAddress[i].required ? '*' : ''}}</label>
-      <span class="p-float-label">
-           <p-dropdown [options]="additionalDataPostalAddress[i].optionsList.data" [showClear]="true" #dropdown2
-                       class="vendor-dropdown" [virtualScroll]="true" virtualScrollItemSize="25" appendTo="body"
-                       (onChange)="addNewAdditionalDropDownOption($event,additionalDataPostalAddress[i],additionalField, dropdown2);
-                       commonUtil.isPressEnterInsideDropdown(dropdown2)" optionDisabled="inactive"
-                       id="dropdown2_{{i}}" optionValue="id" optionLabel="name" [autoDisplayFirst]="false"
-                       formControlName="fieldValue" inputId="dropdown2_{{i}}" [filter]="true">
-
-             <ng-template pTemplate="selectedItem">
-                <div>{{dropdown2.selectedOption.name}}</div>
-             </ng-template>
-
-             <ng-template let-multiselect pTemplate="item">
-                 <div class="grid">
-                     <div class="dropdown-list">{{multiselect.name}}</div>
-                 </div>
-             </ng-template>
-
-              <ng-template pTemplate="footer" *ngIf="additionalDataBasicInfo[i].createNew === 'A'">
-                    <div class="grid dp-footer">
-                      <div class="col-12 button-wrapper">
-                        <button pButton class="p-button-sm" label="Add New"
-                                (click)="addNewDropDown = true;
-                           setSelectedAdditionalField(additionalDataBasicInfo[i])"></button>
-                      </div>
-                    </div>
-                  </ng-template>
-
-           </p-dropdown>
-        </span>
-      </div>
-
-        <div *ngIf="appFieldType.FILE_INPUT === additionalDataPostalAddress[i].fieldTypeId">
-          <label class="label-wrapper" for="fileText">Upload {{additionalDataPostalAddress[i].fieldName}} Here
-            {{additionalDataPostalAddress[i].required ? '*' : ''}}</label>
+            <div *ngIf="vendorCreateForm.get(appFormConstants.TERM).value === 10"
+                 class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="discountDaysDue">Discount Days Due</label>
               <div class="p-inputgroup">
-              <span class="p-float-label">
-              <input [id]="'fileUploadH3'+ i" #fileInput3
-                     (change)="commonUtil.changeFileInput($event,additionalField, additionalDataPostalAddress[i],false, fileInput3)"
-                     type="file" class="place-holder-width"
-                     accept="{{additionalDataPostalAddress[i].fileTypes}}" hidden>
-              <input id="fileText2" formControlName="attachment" readonly type="text"
-                     (click)="fileUploadClick('fileUploadH3', i)"
-                     (keydown.enter)="fileUploadClick('fileUploadH3', i)"
-                     style="border-radius: 6px 0 0 6px !important;"
-                     class="place-holder-width"
-                     [value]="fileInput3.files[0] ? fileInput3.files[0].name : null" pInputText>
-              <button tabindex="-1" style="margin: 0 !important;height: 31px !important;" type="button" pButton
-                      label="Browse" class="p-button file-browse p-button-sm"
-                      (click)="fileUploadClick('fileUploadH3', i)"></button>
-           <button tabindex="-1" *ngIf="fileInput3.files[0] != null" pButton type="button"
-                   class="p-button-outlined p-button-sm "
-                   icon="fa fa-close"
-                   (click)="fileInput3.value = null;
-                   commonUtil.changeFileInput($event,additionalField, null,false, fileInput3)">
-           </button>
-             </span>
+            <span class="p-float-label">
+              <input formControlName="discountDaysDue" id="discountDaysDue" numbersOnly pInputText type="text">
+            </span>
               </div>
-        </div>
-
-      <div *ngIf="appFieldType.DATE_FIELD=== additionalDataPostalAddress[i].fieldTypeId">
-         <label class="label-wrapper" for="dateField2_{{i}}">{{additionalDataPostalAddress[i].fieldName}}
-           {{additionalDataPostalAddress[i].required ? '*' : ''}} </label>
-      <div class="p-inputgroup">
-            <span class="p-float-label">
-              <p-calendar appTabindexMinusOne formControlName="fieldValue" id="dateField2_{{i}}"
-                          class="place-holder-width" [showButtonBar]="true"
-                          (onSelect)="formatDate($event, i, 'postal')" [showIcon]="true"></p-calendar>
-               <button pButton type="button" class="p-button p-button-sm clear-button"
-                       icon="fa fa-close" (click)="additionalField.get('fieldValue').reset()"></button>
-            </span>
-      </div>
-    </div>
-
-              <div *ngIf="appFieldType.RADIO_BUTTON === additionalDataPostalAddress[i].fieldTypeId ">
-                <div class="grid col-12" [style]="{'align-items': 'center'}">
-                    <div>
-            <span
-              class="label-wrapper">{{additionalDataPostalAddress[i].fieldName}} {{additionalDataPostalAddress[i].required ? '*' : ''}}</span>
-          </div>
-                  <div class="radio-container" *ngFor="let option of additionalDataPostalAddress[i].options">
-                    <label>
-                      <input id="male2" type="radio" value="{{option.optionValue}}" class="radioButton"
-                             formControlName="fieldValue">
-                      <span style="margin-left: 0.2rem; margin-right: 0.5rem"
-                            for="male1">{{' ' + option.optionValue}}</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-                 <div *ngIf="appFieldType.CHECK_BOX === additionalDataPostalAddress[i].fieldTypeId">
-        <div class="p-inputgroup" style="position:relative">
-     <div class="field-checkbox">
-           <p-checkbox name="checkBox" formControlName="fieldValue" id="binary2" binary="true"></p-checkbox>
-          <label
-            for="binary2">{{additionalDataPostalAddress[i].fieldName}}{{additionalDataPostalAddress[i].required ? '*' : ''}}</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="p-invalid text-align-left"
-           *ngIf="(additionalField.get('fieldValue').errors && additionalField.get('fieldValue').dirty) ||
-(additionalField.get('attachment').errors && additionalField.get('attachment').dirty)">
-
-         <div *ngIf="additionalField.get('fieldValue').dirty
-             && additionalField.get('fieldValue').hasError('required')"> {{additionalDataPostalAddress[i].fieldName}}
-           is required
             </div>
 
-            <div *ngIf="additionalField.get('attachment').dirty
-             && additionalField.get('attachment').hasError('required')"> {{additionalDataPostalAddress[i].fieldName}}
-              is required
-            </div>
 
-        <div *ngIf="additionalField.get('fieldValue').hasError('isValidate')">
-          Field require ({{appConstant.DATA_TYPE_PATTERN_MAP.get(additionalDataPostalAddress[i].dataType)}}) type
-        </div>
-      </div>
-              </span>
-          </ng-container>
-        </ng-container>
-
-        <span class="col-12">
-          <p-inputSwitch class="custom-checkbox" [styleClass]="vendorCreateForm.get('showRemit').value ?
-          'card-overflow': null" formControlName="showRemit"></p-inputSwitch>
-          <span class="col-10 costume-checkbox" style="padding: 10px">Please check if the remit address is different from above</span>
-        </span>
-
-      </div>
-
-
-      <div class="p-fluid">
-        <div class="col-12 grid " *ngIf="vendorCreateForm.get('showRemit').value">
-
-          <div class="xl:col-12">
-            <h6 style="color: #73828A">Remit Address</h6>
-          </div>
-
-          <div class="field col-12 xl:col-6">
-            <label class="label-wrapper" for="addressLine1">Address Line1 </label>
-            <div class="p-inputgroup"
-                 [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !vendorCreateForm.get('r_address_line_1').value) ? 'isSelectedCheck':''">
-            <span class="p-float-label">
-              <input formControlName="r_address_line_1" maxlength="300"
-                     (keyup)="removeSpace.clearSpace(vendorCreateForm, 'r_address_line_1')"
-                     id="rAddressLine1" type="text" pInputText>
-            </span>
-            </div>
-            <small
-              *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !vendorCreateForm.get('r_address_line_1').value)"
-              class="block">Please provide your Address Line1 (max 35 characters).</small>
-            <div class="p-invalid text-align-left"
-                 *ngIf="vendorCreateForm.get('r_address_line_1').dirty && vendorCreateForm.get('r_address_line_1').errors">
-              Address Line1 is required
-            </div>
-          </div>
-
-          <div class="field col-12 xl:col-6">
-            <label class="label-wrapper" for="addressLine2">Address Line2 </label>
-            <div class="p-inputgroup">
-            <span class="p-float-label">
-              <input formControlName="r_address_line_2" maxlength="300"
-                     (keyup)="removeSpace.clearSpace(vendorCreateForm, 'r_address_line_2')"
-                     id="rAddressLine2" type="text" pInputText>
-            </span>
-            </div>
-          </div>
-
-          <div class="field col-12 xl:col-3">
-            <label class="label-wrapper" for="rcity">City</label>
-            <span class="p-float-label">
-            <p-autoComplete delay="100" [minLength]="1" maxlength="200"
-                            (keyup)="removeSpace.clearSpace(vendorCreateForm, 'r_city')"
-                            [style]="{'width':'100%'}" formControlName="r_city"
-                            [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !vendorCreateForm.get('r_city').value) ? 'isSelectedCheck':''"
-                            [suggestions]="filteredGroups" dataKey="id" [autoHighlight]="true"
-                            (completeMethod)="filterCities($event)" id="rcity"
-                            [multiple]="false" [dropdown]="false">
-            </p-autoComplete>
-             </span>
-            <small
-              *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !vendorCreateForm.get('r_city').value)"
-              class="block">Please provide your City (max 30 characters).</small>
-          </div>
-
-
-          <div class="field col-12 xl:col-3">
-            <label class="label-wrapper" for="rstate">State</label>
-            <span class="p-float-label">
-            <p-autoComplete delay="100" [minLength]="1" maxlength="200"
-                            (keyup)="removeSpace.clearSpace(vendorCreateForm, 'r_state')"
-                            [style]="{'width':'100%'}" formControlName="r_state"
-                            [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !vendorCreateForm.get('r_state').value) ? 'isSelectedCheck':''"
-                            [suggestions]="filteredGroups" [autoHighlight]="true" id="rstate"
-                            (completeMethod)="filterStates($event)" [autocomplete]="false"
-                            [multiple]="false" [dropdown]="false">
-            </p-autoComplete>
-            </span>
-            <small
-              *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !vendorCreateForm.get('r_state').value)"
-              class="block">Please provide your State.</small>
-          </div>
-
-          <div class="field col-12 xl:col-3">
-            <label class="label-wrapper" for="zipCode">Zip Code </label>
-            <div class="p-inputgroup"
-                 [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !vendorCreateForm.get('r_zipcode').value) ? 'isSelectedCheck':''">
-            <span class="p-float-label">
-              <input formControlName="r_zipcode" (keyup)="removeSpace.clearSpace(vendorCreateForm, 'r_zipcode')"
-                     id="rZipCode" type="text"
-                     [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !vendorCreateForm.get('r_zipcode').value) ? 'isSelectedCheck':''"
-                     pInputText>
-            </span>
-            </div>
-            <small
-              *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !vendorCreateForm.get('r_zipcode').value)"
-              class="block">Please provide your Zip Code (max 10 characters).</small>
-            <div class="p-invalid text-align-left" *ngIf="vendorCreateForm.get('r_zipcode').hasError('maxlength')">
-              Zip Code must be less than 30 characters.
-            </div>
-          </div>
-
-          <div class=" field col-12 xl:col-3">
-            <label class="label-wrapper" for="country">Select Country*</label>
-            <span class="p-float-label">
-               <p-dropdown #sCountry id="rCountry" formControlName="r_country" showClear="true" [virtualScroll]="true"
-                           (onChange)="commonUtil.isPressEnterInsideDropdown(sCountry)"
-                           virtualScrollItemSize="25"
-                           [autoDisplayFirst]="false" [options]="countries" [filter]="true" appendTo="body"
-                           optionLabel="name" optionValue="id"></p-dropdown>
-
-           </span>
-            <div *ngIf="vendorCreateForm.get('r_country').dirty && vendorCreateForm.get('r_country').hasError('required')"
-                 class="p-invalid text-align-left">
-              Country is required
-            </div>
-          </div>
-
-          <ng-container class="grid col-12" formArrayName="additionalDataRemitAddress"
-                        *ngIf="additionalDataRemitAddress.length>0">
-            <ng-container class="field col-12 xl:col-3 md:col-3"
-                          *ngFor="let additionalField of vendorAdditionalDataArrayInRemitAddress.controls; let i=index"
-                          [formGroupName]="i">
-
-              <span class="field col-12 xl:col-3 md:col-3"
-                    *ngIf="commonUtil.checkUndefinedValues(additionalField.get('fieldValue').value,
-           additionalDataRemitAddress[i].docStatus, false)">
-
-      <div *ngIf="appFieldType.LABEL === additionalDataRemitAddress[i].fieldTypeId">
-         <label class="label-wrapper">{{additionalDataRemitAddress[i].fieldName}}</label>
-        <span class="p-float-label">
-            <input type="text" class="form-control" pInputText
-                   [readonly]="true" readonly [value]="additionalDataRemitAddress[i].value">
-
-        </span>
-      </div>
-
-      <div *ngIf="appFieldType.TEXT_BOX === additionalDataRemitAddress[i].fieldTypeId">
-         <label class="label-wrapper"
-                for="input3_{{i}}">{{additionalDataRemitAddress[i].fieldName}}
-           {{additionalDataRemitAddress[i].required ? '*' : ''}}</label>
-        <div class="p-inputgroup">
-            <span class="p-float-label">
-              <input formControlName="fieldValue" type="text" pInputText id="input3_{{i}}"
-                     [maxLength]="additionalDataRemitAddress[i].maxLength" class="place-holder-width"
-                     [pKeyFilter]="commonUtil.buildRegex(additionalDataRemitAddress[i].dataType)"
-                     maxlength="{{additionalDataRemitAddress[i].maxLength}}"
-                     (keyup)="removeSpace.clearSpace(additionalField, 'fieldValue')">
-            </span>
-        </div>
-      </div>
-
-      <div>
-        <div
-          *ngIf="appFieldType.TEXT_AREA === additionalDataRemitAddress[i].fieldTypeId">
-           <label class="label-wrapper"
-                  for="notes3_{{i}}">{{additionalDataRemitAddress[i].fieldName}}
-             {{additionalDataRemitAddress[i].required ? '*' : ''}}</label>
-      <div class="p-inputgroup">
-          <span class="p-float-label">
-            <textarea formControlName="fieldValue" id="notes3_{{i}}"
-                      rows="{{additionalDataRemitAddress[i].rowCount}}"
-                      pInputTextarea
-                      [maxLength]="additionalDataRemitAddress[i].maxLength"
-                      class="place-holder-width"
-                      (keyup)="removeSpace.clearSpace(additionalField, 'fieldValue')"></textarea>
-          </span>
-      </div>
-    </div>
-      </div>
-                <div
-                  *ngIf="appFieldType.DROP_DOWN_FIELD === additionalDataRemitAddress[i].fieldTypeId && additionalDataRemitAddress[i].multiple === 'A'">
-                     <label class="label-wrapper"
-                            for="multiselect_{{i}}">Select {{additionalDataRemitAddress[i].fieldName}}
-                       {{additionalDataRemitAddress[i].required ? '*' : ''}}</label>
-      <span class="p-float-label">
-           <p-multiSelect [options]="additionalDataRemitAddress[i].optionsList.data" id="multiSelect3_{{i}}"
-                          optionValue="id" inputId="multiSelect3_{{i}}" #multiSelect3 appendTo="body" optionDisabled="inactive"
-                          (onChange)="addNewAdditionalDropDownOption($event,additionalDataRemitAddress[i],additionalField, multiSelect3)"
-                          (onClick)="commonUtil.isAllowedToTriggerClickEvent(multiSelect3, additionalDataRemitAddress[i]) ?
-                          addNewAdditionalDropDownOption($event,additionalDataRemitAddress[i],additionalField, multiSelect3): null"
-                          formControlName="fieldValue" optionLabel="name" [showToggleAll]="true" [filter]="true">
-             <ng-template pTemplate="selectedItem">
-                <div>{{additionalField.get('fieldValue').value.name}}</div>
-             </ng-template>
-
-             <ng-template let-multiselect pTemplate="item">
-                 <div class="grid">
-                     <div class="dropdown-list">{{multiselect.name}}</div>
-                 </div>
-             </ng-template>
-
-             <ng-template pTemplate="footer" *ngIf="additionalDataRemitAddress[i].createNew === 'A'">
-                    <div class="grid dp-footer">
-                      <div class="col-12 button-wrapper">
-                        <button pButton class="p-button-sm" label="Add New"
-                                (click)="addNewDropDown = true;
-                           setSelectedAdditionalField(additionalDataRemitAddress[i])"></button>
-                      </div>
-                    </div>
-                  </ng-template>
-
-           </p-multiSelect>
-        </span>
-      </div>
-
-      <div
-        *ngIf="appFieldType.DROP_DOWN_FIELD === additionalDataRemitAddress[i].fieldTypeId && additionalDataRemitAddress[i].multiple != 'A'">
-         <label class="label-wrapper"
-                for="dropdown3_{{i}}">Select {{additionalDataRemitAddress[i].fieldName}}
-           {{additionalDataRemitAddress[i].required ? '*' : ''}}</label>
-      <span class="p-float-label">
-           <p-dropdown [options]="additionalDataRemitAddress[i].optionsList.data" [showClear]="true" #dropdown3
-                       class="vendor-dropdown" [virtualScroll]="true" virtualScrollItemSize="25" appendTo="body"
-                       (onChange)="addNewAdditionalDropDownOption($event,additionalDataRemitAddress[i],additionalField, dropdown3);
-                       commonUtil.isPressEnterInsideDropdown(dropdown3)" optionDisabled="inactive"
-                       id="dropdown3_{{i}}" optionValue="id" optionLabel="name" [autoDisplayFirst]="false"
-                       formControlName="fieldValue" inputId="dropdown3_{{i}}" [filter]="true">
-
-             <ng-template pTemplate="selectedItem">
-                <div>{{dropdown3.selectedOption.name}}</div>
-             </ng-template>
-
-             <ng-template let-multiselect pTemplate="item">
-                 <div class="grid">
-                     <div class="dropdown-list">{{multiselect.name}}</div>
-                 </div>
-             </ng-template>
-
-             <ng-template pTemplate="footer" *ngIf="additionalDataRemitAddress[i].createNew === 'A'">
-                    <div class="grid dp-footer">
-                      <div class="col-12 button-wrapper">
-                        <button pButton class="p-button-sm" label="Add New"
-                                (click)="addNewDropDown = true;
-                           setSelectedAdditionalField(additionalDataRemitAddress[i])"></button>
-                      </div>
-                    </div>
-                  </ng-template>
-
-           </p-dropdown>
-        </span>
-      </div>
-
-        <div *ngIf="appFieldType.FILE_INPUT === additionalDataRemitAddress[i].fieldTypeId">
-           <label class="label-wrapper" for="fileText">Upload {{additionalDataRemitAddress[i].fieldName}} Here
-             {{additionalDataRemitAddress[i].required ? '*' : ''}}</label>
+            <div *ngIf="isConfidential" class="field col-12 xl:col-3">
+              <label class=" label-wrapper" for="confidential">Is Confidential Vendor?</label>
               <div class="p-inputgroup">
-              <span class="p-float-label">
-              <input [id]="'fileUploadH4'+ i" #fileInput4
-                     (change)="commonUtil.changeFileInput($event,additionalField, additionalDataRemitAddress[i],false, fileInput4)"
-                     type="file" class="place-holder-width"
-                     accept="{{additionalDataRemitAddress[i].fileTypes}}" hidden>
-              <input id="fileText3" formControlName="attachment" readonly type="text"
-                     (click)="fileUploadClick('fileUploadH4', i)"
-                     (keydown.enter)="fileUploadClick('fileUploadH4', i)"
-                     style="border-radius: 6px 0 0 6px !important;"
-                     class="place-holder-width"
-                     [value]="fileInput4.files[0] ? fileInput4.files[0].name : null" pInputText>
-              <button tabindex="-1" style="margin: 0 !important;height: 31px !important;" type="button" pButton
-                      label="Browse" class="p-button file-browse p-button-sm"
-                      (click)="fileUploadClick('fileUploadH4', i)"></button>
-           <button tabindex="-1" pButton type="button" class="p-button-outlined p-button-sm"
-                   icon="fa fa-close"
-                   *ngIf="fileInput4.files[0] != null"
-                   (click)="fileInput4.value = null; additionalField.get('attachment').reset()"></button>
-             </span>
+                <p-checkbox [(ngModel)]="vendorDto.confidential" [ngModelOptions]="{standalone: true}" binary="true"
+                            class="costume-checkbox-wrapper"
+                            id="confidential" name="confidential"></p-checkbox>
               </div>
-        </div>
+            </div>
 
-      <div *ngIf="appFieldType.DATE_FIELD=== additionalDataRemitAddress[i].fieldTypeId">
-        <label class="label-wrapper" for="dateField3_{{i}}">{{additionalDataRemitAddress[i].fieldName}}
-          {{additionalDataRemitAddress[i].required ? '*' : ''}} </label>
-      <div class="p-inputgroup">
-            <span class="p-float-label">
-              <p-calendar appTabindexMinusOne formControlName="fieldValue" id="dateField3_{{i}}"
-                          class="place-holder-width" [showButtonBar]="true"
-                          (onSelect)="formatDate($event, i, 'remit')" [showIcon]="true"></p-calendar>
-               <button pButton type="button" class="p-button p-button-sm clear-button"
-                       icon="fa fa-close" (click)="additionalField.get('fieldValue').reset()"></button>
+            <div class="field col-12 xl:col-3">
+              <label class=" label-wrapper" for="confidential">Is 1099 Vendor?</label>
+              <div class="p-inputgroup">
+                <p-checkbox binary="true" class="costume-checkbox-wrapper" formControlName="tenNinetyNine"
+                            id="confidential" name="confidential"></p-checkbox>
+              </div>
+            </div>
+
+            <span class="field col-12 xl:col-6">
+                <p-inputSwitch formControlName="remitEmailSwitchEnable"></p-inputSwitch>
+                <span class="col-10 inline-block">Please check if the remit email address is different from above Email</span>
             </span>
-      </div>
-    </div>
 
-              <div *ngIf="appFieldType.RADIO_BUTTON === additionalDataRemitAddress[i].fieldTypeId ">
-                <div class="grid col-12" [style]="{'align-items': 'center'}">
-                    <div>
-            <span
-              class="label-wrapper">{{additionalDataRemitAddress[i].fieldName}}{{additionalDataRemitAddress[i].required ? '*' : ''}}</span>
-          </div>
-                  <div class="radio-container" *ngFor="let option of additionalDataRemitAddress[i].options">
-                    <label>
-                      <input id="male3" type="radio" value="{{option.optionValue}}" class="radioButton"
-                             formControlName="fieldValue">
-                      <span style="margin-left: 0.2rem; margin-right: 0.5rem"
-                            for="male1">{{' ' + option.optionValue}}</span>
-                    </label>
-                  </div>
-                </div>
+
+            <div *ngIf="vendorCreateForm.get('remitEmailSwitchEnable').value" class="field col-12 xl:col-6"
+                 style="padding: 0">
+              <label class="label-wrapper" for="remitEmailAddress">Remittance Email Address*</label>
+              <div class="p-inputgroup">
+                   <span class="p-float-label">
+                     <input blockSpace formControlName="remittanceEmail" id="remitEmailAddress" maxlength="150"
+                            pInputText type="text">
+                   </span>
               </div>
-
-                 <div *ngIf="appFieldType.CHECK_BOX === additionalDataRemitAddress[i].fieldTypeId">
-        <div class="p-inputgroup" style="position:relative">
-     <div class="field-checkbox">
-           <p-checkbox name="checkBox" formControlName="fieldValue" id="binary3" binary="true"></p-checkbox>
-          <label
-            for="binary3">{{additionalDataRemitAddress[i].fieldName}}{{additionalDataRemitAddress[i].required ? '*' : ''}}</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="p-invalid text-align-left"
-           *ngIf="(additionalField.get('fieldValue').errors && additionalField.get('fieldValue').dirty) ||
-(additionalField.get('attachment').errors && additionalField.get('attachment').dirty)">
-
-         <div *ngIf="additionalField.get('fieldValue').dirty
-             && additionalField.get('fieldValue').hasError('required')"> {{additionalDataRemitAddress[i].fieldName}}
-           is required
+              <div *ngIf="vendorCreateForm.get('remittanceEmail').dirty &&
+                 vendorCreateForm.get('remittanceEmail').hasError('required')" class="p-invalid text-align-left">
+                Remittance Email Address is required
+              </div>
+              <div *ngIf="vendorCreateForm.controls['remittanceEmail'].hasError('emailValidate')"
+                   class="p-invalid text-align-left">
+                Remittance Email must be a valid email address
+              </div>
             </div>
 
-            <div *ngIf="additionalField.get('attachment').dirty
-             && additionalField.get('attachment').hasError('required')"> {{additionalDataRemitAddress[i].fieldName}}
-              is required
-            </div>
-
-        <div *ngIf="additionalField.get('fieldValue').hasError('isValidate')">
-          Field require ({{appConstant.DATA_TYPE_PATTERN_MAP.get(additionalDataRemitAddress[i].dataType)}}) type
-        </div>
-      </div>
-              </span>
+            <ng-container *ngIf="additionalDataBasicInfo.length > 0" class="grid"
+                          formArrayName="additionalDataBasicInfo">
+              <ng-container
+                *ngFor="let additionalField of vendorAdditionalDataArrayInBasicInformation.controls; let itemIndex = index"
+                [formGroupName]="itemIndex">
+                <app-additional-field-header-items
+                  (updateAdditionalFieldDropDowns)="updateAdditionalFieldDropDowns($event)"
+                  *ngIf="commonUtil.checkUndefinedValues(additionalField.get('fieldValue').value, additionalDataBasicInfo[itemIndex].docStatus, false)" [additionalFieldHeader]="additionalDataBasicInfo"
+                  [additionalField]="additionalField"
+                  [isCreate]="!isVendorEdit"
+                  [itemIndex]="itemIndex"
+                  [parentFormControlName]="'additionalDataBasicInfo'" [parentForm]="vendorCreateForm" class="field lg:col-4 xl:col-6 md:col-4 sm:col-6 col-12">
+                </app-additional-field-header-items>
+              </ng-container>
             </ng-container>
-          </ng-container>
 
-          <div class="col-3"></div>
+            <div class="xl:col-9 empty-div"></div>
+          </div>
 
-        </div>
+        </p-accordionTab>
 
-      </div>
+        <p-accordionTab header="Payment Information">
+          <div class="grid">
+            <div *ngIf="acceptedPaymentTypes.length>0" class="field col-12 xl:col-12">
+              <label class="label-wrapper" for="accountRoutingNumber">Accepted Payment Type(s)</label>
+              <ng-container formArrayName="acceptedPaymentTypes">
+                <div *ngFor="let data of acceptedPaymentTypes.controls; let i = index" [formGroupName]="i"
+                     class=" mt-2">
+                  <p-panel [collapsed]="!data.get('selected').value" [toggleable]="false" class="funding-acc-panel">
+                    <ng-template pTemplate="header">
+                      <div class="flex align-items-center w-full">
+                        <span class="font-bold">{{data.get('name').value}}</span>
+                        <p-inputSwitch (onChange)="acceptedPaymentTypeSelected(data.value, i)"
+                                       class="ml-auto"
+                                       formControlName="selected"></p-inputSwitch>
+                      </div>
+                    </ng-template>
+
+                    <ng-container *ngIf="data.get('selected').value">
+                      <div class="grid">
+                        <div class="col-6">
+                          <label class="label-wrapper" for="vendorName">Preferred Payment Channel
+                            for {{ data.get('name').value }}</label>
+                          <div class="p-inputgroup">
+                        <span class="p-float-label">
+                          <p-dropdown #recipient (onChange)="commonUtil.isPressEnterInsideDropdown(recipient)"
+                                      [autoDisplayFirst]="false" [filter]="true"
+                                      [options]="paymentProviders.data" [virtualScroll]="paymentProviders.data.length >20"
+                                      formControlName="providerId" inputId="dropdown" optionDisabled="inactive"
+                                      optionLabel="name" optionValue="id" showClear="true"
+                                      appendTo="body"
+                                      virtualScrollItemSize="25">
+                           </p-dropdown>
+                        </span>
+                          </div>
+                        </div>
+
+                        <div class="col-6 mt-3">
+                      <span class="grid">
+                        <div class="col-2">
+                        <p-inputSwitch class="custom-checkbox" formControlName="differentRemit"></p-inputSwitch>
+                        </div>
+                        <div class="col-10">
+                          <span class="costume-checkbox">Please check if the remit email address is different from above Email</span>
+                        </div>
+                      </span>
+                        </div>
 
 
-      <div class="col-12 grid" *ngIf="w9Information">
-        <div class="col-12">
-          <h6 style="color: #73828A">W9 Form Information</h6>
-        </div>
+                        <div class="col-6" *ngIf="data.get('differentRemit').value">
+                            <label class="label-wrapper">Remittance Email Address</label>
+                            <div class="p-inputgroup">
+                      <span class="p-float-label">
+                        <input blockSpace formControlName="remittanceEmail" maxlength="150" pInputText type="text">
+                      </span>
+                            </div>
+                            <div *ngIf="data.get('remittanceEmail').dirty &&
+                        data.get('remittanceEmail').hasError('required')" class="p-invalid text-align-left">
+                              Remittance Email Address is required
+                            </div>
+                            <div *ngIf="data.get('remittanceEmail').hasError('emailValidate')"
+                                 class="p-invalid text-align-left">
+                              Remittance Email must be a valid email address
+                            </div>
+                        </div>
 
-        <div class=" field col-12 xl:col-6">
-          <label class="label-wrapper" for="taxClassifications">Select Federal Tax Classification </label>
-          <span class="p-float-label">
-           <p-dropdown #federelTax inputId="taxClassification" [filter]="true" [autoDisplayFirst]="false"
-                       [virtualScroll]="true"
-                       (onChange)="commonUtil.isPressEnterInsideDropdown(federelTax)"
-                       virtualScrollItemSize="25"
-                       [options]="taxClassifications" id="taxClassifications" optionValue="id" [showClear]="true"
-                       formControlName="taxClassification" optionLabel="name"></p-dropdown>
-        </span>
-        </div>
+                        <div *ngIf="commonUtil.isCheck && data.get('name').value === 'Check'" class="field col-6" style="display: flex">
+                          <div class="mt-2">
+                            <p-inputSwitch class="custom-checkbox" [formControl]="fieldValueControl"></p-inputSwitch>
+                          </div>
+                          <div class="col-10">
+                  <span class="col-10 costume-checkbox" style="color:#555555">Enable this option if the check is
+                to <br><span style="padding-left: 7px">be delivered via mail</span></span>
+                          </div>
+                        </div>
 
-        <div class="field col-12 xl:col-6">
-          <label class="label-wrapper" for="fileText">Upload W9 Here </label>
-          <div class="p-inputgroup">
+                        <div *ngIf="vendorCreateForm.get('checkToBeMail').value && data.get('name').value === 'Check'"
+                             class="field col-6">
+                          <label class="label-wrapper" for="accountType">Check Processing Method</label>
+                          <span class="p-float-label">
+                 <p-dropdown [autoDisplayFirst]="false" [filter]="true"
+                             [options]="paymentMailOption"
+                             appendTo="body"
+                             [virtualScroll]="paymentMailOption.length >20" [formControl]="fieldValueMailOption" id="mailOption"
+                             inputId="dropdown" optionDisabled="inactive"
+                             optionLabel="name" optionValue="id" showClear="true" virtualScrollItemSize="25">
+                 </p-dropdown>
+                </span>
+                        </div>
+
+                        <div class="field col-6" *ngIf="data.get('paymentTypeId').value === this.appConstant.ACH_PAYMENT_TYPE" >
+                          <label class="label-wrapper" for="accountType">Account Type</label>
+                          <span class="p-float-label">
+            <p-dropdown #accountT (onChange)="commonUtil.isPressEnterInsideDropdown(accountT)" [autoDisplayFirst]="false"
+                        [filter]="true" [ngClass]="{'isSelectedCheck': commonUtil.isSelectedACH && !vendorCreateForm.get('accountType').value}" [options]="accountType.data"
+                        [virtualScroll]="accountType.data.length >20" [formControl]="fieldValueAccountType" id="accountType"
+                        inputId="dropdown" appendTo="body"
+                        optionDisabled="inactive" optionLabel="name" optionValue="id" showClear="true"
+                        virtualScrollItemSize="25">
+            </p-dropdown>
+          </span>
+                        </div>
+
+                        <div class="field col-6" *ngIf="data.get('paymentTypeId').value === this.appConstant.ACH_PAYMENT_TYPE">
+                          <label class="label-wrapper" for="recipientType">Recipient Type</label>
+                          <span class="p-float-label">
+            <p-dropdown #recipient (onChange)="commonUtil.isPressEnterInsideDropdown(recipient)" [autoDisplayFirst]="false"
+                        [filter]="true" appendTo="body"
+                        [ngClass]="{'isSelectedCheck': commonUtil.isSelectedACH && !vendorCreateForm.get('recipientType').value}"
+                        [options]="recipientType.data" [virtualScroll]="recipientType.data.length >20"
+                        [formControl]="fieldValueRecipientType"
+                        id="recipientType" inputId="dropdown" optionDisabled="inactive"
+                        optionLabel="name" optionValue="id" showClear="true" virtualScrollItemSize="25">
+            </p-dropdown>
+          </span>
+                        </div>
+
+
+                      </div>
+                    </ng-container>
+                  </p-panel>
+
+                </div>
+
+              </ng-container>
+            </div>
+
+            <div class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="accountRoutingNumber">Preferred Payment Type</label>
+              <div class="p-inputgroup">
+
+                <p-dropdown #paymentType (onChange)="commonUtil.isPressEnterInsideDropdown(paymentType)" [autoDisplayFirst]="false"
+                            [filter]="true"
+                            [options]="selectedPaymentTypes.data"
+                            [showClear]="true" formControlName="preferredPaymentTypeId" id="preferredPaymentType"
+                            optionLabel="name"
+                            optionValue="id">
+                </p-dropdown>
+
+              </div>
+            </div>
+
+            <div class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="vendorName">Company Name</label>
+              <div #actualTarget [ngClass]="{'isSelectedCheck': commonUtil.isSelectedVirtualCardACHCheck && !vendorCreateForm.get('companyName').value}"
+                   class="p-inputgroup">
             <span class="p-float-label">
-            <input id="fileUpload" #w9Form formControlName="w9FormName" accept="application/pdf"
-                   (change)="fileUpload1($event)" type="file" hidden>
-            <input id="fileText" readonly
-                   onClick="document.getElementById('fileUpload').click()"
-                   (keydown.enter)="document.getElementById('fileUpload').click()"
-                   [value]="w9Form.files[0] ? w9Form.files[0].name : null" type="text" pInputText
-                   style="border-radius: 6px 0 0 6px !important;">
-            <button tabindex="-1" type="button" pButton label="Browse" class="p-button file-browse p-button-sm"
-                    onClick="document.getElementById('fileUpload').click()"></button>
-                   <button *ngIf="w9Form.files[0] != null" tabindex="-1" pButton type="button"
-                           class="p-button-outlined p-button-sm"
-                           icon="fa fa-close" (click)="w9Form.value = null; clearW9Attachment()"></button>
-           </span>
-          </div>
-        </div>
-
-        <div class="field col-12 xl:col-3">
-          <label class="label-wrapper" for="securityNumber">Social Security Number </label>
-          <div class="p-inputgroup ">
-            <span class="p-float-label ">
-              <p-inputMask class="p-fluid width-max"
-                           (keyup)="checkVendorSsnAvailability(); removeSpace.clearSpace(vendorCreateForm, 'socialSecNo')"
-                           mask="***-**-****" formControlName="socialSecNo" id="securityNumber" type="text"
-                           [disabled]="isSocialNoDisabled"></p-inputMask>
+              <input autocomplete="off" blockSpace formControlName="companyName" id="name"
+                     maxlength="22" pInputText type="text">
             </span>
-          </div>
-          <div class="p-invalid text-align-left" *ngIf="isVendorSsnAvailable">
-            Social Security Number already exist, Please enter new one
-          </div>
-        </div>
+              </div>
+              <small class="block">This field will be used for (ACH, Checks, Virtual Cards).</small>
+            </div>
 
-        <div class="field col-12 xl:col-3">
-          <label class="label-wrapper" for="employeeId">Employee ID Number (**-*******)</label>
-          <div class="p-inputgroup">
+            <div class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="accountNumber">Account Number</label>
+              <div #actualTarget [ngClass]="{'isSelectedCheck': commonUtil.isSelectedACHCheck && !vendorCreateForm.get('accountNumber').value}"
+                   class="p-inputgroup">
+            <span class="p-float-label">
+              <input (paste)="onPaste($event)" autocomplete="off" blockSpace
+                     formControlName="accountNumber" id="accountNumber"
+                     maxlength="17" pInputText pKeyFilter="pint" type="text">
+            </span>
+              </div>
+              <small class="block">This field will be used for (ACH, Checks).</small>
+            </div>
+
+            <div class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="accountRoutingNumber">Bank Identification Number / Routing
+                Number</label>
+              <div #actualTarget [ngClass]="{'isSelectedCheck': commonUtil.isSelectedACHCheck && !vendorCreateForm.get('accountRoutingNumber').value}"
+                   class="p-inputgroup">
+            <span class="p-float-label">
+              <input (paste)="onPaste($event)" autocomplete="off" blockSpace formControlName="accountRoutingNumber"
+                     id="accountRoutingNumber" maxlength="9" pInputText pKeyFilter="pint" type="text">
+            </span>
+              </div>
+              <small class="block">This field will be used for (ACH, Checks).</small>
+            </div>
+
+
+            <ng-container *ngIf="additionalDataPaymentInfo.length > 0" class="grid"
+                          formArrayName="additionalDataPaymentInfo">
+              <ng-container
+                *ngFor="let additionalField of vendorAdditionalDataArrayInPaymentInformation.controls; let itemIndex = index"
+                [formGroupName]="itemIndex">
+                <app-additional-field-header-items
+                  (updateAdditionalFieldDropDowns)="updateAdditionalFieldDropDowns($event)"
+                  *ngIf="commonUtil.checkUndefinedValues(additionalField.get('fieldValue').value, additionalDataPaymentInfo[itemIndex].docStatus, false)" [additionalFieldHeader]="additionalDataPaymentInfo"
+                  [additionalField]="additionalField"
+                  [isCreate]="!isVendorEdit"
+                  [itemIndex]="itemIndex"
+                  [parentFormControlName]="'additionalDataPaymentInfo'" [parentForm]="vendorCreateForm"
+                  class="field lg:col-4 xl:col-6 md:col-4 sm:col-6 col-12">
+                </app-additional-field-header-items>
+              </ng-container>
+            </ng-container>
+          </div>
+        </p-accordionTab>
+
+        <p-accordionTab header="Postal Address">
+          <div class="grid">
+            <ng-container [formGroupName]="'permenantAddress'">
+
+              <div class="field col-12 xl:col-6">
+                <label class="label-wrapper" for="addressLine1">Address Line1 </label>
+                <div [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && !permenantAddress.get('addressLine1').value) ? 'isSelectedCheck':''"
+                     class="p-inputgroup">
+            <span class="p-float-label">
+              <input blockSpace formControlName="addressLine1" id="addressLine1" maxlength="300" pInputText
+                     type="text">
+            </span>
+                </div>
+                <small
+                  *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && !permenantAddress.get('addressLine1').value)"
+                  class="block">Please provide your Address Line1 (max 35 characters).</small>
+                <div *ngIf="permenantAddress.get('addressLine1').dirty && permenantAddress.get('addressLine1').errors"
+                     class="p-invalid text-align-left">
+                  Address Line1 is required
+                </div>
+              </div>
+
+              <div class="field col-12 xl:col-6">
+                <label class="label-wrapper" for="addressLine2">Address Line2 </label>
+                <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input blockSpace formControlName="addressLine2" id="addressLine2" maxlength="300" pInputText
+                     type="text">
+            </span>
+                </div>
+              </div>
+
+              <div class="field col-12 xl:col-6">
+                <label class="label-wrapper" for="city">City</label>
+                <span class="p-float-label">
+          <p-autoComplete (completeMethod)="filterCities($event)" [autoHighlight]="true" [dropdown]="false"
+                          [minLength]="1"
+                          [multiple]="false" [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && !permenantAddress.get('city').value) ? 'isSelectedCheck':''" [style]="{'width':'100%'}"
+                          [suggestions]="filteredGroups" blockSpace delay="100"
+                          formControlName="city"
+                          id="city" maxlength="200">
+          </p-autoComplete>
+          </span>
+                <small
+                  *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && !permenantAddress.get('city').value)"
+                  class="block">Please provide your City (max 30 characters).</small>
+              </div>
+
+              <div class="field col-12 xl:col-6">
+                <label class="label-wrapper" for="addressState">State</label>
+                <span class="p-float-label">
+          <p-autoComplete (completeMethod)="filterStates($event)" [autoHighlight]="true" [dropdown]="false"
+                          [minLength]="1"
+                          [multiple]="false" [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && !permenantAddress.get('addressState').value) ? 'isSelectedCheck':''" [style]="{'width':'100%'}"
+                          [suggestions]="filteredGroups" blockSpace delay="100"
+                          formControlName="addressState"
+                          id="addressState" maxlength="200">
+          </p-autoComplete>
+            </span>
+                <small
+                  *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && !permenantAddress.get('addressState').value)"
+                  class="block">Please provide your State.</small>
+              </div>
+
+              <div class="field col-12 xl:col-6">
+                <label class="label-wrapper" for="zipCode">Zip Code </label>
+                <div [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && !permenantAddress.get('zipcode').value) ? 'isSelectedCheck':''"
+                     class="p-inputgroup">
+            <span class="p-float-label">
+              <input blockSpace formControlName="zipcode" id="zipCode" pInputText type="text">
+            </span>
+                </div>
+                <small
+                  *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && !permenantAddress.get('zipcode').value)"
+                  class="block">Please provide your Zip Code (max 10 characters).</small>
+                <div *ngIf="permenantAddress.get('zipcode').hasError('maxlength')" class="p-invalid text-align-left">
+                  Zip Code must be less than 30 characters
+                </div>
+              </div>
+
+              <div class=" field col-12 xl:col-6">
+                <label class="label-wrapper" for="country">Select Country*</label>
+                <span class="p-float-label">
+               <p-dropdown #sCountry (onChange)="commonUtil.isPressEnterInsideDropdown(sCountry)" [autoDisplayFirst]="false" [filter]="true" [options]="countries"
+                           [virtualScroll]="true"
+                           appendTo="body"
+                           formControlName="country" id="country" optionLabel="name" optionValue="id"
+                           showClear="true" virtualScrollItemSize="25"></p-dropdown>
+
+           </span>
+                <div *ngIf="permenantAddress.get('country').dirty && permenantAddress.get('country').errors"
+                     class="p-invalid text-align-left">
+                  Country is required
+                </div>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="additionalDataPostalAddress.length > 0" class="grid"
+                          formArrayName="additionalDataPostalAddress">
+              <ng-container
+                *ngFor="let additionalField of vendorAdditionalDataArrayInPostalAddress.controls; let itemIndex = index"
+                [formGroupName]="itemIndex">
+                <app-additional-field-header-items
+                  (updateAdditionalFieldDropDowns)="updateAdditionalFieldDropDowns($event)"
+                  *ngIf="commonUtil.checkUndefinedValues(additionalField.get('fieldValue').value, additionalDataPostalAddress[itemIndex].docStatus, false)" [additionalFieldHeader]="additionalDataPostalAddress"
+                  [additionalField]="additionalField"
+                  [isCreate]="!isVendorEdit"
+                  [itemIndex]="itemIndex"
+                  [parentFormControlName]="'additionalDataPostalAddress'" [parentForm]="vendorCreateForm"
+                  class="field lg:col-4 xl:col-6 md:col-4 sm:col-6 col-12">
+                </app-additional-field-header-items>
+              </ng-container>
+            </ng-container>
+          </div>
+          <span class="col-12">
+          <p-inputSwitch [styleClass]="vendorCreateForm.get('showRemit').value ?
+          'card-overflow': null" class="custom-checkbox" formControlName="showRemit"></p-inputSwitch>
+          <span class="col-10 costume-checkbox" style="padding: 10px">Please check if the remit address is different from the Postal Address</span>
+        </span>
+
+          <div *ngIf="vendorCreateForm.get('showRemit').value" class="grid mt-2">
+
+            <div class="xl:col-12">
+              <h6 style="color: #73828A">Remit Address</h6>
+            </div>
+            <ng-container [formGroupName]="'remitAddress'">
+
+              <div class="field col-12 xl:col-6">
+                <label class="label-wrapper" for="addressLine1">Address Line1 </label>
+                <div [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && !remitAddress.get('addressLine2').value) ? 'isSelectedCheck':''"
+                     class="p-inputgroup">
+            <span class="p-float-label">
+              <input blockSpace formControlName="addressLine2" id="rAddressLine1" maxlength="300" pInputText
+                     type="text">
+            </span>
+                </div>
+                <small
+                  *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && !remitAddress.get('addressLine2').value)"
+                  class="block">Please provide your Address Line1 (max 35 characters).</small>
+                <div *ngIf="remitAddress.get('addressLine2').dirty && remitAddress.get('addressLine2').errors"
+                     class="p-invalid text-align-left">
+                  Address Line1 is required
+                </div>
+              </div>
+
+              <div class="field col-12 xl:col-6">
+                <label class="label-wrapper" for="addressLine2">Address Line2 </label>
+                <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input blockSpace formControlName="addressLine2" id="rAddressLine2" maxlength="300" pInputText
+                     type="text">
+            </span>
+                </div>
+              </div>
+
+              <div class="field col-12 xl:col-6">
+                <label class="label-wrapper" for="rcity">City</label>
+                <span class="p-float-label">
+            <p-autoComplete (completeMethod)="filterCities($event)" [autoHighlight]="true" [dropdown]="false" [minLength]="1"
+                            [multiple]="false" [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && !remitAddress.get('city').value) ? 'isSelectedCheck':''"
+                            [style]="{'width':'100%'}"
+                            [suggestions]="filteredGroups" blockSpace dataKey="id"
+                            delay="100" formControlName="city"
+                            id="rcity" maxlength="200">
+            </p-autoComplete>
+             </span>
+                <small
+                  *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && !remitAddress.get('city').value)"
+                  class="block">Please provide your City (max 30 characters).</small>
+              </div>
+
+
+              <div class="field col-12 xl:col-6">
+                <label class="label-wrapper" for="rstate">State</label>
+                <span class="p-float-label">
+            <p-autoComplete (completeMethod)="filterStates($event)" [autoHighlight]="true" [autocomplete]="false" [dropdown]="false"
+                            [minLength]="1" [multiple]="false"
+                            [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && !remitAddress.get('addressState').value) ? 'isSelectedCheck':''"
+                            [style]="{'width':'100%'}" [suggestions]="filteredGroups" blockSpace
+                            delay="100" formControlName="addressState"
+                            id="rstate" maxlength="200">
+            </p-autoComplete>
+            </span>
+                <small
+                  *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && !remitAddress.get('addressState').value)"
+                  class="block">Please provide your State.</small>
+              </div>
+
+              <div class="field col-12 xl:col-6">
+                <label class="label-wrapper" for="zipCode">Zip Code </label>
+                <div [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && !remitAddress.get('zipcode').value) ? 'isSelectedCheck':''"
+                     class="p-inputgroup">
+            <span class="p-float-label">
+              <input [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && !remitAddress.get('zipcode').value) ? 'isSelectedCheck':''" blockSpace formControlName="zipcode" id="rZipCode"
+                     pInputText
+                     type="text">
+            </span>
+                </div>
+                <small
+                  *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && !remitAddress.get('zipcode').value)"
+                  class="block">Please provide your Zip Code (max 10 characters).</small>
+                <div *ngIf="remitAddress.get('zipcode').hasError('maxlength')" class="p-invalid text-align-left">
+                  Zip Code must be less than 30 characters.
+                </div>
+              </div>
+
+              <div class=" field col-12 xl:col-6">
+                <label class="label-wrapper" for="country">Select Country*</label>
+                <span class="p-float-label">
+               <p-dropdown #sCountry (onChange)="commonUtil.isPressEnterInsideDropdown(sCountry)" [autoDisplayFirst]="false" [filter]="true" [options]="countries"
+                           [virtualScroll]="true"
+                           appendTo="body"
+                           formControlName="country" id="rCountry" optionLabel="name" optionValue="id"
+                           showClear="true" virtualScrollItemSize="25"></p-dropdown>
+
+           </span>
+                <div
+                  *ngIf="remitAddress.get('country').dirty && remitAddress.get('country').hasError('required')"
+                  class="p-invalid text-align-left">Country is required
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="additionalDataRemitAddress.length > 0" class="grid"
+                          formArrayName="additionalDataRemitAddress">
+              <ng-container
+                *ngFor="let additionalField of vendorAdditionalDataArrayInRemitAddress.controls; let itemIndex = index"
+                [formGroupName]="itemIndex">
+                <app-additional-field-header-items
+                  (updateAdditionalFieldDropDowns)="updateAdditionalFieldDropDowns($event)"
+                  *ngIf="commonUtil.checkUndefinedValues(additionalField.get('fieldValue').value, additionalDataRemitAddress[itemIndex].docStatus, false)" [additionalFieldHeader]="additionalDataRemitAddress"
+                  [additionalField]="additionalField"
+                  [isCreate]="!isVendorEdit"
+                  [itemIndex]="itemIndex"
+                  [parentFormControlName]="'additionalDataRemitAddress'" [parentForm]="vendorCreateForm"
+                  class="field lg:col-4 xl:col-6 md:col-4 sm:col-6 col-12">
+                </app-additional-field-header-items>
+              </ng-container>
+            </ng-container>
+          </div>
+        </p-accordionTab>
+
+        <p-accordionTab header="Supplier Diversity Information">
+          <div class="grid">
+            <div class="col-12">
+              <p class="subHeadingColour">A diverse supplier is defined as a U.S. privately held company that is 51%
+                owned
+                and operated by a woman,
+                minority, veteran, disable veteran, person with a disability or a member of the lesbian, gay, bisexual
+                or
+                transgender (LGBT) community.</p>
+              <br>
+            </div>
+
+            <div class="field col-12 xl:col-6">
+              <div class="grid">
+                <div class="pb-0 pt-2 col-12">Are you a diverse supplier?</div>
+                <div class="pb-0 pt-2 col-4">
+                  <div class="field-radiobutton vendor-radio-container">
+                    <input (click)="vendorCreateForm.get('diverseSupplier').patchValue(true)" [value]="true"
+                           class="radioButton" formControlName="diverseSupplier" id="city3"
+                           name="diverseSupplier" type="radio">
+                    <label for="city3">Yes</label>
+                  </div>
+                </div>
+                <div class="pb-0 pt-2 col-6">
+                  <div class="field-radiobutton vendor-radio-container">
+                    <input [value]="false" class="radioButton" formControlName="diverseSupplier" id="city4" name="diverseSupplier"
+                           type="radio">
+                    <label for="city4">No</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div [hidden]="!vendorCreateForm.get('diverseSupplier').value" class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="fileText">Attach Diversity Certification</label>
+              <div class="p-inputgroup">
+            <span class="p-float-label">
+            <input #diversity (change)="classificationUpload($event, diversity)" accept="application/pdf"
+                   hidden id="classificationUpload" multiple type="file">
+            <input (keydown.enter)="document.getElementById('classificationUpload').click()" [value]="getClassificationAttachmentNames(diversity)"
+                   formControlName="classificationAttachmentListNames"
+                   onClick="document.getElementById('classificationUpload').click()"
+                   pInputText
+                   readonly style="border-radius: 6px 0 0 6px !important;" type="text">
+
+            <button class="p-button file-browse p-button-sm" label="Browse" onClick="document.getElementById('classificationUpload').click()" pButton
+                    style="margin: 0 !important;height: 31px !important;" tabindex="-1" type="button"></button>
+                   <button (click)="diversity.value = null; vendorCreateForm.get('classificationAttachmentList').reset()"
+                           *ngIf="diversity.value" class="p-button-outlined ml-1 p-button-sm" icon="fa fa-close"
+                           pButton tabindex="-1" type="button"></button>
+           </span>
+              </div>
+            </div>
+
+            <div [hidden]="!vendorCreateForm.get('diverseSupplier').value" class="field col-12 xl:col-">
+              <label class="label-wrapper" for="paymentType">Select Classification* </label>
+              <span class="p-float-label">
+            <p-multiSelect [filter]="true" [options]="classification.data"
+                           [virtualScroll]="classification.data.length >20" appMultiselectFocus
+                           appendTo="body" formControlName="classificationIdList" id="classification"
+                           inputId="dropdown" optionLabel="name" optionValue="id" virtualScrollItemSize="25">
+
+            </p-multiSelect>
+          </span>
+              <div *ngIf="vendorCreateForm.get('classificationIdList').dirty && vendorCreateForm.get('classificationIdList').hasError('required')"
+                   class="p-invalid text-align-left">
+                Classification is required
+              </div>
+            </div>
+
+
+          </div>
+
+        </p-accordionTab>
+
+        <p-accordionTab header="W9 Form Information">
+          <div class="grid">
+            <div class=" field col-12 xl:col-6">
+              <label class="label-wrapper" for="taxClassifications">Select Federal Tax Classification </label>
+              <span class="p-float-label">
+           <p-dropdown #federelTax (onChange)="commonUtil.isPressEnterInsideDropdown(federelTax)" [autoDisplayFirst]="false" [filter]="true"
+                       [options]="taxClassifications"
+                       [showClear]="true"
+                       [virtualScroll]="true"
+                       formControlName="taxClassification" id="taxClassifications" inputId="taxClassification" optionLabel="name"
+                       optionValue="id" virtualScrollItemSize="25"></p-dropdown>
+        </span>
+            </div>
+
+            <div class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="fileText">Upload W9 Here </label>
+              <div class="p-inputgroup">
+            <span class="p-float-label">
+            <input #w9Form (change)="fileUpload1($event)" accept="application/pdf" formControlName="w9FormName"
+                   hidden id="fileUpload" type="file">
+            <input (keydown.enter)="document.getElementById('fileUpload').click()" [value]="w9Form.files[0] ? w9Form.files[0].name : null"
+                   id="fileText"
+                   onClick="document.getElementById('fileUpload').click()"
+                   pInputText readonly style="border-radius: 6px 0 0 6px !important;"
+                   type="text">
+            <button class="p-button file-browse p-button-sm" label="Browse" onClick="document.getElementById('fileUpload').click()" pButton tabindex="-1"
+                    type="button"></button>
+                   <button (click)="w9Form.value = null; clearW9Attachment()" *ngIf="w9Form.files[0] != null" class="p-button-outlined p-button-sm" icon="fa fa-close"
+                           pButton
+                           tabindex="-1" type="button"></button>
+           </span>
+              </div>
+            </div>
+
+            <div class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="securityNumber">Social Security Number </label>
+              <div class="p-inputgroup ">
+            <span class="p-float-label ">
+              <p-inputMask (keyup)="checkVendorSsnAvailability(); removeSpace.clearSpace(vendorCreateForm, 'socialSecNo')"
+                           [disabled]="isSocialNoDisabled"
+                           class="p-fluid width-max" formControlName="socialSecNo" id="securityNumber" mask="***-**-****"
+                           type="text"></p-inputMask>
+            </span>
+              </div>
+              <div *ngIf="isVendorSsnAvailable" class="p-invalid text-align-left">
+                Social Security Number already exist, Please enter new one
+              </div>
+            </div>
+
+            <div class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="employeeId">Employee ID Number (**-*******)</label>
+              <div class="p-inputgroup">
             <span class="p-float-label">
               <input (keyup)="checkVendorEmployeeAvailability(); removeSpace.clearSpace(vendorCreateForm, 'empIdNo')"
-                     class="p-fluid width-max" formControlName="empIdNo" id="employeeId"
-                     [disabled]="isEmployeeIdDisabled" pInputText type="text">
+                     [disabled]="isEmployeeIdDisabled" class="p-fluid width-max" formControlName="empIdNo"
+                     id="employeeId" pInputText type="text">
             </span>
-          </div>
-          <div class="p-invalid text-align-left" *ngIf="isVendorEmpNoAvailable">
-            Employee ID already exist, Please enter new one
-          </div>
-        </div>
+              </div>
+              <div *ngIf="isVendorEmpNoAvailable" class="p-invalid text-align-left">
+                Employee ID already exist, Please enter new one
+              </div>
+            </div>
 
 
-        <div class="field col-12 xl:col-3">
-          <label class="label-wrapper" for="exemptPayCode">Exempt Payee Code</label>
-          <div class="p-inputgroup">
-            <span class="p-float-label">
-              <input formControlName="exemptPayeeCode" id="exemptPayCode"
-                     (keyup)="removeSpace.clearSpace(vendorCreateForm, 'exemptPayeeCode')"
-                     type="text" pInputText>
-            </span>
-          </div>
-          <div class="p-invalid text-align-left "
-               *ngIf="vendorCreateForm.get('exemptPayeeCode').hasError('maxlength')">
-            Payee Code must be less than 40 characters
-          </div>
-        </div>
-
-        <div class="field col-12 xl:col-3">
-          <label for="ExemptionReportCode" class="label-responsive label-wrapper">Exemption From FACTA Report
-            Code</label>
-          <div class="p-inputgroup">
-            <span class="p-float-label">
-              <input formControlName="fatcaReportingCode"
-                     (keyup)="removeSpace.clearSpace(vendorCreateForm, 'fatcaReportingCode')"
-                     id="ExemptionReportCode" type="text" pInputText>
-            </span>
-          </div>
-          <div class="p-invalid text-align-left"
-               *ngIf="vendorCreateForm.get('fatcaReportingCode').hasError('maxlength')">
-            FACTA Report Code must be less than 40 characters
-          </div>
-        </div>
-
-        <ng-container class="grid col-12" formArrayName="additionalDataW9Info"
-                      *ngIf="additionalDataW9Info.length>0">
-          <ng-container *ngFor="let additionalField of vendorAdditionalDataArrayInW9Form.controls; let i=index"
-                        [formGroupName]="i">
-
-              <span class="field col-12 xl:col-3 md:col-3"
-                    *ngIf="commonUtil.checkUndefinedValues(additionalField.get('fieldValue').value,
-           additionalDataW9Info[i].docStatus, false)">
-
-      <div *ngIf="appFieldType.LABEL === additionalDataW9Info[i].fieldTypeId">
-         <label class="label-wrapper">{{additionalDataW9Info[i].fieldName}}</label>
-        <span class="p-float-label">
-            <input type="text" class="form-control" pInputText
-                   [readonly]="true" readonly [value]="additionalDataW9Info[i].value">
-        </span>
-
-      </div>
-
-      <div *ngIf="appFieldType.TEXT_BOX === additionalDataW9Info[i].fieldTypeId">
-            <label class="label-wrapper"
-                   for="input4_{{i}}">{{additionalDataW9Info[i].fieldName}}
-              {{additionalDataW9Info[i].required ? '*' : ''}}</label>
-        <div class="p-inputgroup">
-            <span class="p-float-label">
-              <input formControlName="fieldValue" type="text" pInputText id="input4_{{i}}"
-                     [maxLength]="additionalDataW9Info[i].maxLength" class="place-holder-width"
-                     [pKeyFilter]="commonUtil.buildRegex(additionalDataW9Info[i].dataType)"
-                     maxlength="{{additionalDataW9Info[i].maxLength}}"
-                     (keyup)="removeSpace.clearSpace(additionalField, 'fieldValue')">
-            </span>
-        </div>
-      </div>
-
-      <div>
-        <div
-          *ngIf="appFieldType.TEXT_AREA === additionalDataW9Info[i].fieldTypeId">
-          <label class="label-wrapper"
-                 for="notes4_{{i}}">{{additionalDataW9Info[i].fieldName}}
-            {{additionalDataW9Info[i].required ? '*' : ''}}</label>
-      <div class="p-inputgroup">
-          <span class="p-float-label">
-            <textarea formControlName="fieldValue" id="notes4_{{i}}"
-                      rows="{{additionalDataW9Info[i].rowCount}}" pInputTextarea
-                      [maxLength]="additionalDataW9Info[i].maxLength"
-                      class="place-holder-width"
-                      (keyup)="removeSpace.clearSpace(additionalField, 'fieldValue')"></textarea>
-          </span>
-      </div>
-    </div>
-      </div>
-                <div
-                  *ngIf="appFieldType.DROP_DOWN_FIELD === additionalDataW9Info[i].fieldTypeId && additionalDataW9Info[i].multiple === 'A'">
-                    <label class="label-wrapper" for="multiselect_{{i}}">Select {{additionalDataW9Info[i].fieldName}}
-                      {{additionalDataW9Info[i].required ? '*' : ''}}</label>
-      <span class="p-float-label">
-           <p-multiSelect [options]="additionalDataW9Info[i].optionsList.data" id="multiselect4_{{i}}"
-                          optionValue="id" inputId="multiselect_{{i}}" #multiSelect4 appendTo="body" optionDisabled="inactive"
-                          (onChange)="addNewAdditionalDropDownOption($event,additionalDataW9Info[i],additionalField, multiSelect4)"
-                          (onClick)="commonUtil.isAllowedToTriggerClickEvent(multiSelect4, additionalDataW9Info[i])?
-                           addNewAdditionalDropDownOption($event,additionalDataW9Info[i],additionalField, multiSelect4): null"
-                          formControlName="fieldValue" optionLabel="name" [showToggleAll]="true" [filter]="true">
-             <ng-template pTemplate="selectedItem">
-                <div>{{additionalField.get('fieldValue').value.name}}</div>
-             </ng-template>
-
-             <ng-template let-multiselect pTemplate="item">
-                 <div class="grid">
-                     <div class="dropdown-list">{{multiselect.name}}</div>
-                 </div>
-             </ng-template>
-
-
-               <ng-template pTemplate="footer" *ngIf="additionalDataW9Info[i].createNew === 'A'">
-                    <div class="grid dp-footer">
-                      <div class="col-12 button-wrapper">
-                        <button pButton class="p-button-sm" label="Add New"
-                                (click)="addNewDropDown = true;
-                           setSelectedAdditionalField(additionalDataW9Info[i])"></button>
-                      </div>
-                    </div>
-                  </ng-template>
-
-           </p-multiSelect>
-        </span>
-      </div>
-
-      <div
-        *ngIf="appFieldType.DROP_DOWN_FIELD === additionalDataW9Info[i].fieldTypeId && additionalDataW9Info[i].multiple != 'A'">
-        <label class="label-wrapper"
-               for="dropdown4_{{i}}">Select {{additionalDataW9Info[i].fieldName}}
-          {{additionalDataW9Info[i].required ? '*' : ''}}</label>
-      <span class="p-float-label">
-           <p-dropdown [options]="additionalDataW9Info[i].optionsList.data" [showClear]="true" #dropdown3
-                       class="vendor-dropdown" [virtualScroll]="true" virtualScrollItemSize="25" appendTo="body"
-                       (onChange)="addNewAdditionalDropDownOption($event,additionalDataW9Info[i],additionalField, dropdown3);
-                       commonUtil.isPressEnterInsideDropdown(dropdown3)" optionDisabled="inactive"
-                       id="dropdown4_{{i}}" optionValue="id" optionLabel="name" [autoDisplayFirst]="false"
-                       formControlName="fieldValue" inputId="dropdown_{{i}}" [filter]="true">
-
-             <ng-template pTemplate="selectedItem">
-                <div>{{dropdown3.selectedOption.name}}</div>
-             </ng-template>
-
-             <ng-template let-multiselect pTemplate="item">
-                 <div class="grid">
-                     <div class="dropdown-list">{{multiselect.name}}</div>
-                 </div>
-             </ng-template>
-
-               <ng-template pTemplate="footer" *ngIf="additionalDataW9Info[i].createNew === 'A'">
-                    <div class="grid dp-footer">
-                      <div class="col-12 button-wrapper">
-                        <button pButton class="p-button-sm" label="Add New"
-                                (click)="addNewDropDown = true;
-                           setSelectedAdditionalField(additionalDataW9Info[i])"></button>
-                      </div>
-                    </div>
-                  </ng-template>
-
-           </p-dropdown>
-        </span>
-      </div>
-
-        <div *ngIf="appFieldType.FILE_INPUT === additionalDataW9Info[i].fieldTypeId">
-           <label class="label-wrapper" for="fileText">Upload {{additionalDataW9Info[i].fieldName}} Here
-             {{additionalDataW9Info[i].required ? '*' : ''}}</label>
+            <div class="field col-12 xl:col-6">
+              <label class="label-wrapper" for="exemptPayCode">Exempt Payee Code</label>
               <div class="p-inputgroup">
-              <span class="p-float-label">
-              <input [id]="'fileUploadH5'+ i" #fileInput5
-                     (change)="commonUtil.changeFileInput($event,additionalField, additionalDataW9Info[i],false, fileInput5)"
-                     type="file" class="place-holder-width"
-                     accept="{{additionalDataW9Info[i].fileTypes}}" hidden>
-              <input id="fileText4" formControlName="attachment" readonly type="text"
-                     (click)="fileUploadClick('fileUploadH5', i)"
-                     (keydown.enter)="fileUploadClick('fileUploadH5', i)"
-                     style="border-radius: 6px 0 0 6px !important;"
-                     class="place-holder-width"
-                     [value]="fileInput5.files[0] ? fileInput5.files[0].name : null" pInputText>
-              <button tabindex="-1" style="margin: 0 !important;height: 31px !important;" type="button" pButton
-                      label="Browse" class="p-button file-browse p-button-sm"
-                      (click)="fileUploadClick('fileUploadH5', i)"></button>
-           <button tabindex="-1" *ngIf="fileInput5.files[0] != null" pButton type="button"
-                   class="p-button-outlined p-button-sm"
-                   icon="fa fa-close"
-                   (click)="fileInput5.value = null; commonUtil.changeFileInput($event,additionalField, null,false, fileInput5)"></button>
-             </span>
-              </div>
-        </div>
-
-      <div *ngIf="appFieldType.DATE_FIELD=== additionalDataW9Info[i].fieldTypeId">
-         <label class="label-wrapper" for="dateField4_{{i}}">{{additionalDataW9Info[i].fieldName}}
-           {{additionalDataW9Info[i].required ? '*' : ''}} </label>
-      <div class="p-inputgroup">
             <span class="p-float-label">
-              <p-calendar appTabindexMinusOne formControlName="fieldValue" id="dateField4_{{i}}"
-                          class="place-holder-width" [showButtonBar]="true"
-                          (onSelect)="formatDate($event, i, 'w9Info')" [showIcon]="true"></p-calendar>
-               <button pButton type="button" class="p-button p-button-sm clear-button"
-                       icon="fa fa-close" (click)="additionalField.get('fieldValue').reset()"></button>
+              <input (keyup)="removeSpace.clearSpace(vendorCreateForm, 'exemptPayeeCode')" formControlName="exemptPayeeCode"
+                     id="exemptPayCode"
+                     pInputText type="text">
             </span>
-      </div>
-    </div>
-
-              <div *ngIf="appFieldType.RADIO_BUTTON === additionalDataW9Info[i].fieldTypeId">
-                <div class="grid col-12" [style]="{'align-items': 'center'}">
-                    <div>
-            <span
-              class="label-wrapper">{{additionalDataW9Info[i].fieldName}}{{additionalDataW9Info[i].required ? '*' : ''}}</span>
-          </div>
-                  <div class="radio-container" *ngFor="let option of additionalDataW9Info[i].options">
-                    <label>
-                      <input id="male4" type="radio" value="{{option.optionValue}}" class="radioButton"
-                             formControlName="fieldValue">
-                      <span style="margin-left: 0.2rem; margin-right: 0.5rem"
-                            for="male1">{{' ' + option.optionValue}}</span>
-                    </label>
-                  </div>
-                </div>
               </div>
+              <div *ngIf="vendorCreateForm.get('exemptPayeeCode').hasError('maxlength')"
+                   class="p-invalid text-align-left ">
+                Payee Code must be less than 40 characters
+              </div>
+            </div>
 
-                 <div *ngIf="appFieldType.CHECK_BOX === additionalDataW9Info[i].fieldTypeId">
-                    <label class="label-wrapper"
-                           for="binary4">{{additionalDataW9Info[i].fieldName}}{{additionalDataW9Info[i].required ? '*' : ''}}</label>
-        <div class="p-inputgroup" style="position:relative">
-     <div class="field-checkbox">
-           <p-checkbox name="checkBox" formControlName="fieldValue" id="binary4" binary="true"></p-checkbox>
+            <div class="field col-12 xl:col-6">
+              <label class="label-responsive label-wrapper" for="ExemptionReportCode">Exemption From FACTA Report
+                Code</label>
+              <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input (keyup)="removeSpace.clearSpace(vendorCreateForm, 'fatcaReportingCode')"
+                     formControlName="fatcaReportingCode"
+                     id="ExemptionReportCode" pInputText type="text">
+            </span>
+              </div>
+              <div *ngIf="vendorCreateForm.get('fatcaReportingCode').hasError('maxlength')"
+                   class="p-invalid text-align-left">
+                FACTA Report Code must be less than 40 characters
+              </div>
+            </div>
+
+            <ng-container *ngIf="additionalDataW9Info.length > 0" class="grid" formArrayName="additionalDataW9Info">
+              <ng-container
+                *ngFor="let additionalField of vendorAdditionalDataArrayInW9Form.controls; let itemIndex = index"
+                [formGroupName]="itemIndex">
+                <app-additional-field-header-items
+                  (updateAdditionalFieldDropDowns)="updateAdditionalFieldDropDowns($event)"
+                  *ngIf="commonUtil.checkUndefinedValues(additionalField.get('fieldValue').value, additionalDataW9Info[itemIndex].docStatus, false)" [additionalFieldHeader]="additionalDataW9Info"
+                  [additionalField]="additionalField"
+                  [isCreate]="!isVendorEdit"
+                  [itemIndex]="itemIndex"
+                  [parentFormControlName]="'additionalDataW9Info'" [parentForm]="vendorCreateForm" class="field lg:col-4 xl:col-6 md:col-4 sm:col-6 col-12">
+                </app-additional-field-header-items>
+              </ng-container>
+            </ng-container>
 
           </div>
-        </div>
-      </div>
+        </p-accordionTab>
+      </p-accordion>
 
-      <div class="p-invalid text-align-left"
-           *ngIf="(additionalField.get('fieldValue').errors && additionalField.get('fieldValue').dirty) ||
-(additionalField.get('attachment').errors && additionalField.get('attachment').dirty)">
-
-         <div *ngIf="additionalField.get('fieldValue').dirty
-             && additionalField.get('fieldValue').hasError('required')"> {{additionalDataW9Info[i].fieldName}}
-           is required
-            </div>
-
-            <div *ngIf="additionalField.get('attachment').dirty
-             && additionalField.get('attachment').hasError('required')"> {{additionalDataW9Info[i].fieldName}}
-              is required
-            </div>
-
-        <div *ngIf="additionalField.get('fieldValue').hasError('isValidate')">
-          Field require ({{appConstant.DATA_TYPE_PATTERN_MAP.get(additionalDataW9Info[i].dataType)}}) type
-        </div>
-      </div>
-              </span>
-          </ng-container>
-        </ng-container>
-
-      </div>
-
-      <ng-container *ngIf="(vendorHome.vendorIdToEdit) && vendorAdditionalFieldAttachment.length>0"
-                    class="grid">
+      <ng-container *ngIf="(isVendorEdit) && vendorAdditionalFieldAttachment.length>0" class="grid">
         <div class="col-12">
           <h6 class="subHeadingColour">Files Attached</h6>
-          <p-table responsiveLayout="scroll" [value]="vendorAdditionalFieldAttachment" scrollable="true"
-                   scrollHeight="150px"
+          <p-table [value]="vendorAdditionalFieldAttachment" responsiveLayout="scroll" scrollHeight="150px"
+                   scrollable="true"
                    styleClass="p-datatable-md p-datatable-striped detail-table">
 
             <ng-template pTemplate="header">
               <tr>
-                <th style="width:150px" class="thead-style detail-table-header-left" id="rName">File Name</th>
-                <th style="width:150px" class="thead-style detail-table-header-left" id="fieldName">Field Name</th>
-                <th style="width:50px" class="thead-style text-center" id="action">Action</th>
+                <th class="thead-style detail-table-header-left" id="rName" style="width:150px">File Name</th>
+                <th class="thead-style detail-table-header-left" id="fieldName" style="width:150px">Field Name</th>
+                <th class="thead-style text-center" id="action" style="width:50px">Action</th>
               </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-i="rowIndex" let-item>
+            <ng-template let-i="rowIndex" let-item pTemplate="body">
               <tr>
 
                 <td [style]="'height : 30px'">
-                  <label> {{item.fileName}}</label>
+                  <label> {{ item.fileName }}</label>
                 </td>
                 <td [style]="'height : 30px'">
-                  <label> {{item.fieldName}}</label>
+                  <label> {{ item.fieldName }}</label>
                 </td>
 
                 <td class="text-center">
-                  <i (click)="downloadVendorAttachment(item)" class="download-icon"
-                     [class]="item.loading ? 'pi pi-spin pi-spinner' : 'fa fa-download'"></i> &nbsp;
+                  <i (click)="downloadVendorAttachment(item)" [class]="item.loading ? 'pi pi-spin pi-spinner' : 'fa fa-download'"
+                     class="download-icon"></i> &nbsp;
 
-                  <i *ngIf="!item.loading"
-                     (click)="deleteVendorAttachments(item, i)" id="deleteAttachment"
-                     class="fa fa-trash download-icon"></i>
+                  <i (click)="deleteVendorAttachments(item, i)"
+                     *ngIf="!item.loading" class="fa fa-trash download-icon"
+                     id="deleteAttachment"></i>
                 </td>
 
               </tr>
@@ -1910,70 +951,59 @@
       </ng-container>
       <br *ngIf="vendorAdditionalFieldAttachment.length>0">
     </div>
-
-    <div class="col-12 more-info-duplicate" *ngIf="viewShowMoreContent">
-      <p class="more-info"
-         (click)="w9Information ? w9Information = false : w9Information = true;">{{!postalAddress && !w9Information ? 'Add W9 Information' : 'Hide W9 Information'}}
-        <i [ngClass]="!postalAddress && !w9Information ? 'pi pi-angle-down': 'pi pi-angle-up'"></i></p>
-    </div>
   </form>
 </div>
+<div class="grid footer form-footer-button">
+  <div class="col-12 button-set-wrapper">
+    <div class="pull-right">
+      <button (click)="resetVendorCreateForm()" [disabled]="isCreate || isSendInvitation || isUpdateVendor" class="p-button-sm p-button-outlined mr-2" icon="fa-solid fa-rotate-right"
+              label="Reset"
+              pButton type="button"></button>
 
-<div class="grid button-responsive sticky-btn">
-  <div class="col-12 vendor-create footer form-footer-button button-set-wrapper" [style.margin-bottom.px]="vendorHome.isOpenEditPage ? -16 : 0">
-    <div class="pull-right pr-6">
-      <button pButton type="button" label="Back"
-              class="p-button-outlined p-button-sm margin-right" (click)="vendorHome.isOpenEditPage = false"
-              *ngIf="vendorHome.isOpenEditPage" icon="pi pi-arrow-left"></button>
-      <button pButton type="button" (click)="resetVendorCreateForm()" label="Reset"
-              [disabled]="isCreate || isSendInvitation || isUpdateVendor"
-              class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>
+      <button (click)="onSubmit('CS')" *ngIf="!isVendorSelectedFromSuggestions && !isVendorEdit &&
+                  privilegeService.isAuthorized(appAuthorities.VENDORS_SEND_VENDOR_INVITATION)" [disabled]="isCreate || isSendInvitation || isUpdateVendor" [icon]="!isSendInvitation ? 'fa fa-paper-plane': 'pi pi-spin pi-spinner'"
+              [label]="'Create & Invite'"
+              class="p-button-sm p-button-outlined mr-2" iconPos="left"
+              pButton
+              type="submit"></button>
 
-      <button pButton type="submit" class="p-button-sm" (click)="onSubmit('CS')"
-              *ngIf="!isVendorSelectedFromSuggestions && !vendorHome.isOpenEditPage &&
-                  privilegeService.isAuthorized(appAuthorities.VENDORS_SEND_VENDOR_INVITATION)"
-              iconPos="left" [icon]="!isSendInvitation ? 'pi pi-plus': 'pi pi-spin pi-spinner'"
-              [disabled]="isCreate || isSendInvitation || isUpdateVendor"
-              [label]="'Create and Send Invitation'"></button>&nbsp;
+      <button (click)="onSubmit('C')" *ngIf="!isVendorSelectedFromSuggestions && !isVendorEdit" [disabled]="isCreate || isSendInvitation || isUpdateVendor" [icon]="!isCreate ? 'pi pi-plus': 'pi pi-spin pi-spinner'"
+              [label]="'Create Vendor'"
+              class="p-button-sm mr-2" iconPos="left"
+              pButton
+              type="submit"></button>
 
-      <button pButton type="submit" class="p-button-sm" (click)="onSubmit('C')"
-              *ngIf="!isVendorSelectedFromSuggestions && !vendorHome.isOpenEditPage"
-              iconPos="left" [icon]="!isCreate ? 'pi pi-plus': 'pi pi-spin pi-spinner'"
-              [disabled]="isCreate || isSendInvitation || isUpdateVendor"
-              [label]="'Create Vendor'"></button>
+      <button (click)="onSubmit('U')" *ngIf="!isVendorSelectedFromSuggestions && isVendorEdit" [disabled]="isCreate || isSendInvitation || isUpdateVendor" [icon]="!isUpdateVendor ?'pi pi-save':'pi pi-spin pi-spinner'"
+              [label]="'Save'"
+              class="p-button-sm mr-2" iconPos="left"
+              pButton type="submit"></button>
 
-      <button pButton type="submit" class="p-button-sm" (click)="onSubmit('U')"
-              *ngIf="!isVendorSelectedFromSuggestions && vendorHome.isOpenEditPage"
-              iconPos="left" [icon]="!isUpdateVendor ?'pi pi-save':'pi pi-spin pi-spinner'"
-              [disabled]="isCreate || isSendInvitation || isUpdateVendor" [label]="'Save'"></button>
+      <button (click)="addVendorToCompanyFromList()" *ngIf="isVendorSelectedFromSuggestions" [icon]="'pi pi-plus'" class="p-button-sm mr-2"
+              iconPos="left"
+              label="Add to Company Vendor list" pButton type="button"></button>
 
-      <button pButton type="button" (click)="addVendorToCompanyFromList()" class="p-button-sm margin-right"
-              *ngIf="isVendorSelectedFromSuggestions"
-              iconPos="left" [icon]="'pi pi-plus'"
-              label="Add to Company Vendor list"></button>
-
-      <button pButton type="submit" class="p-button-sm" *ngIf="isVendorSelectedFromSuggestions"
-              iconPos="left" [icon]="'pi pi-plus'" (click)="onSubmit('C')"
-              label="Create as a local Vendor"></button>
+      <button (click)="onSubmit('C')" *ngIf="isVendorSelectedFromSuggestions" [icon]="'pi pi-plus'" class="p-button-sm mr-2"
+              iconPos="left" label="Create as a local Vendor" pButton
+              type="submit"></button>
 
     </div>
   </div>
 </div>
 
 
-<p-overlayPanel styleClass="vendorOverlay" #vendorOverlay [dismissable]="true" [showCloseIcon]="false">
+<p-overlayPanel #vendorOverlay [dismissable]="true" [showCloseIcon]="false" styleClass="vendorOverlay">
   <ng-template pTemplate>
     <p [style]="{'color':'$green', 'font-size':'14px'}"><b>Existing Vendors In Vendor Community</b></p><br>
     <table>
       <div>
         <tr *ngFor="let vendor of suggestions; let i=index">
-          <th class="th-border" (click)="vendorClickedFromList(vendor)">
+          <th (click)="vendorClickedFromList(vendor)" class="th-border">
             <div [style]="{'color':'#959595','margin-bottom': '8px','font-size': '16px'}">
-              <i class="fa fa-user"></i> &nbsp;{{vendor.vendorName}}</div>
+              <i class="fa fa-user"></i> &nbsp;{{ vendor.vendorName }}
+            </div>
             <div [style]="{'color':'#959595','margin-bottom': '8px','font-weight': 'normal', 'font-size': '15px'}">
-              <i class="pi pi-envelope"></i> &nbsp;{{vendor.email}}</div>
-            <!--            <div [style]="{'color':'#959595','margin-bottom': '8px','font-weight': 'normal', 'font-size': '15px'}">-->
-            <!--              <i class="fa fa-map-marker"></i> &nbsp;{{vendor.permenantAddress.country}}</div>-->
+              <i class="pi pi-envelope"></i> &nbsp;{{ vendor.email }}
+            </div>
             <hr>
           </th>
         </tr>
@@ -1983,38 +1013,28 @@
 </p-overlayPanel>
 
 
-<p-sidebar [showCloseIcon]="true" *ngIf="vendorDetail" position="right" styleClass="p-sidebar-sm" [modal]="false"
-           [(visible)]="vendorDetail">
+<p-sidebar *ngIf="vendorDetail" [(visible)]="vendorDetail" [modal]="false" [showCloseIcon]="true" position="right"
+           styleClass="p-sidebar-sm">
   <ng-template pTemplate="header">Vendor Detail View</ng-template>
-  <app-vendor-detail-drawer [vendorId]="vendorId" *ngIf="vendorDetail"></app-vendor-detail-drawer>
+  <app-vendor-detail-drawer *ngIf="vendorDetail" [vendorId]="vendorId"></app-vendor-detail-drawer>
 </p-sidebar>
-<p-toast position="bottom-right" key="bc1"></p-toast>
+<p-toast key="bc1" position="bottom-right"></p-toast>
 
-<!--Create New DropDown-->
-<p-sidebar styleClass="p-sidebar-sm" appendTo="body" (onHide)="addNewDropDown = false" position="right" [modal]="true"
-           [dismissible]="true"
-           *ngIf="addNewDropDown"
-           [(visible)]="addNewDropDown">
-  <ng-template pTemplate="header">Create New DropDown Option</ng-template>
-  <app-additional-field-add-new [field]="selectedAdditionalField" *ngIf="addNewDropDown"
-                                [needToRemoveAddNew]="true" [isCreate]="!isVendorEdit"
-                                (closedComponent)="closeAdditionalDropdownCreateDrawer()"></app-additional-field-add-new>
-</p-sidebar>
-
-<p-confirmDialog #cd key="vendorAttachment" appendTo="body" header="Are you sure?"
-                 icon="conf-delete-icon pi pi-exclamation-triangle">
+<p-confirmDialog #cd appendTo="body" header="Are you sure?" icon="conf-delete-icon pi pi-exclamation-triangle"
+                 key="vendorAttachment">
   <p-footer>
-    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
-            (click)="cd.reject()"></button>
-    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, Delete it!"
-            (click)="cd.accept()"></button>
+    <button (click)="cd.reject()" class="conf-cancel-btn p-button-outlined" icon="pi pi-times" label="Cancel" pButton
+            type="button"></button>
+    <button (click)="cd.accept()" class="conf-reject-btn" icon="pi pi-check" label="Yes, Delete it!" pButton
+            type="button"></button>
   </p-footer>
 </p-confirmDialog>
 
 <!--Create New Vendor Group-->
-<p-sidebar styleClass="p-sidebar-sm" position="right" [modal]="true" [dismissible]="true" appendTo="body"
-           *ngIf="createVendorGroup" [(visible)]="createVendorGroup">
+<p-sidebar *ngIf="createVendorGroup" [(visible)]="createVendorGroup" [dismissible]="true" [modal]="true" appendTo="body"
+           position="right" styleClass="p-sidebar-sm">
   <ng-template pTemplate="header">Create Vendor Group</ng-template>
-  <app-vendor-group-form (refreshGrid)="getVendorGroups(); createVendorGroup = false" [panel]="true"
-                         *ngIf="createVendorGroup"></app-vendor-group-form>
+  <app-vendor-group-form (refreshGrid)="getVendorGroups(); createVendorGroup = false" *ngIf="createVendorGroup"
+                         [panel]="true"></app-vendor-group-form>
 </p-sidebar>
+

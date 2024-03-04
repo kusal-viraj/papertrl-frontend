@@ -17,8 +17,7 @@ import {UploadNotificationsComponent} from '../../common/upload-notifications/up
 export class UserUploadComponent implements OnInit, OnDestroy {
   public uploadUserForm: UntypedFormGroup;
   private files: any;
-  responsePercentage: any;
-  isBlocked = false;
+  responsePercentage = 0;
   userId: any;
   timeInterval: any;
   value: any;
@@ -109,7 +108,6 @@ export class UserUploadComponent implements OnInit, OnDestroy {
         this.responsePercentage = res.body;
         this.responsePercentage = Math.floor(this.responsePercentage);
         if (this.responsePercentage === 100.0) {
-          this.isBlocked = false;
           clearInterval(this.timeInterval);
           setTimeout(() => {
             this.getUploadIssues();

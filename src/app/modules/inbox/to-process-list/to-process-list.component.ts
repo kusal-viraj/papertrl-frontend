@@ -38,13 +38,15 @@ export class ToProcessListComponent implements OnInit {
 
   public isHeight = false;
   public isVisibleAttachedToModal = false;
+  @Input() isVisibleAttached = false;
+  @Output() isVisible = new EventEmitter();
   public isSaveButtonEventInProgress = false;
   public isExpanded = false;
   public isProgressView: boolean;
   public vendorName: any;
   public tabIndex: any;
   public totalRecords: any;
-  public attachmentId: any;
+  public attachmentId: any [] = [];
   public attId: any;
   public screenHeight: number;
   public toProcessDataLength: number;
@@ -93,6 +95,7 @@ export class ToProcessListComponent implements OnInit {
   @Output() isProgressToProcessAction = new EventEmitter();
   @Output() emitToProcesslistLength = new EventEmitter();
   public title: any;
+  public isCheck: any;
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -113,6 +116,7 @@ export class ToProcessListComponent implements OnInit {
     this.getToProcessOption();
     this.getAttachmentId();
     this.onResize();
+
   }
 
   /**
@@ -327,8 +331,7 @@ export class ToProcessListComponent implements OnInit {
       documentType: [AppConstant.NULL_VALUE, Validators.required],
       documentId: [AppConstant.NULL_VALUE],
       vendorId: [AppConstant.NULL_VALUE],
-      attachment: [AppConstant.NULL_VALUE],
-      attachmentId: [AppConstant.NULL_VALUE],
+      attachmentIdList: [AppConstant.NULL_VALUE],
       vendorAttachmentTypeId: [AppConstant.NULL_VALUE]
     });
   }
@@ -338,6 +341,7 @@ export class ToProcessListComponent implements OnInit {
    */
   resetAttachedToForm() {
     this.attachedToForm.reset();
+    this.attachmentId =  [];
   }
 
   /**
@@ -365,18 +369,21 @@ export class ToProcessListComponent implements OnInit {
       this.isSaveButtonEventInProgress = false;
       new CommonUtility().validateForm(this.attachedToForm);
     } else {
-      this.inboxService.fileFromInbox.subscribe(file => {
-        if (file != null) {
-          this.attachedToForm.get(AppConstant.INBOX_ATTACHMENT).patchValue(file.get(AppConstant.FILE));
-        }
-      });
-      if (this.attachmentId != null) {
-        this.attachedToForm.get(AppConstant.ATTACHMENT_ID).patchValue(this.attachmentId);
+      const multipleAttId = this.attachmentIds || [];
+      const singleAttId = this.attachmentId || [];
+
+      if(multipleAttId.length > 0 ){
+        this.attachedToForm.get(AppConstant.ATTACHMENT_ID).patchValue(multipleAttId);
+      }else {
+        this.attachedToForm.get(AppConstant.ATTACHMENT_ID).patchValue(singleAttId);
       }
+
       this.inboxService.saveAttachedToFormData(this.attachedToForm.value).subscribe((response: any) => {
         if (response.status === AppConstant.HTTP_RESPONSE_STATUS_SUCCESS) {
           this.notificationService.successMessage(HttpResponseMessage.ATTACHED_TO_DOCUMENT_SUCCESSFULLY);
           this.isVisibleAttachedToModal = false;
+          this.isVisible.emit();
+          this.isVisibleAttached = false;
           this.isSaveButtonEventInProgress = false;
           this.attachedToForm.reset();
           this.loadToProcessList(this.filterValue);
@@ -480,7 +487,7 @@ export class ToProcessListComponent implements OnInit {
   getAttachmentId() {
     this.inboxService.attachmentIdInToProcessData.subscribe(attachmentId => {
       if (attachmentId != null) {
-        this.attachmentId = attachmentId;
+        this.attachmentId.push(attachmentId);
       }
     });
   }
@@ -493,6 +500,7 @@ export class ToProcessListComponent implements OnInit {
    * @param isChecked
    */
   addAttachmentToList(toProcessData, attId, fileType, isChecked) {
+    this.isCheck = isChecked;
     if (attId !== null && isChecked && attId !== undefined && !this.attachmentIds.includes(attId)) {
       this.attachmentIds.push(attId);
     } else {
@@ -518,6 +526,7 @@ export class ToProcessListComponent implements OnInit {
    */
 
   checkUncheckAll(isChecked, toProcessData: any) {
+    this.isCheck = isChecked;
     if (isChecked) {
       toProcessData.attachmentList.forEach(attachment => {
         attachment.isChecked = true;
@@ -606,5 +615,11 @@ export class ToProcessListComponent implements OnInit {
   showFullText(event: MouseEvent) {
     const target = event.target as HTMLElement;
     target.title = this.title;
+  }
+
+  whenCloseDrawer() {
+    this.isVisibleAttachedToModal = false;
+    this.isVisibleAttached = false;
+    this.attachmentId =  [];
   }
 }

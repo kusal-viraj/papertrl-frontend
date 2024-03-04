@@ -62,6 +62,9 @@ import { FieldValidationComponent } from './field-validation/field-validation.co
 import { DepartmentDetailViewComponent } from './department-detail-view/department-detail-view.component';
 import {ItemModule} from "../item/item.module";
 import {NgxIntlTelInputModule} from "ngx-intl-tel-input";
+import { FundingAccountCreateComponent } from './funding-accounts/funding-account-create/funding-account-create.component';
+import { FundingAccountHomeComponent } from './funding-accounts/funding-account-home/funding-account-home.component';
+import {PanelModule} from "primeng/panel";
 
 
 @NgModule({
@@ -71,7 +74,7 @@ import {NgxIntlTelInputModule} from "ngx-intl-tel-input";
     PoNumberConfigurationComponent, PoNumberListComponent, PaymentConfigurationComponent, AdditionalFieldAttachDocComponent,
     ManageFeatureComponent, DecimalNumberDirective, PoPriceVarianceComponent, PoPriceVarianceListComponent,
     ReminderConfigurationComponent, ReminderListComponent, MileageConfigurationComponent, MileageRateListComponent,
-    PaymentProviderDetailComponent, FieldValidationComponent, DepartmentDetailViewComponent, ],
+    PaymentProviderDetailComponent, FieldValidationComponent, DepartmentDetailViewComponent, FundingAccountCreateComponent, FundingAccountHomeComponent, ],
   providers: [PoNumberListComponent],
   exports: [
     NumberDirective
@@ -113,7 +116,8 @@ import {NgxIntlTelInputModule} from "ngx-intl-tel-input";
         AutoCompleteModule,
         MegaMenuModule,
         ItemModule,
-        NgxIntlTelInputModule
+        NgxIntlTelInputModule,
+        PanelModule
     ]
 })
 export class SettingModule {

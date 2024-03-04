@@ -250,6 +250,7 @@
                           [options]="employeeList.data" id="employees" appendTo="body" [showClear]="true" optionValue="id"
                           formControlName="employeeId" placeholder="Select Employee" optionLabel="name" #empDp
                           (onChange)="employeeDpChanged(empDp.selectedOption, group)"
+                          (onClear)="onClear(empDp.selectedOption, group)"
                           [filter]="true" [autoDisplayFirst]="false">
               </p-dropdown>
             </div>

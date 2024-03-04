@@ -70,7 +70,7 @@
              </ng-template>
 
 
-            <ng-template pTemplate="footer">
+            <ng-template pTemplate="footer" *ngIf="privilegeService.isAuthorized(appAuthorities.BILL_TEMPLATES_CREATE)">
                <div class="grid dp-footer">
                  <div class="col-12 button-wrapper">
                    <button pButton class="p-button-sm" label="Add New"

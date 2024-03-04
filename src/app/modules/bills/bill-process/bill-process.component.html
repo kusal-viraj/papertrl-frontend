@@ -227,8 +227,7 @@
                                 (onChange)="changeBillTemplate(selectedTemplateName)"
                                 [autoDisplayFirst]="false" [filter]="true">
 
-                      <ng-template pTemplate="footer"
-                                   *ngIf="privilegeService.isAuthorized(appAuthorities.VENDORS_CREATE)">
+                      <ng-template pTemplate="footer" *ngIf="privilegeService.isAuthorized(appAuthorities.BILL_TEMPLATES_CREATE)">
                <div class="grid dp-footer">
                  <div class="col-12 button-wrapper">
                    <button pButton class="p-button-sm" label="Add New"

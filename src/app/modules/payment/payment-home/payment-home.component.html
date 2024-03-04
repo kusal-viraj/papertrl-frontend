@@ -1,6 +1,79 @@
-<div [class.back-ground-white]="uploadBillPayment">
-  <div class="grid mt-1">
-    <div class="col-6  mb-1">
+<div class="back-ground-white">
+  <div class="col-12 flex">
+    <div class="col-6 flex flex-column row-gap-2 mt-2 ml-2">
+      <div class="payment-title">Payments</div>
+      <div class="payment-description">Effortlessly view and track every transaction recorded in the system.</div>
+    </div>
+
+    <div class="col-6 flex justify-content-end align-items-end">
+      <!--      If the user package type is only for payments-->
+      <ng-container *ngIf="userPackageType(appConstant.PAPERTRL_SYSTEM_USERS)">
+        <button pButton class="p-button-outlined p-button-lg mr-3 " *ngIf="!uploadBillPayment &&
+                privilegeService.isAuthorized(appAuthorities.PAYMENT_UPLOAD)" iconPos="right"
+                icon="pi pi-angle-down" label="Upload Offline Transactions"
+                (click)="uploadMenu.toggle($event)"></button>
+
+        <ng-template [ngTemplateOutlet]="payBtnTemplate"></ng-template>
+      </ng-container>
+
+      <!--      If the user package type is only for integrated payments-->
+      <ng-container *ngIf="userPackageType(appConstant.INTEGRATED_PAYABLE_USERS)">
+        <ng-template [ngTemplateOutlet]="erpButtonTemplate"></ng-template>
+        <button pButton class="p-button mr-3 pay-btn" iconPos="left" icon="fa-solid fa-hand-holding-dollar"
+                label="Pay" (click)="integrationPayBtnClicked()"></button>
+      </ng-container>
+
+      <!--      If the user package type is for both payments and integrated payments-->
+      <ng-container *ngIf="userPackageType(appConstant.HYBRID_USERS)">
+        <ng-template [ngTemplateOutlet]="erpButtonTemplate"></ng-template>
+        <button pButton class="p-button pay-btn mr-2" label="" (click)="menu.toggle($event)">
+          <label><span class="fa-solid fa-hand-holding-dollar mr-2"></span>Pay<span
+            class="pi pi-angle-down vertical-align-sub ml-2"></span></label>
+        </button>
+      </ng-container>
+
+      <!--      ERP Button template for both Payments and Integration-->
+      <ng-template #erpButtonTemplate>
+        <button pButton class="p-button-outlined mr-3 p-button-lg" *ngIf="!activePackage.isThirdPartySystemConfig"
+                [class.erp-btn-disable]="activePackage.isThirdPartySystemPending"
+                [class.p-disabled]="isErpButtonDisabled()"
+                (click)="isErpButtonDisabled() ? null : erpConfigMenu.toggle($event)">
+          <label>
+            <i [style.color]="isErpButtonDisabled() ? 'black' : ''" class="mr-2"
+               [ngClass]="{'fa-regular fa-hourglass-half': isErpButtonDisabled(), 'fa-solid fa-gear': !isErpButtonDisabled()}"></i>
+            {{ isErpButtonDisabled() ? activePackage.thirdPartySystemName + 'Configuration is pending' : 'Send ERP Configuration Request' }}
+            <span *ngIf="!isErpButtonDisabled()" class="pi pi-angle-down vertical-align-sub ml-2"></span>
+          </label>
+        </button>
+
+        <button *ngIf="activePackage.isThirdPartySystemConfig" pButton class="connect-qbo p-button-lg mr-3"
+                (click)="toggleConnection()">
+          <div class="content-wrapper">
+            <span class="fa-solid fa-plug mr-3"></span>
+            <span>{{ (activePackage.thirdPartySystemConnected ? 'Disconnect ' : 'Connect ') + activePackage.thirdPartySystemName }}</span>
+            <i class="fa-solid fa-circle ml-6"
+               [style.color]="activePackage.thirdPartySystemConnected ? '#44D653' : '#EE3912'"></i>
+          </div>
+        </button>
+      </ng-template>
+
+      <!--      Pay Button template for both Payments and Integration-->
+      <ng-template #payBtnTemplate>
+        <button pButton class="p-button mr-3 pay-btn"
+                *ngIf="!createBillPayment && privilegeService.isAuthorized(appAuthorities.PAYMENT_CREATE)"
+                iconPos="left" icon="fa-solid fa-hand-holding-dollar" label="Pay"
+                (click)="toggleBillPayment('cb')"></button>
+      </ng-template>
+
+      <p-menu appendTo="body" #menu [popup]="true" [model]="getActionMenuList()"></p-menu>
+      <p-menu appendTo="body" #uploadMenu [popup]="true" [model]="uploadMenuItems"></p-menu>
+      <p-menu appendTo="body" #erpConfigMenu [popup]="true" [model]="erpConfigMenuItems"></p-menu>
+    </div>
+  </div>
+
+
+  <div class="grid mt-4 ml-3">
+    <div class="col-6 paginator-top-table-actions">
       <app-table-header-action-buttons [hidden]="!listBillPayment" *ngIf="isBillPaymentTable()
                                        && transactionListComponent" [componentInstance]="transactionListComponent"
                                        [tableSupportBase]="transactionListComponent?.tableSupportBase"
@@ -15,26 +88,7 @@
                                        [moduleName]="AppAnalyticsConstants.MODULE_NAME_PAYMENT"
       ></app-table-header-action-buttons>
     </div>
-    <div class="col-6 text-right">
 
-      <button pButton class="p-button-outlined mr-3" *ngIf="!uploadBillPayment &&
-                privilegeService.isAuthorized(appAuthorities.PAYMENT_UPLOAD)" iconPos="right"
-              icon="pi pi-angle-down"
-              label="Upload Offline Transactions" (click)="menu.toggle($event)"></button>
-
-      <p-menu appendTo="body" #menu [popup]="true" [model]="menuItems"></p-menu>
-
-      <button pButton class="p-button-outlined mr-3" *ngIf="!listBillPayment && isBillPaymentTable()"
-              iconPos="left" label="View Transaction List" (click)="toggleBillPayment('lb')"></button>
-
-      <button pButton class="p-button mr-3 pay-btn" *ngIf="!createBillPayment &&
-               privilegeService.isAuthorized(appAuthorities.PAYMENT_CREATE)" iconPos="left"
-              label="Pay" (click)="toggleBillPayment('cb')"></button>
-    </div>
-  </div>
-  <div class="height" *ngIf="uploadBillPayment &&
-                privilegeService.isAuthorized(appAuthorities.PAYMENT_UPLOAD)">
-    <app-payment-offline-upload [documentId]="documentId"></app-payment-offline-upload>
   </div>
 </div>
 
@@ -42,11 +96,35 @@
                       *ngIf="isBillPaymentTable()"></app-transaction-list>
 
 
-<p-sidebar [modal]="false" [showCloseIcon]="false" [dismissible]="true" position="right" appendTo="body" [fullScreen]="true" [(visible)]="createBillPayment"
+<p-sidebar [modal]="false" [showCloseIcon]="false" [dismissible]="true" position="right" appendTo="body"
+           [fullScreen]="true" [(visible)]="createBillPayment"
            (onHide)="changeAfterSuccess()" *ngIf="createBillPayment" styleClass="payment-drawer">
-<!--  <ng-template pTemplate="header">Create Payment</ng-template>-->
+  <!--  <ng-template pTemplate="header">Create Payment</ng-template>-->
   <app-create-payment
     (successEmit)="transactionListComponent.loadData(transactionListComponent.tableSupportBase.searchFilterDto); changeAfterSuccess()"
     (closeEmit)="changeAfterSuccess()"
     *ngIf="createBillPayment && privilegeService.isAuthorized(appAuthorities.PAYMENT_CREATE)"></app-create-payment>
 </p-sidebar>
+
+
+<p-sidebar [modal]="false" [showCloseIcon]="false" [dismissible]="true" position="right" appendTo="body"
+           [fullScreen]="true" [(visible)]="processPaymentRequest"
+           (onHide)="changeAfterSuccess()" *ngIf="processPaymentRequest" styleClass="payment-drawer">
+  <!--  <ng-template pTemplate="header">Create Payment</ng-template>-->
+  <app-process-payment-request (closeEmit)="changeAfterSuccess()"
+                               [isFileUploadType]="!activePackage.thirdPartySystemConnected"
+                               *ngIf="processPaymentRequest"></app-process-payment-request>
+</p-sidebar>
+
+<p-sidebar styleClass="p-sidebar-lg" [modal]="true" [dismissible]="true" appendTo="body" position="right"
+           class="overflow-side-bar" [(visible)]="uploadBillPayment" *ngIf="uploadBillPayment">
+  <ng-template pTemplate="header">Upload Offline Transactions</ng-template>
+  <app-payment-offline-upload [documentId]="documentId"></app-payment-offline-upload>
+</p-sidebar>
+
+<!--ERP Configuration Component-->
+<app-erp-configuration [erpConfigRequestPanel]="erpConfigRequestPanel" (closePanelEmit)="erpConfigRequestPanel = false"
+                       [selectedERPConfig]="selectedERPConfig">
+</app-erp-configuration>
+
+

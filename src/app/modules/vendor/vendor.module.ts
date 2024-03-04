@@ -66,6 +66,7 @@ import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import { VendorItemDetailComponent } from './item/vendor-item-detail/vendor-item-detail.component';
 import { VendorItemErrorComponent } from './item/vendor-item-error/vendor-item-error.component';
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import {AccordionModule} from "primeng/accordion";
 
 @NgModule({
   declarations: [VendorHomeComponent, VendorInvoiceComponent, VendorRequestComponent, CreateVendorComponent,
@@ -124,6 +125,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
     NgxDropzoneModule,
     ProgressSpinnerModule,
     ScrollingModule,
+    AccordionModule,
   ],
     exports: [
         VendorDetailDrawerComponent

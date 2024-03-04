@@ -195,7 +195,8 @@
       <label class="label" for="effectiveUntil">Valid Thru<span
         *ngIf="isAsteriskMarkShown(f,'effectiveUntil')">{{'*'}}</span></label>
       <p-calendar appTabindexMinusOne id="effectiveUntil" readonlyInput="true" [showButtonBar]="true" [maxDate]="maxDate"
-                  [showIcon]="true" formControlName="effectiveUntil" appendTo="body" [minDate]="today"></p-calendar>
+                  [showIcon]="true" formControlName="effectiveUntil" appendTo="body" [minDate]="today"
+                  [todayButtonStyleClass]="'d-card-calendar-clear-btn'"></p-calendar>
       <div class="p-invalid text-align-left"
            *ngIf="formGroup.get('effectiveUntil').dirty && formGroup.get('effectiveUntil').errors">
         Valid Thru is required

@@ -103,8 +103,7 @@
     </div>
   </div>
 
-  <div *ngIf="vendorInfo && !isOpenEditPage"
-       [ngClass]="getVendorInfoClass()">
+  <div *ngIf="vendorInfo" [ngClass]="getVendorInfoClass()">
     <div class="card pl-0 pr-0 card-overflow">
       <ul class="widget-person-list custom-card-header">
         <li>
@@ -116,23 +115,20 @@
 
           <div class="col-7">
             <div style="display: flex; justify-content: flex-end;">
-              <button *ngIf="isOpenEditPage === false && privilegeService.isAuthorized(appAuthorities.VENDORS_EDIT)"
-                      label="Edit"
-                      class="p-button-outlined mr-3 createVendorBtn p-button-sm" style="font-weight: bold;"
-                      #listVendorId (click)="editVendor()" pButton><i class="fa fa-pencil mr-2"></i>
+              <button *ngIf="privilegeService.isAuthorized(appAuthorities.VENDORS_EDIT)"
+                      label="Edit" class="p-button-outlined mr-3 createVendorBtn p-button-sm" style="font-weight: bold;"
+                      (click)="editVendor()" pButton><i class="fa fa-pencil mr-2"></i>
               </button>
 
               <button
                 *ngIf="showSendInvitationButton && privilegeService.isAuthorized(appAuthorities.VENDORS_SEND_VENDOR_INVITATION)"
-                label="Send An Invitation" type="submit"
-                class="p-button-outlined mr-3 createVendorBtn p-button-sm" style="font-weight: bold;"
-                #listVendorId pButton (click)="sendInvitation(vendorId)"><i class="fa fa-paper-plane mr-2"></i>
+                label="Send An Invitation" type="submit" class="p-button-outlined mr-3 createVendorBtn p-button-sm" style="font-weight: bold;"
+                pButton (click)="sendInvitation(vendorId)"><i class="fa fa-paper-plane mr-2"></i>
               </button>
 
               <button *ngIf="privilegeService.isAuthorized(appAuthorities.ITEMS_UPLOAD)"
-                      label="Upload Item List"
-                      class="p-button-outlined mr-3 createVendorBtn p-button-sm" style="font-weight: bold;"
-                      #listVendorId (click)="vendorItemUpload = true" pButton><i class="fa fa-upload mr-2"></i>
+                      label="Upload Item List" class="p-button-outlined mr-3 createVendorBtn p-button-sm" style="font-weight: bold;"
+                      (click)="vendorItemUpload = true" pButton><i class="fa fa-upload mr-2"></i>
               </button>
             </div>
           </div>
@@ -235,88 +231,43 @@
     </div>
   </div>
 
-  <div *ngIf="isOpenEditPage" [ngClass]="getVendorInfoClass()">
-    <div class="card card-overflow">
-      <ul class="widget-person-list custom-card-header">
-        <li>
-          <div class="person-item">
-            <div class="person-info">
-              <div class="person-name" style="margin-left: -6px;">{{vendorEditName}} &nbsp;
-                <span class="vendor-edit-button" *ngIf="isOpenEditPage == false" (click)="editVendor()"><i
-                  class="fa fa-pencil"></i> Edit</span>
-              </div>
-            </div>
-          </div>
-          <i (click)="moreVendorDetailsMain = !moreVendorDetailsMain"
-             *ngIf="isOpenEditPage == false && privilegeService.isAuthorized(appAuthorities.VENDORS_DETAIL_VIEW)"
-             [ngClass]="!moreVendorDetailsMain ? 'pi pi-angle-down' : 'pi pi-angle-up'">{{moreVendorDetailsMain ? 'Show Less' : 'Show More'}}</i>
-        </li>
-      </ul>&nbsp;
-      <app-create-vendor [isVendorEdit]="isOpenEditPage" #createVendorComponent></app-create-vendor>
-    </div>
-  </div>
-
-  <div *ngIf="!vendorInfo && !isOpenEditPage" [ngClass]="getVendorInfoClass()">
+  <div *ngIf="!vendorInfo" [ngClass]="getVendorInfoClass()">
     <div class="card p-0 card-overflow">
-      <p-tabView (onChange)="vendorTabCHanged(tabIndex)" [(activeIndex)]="tabIndex"
-                 styleClass="tabview-custom expense-tabs vendor-tabview">
-        <p-tabPanel [disabled]="!privilegeService.isAuthorized(appAuthorities.VENDORS_CREATE)">
+      <p-tabView (onChange)="vendorTabCHanged(tabIndex)" [(activeIndex)]="tabIndex" styleClass="tabview-custom expense-tabs vendor-tabview">
+        <p-tabPanel [disabled]="isSendInvitationEnabled()">
           <ng-template pTemplate="header">
-            <span class="custom-span">Create Vendor</span>
-          </ng-template>
-          <app-create-vendor #VendorComponentEdit
-                             *ngIf="privilegeService.isAuthorized(appAuthorities.VENDORS_CREATE)"></app-create-vendor>
-        </p-tabPanel>
-        <p-tabPanel [disabled]="!privilegeService.isAuthorizedMultiple([appAuthorities.VENDORS_SEND_VENDOR_INVITATION,
-            appAuthorities.VENDORS_DELETE_VENDOR_INVITATION, appAuthorities.VENDORS_RESEND_VENDOR_INVITATION])">
-          <ng-template pTemplate="header">
-            <span class="custom-span">Send An Invitation</span>
+            <span class="custom-span">Vendor Invitation</span>
           </ng-template>
           <ng-template pTemplate="content">
-            <app-vendor-invitation *ngIf="privilegeService.isAuthorizedMultiple([appAuthorities.VENDORS_SEND_VENDOR_INVITATION,
-            appAuthorities.VENDORS_DELETE_VENDOR_INVITATION, appAuthorities.VENDORS_RESEND_VENDOR_INVITATION])"></app-vendor-invitation>
+            <app-vendor-invitation *ngIf="!isSendInvitationEnabled()"></app-vendor-invitation>
           </ng-template>
         </p-tabPanel>
-        <p-tabPanel [disabled]="!privilegeService.isAuthorized(appAuthorities.VENDORS_UPLOAD)">
-          <ng-template pTemplate="header">
-            <span class="custom-span">Import Vendors</span>
-          </ng-template>
-          <ng-template pTemplate="content">
-            <app-vendor-upload *ngIf="privilegeService.isAuthorized(appAuthorities.VENDORS_UPLOAD)"></app-vendor-upload>
-          </ng-template>
-        </p-tabPanel>
-        <p-tabPanel [disabled]="!privilegeService.isAuthorizedMultiple([appAuthorities.VENDORS_APPROVE_VENDOR_REQUEST,
-            appAuthorities.VENDORS_DELETE_VENDOR_REQUEST, appAuthorities.VENDORS_REJECT_VENDOR_REQUEST])">
+        <p-tabPanel [disabled]="isVendorRequestEnabled()">
           <ng-template pTemplate="header">
             <span class="custom-span">Vendor Requests</span>
           </ng-template>
           <ng-template pTemplate="content">
-            <app-vendor-request
-              *ngIf="privilegeService.isAuthorizedMultiple([appAuthorities.VENDORS_APPROVE_VENDOR_REQUEST,
-            appAuthorities.VENDORS_DELETE_VENDOR_REQUEST, appAuthorities.VENDORS_REJECT_VENDOR_REQUEST])"></app-vendor-request>
+            <app-vendor-request *ngIf="!isVendorRequestEnabled()"></app-vendor-request>
           </ng-template>
         </p-tabPanel>
-        <p-tabPanel [disabled]="!privilegeService.isAuthorizedMultiple([appAuthorities.VENDOR_GROUP_CREATE,
-            appAuthorities.VENDOR_GROUP_EDIT, appAuthorities.VENDOR_GROUP_DELETE, appAuthorities.VENDOR_GROUP_INACTIVATE,
-            appAuthorities.VENDOR_GROUP_ACTIVATE])">
+        <p-tabPanel [disabled]="isVendorGroupEnabled()">
           <ng-template pTemplate="header">
             <span class="custom-span">Vendor Groups</span>
           </ng-template>
           <ng-template pTemplate="content">
-            <app-vendor-group *ngIf="privilegeService.isAuthorizedMultiple([appAuthorities.VENDORS_SEND_VENDOR_INVITATION,
-            appAuthorities.VENDORS_DELETE_VENDOR_INVITATION, appAuthorities.VENDORS_RESEND_VENDOR_INVITATION])"></app-vendor-group>
+            <app-vendor-group *ngIf="!isVendorGroupEnabled()"></app-vendor-group>
           </ng-template>
         </p-tabPanel>
 
-        <p-tabPanel [disabled]="!privilegeService.isAuthorized(appAuthorities.VENDORS_ADD_TO_LOCAL_VENDOR_LIST)">
+        <p-tabPanel [disabled]="isCommunityVendorsEnabled()">
           <ng-template pTemplate="header">
             <span class="custom-span">Community Vendors</span>
           </ng-template>
           <ng-template pTemplate="content">
-            <app-vendor-table
-              *ngIf="privilegeService.isAuthorized(appAuthorities.VENDORS_ADD_TO_LOCAL_VENDOR_LIST)"></app-vendor-table>
+            <app-vendor-table *ngIf="!isCommunityVendorsEnabled()"></app-vendor-table>
           </ng-template>
         </p-tabPanel>
+
       </p-tabView>
     </div>
   </div>
@@ -348,3 +299,29 @@
   <ng-template pTemplate="header">Upload Item</ng-template>
   <app-vendor-item-upload [vendorId]="vendorId" [vendorName]="vendorName"></app-vendor-item-upload>
 </p-sidebar>
+
+<p-sidebar styleClass="p-sidebar-lg upload-one-file" appendTo="body" [modal]="true" [dismissible]="true"
+           position="right" *ngIf="isVendorCreate" [(visible)]="isVendorCreate">
+  <ng-template pTemplate="header">Create Vendor</ng-template>
+  <app-create-vendor *ngIf="isVendorCreate" (refreshVendorList)="refreshVendorList(); isVendorCreate = false"></app-create-vendor>
+</p-sidebar>
+
+<p-sidebar styleClass="p-sidebar-lg upload-one-file" appendTo="body" [modal]="true" [dismissible]="true"
+           position="right" *ngIf="isOpenEditPage" [(visible)]="isOpenEditPage">
+  <ng-template pTemplate="header">Edit Vendor</ng-template>
+  <app-create-vendor *ngIf="isOpenEditPage" [isVendorEdit]="true" (refreshVendorList)="refreshVendorList(null, $event); isOpenEditPage = false" [vendorId]="vendorIdToEdit"></app-create-vendor>
+</p-sidebar>
+
+
+<p-sidebar styleClass="p-sidebar-md" appendTo="body" [modal]="true" [dismissible]="true"
+           position="right" *ngIf="isVendorUploadPanel" [(visible)]="isVendorUploadPanel">
+  <ng-template pTemplate="header">Import Vendors</ng-template>
+  <app-vendor-upload></app-vendor-upload>
+</p-sidebar>
+
+
+<!--<p-dialog position="center" [(visible)]="isVendorUploadPanel" (onHide)="isVendorUploadPanel = false"-->
+<!--          [resizable]="false" [closable]="true" class="credit-note-details-wrapper" appendTo="body"-->
+<!--          [style]="{width: '50vw'}" closeOnEscape="false" [modal]="true" [draggable]="false"-->
+<!--          [baseZIndex]="1000" *ngIf="isVendorUploadPanel">-->
+<!--</p-dialog>-->

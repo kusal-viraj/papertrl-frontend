@@ -5,8 +5,10 @@
   </div>
   <div class="grid">
     <div class="col-5 font-bold"><label>Accepted Payment Types</label></div>
-    <div
-      class="col-6">{{data.acceptedPaymentTypeList?.length ? getPaymentTypes(data.acceptedPaymentTypeList) : '-'}}</div>
+    <div class="col-6" *ngIf="data.acceptedPaymentTypeList.length">
+      <li *ngFor="let type of data.acceptedPaymentTypeList">{{type.name + ' (' + type.paymentChannel + ')'}}</li>
+    </div>
+    <div class="col-6" *ngIf="!data.acceptedPaymentTypeList.length">-</div>
   </div>
   <div class="grid">
     <div class="col-5 font-bold"><label>Preferred Payment Type</label></div>

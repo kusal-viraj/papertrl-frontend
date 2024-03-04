@@ -88,6 +88,7 @@ export class VendorGroupFormComponent implements OnInit {
         this.buttonLoading = false;
         this.notificationService.successMessage(HttpResponseMessage.VENDOR_GROUP_CREATED_SUCCESSFULLY);
         this.vendorService.groupSubject.next(true);
+        this.refreshGrid.emit();
       } else {
         this.buttonLoading = false;
         this.notificationService.infoMessage(res.body.message);

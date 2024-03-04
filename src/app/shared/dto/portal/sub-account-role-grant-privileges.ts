@@ -4,4 +4,5 @@ export class SubAccountRoleGrantPrivileges {
   public modified: boolean;
   public rolePrivilegeList: any[] = [];
   public subAccountPrivilegeList: any[] = [];
+  hasPrivilege: boolean;
 }

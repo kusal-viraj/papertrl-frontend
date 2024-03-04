@@ -1,8 +1,59 @@
 
-.height{
-  min-height: calc(100vh - 115px);
+.pay-btn {
+  min-width: 80px;
+  height: 40px;
+
+  label {
+    font-size: 1rem;
+  }
+
+  span {
+    font-size: 1rem;
+  }
 }
 
-.pay-btn{
-  min-width: 80px;
+.connect-qbo {
+  background-color: #e4e4e4;
+  color: #555555;
+  border: none;
+  height: 40px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #e4e4e4 !important;
+    color: #555555 !important;
+  }
+}
+
+.content-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.payment-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #26464A;
+}
+
+.payment-description {
+  font-size: 14px;
+  color: #9B9B9B;
+}
+
+.erp-btn-disable {
+  background-color: #F6E22D;
+  color: black !important;
+  font-weight: bold;
+  border: #F6E22D !important;
+  height: 40px;
+  label{
+    span{
+      color: transparent;
+    }
+  }
+}
+
+.p-button-lg{
+  height: 40px;
 }

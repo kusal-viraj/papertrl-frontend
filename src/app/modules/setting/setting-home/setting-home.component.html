@@ -64,6 +64,13 @@
         class="menu-icon fa fa-usd"></span>Online Payments
       </li>
 
+      <li *ngIf="isAccessFundingAccountCreate()"
+          (click)="activeComponent = componentsInFundingAccount; configurationMenu[0].label = null; menuChange()"
+          [ngClass]="activeComponent === componentsInFundingAccount || configurationMenu[0].label === 'Funding' ?
+                    'selected-menu-bg':''"><span
+        class="menu-icon fa fa-building-columns"></span>Funding Accounts
+      </li>
+
       <li *ngIf="isAccessFeatureConfiguration()"
           (click)="activeComponent = componentsInFeatureConfiguration; configurationMenu[0].label = null; menuChange()"
           [ngClass]="activeComponent === componentsInFeatureConfiguration || configurationMenu[0].label === 'Feature'?
@@ -304,4 +311,10 @@
   <app-reminder-configuration *ngIf="isReminderCreate" (onComplete)="reminderListComponent?.getDataFromBackend(); isReminderCreate = false">
   </app-reminder-configuration>
   <app-reminder-list #reminderListComponent [hidden]="isReminderCreate"></app-reminder-list>
+</ng-template>
+
+<!--Funding Accounts-->
+
+<ng-template #componentsInFundingAccount>
+  <app-funding-account-home></app-funding-account-home>
 </ng-template>

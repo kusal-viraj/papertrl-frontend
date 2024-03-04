@@ -3,4 +3,5 @@ export class RoleMasterDto {
   roleName: string;
   previlageList: any;
   fieldList: any;
+  privilegeList: any;
 }

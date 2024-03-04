@@ -101,11 +101,11 @@ export class RoleService {
   }
 
   createRole(roleRequestDto: RoleMasterDto) {
-    for (const entry of roleRequestDto.previlageList) {
-      entry.__proto__ = null;
-      entry.children = null;
-      entry.parent = null;
-    }
+    // for (const entry of roleRequestDto.previlageList) {
+    //   entry.__proto__ = null;
+    //   entry.children = null;
+    //   entry.parent = null;
+    // }
 
     return this.http.post(ApiEndPoint.API_URL + '/role_management/create_role_v2', roleRequestDto,
       {
@@ -114,11 +114,11 @@ export class RoleService {
   }
 
   updateRole(roleRequestDto: RoleMasterDto) {
-    for (const entry of roleRequestDto.previlageList) {
-      entry.__proto__ = null;
-      entry.children = null;
-      entry.parent = null;
-    }
+    // for (const entry of roleRequestDto.previlageList) {
+    //   entry.__proto__ = null;
+    //   entry.children = null;
+    //   entry.parent = null;
+    // }
 
     return this.http.put(ApiEndPoint.API_URL + '/role_management/update_role_v2', roleRequestDto,
       {

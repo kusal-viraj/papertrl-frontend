@@ -96,7 +96,7 @@ tableSupportBase.setContextMenuActionBtnList(tableSupportBase.actionButtonList(c
 </div>
 
 <!--Edit User-->
-<p-sidebar styleClass="p-sidebar-lg custom-user-edit-bar" [modal]="true" [dismissible]="true" appendTo="body" position="right"
+<p-sidebar styleClass="p-sidebar-lg upload-one-file" [modal]="true" [dismissible]="true" appendTo="body" position="right"
            class="overflow-side-bar" [(visible)]="editUser" *ngIf="editUser">
   <ng-template pTemplate="header">Edit User</ng-template>
   <app-user-create (refreshTable)="loadData(tableSupportBase.searchFilterDto); editUser = false" [panel]="true"
@@ -105,7 +105,7 @@ tableSupportBase.setContextMenuActionBtnList(tableSupportBase.actionButtonList(c
 </p-sidebar>
 
 <!--View User-->
-<p-sidebar styleClass="p-sidebar-lg custom-user-edit-bar" [modal]="true" [dismissible]="true" position="right" class="overflow-side-bar"
+<p-sidebar styleClass="p-sidebar-lg upload-one-file" [modal]="true" [dismissible]="true" position="right" class="overflow-side-bar"
            *ngIf="viewUser" [(visible)]="viewUser">
   <ng-template pTemplate="header">User Details</ng-template>
   <app-user-create [panel]="true" [detailView]="true" [editView]="false" [id]="actionActive.id"

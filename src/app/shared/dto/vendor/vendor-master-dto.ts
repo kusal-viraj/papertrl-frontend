@@ -15,6 +15,7 @@ export class VendorMasterDto {
   remittanceEmail ?: string;
   permenantAddress ?: PermanentAddress = new PermanentAddress();
   remitAddress ?: RemitPermanentAddress = new RemitPermanentAddress();
+  // acceptedPaymentType ?: AcceptedPaymentTypes = new AcceptedPaymentTypes();
   additionalData: AdditionalFieldDetailDto[] = new Array();
   additionalFieldAttachments: VendorAdditionalFieldAttachments[] = new Array();
   public additionalDataBasicInfo: AdditionalFieldDetailDto[] = new Array();
@@ -59,10 +60,12 @@ export class VendorMasterDto {
   vendorGroupNameList?: any;
   accountNumber: any;
   recipientType: any;
+  mailOptionName?: string;
   accountType: any;
   accountRoutingNumber: any;
   companyName: any;
-  acceptedPaymentTypes: any = [];
+  // acceptedPaymentTypes: any = [];
+  acceptedPaymentTypes: AcceptedPaymentTypes[] = [];
   preferredPaymentTypeId: any;
   acceptedPaymentTypesStr: string;
   preferredPaymentTypeStr: string;
@@ -94,4 +97,15 @@ export class W9Attachment {
   id: any;
   fileName: any;
   downloading?: any;
+}
+
+
+export class AcceptedPaymentTypes {
+  selected ?: any;
+  paymentTypeId ?: any;
+  providerId ?: any;
+  differentRemit ?: any;
+  remittanceEmail ?: string;
+  paymentProviderName ?: string;
+  paymentTypeName ?: string;
 }

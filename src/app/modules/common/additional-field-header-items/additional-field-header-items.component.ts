@@ -15,6 +15,7 @@ export class AdditionalFieldHeaderItemsComponent implements OnInit {
   @Input() itemIndex;
   @Input() additionalFieldHeader;
   @Input() parentForm;
+  @Input() parentFormControlName = 'additionalData';
   @Output() updateAdditionalFieldDropDowns = new EventEmitter();
   public appFieldType = AppFieldType;
   public addNewDropDown = false;
@@ -27,18 +28,18 @@ export class AdditionalFieldHeaderItemsComponent implements OnInit {
   ngOnInit(): void {
   }
   get fieldValueControl() {
-    return (this.parentForm.get('additionalData') as FormArray).at(this.itemIndex).get('fieldValue');
+    return (this.parentForm.get(this.parentFormControlName) as FormArray).at(this.itemIndex).get('fieldValue');
   }
 
   get fieldValueControlAttachment() {
-    return (this.parentForm.get('additionalData') as FormArray).at(this.itemIndex).get('attachment');
+    return (this.parentForm.get(this.parentFormControlName) as FormArray).at(this.itemIndex).get('attachment');
   }
 
   /**
    * return form array data
    */
   public get headingSectionArray() {
-    return this.parentForm.get('additionalData') as UntypedFormArray;
+    return this.parentForm.get(this.parentFormControlName) as UntypedFormArray;
   }
 
   /**

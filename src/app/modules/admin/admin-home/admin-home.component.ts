@@ -1,18 +1,19 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {CommonSystemTaskRoutingService} from '../../../shared/services/common/common-system-task-routing/common-system-task-routing.service';
+import {
+  CommonSystemTaskRoutingService
+} from '../../../shared/services/common/common-system-task-routing/common-system-task-routing.service';
 import {AppSystemTaskRouting} from '../../../shared/enums/app-system-task-routing';
 import {Subscription} from 'rxjs';
 import {PrivilegeService} from '../../../shared/services/privilege.service';
 import {AppAuthorities} from '../../../shared/enums/app-authorities';
-import {FormGuardService} from "../../../shared/guards/form-guard.service";
-import {UserService} from "../../../shared/services/user/user.service";
-import {RoleService} from "../../../shared/services/roles/role.service";
-import {ReceiptListComponent} from "../../expense/receipt-list/receipt-list.component";
-import {UserManageComponent} from "../user-manage/user-manage.component";
-import {RoleManageComponent} from "../role-manage/role-manage.component";
+import {FormGuardService} from '../../../shared/guards/form-guard.service';
+import {UserService} from '../../../shared/services/user/user.service';
+import {RoleService} from '../../../shared/services/roles/role.service';
+import {UserManageComponent} from '../user-manage/user-manage.component';
+import {RoleManageComponent} from '../role-manage/role-manage.component';
 import {PortalRoleListComponent} from '../../portal/portal-role-list/portal-role-list.component';
-import {AppAnalyticsConstants} from "../../../shared/enums/app-analytics-constants";
+import {AppAnalyticsConstants} from '../../../shared/enums/app-analytics-constants';
 
 export class RoleState {
   public activeTab?: any;
@@ -36,20 +37,18 @@ export class AdminHomeComponent implements OnInit, OnDestroy {
   public tabIndex = 0;
   public createRole = false;
   public createPortalRole = false;
-  public createUserBtn = false;
-  public uploadUserBtn = false;
-  public listUserBtn = false;
   public isUploadApprovalGroup = false;
   public isListApprovalGroup = true;
   public responsePercentage: number;
   public isNotVendor = true;
   public isPortal = false;
+  public createUser = false;
+  public uploadUser = false;
   public appAuthorities = AppAuthorities;
 
   @ViewChild('userManageComponent') public userManageComponent: UserManageComponent;
   @ViewChild('roleManageComponent') public roleManageComponent: RoleManageComponent;
   @ViewChild('portalRoleListComponent') public portalRoleListComponent: PortalRoleListComponent;
-
 
 
   constructor(public route: ActivatedRoute, public privilegeService: PrivilegeService,
@@ -62,14 +61,9 @@ export class AdminHomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getSystemTaskRouting();
-    this.listUserBtn = true;
     if (sessionStorage.getItem('roleState')) {
       this.state = JSON.parse(sessionStorage.getItem('roleState'));
       this.tabIndex = this.state.activeTab;
-      this.createRole = this.state.roleCreate;
-      this.createUserBtn = this.state.userCreate;
-      this.uploadUserBtn = this.state.uploadUser;
-      this.listUserBtn = this.state.listUser;
       this.createPortalRole = this.state.portalRoleCreate;
     } else {
       this.tabIndex = 0;
@@ -89,10 +83,6 @@ export class AdminHomeComponent implements OnInit, OnDestroy {
 
   storeSessionStore() {
     this.state.activeTab = this.tabIndex;
-    this.state.roleCreate = this.createRole;
-    this.state.userCreate = this.createUserBtn;
-    this.state.uploadUser = this.uploadUserBtn;
-    this.state.listUser = this.listUserBtn;
     this.state.isListApprovalGroup = this.isListApprovalGroup;
     this.state.isUploadApprovalGroup = this.isUploadApprovalGroup;
     sessionStorage.setItem('roleState', JSON.stringify(this.state));
@@ -120,27 +110,9 @@ export class AdminHomeComponent implements OnInit, OnDestroy {
 
   toggleCreateUser(val) {
     if (val === 'cu') {
-      this.createUserBtn = true;
-      this.uploadUserBtn = false;
-      this.listUserBtn = false;
-
-    } else if (val === 'vl') {
-      this.uploadUserBtn = false;
-      this.createUserBtn = false;
-      this.listUserBtn = true;
-
-    } else if (val === 'approvalGroupList') {
-
-      this.createUserBtn = false;
-      this.uploadUserBtn = false;
-      this.listUserBtn = false;
-      this.isListApprovalGroup = !this.isListApprovalGroup;
-
+      this.createUser = true;
     } else {
-      this.uploadUserBtn = true;
-      this.createUserBtn = false;
-      this.listUserBtn = false;
-      this.isListApprovalGroup = true;
+      this.uploadUser = true;
     }
     this.storeSessionStore();
   }
@@ -158,19 +130,6 @@ export class AdminHomeComponent implements OnInit, OnDestroy {
       this.isUploadApprovalGroup = false;
     }
     this.storeSessionStore();
-  }
-
-
-  /**
-   * this method can be used to get visible content
-   */
-  changeAfterSuccess(event) {
-    if (event !== undefined) {
-      this.tabIndex = event.tabIndex;
-      this.listUserBtn = event.visible;
-      this.createUserBtn = false;
-      this.userService.updateTableData.next(true);
-    }
   }
 
   /**
@@ -211,4 +170,7 @@ export class AdminHomeComponent implements OnInit, OnDestroy {
   }
 
 
+  refreshUserList() {
+    this.userManageComponent.loadData(this.userManageComponent.tableSupportBase.searchFilterDto);
+  }
 }

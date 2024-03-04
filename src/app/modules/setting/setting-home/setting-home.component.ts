@@ -69,6 +69,7 @@ export class SettingHomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('componentsInPaymentConfiguration') componentsInPaymentConfiguration: ElementRef;
   @ViewChild('componentsInFeatureConfiguration') componentsInFeatureConfiguration: ElementRef;
   @ViewChild('componentsInReminderConfigurationConfiguration') componentsInReminderConfigurationConfiguration: ElementRef;
+  @ViewChild('componentsInFundingAccount') componentsInFundingAccountConfiguration: ElementRef;
 
   activeComponent: any;
   public imageUrl: any;
@@ -109,6 +110,10 @@ export class SettingHomeComponent implements OnInit, OnDestroy, AfterViewInit {
       },
       {
         label: 'Payment',
+        isVisible: this.isAccessPaymentConfiguration(),
+      },
+      {
+        label: 'Funding',
         isVisible: this.isAccessPaymentConfiguration(),
       },
       {
@@ -158,6 +163,11 @@ export class SettingHomeComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       case AppConstant.ONLINE_PAYMENTS:
         this.activeComponent = this.componentsInPaymentConfiguration;
+        this.configurationMenu[0].label = null;
+        this.menuChange();
+        break;
+      case AppConstant.FUNDING_ACCOUNTS:
+        this.activeComponent = this.componentsInFundingAccountConfiguration;
         this.configurationMenu[0].label = null;
         this.menuChange();
         break;
@@ -265,6 +275,17 @@ export class SettingHomeComponent implements OnInit, OnDestroy, AfterViewInit {
     return (this.isAccessDepartment() && (this.isSubAccount || !this.isPortal));
   }
 
+  isAccessFundingAccountCreate() {
+    return (this.accessFundingAccount() && (this.isSubAccount || !this.isPortal));
+  }
+
+  accessFundingAccount() {
+    return this.privilegeService.isAuthorizedMultiple(
+      [AppAuthorities.FUNDING_ACCOUNT_CREATE, AppAuthorities.FUNDING_ACCOUNT_EDIT, AppAuthorities.FUNDING_ACCOUNT_DELETE,
+        AppAuthorities.FUNDING_ACCOUNT_MARK_AS_DEFAULT, AppAuthorities.FUNDING_ACCOUNT_INACTIVATE,
+        AppAuthorities.FUNDING_ACCOUNT_ACTIVATE]);
+  }
+
 
   deptAddedFromEdit() {
     setTimeout(() => {
@@ -321,6 +342,9 @@ export class SettingHomeComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.configurationMenu[0].label === 'ReminderReminder') {
       this.activeComponent = this.componentsInReminderConfigurationConfiguration;
     }
+    if (this.configurationMenu[0].label === 'Funding') {
+      this.activeComponent = this.componentsInFundingAccountConfiguration;
+    }
   }
 
   ngAfterViewInit(): void {
@@ -355,13 +379,14 @@ export class SettingHomeComponent implements OnInit, OnDestroy, AfterViewInit {
    * This method is used to store tab index and particular string inside the map
    */
   settingsTabIndexMapInitialize() {
-      this.indexAndString.set(0, AppConstant.COMPANY_PROFILE);
-      this.indexAndString.set(1, AppConstant.DEPARTMENTS);
-      this.indexAndString.set(2, AppConstant.GENERAL_SETTINGS);
-      this.indexAndString.set(3, AppConstant.FIELDS_CONFIGURATION);
-      this.indexAndString.set(4, AppConstant.ONLINE_PAYMENTS);
-      this.indexAndString.set(5, AppConstant.FEATURE_SETTINGS);
-      this.indexAndString.set(7, AppConstant.REMINDERS);
+      this.indexAndString.set(AppConstant.TAB_INDEX_OF_COMPANY_PROFILE, AppConstant.COMPANY_PROFILE);
+      this.indexAndString.set(AppConstant.TAB_INDEX_OF_DEPARTMENTS, AppConstant.DEPARTMENTS);
+      this.indexAndString.set(AppConstant.TAB_INDEX_OF_GENERAL_SETTINGS, AppConstant.GENERAL_SETTINGS);
+      this.indexAndString.set(AppConstant.TAB_INDEX_OF_FIELDS_CONFIGURATION, AppConstant.FIELDS_CONFIGURATION);
+      this.indexAndString.set(AppConstant.TAB_INDEX_OF_ONLINE_PAYMENTS, AppConstant.ONLINE_PAYMENTS);
+      this.indexAndString.set(AppConstant.TAB_INDEX_OF_FEATURE_SETTINGS, AppConstant.FEATURE_SETTINGS);
+      this.indexAndString.set(AppConstant.TAB_INDEX_OF_FUNDING_ACCOUNTS, AppConstant.FUNDING_ACCOUNTS);
+      this.indexAndString.set(AppConstant.TAB_INDEX_OF_REMINDERS, AppConstant.REMINDERS);
   }
 
 }

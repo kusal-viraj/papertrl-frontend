@@ -21,7 +21,7 @@ export class TablePaymentTypeOverlayComponent implements OnInit {
   }
 
   getPaymentTypes(acceptedPaymentTypeList: any[]) {
-    return acceptedPaymentTypeList.map(x => ' ' + x.name);
+    return acceptedPaymentTypeList.map(x => ' ' + x.name + ' (' + x.paymentChannel + ')');
   }
 
   getPreferredPaymentType(id: any) {

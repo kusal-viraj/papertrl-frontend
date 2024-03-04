@@ -105,9 +105,17 @@ tableSupportBase.setContextMenuActionBtnList(tableSupportBase.actionButtonList(c
   <app-utilization-report-side-bar *ngIf="showUtilizationReport"></app-utilization-report-side-bar>
 </p-sidebar>
 
+<!--Edit Tenant-->
+<p-sidebar styleClass="p-sidebar-sm" [modal]="true" [dismissible]="true" position="right"
+           [(visible)]="editPackageId" *ngIf="packageId">
+  <ng-template pTemplate="header">Edit Tenant</ng-template>
+  <app-tenant-edit *ngIf="editPackageId" [panel]="true" [id]="packageId" #tenantEditComponent
+                   (refreshTable)="loadData(tableSupportBase.searchFilterDto); editPackageId = false"
+                   [isEditForm]="true"></app-tenant-edit>
+</p-sidebar>
+
 
 <!--Action Buttons-->
-
 <p-sidebar styleClass="p-sidebar-sm" appendTo="body" [modal]="true" [dismissible]="true" position="right" (onHide)="showFilter= false"
            [fullScreen]="false" [(visible)]="showFilter" transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)">
   <ng-template pTemplate="header">Advance Filter</ng-template>

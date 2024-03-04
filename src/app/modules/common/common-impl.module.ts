@@ -93,7 +93,8 @@ import { MultiselectFocusDirective } from './multiselect-focus.directive';
 import { AdditionalFieldHeaderItemsComponent } from './additional-field-header-items/additional-field-header-items.component';
 import { NoNegativeValuesDirective } from './no-negative-values.directive';
 import { LoaderComponent } from './loader/loader.component';
-
+import { TreeCheckboxComponent } from './tree-checkbox/tree-checkbox.component';
+import { AccessDeniedContainer } from './access-denied/access-denied-container';
 
 
 @NgModule({
@@ -110,7 +111,7 @@ import { LoaderComponent } from './loader/loader.component';
     AutomatedWorkflowPreviewComponent, VendorGroupFormComponent, TableInlineColumnFiltersComponent,
     TablePaymentTypeOverlayComponent, AddVendorUsersComponent, DCardCreateComponent, TableCardsOverlayComponent,
     VCardEditComponent, CountryCodeValidationComponent, AddCustomerInvoiceComponent, TabindexMinusOneDirective,
-    SkipTabviewDirective, CountryPanelOpenDirective, MultiselectFocusDirective, AdditionalFieldLineItemsComponent, AdditionalFieldHeaderItemsComponent, NoNegativeValuesDirective, LoaderComponent],
+    SkipTabviewDirective, CountryPanelOpenDirective, MultiselectFocusDirective, AdditionalFieldLineItemsComponent, AdditionalFieldHeaderItemsComponent, NoNegativeValuesDirective, LoaderComponent, TreeCheckboxComponent, AccessDeniedContainer],
 
     exports: [
         AuditTrialComponent,
@@ -165,6 +166,7 @@ import { LoaderComponent } from './loader/loader.component';
         AdditionalFieldHeaderItemsComponent,
         NoNegativeValuesDirective,
         LoaderComponent,
+        TreeCheckboxComponent,
     ],
     imports: [
         TimelineModule,

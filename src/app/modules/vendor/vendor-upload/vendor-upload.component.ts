@@ -19,7 +19,7 @@ import {VendorHomeComponent} from "../vendor-home/vendor-home.component";
 })
 export class VendorUploadComponent implements OnInit, OnDestroy {
 
-  responsePercentage: any;
+  responsePercentage = 0;
   uuid: any;
   timeInterval: any;
   value: any;
@@ -28,6 +28,7 @@ export class VendorUploadComponent implements OnInit, OnDestroy {
   public isDisabledUploadButton = false;
   public isDisabledUploadAndSendInvitationButton = false;
   public sendInvitation: boolean;
+  isDisabled = false;
 
 
   constructor(public formBuilder: UntypedFormBuilder, public notificationService: NotificationService,

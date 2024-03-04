@@ -114,13 +114,8 @@ export class InboxService {
    * @param attachedToValue to attachment object
    */
   saveAttachedToFormData(attachedToValue) {
-    attachedToValue.documentType === AppConstant.VENDOR_SECTION_ID ? this.attachedTo.documentId = attachedToValue.vendorId : this.attachedTo.documentId = attachedToValue.documentId;
-    this.attachedTo.attachment = attachedToValue.attachment;
-    this.attachedTo.vendorAttachmentTypeId = attachedToValue.vendorAttachmentTypeId;
-    this.attachedTo.attachmentId = attachedToValue.attachmentId;
-    this.attachedTo.documentType = attachedToValue.documentType;
     return this.httpClient.post(ApiEndPoint.API_URL + '/common_service/sec_inbox_attachment_attach_to_the_document',
-      this.getFormData(this.attachedTo),
+      attachedToValue,
       {observe: 'response', withCredentials: true});
   }
 
@@ -265,6 +260,10 @@ export class InboxService {
       {observe: 'response', withCredentials: true});
   }
 
+  sendEmailToSupport(){
+    return this.httpClient.get(ApiEndPoint.API_URL + '/common_service/sec_send_email_to_support_team_config_inbox_email',
+      {observe: 'response', withCredentials: true});
+  }
 
 
 }

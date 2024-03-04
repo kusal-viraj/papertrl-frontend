@@ -18,10 +18,10 @@
           <div class="grid pt-1">
             <div class="col-12">
               <input type="radio" formControlName="documentType" name="documentType" id="bill" [value]="1"
-                             class="mr-2">
+                     class="mr-2">
               <label class="mr-5" for="bill">Bill</label>
-              <input   type="radio" formControlName="documentType" name="documentType" id="expense" [value]="4"
-                             class="mr-2">
+              <input type="radio" formControlName="documentType" name="documentType" id="expense" [value]="4"
+                     class="mr-2">
               <label for="expense">Expense</label>
             </div>
           </div>
@@ -31,14 +31,12 @@
           <label class="label">Payment Method</label>
           <div class="grid pt-1">
             <div class="col-12">
-              <input type="radio" formControlName="isOnline" name="isOnline" id="offline" [value]="false"
-                             class="mr-2">
-              <label class="mr-5" for="offline">Offline</label>
               <ng-template [ngIf]="privilegeService.isPaymentConfig()">
-                <input type="radio" formControlName="isOnline" name="isOnline" id="online" [value]="true"
-                               class="mr-2">
+                <input type="radio" formControlName="isOnline" name="isOnline" id="online" [value]="true" class="mr-2">
                 <label for="online">Online</label>
               </ng-template>
+              <input type="radio" formControlName="isOnline" name="isOnline" id="offline" [value]="false" class="mr-2">
+              <label class="mr-5" for="offline">Offline</label>
             </div>
           </div>
         </div>
@@ -48,15 +46,25 @@
       <div class="grid">
         <div class="col-12 xl:col-4 lg:col-4 md:col-4 sm:col-12 field p-fluid"
              *ngIf="f.isOnline.value === paymentTypeOnline">
-          <label class="label" for="paymentType">Select Payment Provider</label>
-          <p-dropdown [virtualScroll]="paymentProviders.data.length >20" virtualScrollItemSize="25" inputId="dropdown"
-                      id="paymentProviders" [autoDisplayFirst]="true" optionDisabled="inactive"
-                      [options]="paymentProviders.data" [filter]="true" optionLabel="name" optionValue="id"
-                      formControlName="providerId" placeholder="Select Provider"
-                      (onChange)="paymentProviderChanged($event)">
+          <label class="label-wrapper" for="fundingAcc">Select Funding Account</label>
+          <p-dropdown [virtualScroll]="fundingAccounts.data.length >20" virtualScrollItemSize="25" inputId="dropdown"
+                      id="fundingAcc" [autoDisplayFirst]="true" optionDisabled="inactive" [showClear]="false"
+                      [options]="fundingAccounts.data" [filter]="true" optionLabel="name" optionValue="id"
+                      formControlName="fundingAccount" placeholder="Select Funding Account"
+                      (onChange)="fundingAccountChanged()">
           </p-dropdown>
+
+
+          <!--          <label class="label" for="paymentType">Select Payment Provider</label>-->
+          <!--          <p-dropdown [virtualScroll]="paymentProviders.data.length >20" virtualScrollItemSize="25" inputId="dropdown"-->
+          <!--                      id="paymentProviders" [autoDisplayFirst]="true" optionDisabled="inactive"-->
+          <!--                      [options]="paymentProviders.data" [filter]="true" optionLabel="name" optionValue="id"-->
+          <!--                      formControlName="providerId" placeholder="Select Provider"-->
+          <!--                      (onChange)="paymentProviderChanged($event)">-->
+          <!--          </p-dropdown>-->
         </div>
-        <div class="col-12 xl:col-4 lg:col-4 md:col-4 sm:col-12 field p-fluid">
+        <div class="col-12 xl:col-4 lg:col-4 md:col-4 sm:col-12 field p-fluid"
+             *ngIf="f.isOnline.value === paymentTypeOffline">
           <label class="label" for="paymentType">Select Payment Type</label>
           <p-dropdown [virtualScroll]="paymentTypes.data.length >20" virtualScrollItemSize="25" inputId="dropdown"
                       id="paymentType" showClear="true" [autoDisplayFirst]="false" optionDisabled="inactive"
@@ -88,24 +96,26 @@
 
 
   <div class="grid">
-    <div class="pl-0 pb-0 col-12">
+    <div class="col-6 paginator-top-table-actions">
       <app-table-header-action-buttons [visibleActions]="availableHeaderActions" [componentInstance]="this"
                                        [tableSupportBase]="tableSupportBase" #tableHeaderActionButtonsComponent
                                        (refresh)="loadData(tableSupportBase.searchFilterDto, false)"
                                        (showColumns)="showFilterColumns = !showFilterColumns; showFilter = false"
                                        (showFilters)="showFilter = !showFilter; showFilterColumns = false">
       </app-table-header-action-buttons>
+    </div>
+
+    <div class="pl-0 pb-0 col-12">
       <div class="table-wrapper">
         <p-table responsiveLayout="scroll" id="columnSelect" #dt [selectionPageOnly]="true"
                  [columns]="selectedColumns" (onFilter)="tableSupportBase.onFilter(dt)"
-                 styleClass="p-datatable-sm p-datatable-striped no-grid-lines payment-create-table"
+                 styleClass="p-datatable-sm p-datatable-striped no-grid-lines payment-create-table paginator-lifted page-no-style"
                  scrollDirection="both" (onColResize)="onTableChanged()" (onColReorder)="onTableChanged()"
                  [hidden]="tableSupportBase.isVisibleTable"
                  (onSort)="tableSupportBase.onSort(dt)"
-                 (onRowSelect)="rowSelected($event)" (onRowUnselect)="rowSelected($event)"
-                 [(selection)]="tableSupportBase.rows"
-                 [value]="tableSupportBase.dataSource"
-                 columnResizeMode="expand"
+                 (onRowSelect)="rowSelected($event, true)" (onRowUnselect)="rowSelected($event, false)"
+                 [(selection)]="tableSupportBase.rows" paginatorPosition="top"
+                 [value]="tableSupportBase.dataSource" columnResizeMode="expand"
                  dataKey="id" [reorderableColumns]="true" [rowHover]="true" [lazy]="true"
                  (onLazyLoad)="loadData($event, false)"
                  [responsive]="false" selectionMode="multiple" scrollHeight="flex" [scrollable]="true"
@@ -125,9 +135,10 @@
                   class="sort-icon-wrapper">
                 <div class="grid">
                   <div class="col-12">
-                    <span *ngIf="col.searchType !== enums.CHECKBOX">{{col.header}}</span>
+                    <span *ngIf="col.searchType !== enums.CHECKBOX">{{ col.header }}</span>
                     <span *ngIf="col.field == 'doc.referenceNo' && f.isOnline.value == paymentTypeOffline">*</span>
-                    <p-sortIcon class="grid-sort-icon" *ngIf="col.isSortable" field="{{col.sortableField}}"></p-sortIcon>
+                    <p-sortIcon class="grid-sort-icon" *ngIf="col.isSortable"
+                                field="{{col.sortableField}}"></p-sortIcon>
                   </div>
                   <div class="col-12">
                     <span app-table-inline-column-filters [tableSupportBase]="tableSupportBase" [dt]="dt"
@@ -136,26 +147,18 @@
                 </div>
               </th>
             </tr>
-
-<!--            <tr>-->
-<!--              <th *ngFor="let col of columns" [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn>-->
-<!--                <span app-table-inline-column-filters [tableSupportBase]="tableSupportBase" [dt]="dt"-->
-<!--                      [columns]="columns" [col]="col"></span>-->
-<!--              </th>-->
-<!--            </tr>-->
           </ng-template>
 
           <ng-template pTemplate="body" let-i="rowIndex" let-payment let-columns="columns">
-            <tr [class.row-highlight]="payment.selected" (mouseenter)="payment.hover = true;"
-                (mouseleave)="payment.hover = false">
+            <tr [class.row-highlight]="payment.selected" [class.row-disabled]="payment.fieldDisabled">
               <td *ngFor="let col of columns; let i=index" [ngStyle]="{'text-align': col.align}"
                   [class.z-index]="col.isFrozen"
                   [class.td-border]="i === 0" [class.td-border-selected]="payment.selected && i === 0"
                   pFrozenColumn [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection">
-                <span class="p-column-title">{{col.header}}</span>
+                <span class="p-column-title">{{ col.header }}</span>
 
                 <span *ngIf="col.field == enums.CHECKBOX">
-                   <p-tableCheckbox #check [index]="i" [disabled]="payment.disableCheckbox"
+                   <p-tableCheckbox #check [index]="i" [disabled]="payment.disableCheckbox || payment.fieldDisabled"
                                     [value]="payment"></p-tableCheckbox>
                  </span>
 
@@ -168,7 +171,7 @@
 
                    <span *ngIf="col.field == 'doc.paymentStatus'" class="capitalize">
                    <li [class]="'mr-2 status-style status-'  + getStatus(payment[col.field])"></li>
-                     {{getStatus(payment[col.field]) | titlecase}}
+                     {{ getStatus(payment[col.field]) | titlecase }}
                  </span>
 
 
@@ -178,25 +181,24 @@
                           (focusin)="payment.disableCheckbox = true"
                           (focusout)="updateSelectedArray(payment); payment.disableCheckbox = false" pInputText
                           maxlength="30"
-                          [disabled]="!isReferenceNoDisabled( payment['doc.txnType'])">
+                          [disabled]="!isReferenceNoDisabled( payment['doc.txnType']) || payment.fieldDisabled">
                  </span>
 
                   <span *ngIf="col.field == 'doc.comment'">
                    <input [ngModelOptions]="{standalone: true}" [(ngModel)]="payment[col.field]" type="text" blockSpace
-                          (focusin)="payment.disableCheckbox = true"
+                          (focusin)="payment.disableCheckbox = true" [disabled]="payment.fieldDisabled"
                           (ngModelChange)="patchBulkValues(payment, false, false, false)"
                           (focusout)="updateSelectedArray(payment); payment.disableCheckbox = false" pInputText
                           maxlength="50">
                  </span>
 
                   <span *ngIf="col.field == 'doc.txnType'">
-                      <p-dropdown [virtualScroll]="paymentTypes.data.length > 20" virtualScrollItemSize="25"
-                                  [options]="paymentTypes.data" id="{{'pType' + i}}" inputId="paymentTypeId"
-                                  (focusin)="payment.disableCheckbox = true"
+                      <p-dropdown [options]="getPaymentTypeList(payment)" id="{{'pType' + i}}" inputId="paymentTypeId"
+                                  (focusin)="payment.disableCheckbox = true" [disabled]="payment.fieldDisabled"
                                   [(ngModel)]="payment[col.field]" optionDisabled="inactive"
                                   (focusout)="updateSelectedArray(payment); payment.disableCheckbox = false"
-                                  [ngModelOptions]="{standalone: true}" (onChange)="paymentTypeChange(false,payment)"
-                                  (ngModelChange)="patchBulkValues(payment, true, false, false)"
+                                  [ngModelOptions]="{standalone: true}"
+                                  (onChange)="paymentTypeChange(false,payment); patchBulkValues(payment, true, false, false)"
                                   [showClear]="true" optionLabel="name" optionValue="id" appendTo="body" [filter]="true"
                                   [style]="{'width':'100%'}" [autoDisplayFirst]="false">
                       </p-dropdown>
@@ -205,7 +207,7 @@
                     <span *ngIf="col.field == 'doc.txnAmount'">
                   <input [(ngModel)]="payment[col.field]" maxlength="19" id="paymentAmount" type="text" pInputText
                          currencyMask [ngModelOptions]="{standalone: true}"
-                         (focusin)="payment.disableCheckbox = true"
+                         (focusin)="payment.disableCheckbox = true" [disabled]="payment.fieldDisabled"
                          (focusout)="updateSelectedArray(payment); valueChanged(); payment.disableCheckbox = false"
                          (ngModelChange)="getDiscountAmount(payment);
                          patchBulkValues(payment, false, false, false)"
@@ -215,7 +217,7 @@
                       <span *ngIf="col.field == 'doc.paymentDate'">
                         <p-calendar [(ngModel)]="payment[col.field]" appendTo="body" id="paymentDateGrid"
                                     [ngModelOptions]="{standalone: true}"
-                                    [disabled]="f.isOnline.value == paymentTypeOnline"
+                                    [disabled]="f.isOnline.value == paymentTypeOnline || payment.fieldDisabled"
                                     (ngModelChange)="patchBulkValues(payment, false, true, false)"
                                     [showIcon]="true" [style]="{'width':'100%'}"
                                     (focusin)="payment.disableCheckbox = true"
@@ -224,14 +226,14 @@
                         </span>
 
                   <span *ngIf="col.field == 'doc.creditAmount'">
-                     {{commonUtil.detailViewIsDash(payment[col.field], true) | number : '1.2-2'}}
+                     {{ commonUtil.detailViewIsDash(payment[col.field], true) | number : '1.2-2' }}
                    </span>
 
                   <span *ngIf="col.field == 'doc.applicableDiscountAmount'">
-                    {{commonUtil.detailViewIsDash(payment[col.field], true) | number : '1.2-2'}}
+                    {{ commonUtil.detailViewIsDash(payment[col.field], true) | number : '1.2-2' }}
                    </span>
 
-                  <span *ngIf="col.field == 'doc.payee'">{{payment[col.field]}}</span>
+                  <span *ngIf="col.field == 'doc.payee'">{{ payment[col.field] }}</span>
 
                   <span *ngIf="col.field == 'doc.receipt'">
                      <div class="p-inputgroup">
@@ -263,11 +265,12 @@
                        col.field !== 'doc.applicableDiscountAmount' &&
                        col.field !== 'doc.txnAmount' &&
                        col.field !== 'doc.comment' &&
-                       col.field !== 'doc.creditAmount'">{{payment[col.field]}}
+                       col.field !== 'doc.creditAmount'">{{ payment[col.field] }}
               </span>
             </span>
                 <span *ngIf="col.field == 'doc.payee'">
-                    <i class="pi pi-info-circle ml-3" [pTooltip]="'Payment details for this payee have not been verified.'"
+                    <i class="pi pi-info-circle ml-3"
+                       [pTooltip]="'Payment details for this payee have not been verified.'"
                        tooltipPosition="bottom" tooltipStyleClass="white-tool-tip"
                        *ngIf="showPaymentDetailsValidIcon(payment)"></i>
                 </span>
@@ -334,10 +337,11 @@
     </div>
     <div class="mt-3 col-12 xl:col-6 lg:col-6 md:col-12 sm:col-12">
       <div class="total text-right">
-        <h2 class="subHeadingColour">Total: &nbsp;&nbsp;{{getTotal() | number : '1.2-2'}}</h2>
-        <p *ngIf="getTotal() > 0" (click)="viewSummary()"><i class="fa fa-magnifying-glass-plus"></i> View Summary</p>
+        <span *ngIf="getTotal() > 0" (click)="viewSummary()" class="mr-3"><i class="fa fa-magnifying-glass-plus"></i> View Summary</span>
+        <h2 class="subHeadingColour">Total: &nbsp;&nbsp;{{ getTotal() | number : '1.2-2' }}</h2>
       </div>
     </div>
+
   </div>
 
   <div class="grid mt-4" *ngIf="showApprovers">
@@ -422,17 +426,17 @@
       <div class="col-3 pr-6 text-right font-bold">Amount</div>
       <div class="grid mt-3 p-0 col-12 document-list">
         <ng-container *ngFor="let row of tableSupportBase.rows; let i=index">
-          <div class="col-1 ">{{i + 1}}</div>
-          <div class="col-3">{{row['doc.docNo']}}</div>
-          <div class="col-3">{{row['doc.payee']}}</div>
-          <div class="col-2">{{row['doc.dueDate']}}</div>
-          <div class="col-3 text-right">{{row['doc.txnAmount'] | number : '1.2-2'}}</div>
+          <div class="col-1 ">{{ i + 1 }}</div>
+          <div class="col-3">{{ row['doc.docNo'] }}</div>
+          <div class="col-3">{{ row['doc.payee'] }}</div>
+          <div class="col-2">{{ row['doc.dueDate'] }}</div>
+          <div class="col-3 text-right">{{ row['doc.txnAmount'] | number : '1.2-2' }}</div>
         </ng-container>
       </div>
 
       <div class="grid mt-3 w-full">
         <div class="col-12 text-right">
-          <h2 class="subHeadingColour">Total: &nbsp;&nbsp;{{getTotal() | number : '1.2-2'}}</h2>
+          <h2 class="subHeadingColour">Total: &nbsp;&nbsp;{{ getTotal() | number : '1.2-2' }}</h2>
         </div>
       </div>
     </div>
@@ -464,7 +468,7 @@
 
 <p-dialog position="center" [(visible)]="showSummary" (onHide)="showSummary = false" styleClass="dialog-box-no-padding"
           [resizable]="false" [closable]="false" appendTo="body" [draggable]="false" *ngIf="showSummary"
-          [style]="{width: '70vw', minWidth: '600px'}" closeOnEscape="false" [modal]="true">
+          [style]="{width: showApprovers? '70vw' : '50vw', minWidth: '400px'}" closeOnEscape="false" [modal]="true">
 
   <app-payment-summary *ngIf="showSummary" [fromCreate]="true" [paymentDetails]="paymentObj"
                        [paymentForm]="paymentForm.value" [isWorkFlow]="showApprovers" [isSchedule]="schedule"

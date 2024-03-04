@@ -111,8 +111,8 @@
            (onColReorder)="onTableChanged()" [value]="tableSupportBase.dataSource" [scrollable]="true"
            dataKey="id" [reorderableColumns]="true" [rowHover]="true" [lazy]="true" (onLazyLoad)="loadData($event)"
            [responsive]="false" selectionMode="multiple" scrollHeight="flex" [showCurrentPageReport]="true"
-           stateStorage="session" stateKey="{{tableKeyEnum.PROJECT_BILL}}" [rows]="25" [resizableColumns]="false" [tableStyle]="{'min-width': tableSupportBase.minWidth}"
-           [rowsPerPageOptions]="[25, 50, 75]" [loading]="tableSupportBase.loading"
+           stateStorage="session" stateKey="{{tableKeyEnum.PROJECT_BILL}}" [rows]="25" [resizableColumns]="true"
+           [rowsPerPageOptions]="[25, 50, 75]" [loading]="tableSupportBase.loading" *ngIf="tableSupportBase.minWidth"
            styleClass="p-datatable-sm p-datatable-striped no-grid-lines" [totalRecords]="tableSupportBase.totalRecords"
            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
 
@@ -122,21 +122,28 @@
             [ngStyle]="{'text-align': 'left'}" [class.text-center]="col.searchType == enums.CHECKBOX"
             [pReorderableColumnDisabled]="!col.isReOrderable" pReorderableColumn
             [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn
-            [style]="'min-width:' + col.columnWidth  + 'px'"
             [pSortableColumnDisabled]="!col.isSortable" pSortableColumn="{{col.sortableField}}" class="sort-icon-wrapper">
-          <div *ngIf="col.searchType == enums.CHECKBOX">
-            <p-tableHeaderCheckbox (click)="tableSupportBase.rowSelected(dt,null)"></p-tableHeaderCheckbox>
+          <div class="grid">
+            <div class="col-12">
+              <div *ngIf="col.searchType == enums.CHECKBOX">
+                <p-tableHeaderCheckbox (click)="tableSupportBase.rowSelected(dt,null)"></p-tableHeaderCheckbox>
+              </div>
+              <span *ngIf="col.searchType !== enums.CHECKBOX">{{col.header}}</span>
+              <p-sortIcon class="grid-sort-icon" *ngIf="col.isSortable" field="{{col.sortableField}}"></p-sortIcon>
+            </div>
+            <div class="col-12">
+               <span app-table-inline-column-filters [tableSupportBase]="tableSupportBase" [dt]="dt"
+                     [columns]="columns" [col]="col"></span>
+            </div>
           </div>
-          <span *ngIf="col.searchType !== enums.CHECKBOX">{{col.header}}</span>
-          <p-sortIcon class="grid-sort-icon" *ngIf="col.isSortable" field="{{col.sortableField}}"></p-sortIcon>
         </th>
       </tr>
-      <tr>
-        <th *ngFor="let col of columns" [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn>
-          <span app-table-inline-column-filters [tableSupportBase]="tableSupportBase" [dt]="dt"
-                [columns]="columns" [col]="col"></span>
-        </th>
-      </tr>
+<!--      <tr>-->
+<!--        <th *ngFor="let col of columns" [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn>-->
+<!--          <span app-table-inline-column-filters [tableSupportBase]="tableSupportBase" [dt]="dt"-->
+<!--                [columns]="columns" [col]="col"></span>-->
+<!--        </th>-->
+<!--      </tr>-->
     </ng-template>
 
     <ng-template pTemplate="body" let-customer let-columns="columns">

@@ -32,6 +32,9 @@ export class IntegrationConfigurationCreateComponent implements OnInit {
   public isViewBasicAuthDetails = false;
   public otherData: any;
   public systemList: DropdownDto = new DropdownDto();
+  public integrationUserTypes: DropdownDto = new DropdownDto();
+  public showIntegratedPayableUserIds = false;
+  public systemId: any;
 
 
   ngOnInit(): void {
@@ -46,14 +49,14 @@ export class IntegrationConfigurationCreateComponent implements OnInit {
       integrationSystemTenantId: [null],
       integrationSystemCompanyName: [null],
       pullInitDataFrom: [null],
-
+      integratedPayableUserId: [null]
     });
 
     this.configurationForm.get(AppFormConstants.TENANT_ID).valueChanges.subscribe(data => this.getIntegrationSystems(data));
 
     if (this.editView) {
       this.getDataToEdit().then(r => {
-        this.systemChanged(this.otherData);
+        this.systemChanged(this.otherData, this.systemId, false);
       });
     }
   }
@@ -146,11 +149,16 @@ export class IntegrationConfigurationCreateComponent implements OnInit {
   /**
    * System changed from dropdown
    */
-  systemChanged(e: any) {
+  systemChanged(e: any, id: any, isOnChange: boolean) {
     this.otherData = e;
+    this.systemId = id;
     this.showRedirectUrl = e === AppConstant.AUTH_CODE_GRANT_TYPE_ID;
+    if (isOnChange) {
+      this.showIntegratedPayableUserIds = id === AppConstant.QB_ONLINE_ID;
+    }
     this.systemChangedFormValidate();
     this.validateFields(e);
+    this.showIntegratedPayableUserIds && this.getIntegrationUserTypes();
   }
 
   /**
@@ -162,6 +170,9 @@ export class IntegrationConfigurationCreateComponent implements OnInit {
         if (res.status === AppConstant.HTTP_RESPONSE_STATUS_SUCCESS) {
           this.showRedirectUrl = !!res.body.redirectUrl;
           this.isViewBasicAuthDetails = !!res.body.baseUrl;
+          if (res.body.systemId === AppConstant.QB_ONLINE_ID) {
+            this.showIntegratedPayableUserIds = true;
+          }
           this.configurationForm.patchValue(res.body);
         } else {
           this.notificationService.infoMessage(res.body.message);
@@ -171,7 +182,7 @@ export class IntegrationConfigurationCreateComponent implements OnInit {
         resolve();
         this.notificationService.errorMessage(error);
       });
-    })
+    });
   }
 
   /**
@@ -179,6 +190,7 @@ export class IntegrationConfigurationCreateComponent implements OnInit {
    */
   systemChangedFormValidate() {
     const redirectUrl = this.configurationForm.get('redirectUrl');
+    const integratedPayableUserIds = this.configurationForm.get('integratedPayableUserId');
     if (this.showRedirectUrl) {
       redirectUrl.setValidators([Validators.required]);
     } else {
@@ -186,6 +198,14 @@ export class IntegrationConfigurationCreateComponent implements OnInit {
       redirectUrl.clearValidators();
     }
     redirectUrl.updateValueAndValidity();
+
+    if (this.showIntegratedPayableUserIds) {
+      integratedPayableUserIds.setValidators([Validators.required]);
+    } else {
+      integratedPayableUserIds.reset();
+      integratedPayableUserIds.clearValidators();
+    }
+    integratedPayableUserIds.updateValueAndValidity();
   }
 
   /**
@@ -223,5 +243,14 @@ export class IntegrationConfigurationCreateComponent implements OnInit {
     integratedTenantId.updateValueAndValidity();
     integratedCompanyName.updateValueAndValidity();
     tpEnvironment.updateValueAndValidity();
+  }
+
+  /**
+   * This method can be used to get integrated Payable User id list
+   */
+  getIntegrationUserTypes() {
+    this.integrationService.getIntegrationUserTypes().subscribe((res: any[]) => {
+      this.integrationUserTypes.data = res;
+    });
   }
 }

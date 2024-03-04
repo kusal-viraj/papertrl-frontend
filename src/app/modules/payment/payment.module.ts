@@ -38,14 +38,20 @@ import { CreatePaymentComponent } from './create-payment/create-payment.componen
 import { PaymentApproveComponent } from './payment-approve/payment-approve.component';
 import {PaymentOfflineUploadComponent} from './payment-offline-upload/payment-offline-upload.component';
 import { ChangeExpenseDrawerComponent } from './change-expense-drawer/change-expense-drawer.component';
-import {ContextMenuModule} from "primeng/contextmenu";
+import {ContextMenuModule} from 'primeng/contextmenu';
 import { PaymentSummaryComponent } from './payment-summary/payment-summary.component';
+import {ProgressBarModule} from 'primeng/progressbar';
+import { PaymentUploadFormComponent } from './payment-upload-form/payment-upload-form.component';
+import {NgxDropzoneModule} from "ngx-dropzone";
+import { ProcessPaymentRequestComponent } from './process-payment-request/process-payment-request.component';
+import {NgxIntlTelInputModule} from 'ngx-intl-tel-input';
+import { ErpConfigurationComponent } from './erp-configuration/erp-configuration.component';
 
 
 
 @NgModule({
     declarations: [PaymentHomeComponent, DecimalNumberDirective, NumberDirective, TransactionListComponent, CreatePaymentComponent,
-        PaymentApproveComponent, PaymentOfflineUploadComponent, ChangeExpenseDrawerComponent, PaymentSummaryComponent],
+        PaymentApproveComponent, PaymentOfflineUploadComponent, ChangeExpenseDrawerComponent, PaymentSummaryComponent, PaymentUploadFormComponent, ProcessPaymentRequestComponent, ErpConfigurationComponent],
   imports: [
     CommonModule,
     PaymentRoutingModule,
@@ -80,6 +86,9 @@ import { PaymentSummaryComponent } from './payment-summary/payment-summary.compo
     TooltipModule,
     CheckboxModule,
     ContextMenuModule,
+    ProgressBarModule,
+    NgxDropzoneModule,
+    NgxIntlTelInputModule,
 
   ],
     exports: [

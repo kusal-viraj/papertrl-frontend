@@ -41,6 +41,9 @@ export class TenantListComponent implements OnInit, OnDestroy {
   public userActivityLogs = false;
   public showUtilizationReport =false;
 
+  public editPackageId = false;
+  public packageId;
+
   public showFilter = false;
   public showFilterColumns = false;
   public availableHeaderActions = [];
@@ -50,7 +53,7 @@ export class TenantListComponent implements OnInit, OnDestroy {
    * Columns Show/ Hide Drop down clicked
    */
   set selectedColumns(val: any[]) {
-this.tableSupportBase.columnChange(val);
+    this.tableSupportBase.columnChange(val);
   }
 
   @Input() get selectedColumns(): any[] {
@@ -120,6 +123,16 @@ this.tableSupportBase.columnChange(val);
    */
   actionButtonInit() {
     this.tableSupportBase.tableActionList = [
+      {
+        label: AppActionLabel.ACTION_LABEL_EDIT,
+        icon: AppIcons.ICON_EDIT,
+        status: this.enums.STATUS_COMMON,
+        authCode: true,
+        command: () => {
+          this.editPackageId = true;
+          this.packageId = this.activeAction.id;
+        }
+      },
       {
         label: AppActionLabel.ACTION_LABEL_DELETE,
         icon: AppIcons.ICON_DELETE,

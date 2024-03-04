@@ -172,6 +172,20 @@
       </div>
     </div>
 
+    <div [ngClass]="'field col-12 sm:col-12 md:col-6 xl:col-4 lg:col-4'">
+      <label class="label-wrapper" for="packageId">Package*</label>
+      <span class="p-float-label">
+          <p-dropdown appendTo="body"
+                      [options]="tenantPackageNameList.data" id="packageId" class="packageId-dropdown-list"
+                      formControlName="packageId" optionValue="id" optionLabel="packageName" [showClear]="true"
+                      [autoDisplayFirst]="false" [filter]="true">
+           </p-dropdown>
+      </span>
+      <div class="p-invalid text-align-left"
+           *ngIf="tenantForm.get('packageId').dirty && tenantForm.get('packageId').errors">
+        Package is required
+      </div>
+    </div>
 
 
 

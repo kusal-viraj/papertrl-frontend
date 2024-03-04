@@ -168,7 +168,7 @@
 
       </div>
 
-      <div class="col-12 grid payment-fields-invalid" *ngIf="commonUtil.isValidPaymentInfo(vendorCreateForm)">
+      <div class="col-12 grid payment-fields-invalid" *ngIf="commonUtil.isValidPaymentInfoUsBank(vendorCreateForm)">
         <span class="fa fa-question-circle"></span> Please note that the below-highlighted fields need to be configured
         in order to complete your payment setup with the selected payment type(s).
       </div>
@@ -189,7 +189,7 @@
                            #accPaymentTypes appendTo="body"
                            (onChange)="setPreferredPaymentType(accPaymentTypes.value);
                            commonUtil.onAcceptedPaymentTypesChange(vendorCreateForm.get('acceptedPaymentTypes').value);
-                           commonUtil.isValidPaymentInfo(vendorCreateForm)"
+                           commonUtil.isValidPaymentInfoUsBank(vendorCreateForm)"
                            formControlName="acceptedPaymentTypes" optionLabel="name" [showToggleAll]="true"
                            [filter]="true">
               <ng-template pTemplate="selectedItem">

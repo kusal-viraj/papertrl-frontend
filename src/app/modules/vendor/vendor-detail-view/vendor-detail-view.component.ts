@@ -42,13 +42,14 @@ export class VendorDetailViewComponent implements OnInit {
   public appAuthorities = AppAuthorities;
   public taxClassifications = [];
   public vendorClassifications = [];
-
+  selectedPaymentType: number;
 
   constructor(public vendorService: VendorService, public additionalFieldService: AdditionalFieldService,
               public notificationService: NotificationService, public formBuilder: UntypedFormBuilder,
               public privilegeService: PrivilegeService, public config: DynamicDialogConfig,
               public detailViewService: DetailViewService) {
   }
+
 
   ngOnInit(): void {
     if (this.config?.data) {
@@ -71,11 +72,11 @@ export class VendorDetailViewComponent implements OnInit {
     } else if (this.fromReadMore) {
       return;
     }
-
     await this.getTaxClassifications();
     await this.getClassificationList();
     this.vendorService.getVendor(this.venId, true).subscribe((res: any) => {
       if (AppResponseStatus.STATUS_SUCCESS === res.status) {
+
         this.getModuleReheatedAdditionalField(AppDocumentType.VENDOR, true).then(() => {
           this.resetFields();
           this.patchDropDownAdditionalData(res.body);
@@ -122,6 +123,18 @@ export class VendorDetailViewComponent implements OnInit {
     this.additionalDataW9Info = [];
     this.additionalDataPaymentInfo = [];
     this.vendorAdditionalFieldAttachment = [];
+  }
+
+  /**
+   * Toggles the selection of a payment type and manages its visual state.
+   * @param paymentTypeId The ID of the payment type to be selected or deselected.
+   */
+  selectPaymentType(paymentTypeId: number) {
+    if (this.selectedPaymentType === paymentTypeId) {
+      this.selectedPaymentType = null;
+    } else {
+      this.selectedPaymentType = paymentTypeId;
+    }
   }
 
   /**

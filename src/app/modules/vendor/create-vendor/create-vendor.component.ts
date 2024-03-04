@@ -1,22 +1,5 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
-import {
-  AbstractControl,
-  FormGroup,
-  UntypedFormArray,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators
-} from '@angular/forms';
-import {VendorHomeComponent} from '../vendor-home/vendor-home.component';
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {AbstractControl, FormArray, FormGroup, UntypedFormArray, UntypedFormBuilder, Validators} from '@angular/forms';
 import {VendorService} from '../../../shared/services/vendors/vendor.service';
 import {VendorMasterDto} from '../../../shared/dto/vendor/vendor-master-dto';
 import {CommonUtility} from '../../../shared/utility/common-utility';
@@ -47,6 +30,8 @@ import {AppFormConstants} from '../../../shared/enums/app-form-constants';
 import {Subscription} from 'rxjs';
 import {PaymentTypeService} from '../../../shared/services/support/payment-type.service';
 import {AppAnalyticsConstants} from '../../../shared/enums/app-analytics-constants';
+import {PaymentTypeDto} from '../../../shared/dto/vendor/payment-type-dto';
+import {PaymentService} from '../../../shared/services/payments/payment.service';
 
 @Component({
   selector: 'app-create-vendor',
@@ -72,40 +57,32 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
   public classification: DropdownDto = new DropdownDto();
   public vendorsGroupList: DropdownDto = new DropdownDto();
   public allPaymentTypeList: DropdownDto = new DropdownDto();
+  public paymentProviders: DropdownDto = new DropdownDto();
   public selectedPaymentTypes: DropdownDto = new DropdownDto();
   public removeSpace: RemoveSpace = new RemoveSpace();
   public appConstant = new AppConstant();
   public featureIdEnum = AppFeatureId;
   public commonUtil = new CommonUtility();
-  public addNewDropDown = false;
   public isCreate = false;
   public isSendInvitation = false;
   public isUpdateVendor = false;
 
-  @Input('vendorRequestDto') vendorRequestDto: VendorMasterDto = new VendorMasterDto();
-  @ViewChild('createVendorComponent') createVendorComponent: CreateVendorComponent;
-  @ViewChild('w9Form') w9Form: ElementRef;
   @ViewChild('vendorOverlay') vendorOverlay: OverlayPanel;
   @Input() isVendorEdit: boolean;
+  @Input() vendorId: number;
+  @Output() refreshVendorList = new EventEmitter();
   @ViewChild('vendorNameInput') public vendorNameInput: ElementRef;
   public document = document;
 
 
-  public postalAddress = false;
-  public showAddress = false;
-  public showRemitEmail = false;
-  public w9Information = true;
-  public showPaymentInformation = false;
   public countries = [];
   public states = [];
   public cities = [];
   public taxClassifications = [];
   public vendorName;
-  public viewShowMoreContent = true;
 
   public suggestions: VendorSuggestionDto[] = [];
   public vendorDetail = false;
-  public vendorId;
 
   public expression = new RegExp(AppPatternValidations.EMAIL_PATTERN);
   public isEmailAvailable = false;
@@ -118,25 +95,22 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
   public filteredGroups: any[];
   public communityVendorId: any;
 
-
   public isVendorSelectedFromSuggestions = false;
   public isSocialNoDisabled = false;
   public isEmployeeIdDisabled = false;
   public isSocialEmailDisabled = false;
-  multiSelectValues: any;
   public appAuthorities = AppAuthorities;
   public termList: DropdownDto = new DropdownDto();
   public appFormConstants = AppFormConstants;
   public subscription: Subscription = new Subscription();
   public isSelectedPaymentTypeAsCheckAndVirtualCard = false;
+  public paymentMailOption: any[] = [];
 
 
-  constructor(public formBuilder: UntypedFormBuilder, public notificationService: NotificationService, public vendorHome: VendorHomeComponent,
+  constructor(public formBuilder: UntypedFormBuilder, public notificationService: NotificationService,
               public vendorService: VendorService, public messageService: MessageService, public confirmationService: ConfirmationService,
               public additionalFieldService: AdditionalFieldService, public privilegeService: PrivilegeService,
-              public billsService: BillsService, public paymentTypeService: PaymentTypeService) {
-    this.postalAddress = false;
-    this.w9Information = false;
+              public billsService: BillsService, public paymentTypeService: PaymentTypeService, public paymentService: PaymentService) {
 
     this.vendorCreateForm = this.formBuilder.group({
       id: [null],
@@ -153,25 +127,28 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
         PatternValidator.patternValidator(this.expression, {emailValidate: true})])]],
       ccEmail: [AppConstant.NULL_VALUE, [Validators.compose([Validators.maxLength(150),
         PatternValidator.patternValidator(this.expression, {emailValidate: true})])]],
-
-      address_line_1: [null],
-      address_line_2: [null],
-      country: [AppEnumConstants.DEFAULT_COUNTRY, Validators.required],
-      zipcode: [null, Validators.compose([Validators.maxLength(30)])],
-      city: [null],
-      state: [null],
       vendorGroupIdList: [null],
-      r_address_line_1: [null],
-      r_address_line_2: [null],
-      r_country: [null],
-      r_zipcode: [null, Validators.compose([Validators.maxLength(30)])],
-      r_city: [null],
-      r_state: [null],
       w9Form: [null],
       w9FormName: [null],
       tenNinetyNine: [null],
       netDaysDue: [null],
       term: [null],
+      permenantAddress: this.formBuilder.group({
+        addressLine1: [null],
+        addressLine2: [null],
+        country: [AppEnumConstants.DEFAULT_COUNTRY, Validators.required],
+        zipcode: [null, Validators.compose([Validators.maxLength(30)])],
+        city: [null],
+        addressState: [null],
+      }),
+      remitAddress: this.formBuilder.group({
+        addressLine1: [null],
+        addressLine2: [null],
+        country: [null],
+        zipcode: [null, Validators.compose([Validators.maxLength(30)])],
+        city: [null],
+        addressState: [null],
+      }),
       discountDaysDue: [null],
       discountPercentage: [null],
       businessName: [null],
@@ -184,6 +161,7 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
       exemptPayeeCode: [null, Validators.compose([Validators.maxLength(40)])],
       fatcaReportingCode: [null, Validators.compose([Validators.maxLength(40)])],
       taxClassification: [null],
+      acceptedPaymentTypes: this.formBuilder.array([]),
       additionalDataBasicInfo: this.formBuilder.array([]),
       additionalDataPostalAddress: this.formBuilder.array([]),
       additionalDataRemitAddress: this.formBuilder.array([]),
@@ -194,13 +172,14 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
       showRemit: [false],
       recipientType: [],
       accountType: [],
-      acceptedPaymentTypes: [],
+      mailOption: [1],
+      checkToBeMail: [true],
       preferredPaymentTypeId: [null],
       remittanceEmail: [null],
       remitEmailSwitchEnable: [false],
     });
 
-    this.vendorCreateForm.get('diverseSupplier').valueChanges.subscribe(value => {
+    this.vendorCreateForm.get('diverseSupplier').valueChanges.subscribe(() => {
       if (this.vendorCreateForm.get('diverseSupplier').value) {
         this.vendorCreateForm.get('classificationIdList').setValidators(Validators.required);
       } else {
@@ -209,33 +188,36 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
       this.vendorCreateForm.get('classificationIdList').updateValueAndValidity();
     });
 
-    this.vendorCreateForm.get('remitEmailSwitchEnable').valueChanges.subscribe(value => {
+    this.vendorCreateForm.get('remitEmailSwitchEnable').valueChanges.subscribe(() => {
       if (this.vendorCreateForm.get('remitEmailSwitchEnable').value) {
         this.vendorCreateForm.get('remittanceEmail').setValidators([Validators.required, Validators.compose([Validators.maxLength(150),
           PatternValidator.patternValidator(this.expression, {emailValidate: true})])]);
       } else {
-        this.vendorCreateForm.get('remittanceEmail').clearValidators();
+        this.vendorCreateForm.get('remittanceEmail').setValidators(null);
         this.vendorCreateForm.get('remittanceEmail').reset();
       }
       this.vendorCreateForm.get('remittanceEmail').updateValueAndValidity();
     });
 
-    this.vendorCreateForm.get('showRemit').valueChanges.subscribe(value => {
+    this.vendorCreateForm.get('showRemit').valueChanges.subscribe(() => {
       if (this.vendorCreateForm.get('showRemit').value) {
-        this.vendorCreateForm.get('r_country').setValidators([Validators.required]);
+        this.remitAddress.get('country').setValidators([Validators.required]);
       } else {
-        this.vendorCreateForm.get('r_country').clearValidators();
-        this.vendorCreateForm.get('r_country').reset();
+        this.remitAddress.get('country').setValidators(null);
+        this.remitAddress.get('country').reset();
       }
-      this.vendorCreateForm.get('r_country').updateValueAndValidity();
+      this.remitAddress.get('country').updateValueAndValidity();
     });
-
-
-    if (vendorHome.isOpenEditPage) {
-      this.viewShowMoreContent = false;
-      this.w9Information = true;
-    }
     this.getPaymentType(this.paymentTypes);
+
+  }
+
+  get permenantAddress() {
+    return this.vendorCreateForm.get('permenantAddress');
+  }
+
+  get remitAddress() {
+    return this.vendorCreateForm.get('remitAddress');
   }
 
   ngOnDestroy(): void {
@@ -243,7 +225,6 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getModuleReheatedAdditionalField(AppDocumentType.VENDOR, false);
     this.vendorService.getCountries().subscribe((res) => {
       this.countries = (res.body);
     });
@@ -266,17 +247,19 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
     this.accountType.data = AppConstant.PAYMENT_ACCOUNT_TYPES;
     this.recipientType.data = AppConstant.PAYMENT_RECIPIENT_TYPES;
 
-    let json: any;
-    json = JSON.parse(sessionStorage.getItem('vendorState'));
-    if (!this.vendorHome.vendorIdToEdit && json != null) {
-      this.vendorHome.vendorName = json.vendorName;
-    }
     this.getClassificationList(this.classification);
     this.getVendorGroups();
     this.isEnabledConfidentialFeatureForVendor();
     this.getPaymentTerms();
     this.getPaymentDropDownList();
+    this.getMailOptionStatus();
+    this.getPaymentProviders();
     this.focusFirstElementAfterTabChange();
+    this.getModuleReheatedAdditionalField(AppDocumentType.VENDOR, false).then(r => {
+      if (this.isVendorEdit) {
+        this.getVendorData(this.vendorId);
+      }
+    });
   }
 
   getPaymentTerms() {
@@ -290,9 +273,11 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(actionToDo) {
-    this.setVendorDataToDto();
+    this.vendorDto = this.vendorCreateForm.value;
+    this.formatMultisetValue();
+
     this.vendorDto.contactNumber = this.commonUtil.getTelNo(this.vendorCreateForm, 'contactNumber');
-    if (this.vendorHome.vendorIdToEdit) {
+    if (this.isVendorEdit) {
       this.validateFileInput(this.vendorCreateForm.get('additionalDataBasicInfo'), this.vendorAdditionalFieldAttachment);
       this.validateFileInput(this.vendorCreateForm.get('additionalDataPostalAddress'), this.vendorAdditionalFieldAttachment);
       this.validateFileInput(this.vendorCreateForm.get('additionalDataRemitAddress'), this.vendorAdditionalFieldAttachment);
@@ -332,26 +317,16 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
     this.isSendInvitation = actionToDo === 'CS';
     this.vendorService.createVendor(this.vendorDto, isSendInvitation).subscribe((res: any) => {
         if (res.status === AppConstant.HTTP_RESPONSE_STATUS_CREATED) {
-          this.vendorHome.refreshVendorList();
-          this.resetVendorCreateForm();
-          this.isSocialNoDisabled = false;
-          this.isEmployeeIdDisabled = false;
-          this.isVendorSelectedFromSuggestions = false;
           this.notificationService.successMessage(HttpResponseMessage.VENDOR_CREATED_SUCCESSFULLY);
-          this.vendorDto.confidential = false;
-          this.isCreate = false;
-          this.isSendInvitation = false;
-          this.isUpdateVendor = false;
+          this.refreshVendorList.emit(false);
         } else {
-          this.isCreate = false;
-          this.isSendInvitation = false;
-          this.isUpdateVendor = false;
           this.notificationService.infoMessage(res.body.message);
         }
+        this.isCreate = false;
+        this.isSendInvitation = false;
       }, (error => {
         this.isCreate = false;
         this.isSendInvitation = false;
-        this.isUpdateVendor = false;
         this.notificationService.errorMessage(error);
       })
     );
@@ -361,14 +336,13 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
     this.isUpdateVendor = actionToDo === 'U';
     this.vendorService.updateVendor(this.vendorDto).subscribe((res: any) => {
         if (res.status === AppConstant.HTTP_RESPONSE_STATUS_SUCCESS) {
-          this.vendorHome.refreshVendorList(null, true);
-          this.vendorHome.isOpenEditPage = false;
           this.notificationService.successMessage(HttpResponseMessage.VENDOR_UPDATED_SUCCESSFULLY);
-          this.isUpdateVendor = false;
+          this.refreshVendorList.emit(this.vendorDto);
         } else {
-          this.isUpdateVendor = false;
           this.notificationService.infoMessage(res.body.message);
         }
+        this.isUpdateVendor = false;
+
       }, (error => {
         this.isUpdateVendor = false;
         this.notificationService.errorMessage(error);
@@ -460,7 +434,6 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
    * @param responseBody to response body
    */
   patchVendorData(responseBody) {
-    this.showPaymentInformation = responseBody.showPaymentInformation;
     this.commonUtil.onAcceptedPaymentTypesChange(responseBody.acceptedPaymentTypes);
     this.isEmployeeIdDisabled = this.isVendorSelectedFromSuggestions === true && responseBody.empIdNo !== null
       && responseBody.empIdNo !== AppConstant.EMPTY_STRING && responseBody.empIdNo !== undefined;
@@ -469,22 +442,6 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
     this.isSocialEmailDisabled = this.isVendorSelectedFromSuggestions === true && responseBody.email !== null
       && responseBody.email !== AppConstant.EMPTY_STRING;
 
-    if (responseBody.permenantAddress) {
-      this.vendorCreateForm.get('address_line_1').patchValue(responseBody.permenantAddress.addressLine1);
-      this.vendorCreateForm.get('address_line_2').patchValue(responseBody.permenantAddress.addressLine2);
-      this.vendorCreateForm.get('country').patchValue(responseBody.permenantAddress.country);
-      this.vendorCreateForm.get('zipcode').patchValue(responseBody.permenantAddress.zipcode);
-      this.vendorCreateForm.get('city').patchValue(responseBody.permenantAddress.city);
-      this.vendorCreateForm.get('state').patchValue(responseBody.permenantAddress.addressState);
-    }
-    if (responseBody.remitAddress) {
-      this.vendorCreateForm.get('r_address_line_1').patchValue(responseBody.remitAddress.addressLine1);
-      this.vendorCreateForm.get('r_address_line_2').patchValue(responseBody.remitAddress.addressLine2);
-      this.vendorCreateForm.get('r_country').patchValue(responseBody.remitAddress.country);
-      this.vendorCreateForm.get('r_zipcode').patchValue(responseBody.remitAddress.zipcode);
-      this.vendorCreateForm.get('r_city').patchValue(responseBody.remitAddress.city);
-      this.vendorCreateForm.get('r_state').patchValue(responseBody.remitAddress.addressState);
-    }
     responseBody.additionalDataBasicInfo = this.commonUtil.patchDropDownAdditionalData(responseBody.additionalDataBasicInfo);
     responseBody.additionalDataPostalAddress = this.commonUtil.patchDropDownAdditionalData(responseBody.additionalDataPostalAddress);
     responseBody.additionalDataPaymentInfo = this.commonUtil.patchDropDownAdditionalData(responseBody.additionalDataPaymentInfo);
@@ -496,75 +453,24 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
     responseBody.additionalDataPaymentInfo = this.commonUtil.alignHeadingAdditionalData(this.additionalDataPaymentInfo, responseBody.additionalDataPaymentInfo);
     responseBody.additionalDataW9Info = this.commonUtil.alignHeadingAdditionalData(this.additionalDataW9Info, responseBody.additionalDataW9Info);
     responseBody.additionalDataRemitAddress = this.commonUtil.alignHeadingAdditionalData(this.additionalDataRemitAddress, responseBody.additionalDataRemitAddress);
-    this.setPreferredPaymentType(responseBody?.acceptedPaymentTypes);
+
+    const arr = [];
+    this.acceptedPaymentTypes.controls.forEach((x, index) => {
+      const tempType = responseBody.acceptedPaymentTypes.find(r => r?.paymentTypeId === x.get('paymentTypeId').value);
+      if (tempType) {
+        arr[index] = {
+          paymentTypeId: tempType.paymentTypeId,
+          selected: true,
+          providerId: tempType.providerId,
+          differentRemit: tempType.differentRemit,
+          remittanceEmail: tempType.remittanceEmail
+        };
+      }
+    });
+    responseBody.acceptedPaymentTypes = arr;
+
     this.vendorCreateForm.patchValue(responseBody);
-    this.commonUtil.isValidPaymentInfo(this.vendorCreateForm);
-  }
-
-  /**
-   * Set form data to dto
-   */
-  setVendorDataToDto() {
-    this.vendorDto.id = this.vendorCreateForm.get('id').value;
-    this.vendorDto.vendorCode = this.vendorCreateForm.get('vendorCode').value;
-    this.vendorDto.name = this.vendorCreateForm.get('name').value;
-    this.vendorDto.contactPerson = this.vendorCreateForm.get('contactPerson').value;
-    this.vendorDto.contactNumber = this.vendorCreateForm.get('contactNumber').value;
-    this.vendorDto.fax = this.vendorCreateForm.get('fax').value;
-    this.vendorDto.email = this.vendorCreateForm.get('email').value;
-    this.vendorDto.ccEmail = this.vendorCreateForm.get('ccEmail').value;
-    this.vendorDto.w9Form = this.vendorCreateForm.get('w9Form').value;
-    this.vendorDto.socialSecNo = this.vendorCreateForm.get('socialSecNo').value;
-    this.vendorDto.empIdNo = this.vendorCreateForm.get('empIdNo').value;
-    this.vendorDto.paymentOptionId = this.vendorCreateForm.get('paymentOptionId').value;
-    this.vendorDto.exemptPayeeCode = this.vendorCreateForm.get('exemptPayeeCode').value;
-    this.vendorDto.fatcaReportingCode = this.vendorCreateForm.get('fatcaReportingCode').value;
-    this.vendorDto.taxClassification = this.vendorCreateForm.get('taxClassification').value;
-    this.vendorDto.tenNinetyNine = this.vendorCreateForm.get('tenNinetyNine').value;
-    this.vendorDto.showRemit = this.vendorCreateForm.get('showRemit').value;
-    this.vendorDto.remitEmailSwitchEnable = this.vendorCreateForm.get('remitEmailSwitchEnable').value;
-
-    this.vendorDto.vendorGroupIdList = this.vendorCreateForm.get('vendorGroupIdList').value;
-    this.vendorDto.term = this.vendorCreateForm.get('term').value;
-    this.vendorDto.netDaysDue = this.vendorCreateForm.get('netDaysDue').value;
-    this.vendorDto.discountPercentage = this.vendorCreateForm.get('discountPercentage').value;
-
-    this.vendorDto.companyName = this.vendorCreateForm.get('companyName').value;
-    this.vendorDto.recipientType = this.vendorCreateForm.get('recipientType').value;
-    this.vendorDto.accountType = this.vendorCreateForm.get('accountType').value;
-    this.vendorDto.accountNumber = this.vendorCreateForm.get('accountNumber').value;
-    this.vendorDto.accountRoutingNumber = this.vendorCreateForm.get('accountRoutingNumber').value;
-    this.vendorDto.remittanceEmail = this.vendorCreateForm.get('remittanceEmail').value;
-
-    this.vendorDto.diverseSupplier = this.vendorCreateForm.get('diverseSupplier').value;
-    this.vendorDto.classificationIdList = this.vendorCreateForm.get('classificationIdList').value;
-    this.vendorDto.classificationAttachmentList = this.vendorCreateForm.get('classificationAttachmentList').value;
-
-    this.vendorDto.permenantAddress.addressLine1 = this.vendorCreateForm.get('address_line_1').value;
-    this.vendorDto.permenantAddress.addressLine2 = this.vendorCreateForm.get('address_line_2').value;
-    this.vendorDto.permenantAddress.country = this.vendorCreateForm.get('country').value;
-    this.vendorDto.permenantAddress.zipcode = this.vendorCreateForm.get('zipcode').value;
-    this.vendorDto.permenantAddress.city = this.vendorCreateForm.get('city').value;
-    this.vendorDto.permenantAddress.addressState = this.vendorCreateForm.get('state').value;
-
-    this.vendorDto.remitAddress.addressLine1 = this.vendorCreateForm.get('r_address_line_1').value;
-    this.vendorDto.remitAddress.addressLine2 = this.vendorCreateForm.get('r_address_line_2').value;
-    this.vendorDto.remitAddress.country = this.vendorCreateForm.get('r_country').value;
-    this.vendorDto.remitAddress.zipcode = this.vendorCreateForm.get('r_zipcode').value;
-    this.vendorDto.remitAddress.city = this.vendorCreateForm.get('r_city').value;
-    this.vendorDto.remitAddress.addressState = this.vendorCreateForm.get('r_state').value;
-    this.vendorDto.additionalDataBasicInfo = this.vendorCreateForm.get('additionalDataBasicInfo').value;
-    this.vendorDto.additionalDataPostalAddress = this.vendorCreateForm.get('additionalDataPostalAddress').value;
-    this.vendorDto.additionalDataRemitAddress = this.vendorCreateForm.get('additionalDataRemitAddress').value;
-    this.vendorDto.additionalDataW9Info = this.vendorCreateForm.get('additionalDataW9Info').value;
-    this.vendorDto.additionalDataPaymentInfo = this.vendorCreateForm.get('additionalDataPaymentInfo').value;
-    this.vendorDto.additionalFieldAttachments = this.vendorCreateForm.get('attachment').value;
-    this.vendorDto.acceptedPaymentTypes = this.vendorCreateForm.get('acceptedPaymentTypes').value;
-    this.vendorDto.preferredPaymentTypeId = this.vendorCreateForm.get('preferredPaymentTypeId').value;
-
-
-    this.formatMultisetValue();
-
+    this.setPreferredPaymentType();
   }
 
   /**
@@ -618,50 +524,49 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
     this.vendorCreateForm.get('w9Form').patchValue(null);
   }
 
+  /**
+   * This method use for get payment Provider list
+   */
+  getPaymentProviders() {
+    this.paymentService.getPaymentProviders().subscribe({
+      next: (res: any) => {
+        if (AppResponseStatus.STATUS_SUCCESS === res.status) {
+          this.paymentProviders.data = res.body;
+        }
+      },
+      error: err => this.notificationService.errorMessage(err)
+    });
+  }
 
   /**
    * This method can be used to reset vendor creation page
    */
   resetVendorCreateForm() {
-    if (this.vendorHome.isOpenEditPage) {
-      this.additionalData = [];
-      this.vendorAdditionalFieldAttachment = [];
-      this.vendorAdditionalDataArrayInBasicInformation.controls = [];
-      this.vendorAdditionalDataArrayInPostalAddress.controls = [];
-      this.vendorAdditionalDataArrayInRemitAddress.controls = [];
-      this.vendorAdditionalDataArrayInW9Form.controls = [];
-      this.vendorAdditionalDataArrayInPaymentInformation.controls = [];
-      this.getModuleReheatedAdditionalField(AppDocumentType.VENDOR, false);
-      this.vendorCreateForm.reset();
-      this.getVendorData(this.vendorHome.vendorIdToEdit);
-      this.isVendorEmpNoAvailable = false;
-      this.isSocialEmailDisabled = false;
-      this.isVendorSsnAvailable = false;
-      this.isVendorCodeAvailable = false;
-      this.isEmailAvailable = false;
-    } else {
-      this.additionalData = [];
-      this.vendorAdditionalDataArrayInBasicInformation.controls = [];
-      this.vendorAdditionalDataArrayInPostalAddress.controls = [];
-      this.vendorAdditionalDataArrayInRemitAddress.controls = [];
-      this.vendorAdditionalDataArrayInW9Form.controls = [];
-      this.vendorAdditionalDataArrayInPaymentInformation.controls = [];
-      this.getModuleReheatedAdditionalField(AppDocumentType.VENDOR, false);
-      this.isEmployeeIdDisabled = false;
-      this.isSocialEmailDisabled = false;
-      this.isSocialEmailDisabled = false;
-      this.isSocialNoDisabled = false;
-      this.isVendorEmpNoAvailable = false;
-      this.isVendorSsnAvailable = false;
-      this.isVendorCodeAvailable = false;
-      this.isEmailAvailable = false;
-      this.isVendorSelectedFromSuggestions = false;
-
-
-      this.vendorCreateForm.reset();
-    }
-    this.vendorCreateForm.get('country').patchValue(AppEnumConstants.DEFAULT_COUNTRY);
+    this.additionalData = [];
+    this.vendorAdditionalFieldAttachment = [];
+    this.vendorAdditionalDataArrayInBasicInformation.controls = [];
+    this.vendorAdditionalDataArrayInPostalAddress.controls = [];
+    this.vendorAdditionalDataArrayInRemitAddress.controls = [];
+    this.vendorAdditionalDataArrayInW9Form.controls = [];
+    this.vendorAdditionalDataArrayInPaymentInformation.controls = [];
+    this.acceptedPaymentTypes.controls = [];
+    this.isEmployeeIdDisabled = false;
+    this.isSocialEmailDisabled = false;
+    this.isSocialNoDisabled = false;
+    this.isVendorEmpNoAvailable = false;
+    this.isVendorSsnAvailable = false;
+    this.isVendorCodeAvailable = false;
+    this.isEmailAvailable = false;
+    this.isVendorSelectedFromSuggestions = false;
+    this.vendorCreateForm.reset();
     this.vendorCreateForm.get('diverseSupplier').patchValue(false);
+    this.permenantAddress.get('country').patchValue(AppEnumConstants.DEFAULT_COUNTRY);
+    this.setAcceptedPaymentTypeForm();
+    this.getModuleReheatedAdditionalField(AppDocumentType.VENDOR, false).then(r => {
+      if (this.isVendorEdit) {
+        this.getVendorData(this.vendorId);
+      }
+    });
   }
 
   /**
@@ -698,9 +603,9 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
   filterStates(event) {
     const query = event.query;
     const filtered = [];
-    this.states.forEach(state => {
-      if (state.toLowerCase().indexOf(query.toLowerCase()) === 0) {
-        filtered.push(state);
+    this.states.forEach(addressState => {
+      if (addressState.toLowerCase().indexOf(query.toLowerCase()) === 0) {
+        filtered.push(addressState);
       }
     });
     this.filteredGroups = filtered;
@@ -787,8 +692,6 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
   vendorClickedFromList(vendor: VendorSuggestionDto) {
     this.isVendorSelectedFromSuggestions = true;
     this.communityVendorId = vendor.id;
-    this.showAddress = true;
-    this.w9Information = true;
     this.vendorCreateForm.reset();
     this.vendorOverlay.hide();
 
@@ -808,11 +711,12 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
    */
   addVendorToCompanyFromList() {
     if (this.vendorCreateForm.valid) {
-      this.setVendorDataToDto();
+      this.vendorDto = this.vendorCreateForm.value;
+      this.formatMultisetValue();
       this.vendorDto.contactNumber = this.commonUtil.getTelNo(this.vendorCreateForm, 'contactNumber');
       this.vendorService.addVendorFromCommunity(this.communityVendorId, this.vendorDto).subscribe((res: any) => {
           if (AppResponseStatus.STATUS_SUCCESS === res.status) {
-            this.vendorHome.refreshVendorList();
+            this.refreshVendorList.emit(false);
             this.communityVendorId = null;
             this.resetVendorCreateForm();
             this.isSocialNoDisabled = false;
@@ -835,37 +739,37 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
    * This method use for add additional fields to po creation
    */
   getModuleReheatedAdditionalField(id, isDetailView) {
-    this.additionalFieldService.getAdditionalField(id, isDetailView, !this.isVendorEdit).subscribe((res: any) => {
-      if (AppResponseStatus.STATUS_SUCCESS === res.status) {
-        this.additionalData = res.body;
-        this.vendorNameInput.nativeElement.focus();
-        this.additionalData.forEach(((field) => {
-          this.commonUtil.manageDropDownData(field, isDetailView);
-          if (field.sectionId === AppModuleSection.VENDOR_BASIC_INFO_SECTION && field.status !== AppConstant.STATUS_DELETE) {
-            this.addAdditionalDataForBasicInfo(field);
-          }
-          if (field.sectionId === AppModuleSection.POSTAL_ADDRESS_SECTION && field.status !== AppConstant.STATUS_DELETE) {
-            this.addAdditionalDataForPostalAddress(field);
-          }
-          if (field.sectionId === AppModuleSection.REMIT_ADDRESS_SECTION && field.status !== AppConstant.STATUS_DELETE) {
-            this.addAdditionalDataForRemitAddress(field);
-          }
-          if (field.sectionId === AppModuleSection.W9_INFO_SECTION && field.status !== AppConstant.STATUS_DELETE) {
-            this.addAdditionalDataForW9Info(field);
-          }
-          if (field.sectionId === AppModuleSection.VENDOR_PAYMENT_INFO_SECTION && field.status !== AppConstant.STATUS_DELETE) {
-            this.addAdditionalDataForPaymentInfo(field);
-          }
-        }));
-        if (this.isVendorEdit) {
-          this.getVendorData(this.vendorHome.vendorIdToEdit);
+    return new Promise(resolve => {
+      this.additionalFieldService.getAdditionalField(id, isDetailView, !this.isVendorEdit).subscribe((res: any) => {
+        if (AppResponseStatus.STATUS_SUCCESS === res.status) {
+          this.additionalData = res.body;
+          this.vendorNameInput.nativeElement.focus();
+          this.additionalData.forEach(((field) => {
+            this.commonUtil.manageDropDownData(field, isDetailView);
+            if (field.sectionId === AppModuleSection.VENDOR_BASIC_INFO_SECTION && field.status !== AppConstant.STATUS_DELETE) {
+              this.addAdditionalDataForBasicInfo(field);
+            }
+            if (field.sectionId === AppModuleSection.POSTAL_ADDRESS_SECTION && field.status !== AppConstant.STATUS_DELETE) {
+              this.addAdditionalDataForPostalAddress(field);
+            }
+            if (field.sectionId === AppModuleSection.REMIT_ADDRESS_SECTION && field.status !== AppConstant.STATUS_DELETE) {
+              this.addAdditionalDataForRemitAddress(field);
+            }
+            if (field.sectionId === AppModuleSection.W9_INFO_SECTION && field.status !== AppConstant.STATUS_DELETE) {
+              this.addAdditionalDataForW9Info(field);
+            }
+            if (field.sectionId === AppModuleSection.VENDOR_PAYMENT_INFO_SECTION && field.status !== AppConstant.STATUS_DELETE) {
+              this.addAdditionalDataForPaymentInfo(field);
+            }
+          }));
+        } else {
+          this.notificationService.infoMessage(res.body.message);
         }
-      } else {
-        this.notificationService.infoMessage(res.body.message);
-      }
-
-    }, error => {
-      this.notificationService.errorMessage(error);
+        resolve(true);
+      }, error => {
+        resolve(true);
+        this.notificationService.errorMessage(error);
+      });
     });
   }
 
@@ -913,13 +817,6 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
     this.additionalDataPaymentInfo.push(field);
     this.vendorAdditionalDataArrayInPaymentInformation.push(this.commonUtil.getAdditionalFieldValidations(field, !this.detailView));
   }
-
-
-  /**
-   * this method can be used to manage dropdown data
-   * @param field to section object
-   */
-
 
   /**
    * return form array data
@@ -1043,97 +940,6 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * This method use for view additional option input drawer
-   * @param event to change event
-   * @param additionalFieldDetailDto AdditionalFieldDetailDto
-   * @param additionalField to AdditionalFieldDetailDto
-   * @param multiSelect to multiSelect dropdown
-   */
-  addNewAdditionalDropDownOption(event: any, additionalFieldDetailDto: AdditionalFieldDetailDto, additionalField: AbstractControl,
-                                 multiSelect) {
-    if (event.itemValue === 0 || event.value === 0) {
-      additionalField.get(AppConstant.FIELD_VALUE).reset();
-      this.addNewDropDown = true;
-      this.selectedAdditionalField = additionalFieldDetailDto;
-    }
-    if (multiSelect._options.length === AppConstant.ONE && additionalFieldDetailDto.createNew ===
-      AppConstant.STATUS_ACTIVE && additionalFieldDetailDto.multiple ===
-      AppConstant.STATUS_ACTIVE) {
-      additionalField.get(AppConstant.FIELD_VALUE).reset();
-      this.addNewDropDown = true;
-      this.selectedAdditionalField = additionalFieldDetailDto;
-    }
-    if (multiSelect.allChecked) {
-      multiSelect._options.forEach((value) => {
-        value.isChecked = true;
-        if (value.id === 0 && value.name === AppConstant.ADD_NEW) {
-          value.disabled = true;
-        }
-      });
-    } else {
-      const allChecked: boolean = multiSelect._options.every(function(item: any) {
-        return item.isChecked == false;
-      });
-
-      if (allChecked) {
-        multiSelect._options.forEach((value) => {
-          if (value.id === 0 && value.name === AppConstant.ADD_NEW) {
-            value.disabled = false;
-          }
-        });
-      } else {
-        multiSelect._options.forEach((value) => {
-          if (value.id === 0 && value.name === AppConstant.ADD_NEW) {
-            value.disabled = true;
-          }
-        });
-      }
-    }
-    if (additionalFieldDetailDto.createNew === AppConstant.STATUS_ACTIVE && additionalFieldDetailDto.multiple ===
-      AppConstant.STATUS_ACTIVE && multiSelect.allChecked) {
-
-      let idArray: number [] = [];
-      idArray = additionalField.get(AppConstant.FIELD_VALUE).value;
-      idArray.forEach((value, index) => {
-        if (idArray[0] === 0) {
-          idArray.splice(index, 1);
-        }
-      });
-
-      multiSelect._options.forEach((value) => {
-        if (value.id === 0 && value.name === AppConstant.ADD_NEW) {
-          value.disabled = true;
-        }
-      });
-    } else if (!multiSelect.allChecked) {
-      multiSelect._options.forEach((value) => {
-        if (value.id === 0 && value.name === AppConstant.ADD_NEW) {
-          value.disabled = false;
-        }
-      });
-    }
-  }
-
-  /**
-   * This method use for close additional dropdown option create drawer
-   */
-  closeAdditionalDropdownCreateDrawer() {
-    this.addNewDropDown = false;
-    this.updateAdditionalFieldDropDowns();
-  }
-
-  /**
-   * this method return true or false
-   * @param multiSelectDropDownRef to dropdown reference
-   * @param additionalFieldObject to additional field object
-   */
-  isAllowedToTriggerClickEvent(multiSelectDropDownRef, additionalFieldObject: AdditionalFieldDetailDto): boolean {
-    return !(multiSelectDropDownRef._options.length === AppConstant.ONE &&
-      additionalFieldObject.multiple === AppConstant.STATUS_ACTIVE &&
-      additionalFieldObject.createNew === AppConstant.STATUS_ACTIVE);
-  }
-
 
   /*
   ---------------------------------------------------ADDITIONAL ATTACHMENT SECTION-------------------------------------------------------->
@@ -1189,10 +995,6 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * this method can be used to download attachment
-   * @param val to attachment object
-   */
   downloadVendorAttachment(val) {
     val.loading = true;
     if (val.fieldName === this.appConstant.VENDOR_W9_FORM_STRING_NAME) {
@@ -1216,12 +1018,6 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
     }
   }
 
-
-  /**
-   * this method can be used to download additional fields
-   * @param id to id
-   */
-
   downloadW9Form(val) {
     this.vendorService.downloadW9Form(val.id).subscribe((res: any) => {
       if (res.result.status === AppConstant.HTTP_RESPONSE_STATUS_SUCCESS) {
@@ -1243,10 +1039,6 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
       this.notificationService.errorMessage(error);
     });
   }
-
-  /*
-  Vendor payment information section new impl------------------------------------------------------------------------>
-   */
 
   /**
    * This method use for get payment type list for dropdown
@@ -1353,7 +1145,10 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateAdditionalFieldDropDowns() {
+  updateAdditionalFieldDropDowns(data?) {
+    if (data) {
+      this.selectedAdditionalField = data;
+    }
     this.commonUtil.updateAdditionalFiledDropdowns(this.additionalDataBasicInfo, this.selectedAdditionalField);
     this.commonUtil.updateAdditionalFiledDropdowns(this.additionalDataPaymentInfo, this.selectedAdditionalField);
     this.commonUtil.updateAdditionalFiledDropdowns(this.additionalDataPostalAddress, this.selectedAdditionalField);
@@ -1443,21 +1238,60 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
     this.paymentTypeService.getPaymentDropDownList().subscribe((res: any) => {
       if (AppResponseStatus.STATUS_SUCCESS === res.status) {
         this.allPaymentTypeList.data = res.body;
+        this.setAcceptedPaymentTypeForm();
       }
     }, error => {
       this.notificationService.errorMessage(error);
     });
   }
 
+  setAcceptedPaymentTypeForm() {
+    for (let i = 0; this.allPaymentTypeList.data.length > i; i++) {
+      this.addAcceptedPaymentTypes(this.allPaymentTypeList.data[i]);
+    }
+  }
+
+  public get acceptedPaymentTypes() {
+    return this.vendorCreateForm.get('acceptedPaymentTypes') as UntypedFormArray;
+  }
+
+  addAcceptedPaymentTypes(data: any) {
+    const addHocWorkflowDetail = this.formBuilder.group({
+      selected: [false],
+      paymentTypeId: [null],
+      providerId: [null],
+      differentRemit: [null],
+      remittanceEmail: [AppConstant.NULL_VALUE, [Validators.compose([Validators.maxLength(150),
+        PatternValidator.patternValidator(this.expression, {emailValidate: true})])]],
+      name: [null]
+    });
+    addHocWorkflowDetail.get('paymentTypeId').patchValue(data.id);
+    addHocWorkflowDetail.get('name').patchValue(data.name);
+    addHocWorkflowDetail.get('selected').patchValue(false);
+    this.acceptedPaymentTypes.push(addHocWorkflowDetail);
+  }
+
   /**
    * this method can be used to set selected type list
    */
 
-  setPreferredPaymentType(accPaymentTypes: any) {
-    if (accPaymentTypes) {
-      this.selectedPaymentTypes.data = this.allPaymentTypeList.data.filter(item => accPaymentTypes?.includes(item.id));
+  setPreferredPaymentType() {
+    const selectedPaymentTypeIds = this.acceptedPaymentTypes.controls
+      .filter(control => control.get('selected').value === true)
+      .map(control => control.get('paymentTypeId').value);
+    const selectedPaymentTypes = this.acceptedPaymentTypes.controls
+      .filter(control => control.get('selected').value === true);
+    if (selectedPaymentTypeIds) {
+      this.selectedPaymentTypes.data = [];
+      for (const type of selectedPaymentTypes) {
+        const obj = {id: type.value.paymentTypeId, name: type.value.name};
+        this.selectedPaymentTypes.data.push(obj);
+      }
+      // this.selectedPaymentTypes.data = this.allPaymentTypeList.data.filter(item => selectedPaymentTypeIds?.includes(item.id));
     }
-    this.validatePostalAddress(accPaymentTypes);
+    this.commonUtil.onAcceptedPaymentTypesChange(selectedPaymentTypeIds);
+
+    this.validatePostalAddress(selectedPaymentTypeIds);
   }
 
   /**
@@ -1472,7 +1306,7 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
 
   /**
    * This method use for view additional option input drawer when user click footer add new button
-   * @param additionalFieldDetailDto AdditionalFieldDetailDto
+   * @param lineItemAdditionalFieldDetail
    */
 
   setSelectedAdditionalField(lineItemAdditionalFieldDetail: AdditionalFieldDetailDto) {
@@ -1498,6 +1332,35 @@ export class CreateVendorComponent implements OnInit, OnDestroy {
     const pastedText = clipboardData.getData('text/plain');
     const sanitizedText = pastedText.replace(/\s/g, ''); // Remove spaces
     document.execCommand('insertText', false, sanitizedText);
+  }
+
+  acceptedPaymentTypeSelected(data, i: number) {
+    this.setPreferredPaymentType();
+  }
+
+
+  getMailOptionStatus(){
+    this.paymentService.getPaymentMailOption().subscribe((res: any) => {
+      if (res.status === AppConstant.HTTP_RESPONSE_STATUS_SUCCESS) {
+        this.paymentMailOption = res.body;
+      }
+    });
+  }
+
+  get fieldValueControl() {
+    return (this.vendorCreateForm.get('checkToBeMail'));
+  }
+
+  get fieldValueMailOption() {
+    return (this.vendorCreateForm.get('mailOption'));
+  }
+
+  get fieldValueAccountType() {
+    return (this.vendorCreateForm.get('accountType'));
+  }
+
+  get fieldValueRecipientType() {
+    return (this.vendorCreateForm.get('recipientType'));
   }
 
 }

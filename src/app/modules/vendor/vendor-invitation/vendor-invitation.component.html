@@ -1,12 +1,5 @@
-<app-vendor-invitation-form *ngIf="privilegeService.isAuthorized(appAuthorities.VENDORS_SEND_VENDOR_INVITATION)"
-                            (refreshGrid)="loadData(this.tableSupportBase.searchFilterDto)"></app-vendor-invitation-form>
-
-<h6 class="subHeadingColour" *ngIf="privilegeService.isAuthorizedMultiple([appAuthorities.VENDORS_DELETE_VENDOR_INVITATION,
-         appAuthorities.VENDORS_RESEND_VENDOR_INVITATION, appAuthorities.VENDORS_SEND_VENDOR_INVITATION])">Existing
-  Vendor Invitations</h6><br>
-
 <div class="grid">
-  <div class="col-12">
+  <div class="col-6">
     <app-table-header-action-buttons
       [tableSupportBase]="tableSupportBase" [componentInstance]="this"
       (showColumns)="showFilterColumns = !showFilterColumns;showFilter = false"
@@ -14,10 +7,12 @@
       (vendorSendInvitation)="resendInvitationBulk()"
       (delete)="deleteInvitationBulk()"
       (showFilters)="showFilter = !showFilter; showFilterColumns = false"
-      [visibleActions]="availableHeaderActions"
-    >
-
+      [visibleActions]="availableHeaderActions">
     </app-table-header-action-buttons>
+  </div>
+  <div class="col-6 text-right">
+    <button pButton class="p-button-sm" (click)="createInvitationPanel = true"
+            *ngIf="privilegeService.isAuthorized(appAuthorities.VENDORS_SEND_VENDOR_INVITATION)" label="Send Invitation"></button>
   </div>
 </div>
 <div class="table-wrapper">
@@ -156,3 +151,10 @@
 
 <!--Context Menu-->
 <p-contextMenu #cm [hidden]="tableSupportBase.hideMenu" (onShow)="tableSupportBase.hideActionMenu(menu)" [model]="tableSupportBase.contextMenuActionList"></p-contextMenu>
+
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" [modal]="true" [dismissible]="true"
+           position="right" *ngIf="createInvitationPanel" [(visible)]="createInvitationPanel">
+  <ng-template pTemplate="header">Send Invitation</ng-template>
+  <app-vendor-invitation-form *ngIf="privilegeService.isAuthorized(appAuthorities.VENDORS_SEND_VENDOR_INVITATION)"
+                              (refreshGrid)="loadData(this.tableSupportBase.searchFilterDto); createInvitationPanel = false"></app-vendor-invitation-form>
+</p-sidebar>

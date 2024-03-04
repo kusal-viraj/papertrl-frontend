@@ -58,6 +58,10 @@ export class AppConstant {
   public static BASIC_AUTH_TYPE_ID = 3;
   public readonly PAYMENT_TYPE_VIRTUAL_CARD = 3;
 
+  /**
+   * Integration systems Ids ------->
+   */
+  public static QB_ONLINE_ID = 2;
 
   /**
    * TENANT MENU IDS---------->
@@ -294,6 +298,7 @@ export class AppConstant {
   public readonly GRID_CREDIT_NOTE_LIST = 'CREDIT_NOTE_LIST';
   public readonly GRID_PROJECT_CODE_BILLS = 'PROJECT_CODE_BILLS';
   public readonly GRID_BILL_PAYMENT_LIST = 'TRANSACTION_LIST';
+  public readonly GRID_PROCESS_PAYMENT_REQUEST_LIST = 'PROCESS_PAYMENT_REQUEST_LIST';
   public readonly GRID_PAYMENT_CREATE = 'APPROVED_DOCUMENT_LIST';
   public readonly GRID_OCR_TEMPLATE_LIST = 'OCR_BILL_TEMPLATE';
   public readonly GRID_PO_LIST = 'PO_LIST';
@@ -681,7 +686,7 @@ export class AppConstant {
   public static readonly CLIP_BORD_COPY_OVERLAY_CLOSED_TIME_OUT = 1000;
   public readonly MENU_INBOX = 'Inbox';
   public static readonly INBOX_ATTACHMENT = 'attachment';
-  public static readonly ATTACHMENT_ID = 'attachmentId';
+  public static readonly ATTACHMENT_ID = 'attachmentIdList';
   public static readonly DOCUMENT_TYPE = 'documentType';
   public static readonly VENDOR_ID = 'vendorId';
   public static readonly DOCUMENT_ID = 'documentId';
@@ -726,6 +731,7 @@ export class AppConstant {
   public static INVALID_DATE_FORMAT_MSG = 'Invalid bill date, date should be match the selected format.';
   public static INVALID_FILE_FORMAT_MSG = 'Invalid file format. Please upload only PDF, JPG, JPEG, or PNG files.';
   public static PENDING_FILE_UPLOADS = 'You have pending file uploads. Closing the page now will cancel the upload process.';
+  public static UPLOAD_TEMPLATE_FILE = 'Please Upload the template file.';
 
 
   /*
@@ -883,6 +889,16 @@ export class AppConstant {
   public static ONLINE_PAYMENTS = 'Payment';
   public static FEATURE_SETTINGS = 'Feature';
   public static REMINDERS = 'Reminder';
+  public static FUNDING_ACCOUNTS = 'Funding';
+
+  public static TAB_INDEX_OF_COMPANY_PROFILE = 0;
+  public static TAB_INDEX_OF_DEPARTMENTS = 1;
+  public static TAB_INDEX_OF_GENERAL_SETTINGS = 2;
+  public static TAB_INDEX_OF_FIELDS_CONFIGURATION = 3;
+  public static TAB_INDEX_OF_ONLINE_PAYMENTS = 4;
+  public static TAB_INDEX_OF_FEATURE_SETTINGS = 5;
+  public static TAB_INDEX_OF_FUNDING_ACCOUNTS = 6;
+  public static TAB_INDEX_OF_REMINDERS = 7;
 
 
   // Confirmation massage
@@ -893,6 +909,33 @@ export class AppConstant {
   public readonly PROJECT_CODES_CONFIRMATION_MASSAGE_NO = 'Click  \'No\' to only use this project code on lines where the project code is blank';
   public readonly PROJECT_CODES_CONFIRMATION_MASSAGE_YES = 'Click \'Yes\' to use this project code on all line items, overwriting any existing project codes';
 
+  /* These constants belong to funding account create/edit screen*/
+  public static ACH_PAYMENT_TYPE = 1;
+  public readonly ACH_PAYMENT_TYPE = 1;
+  public static CHECK_PAYMENT_TYPE = 2;
+  public static VIRTUAL_CARD_PAYMENT_TYPE = 3;
+  public static DIGITAL_CARD_PAYMENT_TYPE = 10;
+
+  public static ID_FUNDING_ACCOUNT_EDIT = 1;
+  public static ID_FUNDING_ACCOUNT_MARK_AS_DEFAULT = 2;
+  public static ID_FUNDING_ACCOUNT_DELETE = 3;
+  public static ID_FUNDING_ACCOUNT_ACTIVATE = 4;
+  public static ID_FUNDING_ACCOUNT_INACTIVATE = 5;
+
+  public static BANK_PAYMENT_TYPES = 'bankPaymentTypes';
+  public static SEQUENCE_NUMBER = 'checkSequenceNumber';
+  public static VIRTUAL_CARD_ID = 'virtualCardAccountId';
+  public static DIGITAL_CARD_ID = 'digitalCardAccountId';
+  public static FILE_URL = 'fileUrl';
+  public static COMPANY_ID = 'companyId';
+  public static COMPANY_NAME = 'companyName';
+  public static BANK_ID = 'bankId';
+  public static ACCOUNT_NICK_NAME = 'accountNicName';
+  public static ACCOUNT_NUMBER = 'accountNo';
+  public static BANK_ROUTING_NUMBER = 'bankRoutingNo';
+  public static TRANSIT_NUMBER = 'transitNo';
+
+  public static US_BANK = 1;
 
   // inbox
 
@@ -914,12 +957,9 @@ export class AppConstant {
   public static FILTER_LABEL_A_TO_Z = 'A to Z';
   public static FILTER_LABEL_Z_TO_A = 'Z to A';
 
-
-
-
-
-
-
+  public static PAPERTRL_SYSTEM_USERS = 1;
+  public static INTEGRATED_PAYABLE_USERS = 2;
+  public static HYBRID_USERS = 3;
 
 
 }

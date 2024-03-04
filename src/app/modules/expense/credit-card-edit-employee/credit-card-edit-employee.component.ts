@@ -58,16 +58,15 @@ export class CreditCardEditEmployeeComponent implements OnInit {
    */
   getEmployeeData() {
     this.expenseService.getChangeEmployeeData(this.id).subscribe((res: any) => {
-      if (AppResponseStatus.STATUS_SUCCESS === res.status) {
         if (AppResponseStatus.STATUS_SUCCESS === res.status) {
-          res?.body?.forEach(() => {
+          res?.body?.forEach((employee: any, index: number) => {
             this.addGroup();
+            this.groupFormArray.at(index).get('employeeName').setValue(employee.name);
           });
           this.formGroup.get(AppFormConstants.GROUP_CARD_LIST).patchValue(res.body);
         } else {
           this.notificationService.infoMessage(res.body.message);
         }
-      }
     }, error => {
       this.notificationService.errorMessage(error);
     });

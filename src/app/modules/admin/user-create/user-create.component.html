@@ -1,10 +1,16 @@
-<form [class]="!editView && !detailView ? 'height p-4' : 'side-bar-drawer-content p-3'" [formGroup]="createUserForm"
-      autocomplete="off">
-  <div class="grid p-fluid p-2">
-
-    <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
-      <label class="label-wrapper" for="emailAddress">Email Address* </label>
-      <div class="p-inputgroup">
+<form class="side-bar-drawer-content p-3" [formGroup]="createUserForm" autocomplete="off">
+  <div class="grid payment-fields-invalid m-0 mb-3 mt-4" *ngIf="validPaymentInfo() && !detailView">
+    <div class="col-12">
+      <span class="fa fa-question-circle"></span> Please note that the below-highlighted fields need to be
+      configured in order to complete your payment setup with the selected payment type(s).
+    </div>
+  </div>
+  <p-accordion class="borderless-accordion" [activeIndex]="0">
+    <p-accordionTab header="Basic Information">
+      <div class="grid p-fluid">
+        <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
+          <label class="label-wrapper" for="emailAddress">Email Address* </label>
+          <div class="p-inputgroup">
             <span class="p-float-label">
                      <input (keyup)="checkAvailability(createUserForm.value);
                             removeSpaces.clearSpace(createUserForm, 'email')"
@@ -14,38 +20,38 @@
                             maxlength="100"
                             pInputText type="text" #email>
                    </span>
-      </div>
-      <div *ngIf="createUserForm.get('email').dirty && createUserForm.get('email').errors"
-           class="p-invalid  text-align-left">
-        <div *ngIf="createUserForm.get('email').errors.required">Email Address is required</div>
-        <div *ngIf="createUserForm.controls['email'].hasError('emailValidate')">Email must be a valid
-          email address
+          </div>
+          <div *ngIf="createUserForm.get('email').dirty && createUserForm.get('email').errors"
+               class="p-invalid  text-align-left">
+            <div *ngIf="createUserForm.get('email').errors.required">Email Address is required</div>
+            <div *ngIf="createUserForm.controls['email'].hasError('emailValidate')">Email must be a valid
+              email address
+            </div>
+          </div>
+          <div *ngIf="!isEmailAvailable" class="p-invalid text-align-left">
+            Email already exists, Please enter a new one
+          </div>
         </div>
-      </div>
-      <div *ngIf="!isEmailAvailable" class="p-invalid text-align-left">
-        Email already exists, Please enter a new one
-      </div>
-    </div>
 
-    <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
-      <label class="label-wrapper" for="firstLastName">Name* </label>
-      <div class="p-inputgroup">
+        <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
+          <label class="label-wrapper" for="firstLastName">Name* </label>
+          <div class="p-inputgroup">
             <span class="p-float-label">
                      <input (keyup)="removeSpaces.clearSpace(createUserForm, 'name')" (paste)="removeSpaces.clearSpace(createUserForm, 'name')" formControlName="name"
                             id="firstLastName"
                             maxlength="100" pInputText type="text">
                    </span>
-      </div>
-      <div *ngIf="createUserForm.get('name').dirty && createUserForm.get('name').errors"
-           class="p-invalid text-align-left">
-        Name is required
-      </div>
-    </div>
+          </div>
+          <div *ngIf="createUserForm.get('name').dirty && createUserForm.get('name').errors"
+               class="p-invalid text-align-left">
+            Name is required
+          </div>
+        </div>
 
-    <div *ngIf="isNotVendor && !privilegeService.isSupport()"
-         [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
-      <label class="label-wrapper" for="approvalGroup">Select Approval Groups* </label>
-      <span class="p-float-label">
+        <div *ngIf="isNotVendor && !privilegeService.isSupport()"
+             [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
+          <label class="label-wrapper" for="approvalGroup">Select Approval Groups* </label>
+          <span class="p-float-label">
            <p-multiSelect #multiSelect #select
                           appMultiselectFocus
                           (onChange)="approvalGroupChanged($event,multiSelect)"
@@ -76,16 +82,16 @@
            </p-multiSelect>
         </span>
 
-      <div *ngIf="createUserForm.get('approvalGroups').dirty && createUserForm.get('approvalGroups').errors"
-           class="p-invalid text-align-left">
-        Approval Group is required
-      </div>
-    </div>
+          <div *ngIf="createUserForm.get('approvalGroups').dirty && createUserForm.get('approvalGroups').errors"
+               class="p-invalid text-align-left">
+            Approval Group is required
+          </div>
+        </div>
 
-    <div *ngIf="!isHidden()"
-         [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
-      <label class="label-wrapper" for="departments">Select Departments</label>
-      <span class="p-float-label">
+        <div *ngIf="!isHidden()"
+             [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
+          <label class="label-wrapper" for="departments">Select Departments</label>
+          <span class="p-float-label">
         <p-multiSelect appMultiselectFocus [group]="true" [optionDisabled]="detailView? 'label': ''" [options]="userUtility.departments" class="responsive-multiselect"
                        display="chip" formControlName="departments" id="departments"
                        optionGroupChildren="items" optionValue="value">
@@ -96,49 +102,49 @@
         </ng-template>
       </p-multiSelect>
       </span>
-    </div>
+        </div>
 
-    <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
-      <label class="label-wrapper" for="employeeNumber">Employee Number </label>
-      <div class="p-inputgroup">
+        <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
+          <label class="label-wrapper" for="employeeNumber">Employee Number </label>
+          <div class="p-inputgroup">
             <span class="p-float-label">
                      <input (keyup)="removeSpaces.clearSpace(createUserForm, 'nicPassportNo')"
                             formControlName="nicPassportNo" id="employeeNumber"
                             pInputText type="text">
                    </span>
-      </div>
-      <div *ngIf="createUserForm.get('nicPassportNo').hasError('maxlength')" class="p-invalid text-align-left">Employee
-        Number must be less than 50 characters
-      </div>
-    </div>
+          </div>
+          <div *ngIf="createUserForm.get('nicPassportNo').hasError('maxlength')" class="p-invalid text-align-left">Employee
+            Number must be less than 50 characters
+          </div>
+        </div>
 
-    <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
-      <label class="label-wrapper" for="employeeNumber">Contact Number*</label>
-  <app-country-code-validation formControlName="telephoneNo" id="telephoneNo"  [telephoneFormControl]="createUserForm.get('telephoneNo')">
-  </app-country-code-validation>
-      <div *ngIf="createUserForm.get('telephoneNo').touched && createUserForm.get('telephoneNo').hasError('required')"
-           class="p-invalid text-align-left">
-        Contact Number is required
-      </div>
-      <div *ngIf="createUserForm.get('telephoneNo').hasError('validatePhoneNumber')" class="p-invalid text-align-left">
-        Invalid Contact Number
-      </div>
-    </div>
+        <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
+          <label class="label-wrapper" for="employeeNumber">Contact Number*</label>
+          <app-country-code-validation formControlName="telephoneNo" id="telephoneNo"  [telephoneFormControl]="createUserForm.get('telephoneNo')">
+          </app-country-code-validation>
+          <div *ngIf="createUserForm.get('telephoneNo').touched && createUserForm.get('telephoneNo').hasError('required')"
+               class="p-invalid text-align-left">
+            Contact Number is required
+          </div>
+          <div *ngIf="createUserForm.get('telephoneNo').hasError('validatePhoneNumber')" class="p-invalid text-align-left">
+            Invalid Contact Number
+          </div>
+        </div>
 
-    <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
-      <label class="label-wrapper" for="status">Select Status* </label>
-      <span class="p-float-label">
+        <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
+          <label class="label-wrapper" for="status">Select Status* </label>
+          <span class="p-float-label">
             <p-dropdown [autoDisplayFirst]="false" #status
                         (onChange)="commonUtil.isPressEnterInsideDropdown(status)"
                         [filter]="true" [options]="userUtility.statusList.data" formControlName="status"
                         id="status" inputId="status" optionLabel="name"
                         optionValue="id"></p-dropdown>
         </span>
-      <div *ngIf="createUserForm.get('status').dirty && createUserForm.get('status').errors"
-           class="p-invalid text-align-left">
-        Status is required
-      </div>
-    </div>
+          <div *ngIf="createUserForm.get('status').dirty && createUserForm.get('status').errors"
+               class="p-invalid text-align-left">
+            Status is required
+          </div>
+        </div>
 
 
     <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
@@ -177,9 +183,9 @@
            class="p-invalid text-align-left">Role is required</div>
     </div>
 
-    <div *ngIf="!editView && !detailView" [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
-      <label class="label-wrapper" for="float-input">Password*</label>
-      <div class="p-inputgroup">
+        <div *ngIf="!editView && !detailView" [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
+          <label class="label-wrapper" for="float-input">Password*</label>
+          <div class="p-inputgroup">
       <span class="p-float-label  p-input-icon-right">
            <i (click)="passwordShow? passwordShow= false: passwordShow= true"
               [ngClass]="passwordShow? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
@@ -187,18 +193,18 @@
                     [showPassword]="passwordShow" autocomplete="new-password" class="password-text"
                     formControlName="password" id="float-input" pPassword type="password">
       </span>
-      </div>
-      <div *ngIf="createUserForm.get('password').dirty && createUserForm.get('password').errors"
-           class="p-invalid  text-align-left">
-        <div *ngIf="createUserForm.get('password').errors.required">Password is required</div>
-        <div *ngIf="createUserForm.get('password').errors.minlength">Password must be at least 8 characters</div>
-        <div *ngIf="createUserForm.get('password').errors.maxlength">Password must be less than 20 characters</div>
-      </div>
-    </div>
+          </div>
+          <div *ngIf="createUserForm.get('password').dirty && createUserForm.get('password').errors"
+               class="p-invalid  text-align-left">
+            <div *ngIf="createUserForm.get('password').errors.required">Password is required</div>
+            <div *ngIf="createUserForm.get('password').errors.minlength">Password must be at least 8 characters</div>
+            <div *ngIf="createUserForm.get('password').errors.maxlength">Password must be less than 20 characters</div>
+          </div>
+        </div>
 
-    <div *ngIf="!editView && !detailView" [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
-      <label class="label-wrapper" for="confirmPassword">Confirm Password*</label>
-      <div class="p-inputgroup">
+        <div *ngIf="!editView && !detailView" [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
+          <label class="label-wrapper" for="confirmPassword">Confirm Password*</label>
+          <div class="p-inputgroup">
      <span class="p-float-label p-input-icon-right">
         <i (click)="confirmPasswordShow? confirmPasswordShow= false: confirmPasswordShow= true"
            [ngClass]="confirmPasswordShow? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
@@ -206,21 +212,21 @@
                      [readOnly]="detailView" [showPassword]="confirmPasswordShow" autocomplete="new-password"
                      class="password-text" formControlName="confirmPassword" id="confirmPassword" pPassword
                      type="password"></span>
-      </div>
-      <div *ngIf="createUserForm.get('confirmPassword').dirty && createUserForm.get('confirmPassword').errors"
-           class="p-invalid">
-        <div *ngIf=" createUserForm.get('confirmPassword').errors.required">Confirm Password is
-          required
+          </div>
+          <div *ngIf="createUserForm.get('confirmPassword').dirty && createUserForm.get('confirmPassword').errors"
+               class="p-invalid">
+            <div *ngIf=" createUserForm.get('confirmPassword').errors.required">Confirm Password is
+              required
+            </div>
+            <div *ngIf="createUserForm.get('confirmPassword').errors.mustMatch">New password and
+              Confirm Password must match
+            </div>
+          </div>
         </div>
-        <div *ngIf="createUserForm.get('confirmPassword').errors.mustMatch">New password and
-          Confirm Password must match
-        </div>
-      </div>
-    </div>
 
-    <div *ngIf="!detailView" [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
-      <label class="label-wrapper" for="fileText">Profile Picture</label>
-      <div class="p-inputgroup">
+        <div *ngIf="!detailView" [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
+          <label class="label-wrapper" for="fileText">Profile Picture</label>
+          <div class="p-inputgroup">
             <span class="p-float-label">
             <input #profilePicture (change)="onFileChange($event)" accept="image/*" formControlName="profilePic"
                    hidden id="fileUpload" type="file">
@@ -234,48 +240,107 @@
                     pButton  tabindex="-1"  style="margin: 0 !important; height: 31px !important; border-radius: 0 4px 4px 0 !important;"
                     type="button"></button>
            </span>
-      </div>
-    </div>
-
-    <div *ngIf="validPaymentInfo() && !detailView" class="col-12 grid payment-fields-invalid">
-      <span class="fa fa-question-circle"></span> Please note that the below-highlighted fields need to be configured
-      in order to complete your payment setup with the selected payment type(s).
-    </div>
-
-    <ng-container *ngIf="!isHidden()">
-      <div class="xl:col-12">
-        <h6 style="color: #73828A">Payment Information</h6>
-      </div>
-
-      <div [ngClass]="!panel ? 'field col-12 xl:col-4 lg:col-4' : 'field col-6'">
-        <label class="label-wrapper" for="accountRoutingNumber">Accepted Payment Type(s)</label>
-        <div class="p-inputgroup">
-          <p-multiSelect #accPaymentTypes
-                         (onChange)="setPreferredPaymentType(accPaymentTypes.value);
-                           commonUtil.onAcceptedPaymentTypesChange(createUserForm.get('acceptedPaymentTypes').value); validPaymentInfo()"
-                         (onClear)="setPreferredPaymentType(accPaymentTypes.value)" [filter]="true"
-                         appMultiselectFocus
-                         [optionDisabled]="detailView? 'id':''"
-                         [options]="allPaymentTypeList.data" [showToggleAll]="true"
-                         appendTo="body"
-                         formControlName="acceptedPaymentTypes"
-                         id="paymentInformation" inputId="paymentInformation" optionLabel="name"
-                         optionValue="id">
-            <ng-template pTemplate="selectedItem">
-              <div>{{createUserForm.get('acceptedPaymentTypes').value.name}}</div>
-            </ng-template>
-
-            <ng-template let-multiselect pTemplate="item">
-              <div class="grid">
-                <div [ngClass]="multiselect.id == 0 ? ' dropdown-add': null"
-                     class="dropdown-list">{{multiselect.name}}</div>
-                <em *ngIf="multiselect.name == 'Add New'"
-                    class="pi pi-plus dropdown-icon dropdown-add"></em>
-              </div>
-            </ng-template>
-
-          </p-multiSelect>
+          </div>
         </div>
+
+      </div>
+    </p-accordionTab>
+
+    <p-accordionTab header="Payment Information" *ngIf="!isHidden()">
+      <div class="grid p-fluid">
+
+      <div class="field col-12" *ngIf="acceptedPaymentTypes.length>0">
+        <label class="label-wrapper" for="accountRoutingNumber">Accepted Payment Type(s)</label>
+        <ng-container formArrayName="acceptedPaymentTypes">
+          <div class="mt-2" *ngFor="let data of acceptedPaymentTypes.controls; let i = index"
+               [formGroupName]="i">
+            <p-panel  [collapsed]="!data.get('selected').value"  [toggleable]="false" class="funding-acc-panel">
+              <ng-template pTemplate="header">
+                    <div class="flex align-items-center w-full">
+                      <div class="font-bold">{{ data.get('name').value }}</div>
+                      <p-inputSwitch  class="ml-auto" formControlName="selected"
+                                      (onChange)="acceptedPaymentTypeSelected(data.value, i)"></p-inputSwitch>
+                    </div>
+              </ng-template>
+
+              <ng-container *ngIf="data.get('selected').value">
+               <div class="grid">
+
+               <div class="field col-6" *ngIf="data.get('paymentTypeId').value === appConstant.TWO">
+                 <label class="label-wrapper">Preferred Payment Channel
+                   for {{ data.get('name').value }}</label>
+                 <div class="p-inputgroup">
+                        <span class="p-float-label">
+                          <p-dropdown #recipient [virtualScroll]="paymentProviders.data.length >20"
+                                      appendTo="body"
+                                      formControlName="providerId" virtualScrollItemSize="25"
+                                      inputId="dropdown" (onChange)="commonUtil.isPressEnterInsideDropdown(recipient)"
+                                      [autoDisplayFirst]="false" optionDisabled="inactive" showClear="true"
+                                      [options]="paymentProviders.data" [filter]="true" optionLabel="name"
+                                      optionValue="id">
+                           </p-dropdown>
+                        </span>
+                 </div>
+               </div>
+                 <div class="col-6 field" *ngIf="data.get('name').value === 'Check'">
+                   <div class="mt-4">
+                     <p-inputSwitch class="custom-checkbox" [formControl]="fieldValueCheckToBeMail" ></p-inputSwitch>
+                  <span class="col-10 costume-checkbox" style="color:#555555">Enable this option if the check is
+                to <br><span style="padding-left: 50px">be delivered via mail</span></span>
+                   </div>
+                 </div>
+
+                 <div *ngIf="createUserForm.get('checkToBeMail').value && data.get('name').value === 'Check'"
+                      class="field col-6">
+                   <label class="label-wrapper" for="accountType">Check Processing Method</label>
+                   <span class="p-float-label">
+                 <p-dropdown [autoDisplayFirst]="false" [filter]="true"
+                             [options]="paymentMailOption"
+                             [virtualScroll]="paymentMailOption.length >20"
+                             [formControl]="fieldValueMailOption"
+                             appendTo="body" id="mailOption" inputId="dropdown"
+                             optionDisabled="inactive" optionLabel="name"
+                             optionValue="id" showClear="true" virtualScrollItemSize="25">
+                 </p-dropdown>
+                </span>
+                 </div>
+
+                 <div class="field col-6" *ngIf="data.get('paymentTypeId').value === appConstant.ACH_PAYMENT_TYPE">
+                     <label class="label-wrapper" for="accountType">Account Type</label>
+                     <span class="p-float-label">
+                     <p-dropdown #accountT [autoDisplayFirst]="false" [filter]="true" [ngClass]="{'isSelectedCheck': commonUtil.isSelectedACH && !createUserForm.get('accountType').value}"
+                        [options]="accountType.data" [virtualScroll]="accountType.data.length >20"
+                        [formControl]="fieldValueAccountType"
+                        (onChange)="commonUtil.isPressEnterInsideDropdown(accountT)"
+                        id="accountType" inputId="dropdown"
+                        optionDisabled="inactive" appendTo="body"
+                        optionLabel="name" optionValue="id" showClear="true" virtualScrollItemSize="25">
+                     </p-dropdown>
+                    </span>
+                 </div>
+
+                 <div class="field col-6" *ngIf="data.get('paymentTypeId').value === appConstant.ACH_PAYMENT_TYPE">
+                   <label class="label-wrapper" for="recipientType">Recipient Type</label>
+                   <span class="p-float-label">
+                     <p-dropdown #recipient [autoDisplayFirst]="false" [filter]="true"
+                        [ngClass]="{'isSelectedCheck': commonUtil.isSelectedACH && !createUserForm.get('recipientType').value}"
+                        (onChange)="commonUtil.isPressEnterInsideDropdown(recipient)"
+                        [options]="recipientType.data" [virtualScroll]="recipientType.data.length >20"
+                        [formControl]="fieldValueRecipientType" appendTo="body"
+                        id="recipientType" inputId="dropdown" optionDisabled="inactive"
+                        optionLabel="name" optionValue="id" showClear="true" virtualScrollItemSize="25">
+                    </p-dropdown>
+                    </span>
+                 </div>
+
+               </div>
+              </ng-container>
+
+            </p-panel>
+
+
+          </div>
+        </ng-container>
       </div>
 
       <div [ngClass]="!panel ? 'field col-12 xl:col-4 lg:col-4' : 'field col-6'">
@@ -315,34 +380,6 @@
       </div>
 
       <div [ngClass]="!panel ? 'field col-12 xl:col-4 lg:col-4' : 'field col-6'">
-        <label class="label-wrapper" for="recipientType">Recipient Type</label>
-        <span class="p-float-label">
-            <p-dropdown #recipient [autoDisplayFirst]="false" [filter]="true" [ngClass]="{'isSelectedCheck': commonUtil.isSelectedACH && !createUserForm.get('recipientType').value}"
-                        (onChange)="commonUtil.isPressEnterInsideDropdown(recipient)"
-                        [options]="recipientType.data" [virtualScroll]="recipientType.data.length >20"
-                        formControlName="recipientType"
-                        id="recipientType" inputId="dropdown" optionDisabled="inactive"
-                        optionLabel="name" optionValue="id" showClear="true" virtualScrollItemSize="25">
-            </p-dropdown>
-          </span>
-        <small class="block">This field will be used for (ACH).</small>
-      </div>
-
-      <div [ngClass]="!panel ? 'field col-12 xl:col-4 lg:col-4' : 'field col-6'">
-        <label class="label-wrapper" for="accountType">Account Type</label>
-        <span class="p-float-label">
-            <p-dropdown #accountT [autoDisplayFirst]="false" [filter]="true" [ngClass]="{'isSelectedCheck': commonUtil.isSelectedACH && !createUserForm.get('accountType').value}"
-                        [options]="accountType.data" [virtualScroll]="accountType.data.length >20" formControlName="accountType"
-                        (onChange)="commonUtil.isPressEnterInsideDropdown(accountT)"
-                        id="accountType" inputId="dropdown"
-                        optionDisabled="inactive"
-                        optionLabel="name" optionValue="id" showClear="true" virtualScrollItemSize="25">
-            </p-dropdown>
-          </span>
-        <small class="block">This field will be used for (ACH).</small>
-      </div>
-
-      <div [ngClass]="!panel ? 'field col-12 xl:col-4 lg:col-4' : 'field col-6'">
         <label class="label-wrapper" for="accountNumber">Account Number</label>
         <div #actualTarget [ngClass]="{'isSelectedCheck': commonUtil.isSelectedACHCheck && !createUserForm.get('accountNumber').value}"
              class="p-inputgroup">
@@ -365,43 +402,41 @@
         </div>
         <small class="block">This field will be used for (ACH, Checks).</small>
       </div>
+      </div>
+    </p-accordionTab>
 
-    </ng-container>
-
-    <div class="col-12">
-      <h6 style="color: #73828A">Postal Address</h6>
-    </div>
-
-    <div [ngClass]="!panel ? 'field col-12 xl:col-6 lg:col-4' : 'field col-6'">
-      <label class="label-wrapper" for="addressLine1">Address Line1 </label>
-      <div [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !createUserForm.get('addressLine1').value) ? 'isSelectedCheck':''"
-           class="p-inputgroup">
+    <p-accordionTab header="Postal Address">
+      <div class="grid p-fluid">
+        <div [ngClass]="!panel ? 'field col-12 xl:col-6 lg:col-4' : 'field col-6'">
+          <label class="label-wrapper" for="addressLine1">Address Line1 </label>
+          <div [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !createUserForm.get('addressLine1').value) ? 'isSelectedCheck':''"
+               class="p-inputgroup">
             <span class="p-float-label">
               <input blockSpace formControlName="addressLine1" id="addressLine1" maxlength="300" pInputText
                      type="text">
             </span>
-      </div>
-      <small *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !createUserForm.get('addressLine1').value)"
-             class="block">Please provide your Address Line1 (max 35 characters).</small>
-      <div *ngIf="createUserForm.get('addressLine1').dirty && createUserForm.get('addressLine1').errors"
-           class="p-invalid text-align-left">
-        Address Line1 is required
-      </div>
-    </div>
+          </div>
+          <small *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !createUserForm.get('addressLine1').value)"
+                 class="block">Please provide your Address Line1 (max 35 characters).</small>
+          <div *ngIf="createUserForm.get('addressLine1').dirty && createUserForm.get('addressLine1').errors"
+               class="p-invalid text-align-left">
+            Address Line1 is required
+          </div>
+        </div>
 
-    <div [ngClass]="!panel ? 'field col-12 xl:col-6 lg:col-4' : 'field col-6'">
-      <label class="label-wrapper" for="addressLine2">Address Line2 </label>
-      <div class="p-inputgroup">
+        <div [ngClass]="!panel ? 'field col-12 xl:col-6 lg:col-4' : 'field col-6'">
+          <label class="label-wrapper" for="addressLine2">Address Line2 </label>
+          <div class="p-inputgroup">
             <span class="p-float-label">
               <input blockSpace formControlName="addressLine2" id="addressLine2"
                      maxlength="300" pInputText type="text">
             </span>
-      </div>
-    </div>
+          </div>
+        </div>
 
-    <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
-      <label class="label-wrapper" for="city">City</label>
-      <span class="p-float-label">
+        <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
+          <label class="label-wrapper" for="city">City</label>
+          <span class="p-float-label">
           <p-autoComplete (completeMethod)="filterCities($event)" [autoHighlight]="true" [dropdown]="false" [minLength]="1"
                           [multiple]="false" [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !createUserForm.get('city').value) ? 'isSelectedCheck':''"
                           [style]="{'width':'100%'}"
@@ -410,13 +445,13 @@
                           id="city" maxlength="200">
           </p-autoComplete>
           </span>
-      <small *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !createUserForm.get('city').value)"
-             class="block">Please provide your City (max 30 characters).</small>
-    </div>
+          <small *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !createUserForm.get('city').value)"
+                 class="block">Please provide your City (max 30 characters).</small>
+        </div>
 
-    <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
-      <label class="label-wrapper" for="state">State</label>
-      <span class="p-float-label">
+        <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
+          <label class="label-wrapper" for="state">State</label>
+          <span class="p-float-label">
           <p-autoComplete (completeMethod)="filterStates($event)" [autoHighlight]="true" [dropdown]="false" [minLength]="1"
                           [multiple]="false" [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !createUserForm.get('state').value) ? 'isSelectedCheck':''"
                           [style]="{'width':'100%'}" [suggestions]="filteredGroups" blockSpace
@@ -425,84 +460,84 @@
                           id="state" maxlength="200">
           </p-autoComplete>
             </span>
-      <small *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !createUserForm.get('state').value)"
-             class="block">Please provide your State for Check
-        payments.</small>
-    </div>
+          <small *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !createUserForm.get('state').value)"
+                 class="block">Please provide your State for Check
+            payments.</small>
+        </div>
 
-    <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
-      <label class="label-wrapper" for="zipCode">Zip Code </label>
-      <div [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !createUserForm.get('zipCode').value) ? 'isSelectedCheck':''"
-           class="p-inputgroup">
+        <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
+          <label class="label-wrapper" for="zipCode">Zip Code </label>
+          <div [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !createUserForm.get('zipCode').value) ? 'isSelectedCheck':''"
+               class="p-inputgroup">
             <span class="p-float-label">
               <input blockSpace formControlName="zipCode" id="zipCode" pInputText type="text">
             </span>
-      </div>
-      <small *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !createUserForm.get('zipCode').value)"
-             class="block">Please provide your Zip Code (max 10 characters).</small>
-      <div *ngIf="createUserForm.get('zipCode').hasError('maxlength')" class="p-invalid text-align-left">
-        Zip Code must be less than 30 characters
-      </div>
-    </div>
+          </div>
+          <small *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && !showAddress && !createUserForm.get('zipCode').value)"
+                 class="block">Please provide your Zip Code (max 10 characters).</small>
+          <div *ngIf="createUserForm.get('zipCode').hasError('maxlength')" class="p-invalid text-align-left">
+            Zip Code must be less than 30 characters
+          </div>
+        </div>
 
-    <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
-      <label class="label-wrapper" for="country">Select Country*</label>
-      <span class="p-float-label">
+        <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
+          <label class="label-wrapper" for="country">Select Country*</label>
+          <span class="p-float-label">
                <p-dropdown #country [autoDisplayFirst]="false" [filter]="true" [options]="countries.data" [virtualScroll]="true"
                            (onChange)="commonUtil.isPressEnterInsideDropdown(country)"
                            appendTo="body"
                            formControlName="country" id="country" optionLabel="name" optionValue="id"
                            showClear="true" virtualScrollItemSize="25"></p-dropdown>
            </span>
-      <div *ngIf="createUserForm.get('country').dirty && createUserForm.get('country').errors"
-           class="p-invalid text-align-left">
-        Country is required
-      </div>
-    </div>
+          <div *ngIf="createUserForm.get('country').dirty && createUserForm.get('country').errors"
+               class="p-invalid text-align-left">
+            Country is required
+          </div>
+        </div>
 
-    <span class="col-12 field flex" style="align-items: center">
+        <span class="col-12 field flex" style="align-items: center">
       <p-inputSwitch class="custom-checkbox" [styleClass]="createUserForm.get('showRemit').value ?
       'card-overflow': null" formControlName="showRemit"></p-inputSwitch>
       <span class="col-10 costume-checkbox" style="padding: 10px">Please check if the remit address is different from above
       </span>
     </span>
 
-    <ng-container *ngIf="createUserForm.get('showRemit').value">
-      <div class="col-12">
-        <h6 style="color: #73828A">Remit Address</h6>
-      </div>
+        <ng-container *ngIf="createUserForm.get('showRemit').value">
+          <div class="col-12">
+            <h6 style="color: #73828A">Remit Address</h6>
+          </div>
 
-      <div [ngClass]="!panel ? 'field col-12 xl:col-6 lg:col-4' : 'field col-6'">
-        <label class="label-wrapper" for="rAddressLine1">Address Line1 </label>
-        <div [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !createUserForm.get('rAddressLine1').value) ? 'isSelectedCheck':''"
-             class="p-inputgroup">
+          <div [ngClass]="!panel ? 'field col-12 xl:col-6 lg:col-4' : 'field col-6'">
+            <label class="label-wrapper" for="rAddressLine1">Address Line1 </label>
+            <div [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !createUserForm.get('rAddressLine1').value) ? 'isSelectedCheck':''"
+                 class="p-inputgroup">
             <span class="p-float-label">
               <input blockSpace formControlName="rAddressLine1" id="rAddressLine1"
                      maxlength="300" pInputText type="text">
             </span>
-        </div>
-        <small *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !createUserForm.get('rAddressLine1').value)"
-               class="block">Please provide your Address Line1 for
-          Check payments (max 35 characters).</small>
-        <div *ngIf="createUserForm.get('rAddressLine1').dirty && createUserForm.get('rAddressLine1').errors"
-             class="p-invalid text-align-left">
-          Address Line1 is required
-        </div>
-      </div>
+            </div>
+            <small *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !createUserForm.get('rAddressLine1').value)"
+                   class="block">Please provide your Address Line1 for
+              Check payments (max 35 characters).</small>
+            <div *ngIf="createUserForm.get('rAddressLine1').dirty && createUserForm.get('rAddressLine1').errors"
+                 class="p-invalid text-align-left">
+              Address Line1 is required
+            </div>
+          </div>
 
-      <div [ngClass]="!panel ? 'field col-12 xl:col-6 lg:col-4' : 'field col-6'">
-        <label class="label-wrapper" for="rAddressLine2">Address Line2 </label>
-        <div class="p-inputgroup">
+          <div [ngClass]="!panel ? 'field col-12 xl:col-6 lg:col-4' : 'field col-6'">
+            <label class="label-wrapper" for="rAddressLine2">Address Line2 </label>
+            <div class="p-inputgroup">
             <span class="p-float-label">
               <input blockSpace formControlName="rAddressLine2" id="rAddressLine2"
                      maxlength="300" pInputText type="text">
             </span>
-        </div>
-      </div>
+            </div>
+          </div>
 
-      <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
-        <label class="label-wrapper" for="rcity">City</label>
-        <span class="p-float-label">
+          <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
+            <label class="label-wrapper" for="rcity">City</label>
+            <span class="p-float-label">
             <p-autoComplete (completeMethod)="filterCities($event)" [autoHighlight]="true" [dropdown]="false" [minLength]="1"
                             [multiple]="false" [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !createUserForm.get('rCity').value) ? 'isSelectedCheck':''"
                             [style]="{'width':'100%'}"
@@ -511,14 +546,14 @@
                             id="rcity" maxlength="200">
             </p-autoComplete>
              </span>
-        <small *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !createUserForm.get('rCity').value)"
-               class="block">Please provide your City (max 30 characters).</small>
-      </div>
+            <small *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !createUserForm.get('rCity').value)"
+                   class="block">Please provide your City (max 30 characters).</small>
+          </div>
 
 
-      <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-3' : 'field col-6'">
-        <label class="label-wrapper" for="rstate">State</label>
-        <span class="p-float-label">
+          <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-3' : 'field col-6'">
+            <label class="label-wrapper" for="rstate">State</label>
+            <span class="p-float-label">
             <p-autoComplete (completeMethod)="filterStates($event)" [autoHighlight]="true" [autocomplete]="false"
                             [dropdown]="false" [minLength]="1" [multiple]="false"
                             [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !createUserForm.get('rState').value) ? 'isSelectedCheck':''"
@@ -527,43 +562,44 @@
                             id="rstate" maxlength="200">
             </p-autoComplete>
             </span>
-        <small *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !createUserForm.get('rState').value)"
-               class="block">Please provide your State.</small>
-      </div>
+            <small *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !createUserForm.get('rState').value)"
+                   class="block">Please provide your State.</small>
+          </div>
 
-      <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
-        <label class="label-wrapper" for="rZipCode">Zip Code </label>
-        <div [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !createUserForm.get('rZipCode').value) ? 'isSelectedCheck':''"
-             class="p-inputgroup">
+          <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
+            <label class="label-wrapper" for="rZipCode">Zip Code </label>
+            <div [ngClass]="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !createUserForm.get('rZipCode').value) ? 'isSelectedCheck':''"
+                 class="p-inputgroup">
             <span class="p-float-label">
               <input blockSpace formControlName="rZipCode" id="rZipCode" pInputText type="text">
             </span>
-        </div>
-        <small *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !createUserForm.get('rZipCode').value)"
-               class="block">Please provide your Zip Code (max 10 characters).</small>
-        <div *ngIf="createUserForm.get('rZipCode').hasError('maxlength')" class="p-invalid text-align-left">
-          Zip Code must be less than 30 characters
-        </div>
-      </div>
+            </div>
+            <small *ngIf="(isSelectedPaymentTypeAsCheckAndVirtualCard && showAddress && !createUserForm.get('rZipCode').value)"
+                   class="block">Please provide your Zip Code (max 10 characters).</small>
+            <div *ngIf="createUserForm.get('rZipCode').hasError('maxlength')" class="p-invalid text-align-left">
+              Zip Code must be less than 30 characters
+            </div>
+          </div>
 
-      <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
-        <label class="label-wrapper" for="rCountry">Select Country*</label>
-        <span class="p-float-label">
+          <div [ngClass]="!panel ? 'field col-12 xl:col-3 lg:col-4' : 'field col-6'">
+            <label class="label-wrapper" for="rCountry">Select Country*</label>
+            <span class="p-float-label">
                <p-dropdown #sCountry [autoDisplayFirst]="false" [filter]="true" [options]="countries.data" [virtualScroll]="true"
                            (onChange)="commonUtil.isPressEnterInsideDropdown(sCountry)"
                            appendTo="body"
                            formControlName="rCountry" id="rCountry" optionLabel="name" optionValue="id"
                            showClear="true" virtualScrollItemSize="25"></p-dropdown>
         </span>
-        <div *ngIf="createUserForm.get('rCountry').dirty && createUserForm.get('rCountry').hasError('required')"
-             class="p-invalid text-align-left">
-          Country is required
-        </div>
+            <div *ngIf="createUserForm.get('rCountry').dirty && createUserForm.get('rCountry').hasError('required')"
+                 class="p-invalid text-align-left">
+              Country is required
+            </div>
 
+          </div>
+        </ng-container>
       </div>
-    </ng-container>
-
-  </div>
+    </p-accordionTab>
+  </p-accordion>
 </form>
 
 <div *ngIf="!detailView" [class]="panel ? 'panel-footer' : 'footer fixed'" class="grid">

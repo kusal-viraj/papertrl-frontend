@@ -6,6 +6,7 @@ import {TableColumnsDto} from '../../dto/table/table-columns-dto';
 import {TableSearchFilterDataDto} from '../../dto/table/table-search-filter-data-dto';
 import {UserMasterDto} from '../../dto/user/user-master-dto';
 import {map} from "rxjs/operators";
+import {TenantDto} from '../../dto/tenant/tenant-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -96,5 +97,27 @@ export class TenantService {
   getSubClientList(userDto: UserMasterDto) {
     return this.httpClient.get(ApiEndPoint.API_URL + '/tenant_management/sec_get_sub_account_list_with_tenant_id',
       {params: {roleId: userDto.roleId.toString()}, observe: 'response'});
+  }
+
+  /**
+   * this method can be used to get Tenant package Details
+   */
+  getPackagesDetails() {
+    return this.httpClient.get<DropdownDto[]>(ApiEndPoint.API_URL + '/tenant_management/sec_get_papertrl_packages',
+      {observe: 'response'});
+  }
+
+  /**
+   * This service use for update tenant
+   * @param tenantData TenantDto
+   */
+  updateTenant(id, packageId) {
+    return this.httpClient.put(ApiEndPoint.API_URL + '/tenant_management/update_tenant_package_id', '',
+      { observe: 'response', params: { id, packageId}});
+  }
+
+  getTenantData(id) {
+    return this.httpClient.get(ApiEndPoint.API_URL + '/tenant_management/sec_get_papertrl_package_related_to_package',
+      { observe: 'response', params: { id }});
   }
 }

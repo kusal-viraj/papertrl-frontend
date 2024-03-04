@@ -77,6 +77,10 @@ th div p-multiSelect {
   width: 100%;
 }
 
+th{
+  vertical-align: top;
+}
+
 .selectedHover {
   cursor: pointer;
   color: $green;

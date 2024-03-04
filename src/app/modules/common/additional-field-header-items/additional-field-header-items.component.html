@@ -33,7 +33,7 @@
           <label class="label-wrapper" for="multiselect_{{itemIndex}}">Select {{additionalFieldHeader[itemIndex].fieldName}}
             {{additionalFieldHeader[itemIndex].required ? '*' : ''}}</label>
            <p-multiSelect appMultiselectFocus [options]="additionalFieldHeader[itemIndex].optionsList.data"
-                          id="multiselect_{{itemIndex}}" optionDisabled="inactive"
+                          id="multiselect_{{itemIndex}}" optionDisabled="inactive" appendTo="body"
                           optionValue="id" inputId="multiselect_{{itemIndex}}" #multiSelect1
                           [formControl]="fieldValueControl" optionLabel="name" [showToggleAll]="true" [filter]="true">
 
@@ -56,9 +56,8 @@
             {{additionalFieldHeader[itemIndex].required ? '*' : ''}}</label>
            <p-dropdown [virtualScroll]="additionalFieldHeader[itemIndex].optionsList.data.length>20"
                        (onChange)="commonUtil.isPressEnterInsideDropdown(dropdown1)" optionDisabled="inactive"
-                       virtualScrollItemSize="25"
+                       virtualScrollItemSize="25" appendTo="body"
                        [options]="additionalFieldHeader[itemIndex].optionsList.data" [showClear]="true" #dropdown1
-
                        id="dropdown_{{itemIndex}}" optionValue="id" optionLabel="name" [autoDisplayFirst]="false"
                        [formControl]="fieldValueControl" inputId="dropdown_{{itemIndex}}" [filter]="true">
 
@@ -118,20 +117,20 @@
   </div>
 </div>
 
-<div *ngIf="appFieldType.RADIO_BUTTON === additionalFieldHeader[itemIndex].fieldTypeId ">
+<div *ngIf="appFieldType.RADIO_BUTTON === additionalFieldHeader[itemIndex]?.fieldTypeId">
   <div class="grid col-12" [style]="{'align-items': 'center'}">
-    <div class="p-inputgroup">
-      <span
-        class="label-wrapper">{{additionalFieldHeader[itemIndex].fieldName}}{{additionalFieldHeader[itemIndex].required ? '*' : ''}} </span>
-    </div>
-    <div class="radio-container" *ngFor="let option of additionalFieldHeader[itemIndex].options">
-      <label>
-        <input id="male1" type="radio" value="{{option.optionValue}}" [formControl]="fieldValueControl">
-        <span style="margin-left: 0.2rem" for="male1">{{' ' + option.optionValue}}</span>
-      </label>
+      <div class="p-inputgroup">
+        <span class="label-wrapper">{{additionalFieldHeader[itemIndex].fieldName}}{{additionalFieldHeader[itemIndex].required ? '*' : ''}} </span>
+      </div>
+    <div class="radio-container"
+         *ngFor="let option of additionalFieldHeader[itemIndex]?.options">
+      <input id="expense" type="radio" value="{{option.optionValue}}" name="radioGroup_{{parentFormControlName}}{{itemIndex}}"
+             class="radioButton"  [formControl]="fieldValueControl">
+      <span for="expense">{{' ' + option.optionValue}}</span>
     </div>
   </div>
 </div>
+
 
 <div class="p-invalid text-align-left" *ngIf="(additionalField.get('fieldValue').errors && additionalField.get('fieldValue').dirty) ||
 (additionalField.get('attachment').errors && additionalField.get('attachment').dirty)">

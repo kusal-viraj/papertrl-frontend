@@ -1,12 +1,13 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
-import {TreeNode} from "primeng/api";
-import {RoleMasterDto} from "../../../shared/dto/role/role-master-dto";
-import {NotificationService} from "../../../shared/services/notification/notification.service";
-import {RoleService} from "../../../shared/services/roles/role.service";
-import {AppConstant} from "../../../shared/utility/app-constant";
-import {HttpResponseMessage} from "../../../shared/utility/http-response-message";
-import {CommonUtility} from "../../../shared/utility/common-utility";
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
+import {TreeNode} from 'primeng/api';
+import {RoleMasterDto} from '../../../shared/dto/role/role-master-dto';
+import {NotificationService} from '../../../shared/services/notification/notification.service';
+import {RoleService} from '../../../shared/services/roles/role.service';
+import {AppConstant} from '../../../shared/utility/app-constant';
+import {HttpResponseMessage} from '../../../shared/utility/http-response-message';
+import {CommonUtility} from '../../../shared/utility/common-utility';
+import {TreeCheckboxComponent} from '../../common/tree-checkbox/tree-checkbox.component';
 
 @Component({
   selector: 'app-role-clone',
@@ -17,16 +18,22 @@ export class RoleCloneComponent implements OnInit {
   @Output() closeModal = new EventEmitter<boolean>();
 
   public createRoleForm: UntypedFormGroup;
-  public privilegeFiles: TreeNode[];
+  public treeNodes: TreeNode[];
   public roleRequestDto: RoleMasterDto = new RoleMasterDto();
-  public privilegeNode: TreeNode[];
-  public isRoleNameAvailable = false;
   public btnLoading = false;
+  @ViewChild('treeCheckboxComponent') public treeCheckboxComponent: TreeCheckboxComponent;
 
   @Input() panel;
   @Input() id;
 
   constructor(private formBuilder: UntypedFormBuilder, public notificationService: NotificationService, private roleService: RoleService) {
+    this.initFormBuilder();
+  }
+
+  /**
+   * this method can be used to init form builder
+   */
+  initFormBuilder() {
     this.createRoleForm = this.formBuilder.group({
       roleName: ['', Validators.compose([Validators.required, Validators.maxLength(50)])]
     });
@@ -36,23 +43,14 @@ export class RoleCloneComponent implements OnInit {
    * Load Items in load
    */
   ngOnInit(): void {
-    this.getRoleData();
+    this.getInitialRoleStructure();
   }
 
-  /**
-   * This method used to get role data
-   */
-  getRoleData(): void {
-    this.getRoleWisePrivilegeStructure();
-  }
-
-  getRoleWisePrivilegeStructure(): void {
-    this.roleService.getRoleWisePrivilegeStructure(this.id).subscribe((res: any) => {
+  getInitialRoleStructure(): void {
+    this.roleService.getInitialSystemRoles().subscribe((res: any) => {
         if (res.status === AppConstant.HTTP_RESPONSE_STATUS_SUCCESS) {
-          this.privilegeFiles = res.body.data;
+          this.treeNodes = res.body.data;
           this.getSelectedRole();
-        } else {
-          this.notificationService.errorMessage(res.body.message);
         }
       }, (error => {
         this.notificationService.errorMessage(error);
@@ -64,7 +62,8 @@ export class RoleCloneComponent implements OnInit {
   getSelectedRole(): void {
     this.roleService.getRoleSelectedMenu(this.id).subscribe((res: any) => {
         if (res.status === AppConstant.HTTP_RESPONSE_STATUS_SUCCESS) {
-          this.privilegeNode = res.body.data;
+          this.createRoleForm.get('roleName').patchValue(res.body.roleName);
+          this.treeCheckboxComponent.selectNodes(res.body.privilegeList, this.treeNodes);
         } else {
           this.notificationService.errorMessage(res.body.message);
         }
@@ -74,42 +73,21 @@ export class RoleCloneComponent implements OnInit {
     );
   }
 
-  checkRoleNameAvailability(): void {
-    const letter = this.createRoleForm.get('roleName').value;
-    if (this.createRoleForm.get('roleName').value) {
-      if (this.createRoleForm.get('roleName').value[0] === ' ') {
-        this.createRoleForm.get('roleName').patchValue('');
-      } else {
-        this.roleService.checkRoleNameAvailability(letter).subscribe((res: any) => {
-            this.isRoleNameAvailable = !res;
-          },
-          error => {
-            this.notificationService.errorMessage(error);
-          });
-      }
-    }
-  }
-
   /**
    * Submit form
    */
   onSubmit(): void {
-    this.btnLoading = true;
     if (this.createRoleForm.valid) {
-      if (this.privilegeNode === undefined || this.privilegeNode.length <= 0) {
+      this.roleRequestDto.privilegeList = this.treeCheckboxComponent.getSelectedKeys(this.treeNodes);
+      this.roleRequestDto.roleName = this.createRoleForm.value;
+
+      if (this.roleRequestDto.privilegeList === undefined || this.roleRequestDto.privilegeList.length <= 0) {
         this.notificationService.infoMessage(HttpResponseMessage.PLEASE_SELECT_ATLEAST_ONE_PRIVILEGE);
-        this.btnLoading = false;
       } else {
-        this.roleRequestDto.previlageList = this.privilegeNode;
-        this.roleRequestDto.roleName = this.createRoleForm.value;
-        if (!this.isRoleNameAvailable && this.createRoleForm.get('roleName').value !== '') {
-          this.createRole();
-        } else {
-          this.btnLoading = false;
-        }
+        this.btnLoading = true;
+        this.createRole();
       }
     } else {
-      this.btnLoading = false;
       new CommonUtility().validateForm(this.createRoleForm);
     }
   }
@@ -123,13 +101,11 @@ export class RoleCloneComponent implements OnInit {
     this.roleService.createRole(this.roleRequestDto).subscribe((res: any) => {
       if (res.status === AppConstant.HTTP_RESPONSE_STATUS_CREATED) {
         this.notificationService.successMessage(HttpResponseMessage.ROLE_CREATED_SUCCESSFULLY);
-        this.resetRoleCreation();
         this.closeModal.emit();
-        this.btnLoading = false;
       } else {
-        this.btnLoading = false;
         this.notificationService.infoMessage(res.body.message);
       }
+      this.btnLoading = false;
     }, (error) => {
       this.btnLoading = false;
       this.notificationService.errorMessage(error);
@@ -141,6 +117,6 @@ export class RoleCloneComponent implements OnInit {
    */
   resetRoleCreation(): void {
     this.createRoleForm.reset();
-    this.getRoleData();
+    this.getInitialRoleStructure();
   }
 }

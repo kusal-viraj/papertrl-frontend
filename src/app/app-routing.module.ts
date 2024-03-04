@@ -16,6 +16,7 @@ import {
 import {NetworkGuard} from './shared/guards/network.guard';
 import {RegisterSuccessComponent} from './modules/auth/register-success/register-success.component';
 import {AppDownloadComponent} from './modules/auth/app-download/app-download.component';
+import {AccessDeniedContainer} from './modules/common/access-denied/access-denied-container';
 
 
 const routes: Routes = [
@@ -51,7 +52,6 @@ const routes: Routes = [
         path: 'account', canActivate: [NetworkGuard],
         loadChildren: () => import('./modules/account/account.module').then(m => m.AccountModule),
         data: {breadcrumb: 'Accounts'}
-
       },
       {
         path: 'item', canActivate: [NetworkGuard],
@@ -127,13 +127,12 @@ const routes: Routes = [
       {
         path: 'invoices',
         loadChildren: () => import('./modules/customer-invoice/customer-invoice.module').then(m => m.CustomerInvoiceModule)
-      }
+      },
     ]
   },
   {
     path: 'support', component: AppMainComponent, canActivate: [AuthGuardService],
     children: [
-      {path: 'support', pathMatch: 'full', redirectTo: 'support/dashboard'},
       {
         path: '',
         loadChildren: () => import('./modules/support/support.module').then(m => m.SupportModule),
@@ -161,6 +160,13 @@ const routes: Routes = [
       }
     ]
   },
+  {
+    path: 'access-denied',
+    component: AccessDeniedContainer,
+    canActivate: [NetworkGuard],
+    data: { breadcrumb: 'Access Denied' }
+  },
+  { path: '**',  component: AccessDeniedContainer }
 ];
 
 

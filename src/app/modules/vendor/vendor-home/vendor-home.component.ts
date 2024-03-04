@@ -41,14 +41,13 @@ export class VendorHomeComponent implements OnInit, OnDestroy {
   public vendorIdToEdit; // to vendor edit component
   public tabIndex = 0;
   public fromNotification = false;
-  public fromRouting = false;
   public clickedVendor: any;
-  public isPaddingZero: boolean;
   public searchVendor: any;
   public moreVendorDetailsMain: boolean;
   public letters: any[];
   public clickedLetter: number;
   public isOpenEditPage = false;
+  public isVendorUploadPanel = false;
   public filterValues: VendorFilterDto = new VendorFilterDto();
   public vendorList: VendorListDto[] = [];
   public items;
@@ -70,10 +69,10 @@ export class VendorHomeComponent implements OnInit, OnDestroy {
   public appAuthorities = AppAuthorities;
   public appEnumConstants = AppEnumConstants;
   public showSendInvitationButton: boolean;
+  public isVendorCreate = false;
 
   @ViewChild('vs') vs: VirtualScroller;
   @ViewChild('createVendorComponent') createVendorComponent: CreateVendorComponent;
-  @ViewChild('VendorComponentEdit') VendorComponentEdit: CreateVendorComponent;
 
   @ViewChild('vendorInvoiceComponent') vendorInvoiceComponent: VendorInvoiceComponent;
   @ViewChild('vendorBillPaymentComponent') vendorBillPaymentComponent: VendorPaymentComponent;
@@ -84,7 +83,7 @@ export class VendorHomeComponent implements OnInit, OnDestroy {
 
   @HostListener('window:resize', ['$event'])
   onResize() {
-    this.screenHeight = window.innerHeight - 200;
+    this.screenHeight = window.innerHeight - 208;
   }
 
   constructor(public router: Router, public billsService: BillsService, public privilegeService: PrivilegeService,
@@ -101,7 +100,7 @@ export class VendorHomeComponent implements OnInit, OnDestroy {
       if (params.id && params.status) {
         this.vendorInfo = false;
         this.isOpenEditPage = false;
-        this.tabIndex = 3;
+        this.tabIndex = 2;
         this.fromNotification = true;
         return;
       }
@@ -122,7 +121,7 @@ export class VendorHomeComponent implements OnInit, OnDestroy {
         command: () => {
           this.vendorInfo = false;
           this.isOpenEditPage = false;
-          this.tabIndex = 1;
+          this.tabIndex = 0;
         }
       },
       {separator: true},
@@ -131,9 +130,7 @@ export class VendorHomeComponent implements OnInit, OnDestroy {
         status: this.statusEnums.STATUS_COMMON,
         authCode: this.privilegeService.isAuthorized(AppAuthorities.VENDORS_UPLOAD),
         command: () => {
-          this.vendorInfo = false;
-          this.isOpenEditPage = false;
-          this.tabIndex = 2;
+          this.isVendorUploadPanel = true;
         }
       },
       {separator: true},
@@ -156,7 +153,7 @@ export class VendorHomeComponent implements OnInit, OnDestroy {
         command: () => {
           this.vendorInfo = false;
           this.isOpenEditPage = false;
-          this.tabIndex = 3;
+          this.tabIndex = 1;
         }
       },
       {separator: true},
@@ -169,7 +166,7 @@ export class VendorHomeComponent implements OnInit, OnDestroy {
         command: () => {
           this.vendorInfo = false;
           this.isOpenEditPage = false;
-          this.tabIndex = 4;
+          this.tabIndex = 2;
         }
       },
       {separator: true},
@@ -180,7 +177,7 @@ export class VendorHomeComponent implements OnInit, OnDestroy {
         command: () => {
           this.vendorInfo = false;
           this.isOpenEditPage = false;
-          this.tabIndex = 5;
+          this.tabIndex = 3;
         }
       }
     ];
@@ -314,20 +311,9 @@ export class VendorHomeComponent implements OnInit, OnDestroy {
    * edit vendor after vendor selected
    */
   editVendor() {
-    this.vendorService.getVendor(this.vendorId, false).subscribe((res: any) => {
-        if (res.status === AppConstant.HTTP_RESPONSE_STATUS_SUCCESS) {
-          this.isOpenEditPage = false;
-          this.vendorIdToEdit = this.vendorId;
-          this.isOpenEditPage = true;
-          this.vendorEditName = this.vendorName;
-        } else {
-          this.notificationService.infoMessage(res.body.message);
-          this.notificationService.infoMessage(res.body.message);
-        }
-      }, (error => {
-        this.notificationService.errorMessage(error);
-      })
-    );
+    this.vendorIdToEdit = this.vendorId;
+    this.vendorEditName = this.vendorName;
+    this.isOpenEditPage = true;
   }
 
   /**
@@ -390,10 +376,8 @@ export class VendorHomeComponent implements OnInit, OnDestroy {
    */
   createVen() {
     this.isOpenEditPage = false;
-    this.vendorInfo = false;
-    this.isPaddingZero = this.vendorInfo;
-    this.tabIndex = 0;
-    // this.storeSessionStore();
+    // this.vendorInfo = false;
+    this.isVendorCreate = true;
   }
 
   /**
@@ -517,7 +501,7 @@ export class VendorHomeComponent implements OnInit, OnDestroy {
             ...loadedProducts
           ]);
 
-          if (this.vendorList[0] && !this.clickedVendor) {
+          if (this.vendorList[0] && !this.clickedVendor && !this.searchVendor) {
             this.firstVendor = this.vendorList[0];
             this.loadFirstVendor(this.firstVendor);
           }
@@ -632,8 +616,11 @@ export class VendorHomeComponent implements OnInit, OnDestroy {
     this.searchVendorLetter = undefined;
   }
 
-  refreshVendorList(id?, select?) {
+  refreshVendorList(id?, object?) {
     this.filterValues.rows = 30;
+    if (object){
+      id = object.id;
+    }
     if (this.clickedVendor.id === id) {
       this.vs.scrollToIndex(0);
     }
@@ -649,8 +636,6 @@ export class VendorHomeComponent implements OnInit, OnDestroy {
           if (this.clickedVendor.id === id) {
             this.firstVendor = this.vendorList[0];
             this.loadFirstVendor(this.firstVendor);
-          } else if (select) {
-            this.vendorClicked(this.clickedVendor);
           }
 
         } else {
@@ -731,5 +716,31 @@ export class VendorHomeComponent implements OnInit, OnDestroy {
       return 'col-12 lg:col-12 vendor-card-overwrite-width';
     }
   }
+
+
+  isSendInvitationEnabled() {
+    return !this.privilegeService.isAuthorizedMultiple([this.appAuthorities.VENDORS_SEND_VENDOR_INVITATION,
+      this.appAuthorities.VENDORS_DELETE_VENDOR_INVITATION, this.appAuthorities.VENDORS_RESEND_VENDOR_INVITATION]) || this.tabIndex !== 0;
+  }
+
+  isImportVendorsEnabled() {
+   return !this.privilegeService.isAuthorized(this.appAuthorities.VENDORS_UPLOAD) || this.tabIndex !== 1;
+  }
+
+  isVendorRequestEnabled() {
+    return !this.privilegeService.isAuthorizedMultiple([this.appAuthorities.VENDORS_APPROVE_VENDOR_REQUEST,
+      this.appAuthorities.VENDORS_DELETE_VENDOR_REQUEST, this.appAuthorities.VENDORS_REJECT_VENDOR_REQUEST]) || this.tabIndex !== 1;
+  }
+
+  isVendorGroupEnabled() {
+    return !this.privilegeService.isAuthorizedMultiple([this.appAuthorities.VENDOR_GROUP_CREATE,
+      this.appAuthorities.VENDOR_GROUP_EDIT, this.appAuthorities.VENDOR_GROUP_DELETE, this.appAuthorities.VENDOR_GROUP_INACTIVATE,
+      this.appAuthorities.VENDOR_GROUP_ACTIVATE]) || this.tabIndex !== 2;
+  }
+
+  isCommunityVendorsEnabled() {
+    return !this.privilegeService.isAuthorized(this.appAuthorities.VENDORS_ADD_TO_LOCAL_VENDOR_LIST) || this.tabIndex !== 3;
+  }
+
 }
 

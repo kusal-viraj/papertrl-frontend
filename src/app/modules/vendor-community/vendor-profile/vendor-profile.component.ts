@@ -247,7 +247,7 @@ export class VendorProfileComponent implements OnInit {
       this.commonUtil.onAcceptedPaymentTypesChange(res.body?.acceptedPaymentTypes);
       this.setPreferredPaymentType(res.body?.acceptedPaymentTypes);
       this.vendorCreateForm.patchValue(res.body);
-      this.commonUtil.isValidPaymentInfo(this.vendorCreateForm);
+      this.commonUtil.isValidPaymentInfoUsBank(this.vendorCreateForm);
       this.patchVendorData(res);
     });
   }

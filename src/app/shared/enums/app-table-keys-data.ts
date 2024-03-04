@@ -2,6 +2,7 @@ export enum AppTableKeysData {
   INVOICE_TABLE_KEY = 'invoice-table',
   GRN_TABLE_KEY = 'grn-table',
   PAYMENT_TABLE_KEY = 'payment-table',
+  PROCESS_PAYMENT_TABLE_KEY = 'process-payment-table',
   OCR_TABLE_KEY = 'ocr-table',
   PO_TABLE_KEY = 'po-table',
   V_D_CARDS_TABLE_KEY = 'vdc-table',

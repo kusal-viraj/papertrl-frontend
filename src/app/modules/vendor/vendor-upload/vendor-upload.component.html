@@ -1,24 +1,25 @@
-<p-blockUI class="boarder-hide" *ngIf="responsePercentage !== 0" [blocked]="responsePercentage > 0" [target]="pnl">
-  <div class="exception-body" *ngIf="responsePercentage">
-    <div class="exception-content">
-      <circle-progress
-        [percent]="[responsePercentage]"
-        [radius]="70"
-        [outerStrokeWidth]="10"
-        [innerStrokeWidth]="100"
-        [outerStrokeColor]="'#95fdff'"
-        [innerStrokeColor]="'transparent'"
-        [showUnits]=true
-        [titleFontWeight]="600"
-        [showSubtitle]=false
-        [backgroundGradient]=false
-        [animation]="false">
-      </circle-progress>
-    </div>
-  </div>
-</p-blockUI>
+<!--<p-blockUI class="boarder-hide" *ngIf="responsePercentage !== 0" [blocked]="responsePercentage > 0" [target]="pnl">-->
+<!--  <div class="exception-body" *ngIf="responsePercentage">-->
+<!--    <div class="exception-content">-->
+<!--      <circle-progress-->
+<!--        [percent]="[responsePercentage]"-->
+<!--        [radius]="70"-->
+<!--        [outerStrokeWidth]="10"-->
+<!--        [innerStrokeWidth]="100"-->
+<!--        [outerStrokeColor]="'#95fdff'"-->
+<!--        [innerStrokeColor]="'transparent'"-->
+<!--        [showUnits]=true-->
+<!--        [titleFontWeight]="600"-->
+<!--        [showSubtitle]=false-->
+<!--        [backgroundGradient]=false-->
+<!--        [animation]="false">-->
+<!--      </circle-progress>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</p-blockUI>-->
 
-<p-panel class="border-hide" #pnl>
+<div class="side-bar-drawer-content p-3">
+
   <div class="text-left">
     <p class="margin-top infoUpload"><b>Step 1: </b> <span class="download-link"
                                                            (click)="downloadTemplate()">Download</span> the template.
@@ -30,11 +31,12 @@
 
   <form [formGroup]="uploadVendorForm">
     <div class="grid margin-top-grid">
-      <div class="col-12 xl:col-6 md:col-12 lg:col-12 upload-field">
+      <div class="col-12 upload-field">
         <div class="p-inputgroup">
             <span class="p-float-label inner-text-position">
             <input id="fileUpload" formControlName="vendorListController"
-                   accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                   accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                   application/vnd.ms-excel"
                    #vendorList (change)="vendorListUpload($event)" type="file" hidden>
             <input id="fileText" class="input-max-width"
                    [value]="vendorList.files[0] ? vendorList.files[0].name : null" readonly
@@ -44,34 +46,41 @@
                     onClick="document.getElementById('fileUpload').click()"></button>&nbsp;
                          </span>
         </div>
-               <button pButton class="p-button-sm upload-button ml-2" type="submit" icon="fa fa-cloud-upload"
-                       label="Upload" *ngIf="privilegeService.isAuthorized(appAuthorities.VENDORS_UPLOAD)"
-                       (click)="uploadVendorList(false)" [disabled]="isDisabledUploadButton"></button> &nbsp;
-              <button class="p-button-sm upload-button" pButton type="submit" [disabled]="isDisabledUploadAndSendInvitationButton"
-                      icon="fa fa-cloud-upload" label="Upload and Send Invitation"
-                      *ngIf="privilegeService.isAuthorized(appAuthorities.VENDORS_UPLOAD) && privilegeService.isAuthorized(appAuthorities.VENDORS_SEND_VENDOR_INVITATION)"
-                      (click)="uploadVendorList(true)"></button>
-              <button pButton class="p-button-sm p-button-outlined upload-button ml-2" type="button"
-                      icon="fa-solid fa-rotate-right" label="Reset"
-                      (click)="uploadVendorForm.reset()"></button>
+
       </div>
 
-      <div class=" upload-button-mobile field col-12">
-        <button class="p-button-sm " pButton type="submit" icon="fa fa-cloud-upload" label="Upload"
-                (click)="uploadVendorList(false)" [disabled]="isDisabledUploadButton"></button> &nbsp;
-      </div>
-      <div class=" upload-button-mobile field col-12">
-        <button class="p-button-sm " pButton type="submit" icon="fa fa-cloud-upload" label="Upload and Send Invitation"
-                (click)="uploadVendorList(true)" [disabled]="isDisabledUploadAndSendInvitationButton"></button>
-      </div>
-      <div class=" upload-button-mobile field col-12">
-        <button pButton class="p-button-sm p-button-outlined" type="button" icon="fa-solid fa-rotate-right" label="Reset"
-                (click)="uploadVendorForm.reset()"></button>
-      </div>
     </div>
     <div class="p-invalid text-align-left"
-         *ngIf="uploadVendorForm.get('vendorListController').dirty && uploadVendorForm.get('vendorListController').errors">
+         *ngIf="uploadVendorForm.get('vendorListController').dirty &&
+         uploadVendorForm.get('vendorListController').errors">
       File is required
     </div>
   </form>
-</p-panel>
+  <p-progressBar [style]="{ height: '16px' }" *ngIf="responsePercentage !== 0"
+                 [value]="responsePercentage"></p-progressBar>
+</div>
+
+
+
+<div class="grid footer form-footer-button">
+  <div class="col-12 button-set-wrapper">
+    <div class="pull-right">
+      <button pButton class="p-button-sm p-button-outlined mr-2" type="button"
+              icon="fa-solid fa-rotate-right" label="Reset"
+              [disabled]="isDisabledUploadButton || (responsePercentage !== 0 && responsePercentage !== 100)"
+              (click)="uploadVendorForm.reset()"></button>
+
+      <button class="p-button-sm p-button-outlined mr-2" pButton type="submit"
+              icon="fa fa-paper-plane" label="Upload & Invite"
+              [disabled]="isDisabledUploadButton || (responsePercentage !== 0 && responsePercentage !== 100)"
+              *ngIf="privilegeService.isAuthorized(appAuthorities.VENDORS_UPLOAD) &&
+              privilegeService.isAuthorized(appAuthorities.VENDORS_SEND_VENDOR_INVITATION)"
+              (click)="uploadVendorList(true)"></button>
+
+      <button pButton class="p-button-sm mr-2" type="submit" icon="fa fa-cloud-upload"
+              label="Upload" *ngIf="privilegeService.isAuthorized(appAuthorities.VENDORS_UPLOAD)"
+              [loading]="isDisabledUploadButton || (responsePercentage !== 0 && responsePercentage !== 100)"
+              (click)="uploadVendorList(false)" ></button>
+    </div>
+  </div>
+</div>

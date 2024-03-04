@@ -1,7 +1,9 @@
 <div class="table-wrapper">
-  <p-table responsiveLayout="scroll" id="columnSelect" #dt
+
+  <div class="ml-4 " style="box-shadow: 0px 1px 2px 0px #00000040; !important; border-radius: 8px 0 0 0 !important;">
+    <p-table responsiveLayout="scroll" id="columnSelect" #dt
            [columns]="selectedColumns" (onColResize)="onTableChanged()"
-           styleClass="p-datatable-sm p-datatable-striped no-grid-lines" scrollDirection="both"
+           styleClass="p-datatable-sm p-datatable-striped no-grid-lines paginator-lifted page-no-style" scrollDirection="both"
            [hidden]="tableSupportBase.isVisibleTable" (onFilter)="tableSupportBase.onFilter(dt)"
            (onSort)="tableSupportBase.onSort(dt)"
            (onRowSelect)="tableSupportBase.rowSelected(dt,null)" (onRowUnselect)="tableSupportBase.rowSelected(dt,null)"
@@ -13,7 +15,8 @@
            stateStorage="session" stateKey="{{tableKeyEnum.PAYMENT_TABLE_KEY}}" [rows]="25"
            [showCurrentPageReport]="true"
            [rowsPerPageOptions]="[25, 50, 75]" [loading]="tableSupportBase.loading" [resizableColumns]="true"
-           [totalRecords]="tableSupportBase.totalRecords" [paginator]="true" *ngIf="tableSupportBase.minWidth"
+           [totalRecords]="tableSupportBase.totalRecords" [paginator]="true" paginatorPosition="top"
+             *ngIf="tableSupportBase.minWidth"
            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Records" [filterDelay]="0">
 
     <ng-template pTemplate="header" let-columns>
@@ -169,6 +172,7 @@
       </div>
     </ng-template>
   </p-table>
+  </div>
 </div>
 <div class="no-data-show" *ngIf="tableSupportBase.isVisibleTable == true">
   <span class="fa fa-search"></span>

@@ -81,6 +81,7 @@ export class CreatePaymentComponent implements OnInit, OnDestroy {
   approvalUserList: DropdownDto = new DropdownDto();
   approvalGroupList: DropdownDto = new DropdownDto();
   paymentObj: any;
+  public fundingAccounts: DropdownDto = new DropdownDto();
 
   @ViewChild('tableHeaderActionButtonsComponent') tableHeaderActionButtonsComponent: TableHeaderActionButtonsComponent;
   public matchingAutomation: any;
@@ -130,11 +131,30 @@ export class CreatePaymentComponent implements OnInit, OnDestroy {
     this.availableHeaderActions.push(AppTableHeaderActions.CLEAR_FILTER);
 
     this.initForm();
-    this.getPaymentProviders();
+    this.getFundingAccounts();
+    // this.getPaymentProviders();
     this.initApprover();
     this.loadTableData();
     this.getApprovalUserList();
     this.getApprovalGroupList();
+    this.getOfflinePaymentType();
+  }
+
+  /**
+   * This method use for get payment Provider list
+   */
+  getFundingAccounts() {
+    this.paymentService.getFundingAccounts().subscribe({
+      next: (res: any) => {
+        if (AppResponseStatus.STATUS_SUCCESS === res.status) {
+          this.fundingAccounts.data = res.body;
+          if (this.privilegeService.isPaymentConfig()){
+            this.setDefaultFundingAccount();
+          }
+        }
+      },
+      error: err => this.notificationService.errorMessage(err)
+    });
   }
 
   /**
@@ -145,7 +165,6 @@ export class CreatePaymentComponent implements OnInit, OnDestroy {
       documentType: [this.appDocumentType.BILL],
       isOnline: [this.paymentTypeOffline],
       paymentType: [null],
-      providerId: [null],
       paymentDate: [null],
       referenceNo: [null],
       status: [null],
@@ -156,6 +175,7 @@ export class CreatePaymentComponent implements OnInit, OnDestroy {
       scheduledTimeZone: [null],
       scheduledDateStr: [null],
       isSubmitted: [null],
+      fundingAccount: [null],
       transactionList: [[]],
       adHocWorkflowDetails: this.formBuilder.array([]),
     });
@@ -167,23 +187,37 @@ export class CreatePaymentComponent implements OnInit, OnDestroy {
     this.paymentForm.get('documentType').valueChanges.subscribe(value => {
       this.documentChange(value);
     });
+    if (this.privilegeService.isPaymentConfig()){
+      this.paymentForm.get('isOnline').patchValue(this.paymentTypeOnline);
+    }
   }
 
   /**
    * Bulk Payment method field change event
    */
   paymentMethodChange() {
-    this.paymentForm.get('providerId').reset();
-    if (!this.paymentForm.get('isOnline').value) {
-      this.schedule = false;
-      this.getOfflinePaymentType();
-    } else {
-      this.paymentForm.get('providerId').patchValue(this.paymentProviders.data.find(x => x.trueFalseData === true)?.id);
-      this.getPaymentType();
-    }
+    // this.paymentForm.get('providerId').reset();
     this.paymentForm.get('paymentType').reset();
     this.paymentForm.get('paymentDate').reset();
     this.paymentForm.get('referenceNo').reset();
+    if (!this.paymentForm.get('isOnline').value) {
+      this.schedule = false;
+      this.paymentForm.get('fundingAccount').reset();
+      this.tableHeaderActionButtonsComponent.clearFilterClicked(true);
+      this.tableSupportBase.rows = [];
+    } else {
+      this.setDefaultFundingAccount();
+      // this.getPaymentType();
+    }
+
+
+    // this.loadData(this.tableSupportBase.searchFilterDto, true);
+  }
+
+  fundingAccountChanged() {
+    if (!this.paymentForm.get('fundingAccount').value) {
+      return;
+    }
     this.tableHeaderActionButtonsComponent.clearFilterClicked(true);
     this.tableSupportBase.rows = [];
     // this.loadData(this.tableSupportBase.searchFilterDto, true);
@@ -267,42 +301,50 @@ export class CreatePaymentComponent implements OnInit, OnDestroy {
   /**
    * This method use for get payment Provider list
    */
-  getPaymentProviders() {
-    this.paymentService.getPaymentProviders().subscribe({
-      next: (res: any) => {
-        if (AppResponseStatus.STATUS_SUCCESS === res.status) {
-          this.paymentProviders.data = res.body;
-          this.setDefaultPaymentProvider();
-        }
-      },
-      error: err => this.notificationService.errorMessage(err)
-    });
-  }
+  // getPaymentProviders() {
+  //   this.paymentService.getPaymentProviders().subscribe({
+  //     next: (res: any) => {
+  //       if (AppResponseStatus.STATUS_SUCCESS === res.status) {
+  //         this.paymentProviders.data = res.body;
+  //         this.setDefaultPaymentProvider();
+  //       }
+  //     },
+  //     error: err => this.notificationService.errorMessage(err)
+  //   });
+  // }
 
   /**
    * Set default payment provider
    */
-  setDefaultPaymentProvider() {
-    this.paymentForm.get('providerId').patchValue(this.paymentProviders.data.find(x => x.trueFalseData === true)?.id);
-    this.paymentMethodChange();
+  // setDefaultPaymentProvider() {
+  //   this.paymentForm.get('providerId').patchValue(this.paymentProviders.data.find(x => x.trueFalseData === true)?.id);
+  //   this.paymentMethodChange();
+  // }
+
+  /**
+   * Set default Funding Account
+   */
+  setDefaultFundingAccount() {
+    this.paymentForm.get('fundingAccount').patchValue(this.fundingAccounts.data.find(x => x.trueFalseData === true)?.id);
+    this.fundingAccountChanged();
   }
 
   /**
    * This method use for get payment type list
    */
-  getPaymentType() {
-    if (!this.paymentForm.get('providerId').value) {
-      return;
-    }
-    this.paymentService.getPaymentTypeForProvider(this.paymentForm.get('providerId').value).subscribe({
-      next: (res: any) => {
-        if (AppResponseStatus.STATUS_SUCCESS === res.status) {
-          this.paymentTypes.data = res.body;
-        }
-      },
-      error: err => this.notificationService.errorMessage(err)
-    });
-  }
+  // getPaymentType() {
+  //   if (!this.paymentForm.get('providerId').value) {
+  //     return;
+  //   }
+  //   this.paymentService.getPaymentTypeForProvider(this.paymentForm.get('providerId').value).subscribe({
+  //     next: (res: any) => {
+  //       if (AppResponseStatus.STATUS_SUCCESS === res.status) {
+  //         this.paymentTypes.data = res.body;
+  //       }
+  //     },
+  //     error: err => this.notificationService.errorMessage(err)
+  //   });
+  // }
 
   getOfflinePaymentType() {
     this.billPaymentService.getPaymentTypeList().subscribe((res: any) => {
@@ -394,10 +436,14 @@ export class CreatePaymentComponent implements OnInit, OnDestroy {
     if (!this.f.documentType.value) {
       return;
     }
+
     this.tableSupportBase.searchFilterDto = event;
-    this.billPaymentService.getApprovedDocuments(this.tableSupportBase.searchFilterDto, this.f.documentType.value).subscribe((res: any) => {
+    this.billPaymentService.getApprovedDocuments(this.tableSupportBase.searchFilterDto, this.f.documentType.value, this.f.fundingAccount.value).subscribe((res: any) => {
+      for (const data of res.body.data) {
+        data.fieldDisabled = this.isFieldDisabled(data);
+      }
       this.tableSupportBase.dataSource = res.body.data;
-      if (clear){
+      if (clear) {
         this.tableSupportBase.rows = [];
       }
       this.updateDataSourceWithFilledValues();
@@ -414,14 +460,16 @@ export class CreatePaymentComponent implements OnInit, OnDestroy {
    * Update the table response with the previously filled values
    */
   updateDataSourceWithFilledValues() {
+    const dataSourceMap = new Map(this.tableSupportBase.dataSource.map(val => [val.id, val]));
+
     this.tableSupportBase.rows.forEach(val1 => {
-      for (let i = 0; this.tableSupportBase.dataSource.length > i; i++) {
-        if (this.tableSupportBase.dataSource[i].id === val1.id) {
-          this.tableSupportBase.dataSource[i] = val1;
-        }
+      const correspondingRow = dataSourceMap.get(val1.id);
+      if (correspondingRow) {
+        Object.assign(correspondingRow, val1);
       }
     });
   }
+
 
   /**
    * this method can be used to save table state
@@ -468,7 +516,7 @@ export class CreatePaymentComponent implements OnInit, OnDestroy {
     if (field === 'doc.payee') {
       this.overlayId = obj.id;
       this.overlayData = obj;
-      if (obj.acceptedPaymentTypeList && obj.acceptedPaymentTypeList.length !== 0){
+      if (obj.acceptedPaymentTypeList && obj.acceptedPaymentTypeList.length !== 0) {
         showOverlay(this.paymentTypeOverlay);
       }
     }
@@ -497,11 +545,11 @@ export class CreatePaymentComponent implements OnInit, OnDestroy {
         break;
       }
       case 'doc.payee': {
-        if (!data.acceptedPaymentTypeList){
+        if (!data.acceptedPaymentTypeList) {
           return false;
         }
 
-        if (data.acceptedPaymentTypeList.length === 0){
+        if (data.acceptedPaymentTypeList.length === 0) {
           return false;
         } else {
           return true;
@@ -564,7 +612,7 @@ export class CreatePaymentComponent implements OnInit, OnDestroy {
     this.tableHeaderActionButtonsComponent.clearFilterClicked(true);
     this.paymentForm.reset();
     this.tableSupportBase.rows = [];
-    this.setDefaultPaymentProvider();
+    // this.setDefaultPaymentProvider();
     this.matchingAutomation = null;
     this.isWorkflowConfigAvailable = false;
     this.paymentForm.get('documentType').patchValue(this.appDocumentType.BILL);
@@ -578,35 +626,69 @@ export class CreatePaymentComponent implements OnInit, OnDestroy {
    * clears every value in the row if unselects
    * @param event event
    */
-  rowSelected(event: any) {
+  rowSelected(event: any, select) {
     if (this.tableSupportBase.dataSource.length) {
-      this.tableSupportBase.dataSource.forEach(val => {
-        if (this.tableSupportBase.rows.some(x => x.id === val.id)) {
-          val.selected = true;
-          if (val.valuesPatched) {
-            return;
-          }
-          val.valuesPatched = true;
-          if (this.f.referenceNo.value && !val['doc.referenceNo']) {
-            val['doc.referenceNo'] = this.f.referenceNo.value;
-          }
-          if (this.f.paymentDate.value && !val['doc.paymentDate']) {
-            val['doc.paymentDate'] = this.f.paymentDate.value;
-          }
-          if (this.f.paymentType.value && !val['doc.txnType']) {
-            val['doc.txnType'] = this.f.paymentType.value;
-          }
-          this.getDiscountAmount(val);
-        } else {
-          val.selected = false;
-          val.valuesPatched = false;
-          val['doc.referenceNo'] = null;
-          val['doc.paymentDate'] = null;
-          val['doc.txnType'] = null;
-          val['doc.comment'] = null;
-          val['doc.creditAmount'] = null;
+      const arr = [];
+      const index = this.tableSupportBase.dataSource.findIndex(x => x.id === event.data.id);
+      const selectedValue = this.tableSupportBase.dataSource[index];
+      if (select) {
+        selectedValue.selected = true;
+        if (selectedValue.valuesPatched) {
+          return;
         }
-      });
+        selectedValue.valuesPatched = true;
+        if (this.f.referenceNo.value && !selectedValue['doc.referenceNo']) {
+          selectedValue['doc.referenceNo'] = this.f.referenceNo.value;
+        }
+        if (this.f.paymentDate.value && !selectedValue['doc.paymentDate']) {
+          selectedValue['doc.paymentDate'] = this.f.paymentDate.value;
+        }
+        if (this.f.paymentType.value && !selectedValue['doc.txnType']) {
+          selectedValue['doc.txnType'] = this.f.paymentType.value;
+        }
+        this.getDiscountAmount(selectedValue);
+
+      } else {
+        selectedValue.selected = false;
+        selectedValue.valuesPatched = false;
+        selectedValue['doc.referenceNo'] = null;
+        selectedValue['doc.paymentDate'] = null;
+        // selectedValue['doc.txnType'] = null;
+        selectedValue['doc.comment'] = null;
+        selectedValue['doc.creditAmount'] = null;
+        if (this.paymentForm.get('isOnline').value === this.paymentTypeOffline){
+          selectedValue['doc.txnType'] = null;
+        }
+      }
+
+
+      // this.tableSupportBase.dataSource.forEach(val => {
+      //   if (this.tableSupportBase.rows.some(x => x.id === val.id)) {
+      //     val.selected = true;
+      //     if (val.valuesPatched) {
+      //       return;
+      //     }
+      //     val.valuesPatched = true;
+      //     if (this.f.referenceNo.value && !val['doc.referenceNo']) {
+      //       val['doc.referenceNo'] = this.f.referenceNo.value;
+      //     }
+      //     if (this.f.paymentDate.value && !val['doc.paymentDate']) {
+      //       val['doc.paymentDate'] = this.f.paymentDate.value;
+      //     }
+      //     if (this.f.paymentType.value && !val['doc.txnType']) {
+      //       val['doc.txnType'] = this.f.paymentType.value;
+      //     }
+      //     this.getDiscountAmount(val);
+      //   } else {
+      //     val.selected = false;
+      //     val.valuesPatched = false;
+      //     val['doc.referenceNo'] = null;
+      //     val['doc.paymentDate'] = null;
+      //     // val['doc.txnType'] = null;
+      //     val['doc.comment'] = null;
+      //     val['doc.creditAmount'] = null;
+      //   }
+      // });
     }
   }
 
@@ -827,9 +909,9 @@ export class CreatePaymentComponent implements OnInit, OnDestroy {
    * @param data payment method
    */
   isReferenceNoDisabled(data) {
-    if (data === AppConstant.PAYMENT_TYPE_CHECK) {
-      return true;
-    }
+    // if (data === AppConstant.PAYMENT_TYPE_CHECK) {
+    //   return true;
+    // }
     return this.f.isOnline.value !== this.paymentTypeOnline;
   }
 
@@ -852,12 +934,12 @@ export class CreatePaymentComponent implements OnInit, OnDestroy {
     }
   }
 
-  paymentProviderChanged(value) {
-    this.tableHeaderActionButtonsComponent.clearFilterClicked(true);
-    this.tableSupportBase.rows = [];
-    this.loadData(this.tableSupportBase.searchFilterDto, true);
-    this.getPaymentType();
-  }
+  // paymentProviderChanged(value) {
+  //   this.tableHeaderActionButtonsComponent.clearFilterClicked(true);
+  //   this.tableSupportBase.rows = [];
+  //   this.loadData(this.tableSupportBase.searchFilterDto, true);
+  //   this.getPaymentType();
+  // }
 
   onClickReceipt(receiptID: any) {
     document.getElementById(receiptID).click();
@@ -968,10 +1050,34 @@ export class CreatePaymentComponent implements OnInit, OnDestroy {
       return true;
     }
 
-    if (!payment.acceptedPaymentTypeList.find(x => x.id === payment['doc.txnType'])){
+    if (!payment.acceptedPaymentTypeList.find(x => x.id === payment['doc.txnType'])) {
       return false;
     }
 
     return !payment.acceptedPaymentTypeList.find(x => x.id === payment['doc.txnType'])?.trueFalseData;
+  }
+
+  getPaymentTypeList(col) {
+    if (this.paymentForm.get('isOnline').value) {
+      return col.supportedPaymentTypeList ? col.supportedPaymentTypeList : [];
+    } else {
+      return this.paymentTypes.data;
+    }
+  }
+
+  /**
+   *
+   * @param data Payment Record
+   */
+  isFieldDisabled(data) {
+    if (this.paymentForm.get('isOnline').value === this.paymentTypeOffline) {
+      return false;
+    }
+
+    if (!data.supportedPaymentTypeList) {
+      return true;
+    }
+
+    return !data.supportedPaymentTypeList.length;
   }
 }

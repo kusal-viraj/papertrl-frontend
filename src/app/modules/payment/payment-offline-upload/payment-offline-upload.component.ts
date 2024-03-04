@@ -5,11 +5,10 @@ import {AppConstant} from '../../../shared/utility/app-constant';
 import {HttpResponseMessage} from '../../../shared/utility/http-response-message';
 import {BillPaymentService} from '../../../shared/services/bill-payment-service/bill-payment.service';
 import {MessageService} from 'primeng/api';
-import {DataTableImportMst} from '../../../shared/dto/data-table-import-mst/data-table-import-mst';
 import {NotificationService} from '../../../shared/services/notification/notification.service';
 import {UploadNotificationsComponent} from '../../common/upload-notifications/upload-notifications.component';
 import {CommonUploadIssueService} from '../../../shared/services/common/upload-issues/common-upload-issue.service';
-import {AppDocumentType} from "../../../shared/enums/app-document-type";
+import {AppDocumentType} from '../../../shared/enums/app-document-type';
 
 @Component({
   selector: 'app-payment-offline-upload',
@@ -18,15 +17,14 @@ import {AppDocumentType} from "../../../shared/enums/app-document-type";
 })
 export class PaymentOfflineUploadComponent implements OnInit, OnDestroy {
 
-  @Input() documentId;
+  @Input() documentId = AppDocumentType.BILL_PAYMENT;
   public uploadPaymentForm: UntypedFormGroup;
-  public dataTableImportMst: DataTableImportMst = new DataTableImportMst();
-  public issuesArrayLength: any;
-  public responsePercentage: any;
-  public isBlocked = false;
+  public responsePercentage = 0;
   public isDisabled = false;
   public uuid: any;
   public timeInterval: any;
+  public appDocumentType = AppDocumentType;
+  public tabIndex = 0;
 
   constructor(public formBuilder: UntypedFormBuilder, public messageService: MessageService, public notificationService: NotificationService,
               public billPaymentService: BillPaymentService, public commonUploadIssueService: CommonUploadIssueService) {
@@ -35,10 +33,10 @@ export class PaymentOfflineUploadComponent implements OnInit, OnDestroy {
       paymentListController: [AppConstant.EMPTY_STRING, Validators.required],
       file: []
     });
-
   }
 
   ngOnInit(): void {
+    this.tabIndex = this.documentId === AppDocumentType.BILL_PAYMENT ? 0 : 1;
   }
 
   /**
@@ -115,7 +113,6 @@ export class PaymentOfflineUploadComponent implements OnInit, OnDestroy {
         this.responsePercentage = res.body;
         this.responsePercentage = Math.floor(this.responsePercentage);
         if (this.responsePercentage === 100.0) {
-          this.isBlocked = false;
           clearInterval(this.timeInterval);
           setTimeout(() => {
             this.getUploadIssues();
@@ -162,5 +159,13 @@ export class PaymentOfflineUploadComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy() {
     clearInterval(this.timeInterval);
+  }
+
+  tabChanged(event) {
+    if (event.index === 0){
+      this.documentId = AppDocumentType.BILL_PAYMENT;
+    } else {
+      this.documentId = AppDocumentType.EXPENSE_PAYMENT;
+    }
   }
 }

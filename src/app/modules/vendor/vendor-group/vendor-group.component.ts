@@ -55,6 +55,7 @@ export class VendorGroupComponent implements OnInit, OnDestroy {
   public availableHeaderActions = [];
   public appConstant: AppConstant = new AppConstant();
   public subscription: Subscription = new Subscription();
+  public createGroupPanel = false;
 
 
   /**
@@ -71,7 +72,6 @@ export class VendorGroupComponent implements OnInit, OnDestroy {
   @ViewChild('dt') table: Table;
   @ViewChild('columnSelect') columnSelect: any;
   @ViewChild('menu') menu: Menu;
-
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.onTableResize();

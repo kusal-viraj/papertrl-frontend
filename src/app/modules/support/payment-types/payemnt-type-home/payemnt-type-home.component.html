@@ -14,18 +14,21 @@
         </app-table-header-action-buttons>
       </div>
       <div class="col-6">
-        <div [ngClass]="'col-12'" style="text-align: right" *ngIf="!createPayType " class="screen-change-btn">
+        <div style="text-align: right" class="screen-change-btn">
           <button pButton class="mr-2 p-button"  iconPos="left"
                   label="Create Payment Type" (click)="toggle('pc')"></button>
         </div>
-        <div [ngClass]="'col-12'" style="text-align: right" *ngIf="!listPayTypes " class="screen-change-btn">
-          <button pButton class="mr-2 p-button-outlined" *ngIf="!listPayTypes" iconPos="left"
-                  label="View Payment Type List" (click)="toggle('pl')"></button>
-        </div>
+<!--        <div [ngClass]="'col-12'" style="text-align: right" *ngIf="!listPayTypes " class="screen-change-btn">-->
+<!--          <button pButton class="mr-2 p-button-outlined" *ngIf="!listPayTypes" iconPos="left"-->
+<!--                  label="View Payment Type List" (click)="toggle('pl')"></button>-->
+<!--        </div>-->
       </div>
     </div>
 
     <div>
       <app-payment-type-list #paymentTypeListComponent *ngIf="listPayTypes"></app-payment-type-list>
+      <p-sidebar styleClass="p-sidebar-sm" [modal]="true" [dismissible]="true" position="right" class="overflow-side-bar" *ngIf="createPayType" [(visible)]="createPayType">
+        <ng-template pTemplate="header">Add Payment Type</ng-template>
       <app-create-payment-type  (refreshTable)="refreshTable();" *ngIf="createPayType"></app-create-payment-type>
+      </p-sidebar>
     </div>

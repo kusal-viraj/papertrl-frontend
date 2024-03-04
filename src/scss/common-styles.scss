@@ -321,7 +321,7 @@
   .topbar-badge-large-count {
     width: 20px !important;
     height: 20px !important;
-    padding: 3px 3px!important;
+    padding: 3px 3px !important;
     font-size: 0.80em !important;
   }
 
@@ -1490,26 +1490,28 @@ Credit note screen style
     color: #555555 !important;
     float: right !important;
   }
-  .custom-button .toolbarButton:first-child{
+
+  .custom-button .toolbarButton:first-child {
     position: relative;
     top: 0;
   }
-  .custom-button .toolbarButton:nth-child(2){
+
+  .custom-button .toolbarButton:nth-child(2) {
     position: relative;
     top: 15px !important;
   }
 
-  .custom-button .zoomIn{
+  .custom-button .zoomIn {
     position: relative;
     top: 25px !important;
   }
 
-  .custom-button .zoomOut{
+  .custom-button .zoomOut {
     position: relative;
     top: 35px !important;
   }
 
-  .custom-button .hiddenSmallView{
+  .custom-button .hiddenSmallView {
     position: relative;
     top: 45px !important;
   }
@@ -1541,9 +1543,9 @@ Credit note screen style
     background-color: #FFFFFF !important;
   }
 
-  #errorWrapper{
-      left: 231px !important;
-      width: 50% !important;
+  #errorWrapper {
+    left: 231px !important;
+    width: 50% !important;
   }
 
   #loadingBar {
@@ -1560,10 +1562,11 @@ Credit note screen style
     border: unset !important;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25) !important;
   }
-   .grab-to-pan-grab {
-     top: 134px !important;
-     background-color: #f4f6f9 !important;
-     padding-top: 36px;
+
+  .grab-to-pan-grab {
+    top: 134px !important;
+    background-color: #f4f6f9 !important;
+    padding-top: 36px;
 
   }
 
@@ -1575,7 +1578,7 @@ Credit note screen style
     color: #999999;
     min-width: 13px !important;
     padding: 0;
-    width: 2px  !important;
+    width: 2px !important;
     vertical-align: super;
   }
 
@@ -1595,7 +1598,7 @@ Credit note screen style
     vertical-align: super;
   }
 
-  #mainContainer{
+  #mainContainer {
     background-color: #f4f6f9 !important;
   }
 
@@ -1627,10 +1630,6 @@ Credit note screen style
       padding: 11px 11px 64px 11px !important;
       background: #FFFFFF;
       z-index: 1000;
-    }
-
-    .zoom .grab-to-pan-grab {
-      top: 99px !important;
     }
   }
 }
@@ -2251,7 +2250,7 @@ p-tableheadercheckbox {
 }
 
 .back-ground-white {
-  background-color: white;
+  //background-color: white;
 }
 
 .panel-footer {
@@ -2416,9 +2415,7 @@ p-tableheadercheckbox {
 //invalid field if available in payment info section user/vendor
 .payment-fields-invalid {
   width: 100%;
-  height: 55px;
-  padding: 16px 24px 18px 25px;
-  margin: 4px 4px;
+  padding: 5px;
   border-radius: 8px;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
   background-color: #fff3cd;
@@ -2428,6 +2425,7 @@ p-tableheadercheckbox {
   font-stretch: normal;
   color: $light-black;
   margin-left: 5px !important;
+  line-height: 20px;
 
   span {
     margin-right: 5px;
@@ -2711,16 +2709,36 @@ p-tableheadercheckbox {
   }
 }
 
-.label-width{
-  .p-multiselect .p-multiselect-label {
-    max-width: 100px !important;
+.paginator-lifted {
+  .p-paginator {
+    justify-content: right !important;
+    border-bottom-width: 0 !important;
+  }
+
+  .p-paginator-top {
+    border-radius: 8px 0 0 0 !important;
+    //box-shadow: 0px 1px 2px 0px !important;
   }
 }
 
+.page-no-style {
+  .p-paginator .p-paginator-pages .p-paginator-page {
+    min-width: 1.643rem !important;
+    height: 1.643rem !important;
+  }
 
-.detail-table-configurations{
+}
+
+
+.detail-table-configurations {
   .p-datatable-wrapper {
     max-height: 294px !important;
+  }
+
+  .label-width {
+    .p-multiselect .p-multiselect-label {
+      max-width: 100px !important;
+    }
   }
 }
 
@@ -2732,19 +2750,21 @@ p-tableheadercheckbox {
   right: 0px !important;
 }
 
-.custom-table-loader{
+.custom-table-loader {
   padding: 150px;
   text-align: center;
-  img{
+
+  img {
     height: 41px;
   }
-  .process-lg-label{
+
+  .process-lg-label {
     font-size: 20px;
     display: inline-table;
     color: $secondary-black-grey;
   }
 
-  .process-sm-label{
+  .process-sm-label {
     padding-top: 5px !important;
     font-size: 14px;
     color: #bcbcbc;
@@ -2752,8 +2772,8 @@ p-tableheadercheckbox {
 }
 
 
-.receipt-action-menu{
-  .p-menu-overlay{
+.receipt-action-menu {
+  .p-menu-overlay {
     margin-top: 32px !important;
   }
 }
@@ -2774,10 +2794,56 @@ p-tableheadercheckbox {
       color: $secondary-black-grey;
     }
   }
+
+  .payment-type {
+    label.col-12 {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+
+    .payment-type-item {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition-duration: 0.4s;
+
+      .payment-type-headline {
+        border-bottom: 4px solid #4bc290 !important;
+        width: 35%;
+
+        &:hover {
+          background-color: #f1f1f1;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+      }
+
+      .additional-info {
+        display: none;
+        flex-direction: column;
+        padding-top: 7px;
+
+        &.active {
+          display: flex;
+        }
+      }
+    }
+
+    .info-label {
+      margin-top: 5px;
+      font-weight: bold;
+    }
+  }
 }
 
-.isConfirmation{
-  .p-dialog .p-dialog-content{
+.isConfirmation {
+  .p-dialog .p-dialog-content {
     border-bottom-right-radius: 6px !important;
     border-bottom-left-radius: 6px !important;
   }
@@ -2787,3 +2853,91 @@ p-tableheadercheckbox {
   overflow-y: auto !important;
 }
 
+.borderless-accordion {
+  .p-accordion-header-link {
+    border: none !important;
+    margin-bottom: 4px;
+  }
+
+  .p-accordion-content {
+    border: none !important;
+  }
+}
+
+.p-progressbar-label {
+  color: white !important;
+}
+
+.p-progressbar-value {
+  background: $green !important;
+}
+
+.payment-upload-panel {
+  .p-tabview-nav-container {
+    padding-left: 12px;
+  }
+}
+
+.p-datatable-scrollable-table > .p-datatable-tbody > .p-rowgroup-header {
+  background-color: $light-gray-2 !important;
+
+  td {
+    border-top: 1px solid $offline-gray;
+  }
+}
+
+.sort-icon-wrapper {
+  .grid-sort-icon {
+    content-visibility: hidden;
+  }
+
+  &:hover {
+    .grid-sort-icon {
+      content-visibility: visible !important;
+    }
+  }
+}
+
+.p-highlight {
+  .grid-sort-icon {
+    content-visibility: visible !important;
+  }
+}
+
+.funding-acc-panel {
+  .p-panel-header-icon {
+    display: none;
+  }
+}
+
+.funding-acc-sidebar {
+  .p-sidebar-header {
+    padding-left: 20px;
+  }
+}
+
+.role-accordion-header-text-light {
+  .p-accordion-header {
+    .p-accordion-header-link {
+      font-weight: 400 !important;
+      color: $offline-gray !important;
+    }
+  }
+}
+
+/* This style can be use to remove calender clear button using todayButtonStyleClass property */
+.d-card-calendar-clear-btn {
+  display: none !important;
+}
+
+/* This style related to bill assign component */
+.billAssignSidebar {
+  overflow: hidden !important;
+}
+
+.paginator-top-table-actions{
+  padding-right: 7px;
+  margin-bottom: -65px;
+  z-index: 1;
+  align-self: center;
+}

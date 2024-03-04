@@ -62,7 +62,7 @@ export enum AppActionLabel {
   ACTION_LABEL_FREEZE = 'Freeze',
   ACTION_LABEL_INACTIVATE = 'Inactivate',
   ACTION_LABEL_PASSWORD_RESET = 'Password Reset',
-  ACTION_SEND_INVITATION = 'Send An Invitation',
+  ACTION_SEND_INVITATION = 'Vendor Invitation',
   ACTION_IMPORT_VENDORS = 'Import Vendors',
   ACTION_EXPORT_VENDORS = 'Export Vendors',
   ACTION_VENDOR_REQUEST = 'Vendor Requests',
@@ -88,4 +88,5 @@ export enum AppActionLabel {
   DELETED_LIST_RECOVER = 'Recover',
   ACTION_LABEL_MARK_AS_PAID = 'Mark as Paid',
   ACTION_LABEL_MARK_AS_UNPAID = 'Mark as Unpaid',
+  ACTION_LABEL_MARK_AS_DEFAULT = 'Mark as Default'
 }
