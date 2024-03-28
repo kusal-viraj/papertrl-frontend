@@ -1,0 +1,588 @@
+<form [formGroup]="billApproveForm" class="form-margin bill-detail-form detail-form p-4" autocomplete="off">
+
+  <div class="grid p-fluid">
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Bill Number</label>
+      <div>{{f.billNo.value}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Vendor</label>
+      <div [pTooltip]="f.vendorName.value"
+           tooltipPosition="top" class="text-over-flow">{{f.vendorName.value}}</div>
+    </div>
+
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Project/Task</label>
+      <div>{{f.projectCode.value}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Bill Amount</label>
+      <div>{{f.billAmount.value | number : '1.2-2'}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Bill Date</label>
+      <div>{{f.billDateStr.value}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Purchase Order</label>
+      <div>{{f.poNumber.value}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Remaining Ceiling</label>
+      <div>{{f.poRemainingCeiling.value? f.poRemainingCeiling.value : '-'}}</div>
+
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Receipt Number</label>
+      <div>{{f.poReceiptNumber.value}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Payment Term</label>
+      <div>{{f.termName.value}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12" *ngIf="f.term.value === 10">
+      <label>Net Days Due</label>
+      <div>{{f.netDaysDue.value}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12" *ngIf="f.term.value === 10">
+      <label>Discount Percentage</label>
+      <div>{{f.discountPercentage.value | number : '1.2-2'}}%</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12" *ngIf="f.term.value === 10">
+      <label>Discount Days Due</label>
+      <div>{{f.discountDaysDue.value}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Due Date</label>
+      <div>{{f.dueDateStr.value}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Template</label>
+      <div>{{f.templateName.value}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Department</label>
+      <div>{{commonUtil.detailViewIsDash(f.departmentName.value,false)}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Accounting Period – Month</label>
+      <div>{{commonUtil.detailViewIsDash(f.accountPeriodMonth.value,false)}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Accounting Period – Year</label>
+      <div>{{commonUtil.detailViewIsDash(f.accountPeriodYear.value,false)}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Pay When Customer Pay</label>
+      <div>{{commonUtil.detailViewIsDash(f.payWhenCustomerPayStr.value,false)}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-3 lg:col-4 col-12">
+      <label>Invoice Number</label>
+      <div>{{commonUtil.detailViewIsDash(f.customerInvoiceNumber.value,false)}}</div>
+    </div>
+
+    <div class="field md:col-6 sm:col-12 xl:col-6 lg:col-4 col-12">
+      <label>Additional Notes</label>
+      <div>{{commonUtil.detailViewIsDash(f.additionalNotes.value,false)}}</div>
+    </div>
+  </div>
+
+  <div class="grid p-fluid mt-1" *ngIf="headerAdditionalFieldDetails.length>0">
+    <ng-container formArrayName="additionalData">
+      <ng-container *ngFor="let additionalField of headingSectionArray.controls; let i=index" [formGroupName]="i">
+      <span class="field md:col-6 sm:col-12 xl:col-2  lg:col-4 col-12"
+            *ngIf="commonUtil.checkUndefinedValues(additionalField.get('fieldValue').value, headerAdditionalFieldDetails[i].docStatus, true)">
+          <label>{{headerAdditionalFieldDetails[i].fieldName}}</label>
+        <div>{{additionalField.get('fieldValue').value}}</div>
+      </span>
+      </ng-container>
+    </ng-container>
+  </div>
+
+
+  <ng-container formArrayName="existingVpPaymentTransaction" class="mt-3"
+                *ngIf="paymentDetailsArray.controls.length > 0">
+    <div class="col-12 pl-0">
+      <div class="subHeadingColour">Payment Details</div>
+    </div>
+    <div class="grid p-fluid" *ngFor="let payment of paymentDetailsArray.controls; let i=index" [formGroupName]="i">
+
+      <div class="field col-2">
+        <label *ngIf="i == 0">Payment Date</label>
+        <div>{{f.existingVpPaymentTransaction.value[i].paymentDateStr}}</div>
+      </div>
+
+      <div class="field col-2">
+        <label *ngIf="i == 0">Paid Amount</label>
+        <div>{{f.existingVpPaymentTransaction.value[i].txnAmount | number : '1.2-2'}}</div>
+      </div>
+
+      <div class="field col-2">
+        <label *ngIf="i == 0">Payment Type</label>
+        <div>{{f.existingVpPaymentTransaction.value[i].txnTypeName}}</div>
+      </div>
+
+      <div class="field col-2">
+        <label *ngIf="i == 0">Transaction Status</label>
+        <div><li [class]="'mr-2 status-style status-'  + getStatus(f.existingVpPaymentTransaction.value[i].paymentStatus)"></li>
+          {{getStatus(f.existingVpPaymentTransaction.value[i].paymentStatus) | titlecase}}</div>
+      </div>
+
+      <div class="field col-4">
+        <label *ngIf="i == 0">Payment Reference</label>
+        <div>{{f.existingVpPaymentTransaction.value[i].txnRef}}</div>
+      </div>
+    </div>
+  </ng-container>
+
+
+  <div class="grid mt-3 mb-3">
+    <div class="col-6">
+      <div class="subHeadingColour">Audit Trail</div>
+    </div>
+    <div class="col-6 text-right">
+      <span class="audit-read-more mr-4" (click)="viewAuditTrial()"><u>Detail audit trail</u></span>
+      <span class="audit-read-more" #actualTarget (click)="op.show($event, actualTarget)"><u>Add note</u></span>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div *ngFor="let event of auditTrial | slice:0:auditHeight? 2 : 1000" class="col-12 audit-trail">
+      <div class="grid">
+
+        <div *ngIf="event.undoAction && event.header" class="col-8 pb-0 audit-topic">
+          {{event.statusId.name}} <b> {{event.header}} </b> by <b> {{event.userName}} </b></div>
+
+        <div *ngIf="event.undoAction && !event.header" class="col-8 pb-0 audit-topic">
+          {{event.statusId.name}} <b> {{tableSupportBase.getStatus(event.undoStatus) | titlecase}} Status </b> by
+          <b> {{event.userName}} </b></div>
+
+        <div *ngIf="!event.undoAction" class="col-8 pb-0 audit-topic">
+          {{event.statusId.name}} <b> {{event.userName}} </b></div>
+
+        <div *ngIf="event.automationName" class="col-8 pb-0 p-text-italic audit-auto-topic">
+          Following the automation<b> {{event.automationName}} </b></div>
+        <div
+          class="p-text-italic text-right audit-date">{{event.actionDate | date:dateFormatter.DATE_TIME_FORMAT}}</div>
+      </div>
+
+      <ng-container *ngIf="event.comment">
+        <div class="audit-cmt mt-2" *ngFor="let singleComment of event?.comment.split('</br>'); let i = index">
+          <p app-read-more-text [fieldValue]="singleComment" [maxCharacters]="100"></p>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!event.comment">
+        <p class="p-text-italic audit-cmt">No Information</p>
+      </ng-container>
+
+    </div>
+    <div class="col-12 text-center" *ngIf="auditTrial?.length > 2">
+      <span class="audit-read-more" (click)="auditHeight = !auditHeight">[Read {{auditHeight ? 'More' : 'Less'}}]</span>
+    </div>
+  </div>
+
+
+  <p-tabView
+    *ngIf="(billDetails.billItemCostDistributions.length > 0) || (billDetails.billExpenseCostDistributions.length > 0)"
+    styleClass="tabview-custom">
+
+    <p-tabPanel *ngIf="(billDetails.billExpenseCostDistributions.length > 0)">
+      <ng-template pTemplate="header">
+        <span class="custom-span">Expense Cost Distribution</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <p-table responsiveLayout="scroll" scrollDirection="both"
+                 [value]="expenseFields.controls" scrollable="true" scrollHeight="338px"
+                 [style]="{width:'auto'}"  styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="min-width:50px"  class="thead-style" id="no">#</th>
+              <th style="min-width:180px" class="thead-style" id="project">Project/Task</th>
+              <th style="min-width:180px" class="thead-style" id="account">Account Number</th>
+              <th style="min-width:180px" class="thead-style" id="accountName">Account Name</th>
+              <th style="min-width:250px" class="thead-style" id="description">Description</th>
+              <th style="min-width:200px" class="thead-style" id="departmentAccount">Department</th>
+              <th style="min-width:200px" class="thead-style" id="poReceiptExpense">PO Receipt</th>
+              <th style="min-width:100px" class="thead-style" id="billableExpense">Billable</th>
+              <th style="min-width:100px" class="thead-style" id="taxableExpense">Taxable</th>
+              <th style="min-width:70px"  class="thead-style" *ngIf="f.billType.value ==
+              enums.BILL_TYPE_CREDIT_CARD"
+                   id="billable">Billable</th>
+              <th style="min-width:180px" class="thead-style" *ngFor="let additionalField of
+              additionalFieldForExpenseCostDistributions; let i=index">{{additionalField.fieldName}}</th>
+              <th style="min-width:180px" class="thead-style detail-table-header-right" id="amount">Line Amount</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-i="rowIndex" let-item formArrayName="billExpenseCostDistributions">
+            <tr [formGroupName]="i">
+              <td style="text-align: center; width:50px"><label>{{i + 1}}</label></td>
+
+              <td style="width:180px">
+                <div app-read-more-text [fieldValue]="f.billExpenseCostDistributions.value[i].projectCode"
+                     [maxCharacters]="25"></div>
+              </td>
+
+              <td style="width:180px">
+                <div app-read-more-text [fieldValue]="f.billExpenseCostDistributions.value[i].accountNumber"
+                     [maxCharacters]="20"></div>
+              </td>
+
+              <td style="width:180px">
+                <div app-read-more-text [fieldValue]="f.billExpenseCostDistributions.value[i].accountName"
+                     [maxCharacters]="20"></div>
+              </td>
+
+              <td style="width:250px; text-align: justify">
+                <div app-read-more-text [fieldValue]="f.billExpenseCostDistributions.value[i].description"
+                     [maxCharacters]="25"></div>
+              </td>
+
+              <td style="width:200px">
+                <div app-read-more-text [fieldValue]="f.billExpenseCostDistributions.value[i].departmentName"
+                     [maxCharacters]="25"></div>
+              </td>
+
+              <td style="width:200px" class="receipt-view-wrapper">
+                <div class="p-inputgroup">
+                <div app-read-more-text [fieldValue]="f.billExpenseCostDistributions.value[i].poReceiptNumber"
+                     [maxCharacters]="25" class="receipt-number-wrapper">
+                </div>
+                <button pButton type="button" class="p-button p-button-sm receipt-view-button clear-button pull-right"
+                        [icon]="billUtility.expensePoReceiptLineLevelAttachments[i].isProgressViewReceipt ? 'pi pi-spin pi-spinner':'fa fa-expand'"
+                        *ngIf="f.billExpenseCostDistributions.value[i]?.poReceiptIdList?.length  > 0"
+                        (click)="viewPoReceiptAttachment(f.billExpenseCostDistributions.value[i].poReceiptIdList)">
+                </button>
+                </div>
+              </td>
+
+              <td style="width:100px" class="text-center">
+                <div app-read-more-text [fieldValue]="f.billExpenseCostDistributions.value[i].billableStr"
+                     [maxCharacters]="25"></div>
+              </td>
+
+              <td style="width:100px" class="text-center">
+                <div app-read-more-text [fieldValue]="f.billExpenseCostDistributions.value[i].taxableStr"
+                     [maxCharacters]="25"></div>
+              </td>
+
+              <td style="width:70px" class="text-center" *ngIf="f.billType.value == enums.BILL_TYPE_CREDIT_CARD">
+                <div *ngIf="f.billExpenseCostDistributions.value[i].billable">
+                  <p-checkbox [readonly]="true" formControlName="billable" [binary]="true"></p-checkbox>
+                </div>
+              </td>
+
+              <ng-container formArrayName="additionalData"
+                            *ngIf="additionalFieldForExpenseCostDistributions.length > 0">
+                <td style="width:180px" *ngFor="let additionalLineItemField of expenseAdditionalField(i).controls;
+                let itemIndex = index"
+                    [formGroupName]="itemIndex">
+
+                  <div app-read-more-text [fieldValue]="additionalLineItemField.get('fieldValue')?.value"
+                       [maxCharacters]="25"></div>
+
+                </td>
+              </ng-container>
+
+              <td style="width:180px" class="text-right">
+                <div>{{f.billExpenseCostDistributions.value[i].amount | number : '1.2-2'}}</div>
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="summary">
+            <div class="grid align-table-footer">
+              <div class="outer-po-comparison-button-wrapper po-comparison-label">
+                <p
+                  *ngIf="billUtility.matchingTableValues.length > appConstant.ZERO && billUtility.isViewMatchingTable"
+                  class="subHeadingColour table-add-btn"
+                  (click)="billUtility.isViewThreeWayMatchingTable = true">Show Three-Way Matching</p>
+              </div>
+            </div>
+          </ng-template>
+
+        </p-table>
+      </ng-template>
+
+    </p-tabPanel>
+
+    <p-tabPanel *ngIf="(billDetails.billItemCostDistributions.length > 0)">
+      <ng-template pTemplate="header">
+        <span class="custom-span">Item Cost Distribution</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <p-table responsiveLayout="scroll" [value]="itemForm.controls" scrollDirection="both"
+                  scrollable="true" scrollHeight="338px"
+                 [style]="{width:'auto'}"  styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="min-width:50px"  class="thead-style" id="no1">#</th>
+              <th style="min-width:180px" class="thead-style" id="itemService">Item Number</th>
+              <th style="min-width:180px" class="thead-style" id="itemName">Item Name</th>
+              <th style="min-width:180px" class="thead-style" id="sku">Vendor Part Number</th>
+              <th style="min-width:250px" class="thead-style" id="itemDescription">Description</th>
+              <th style="min-width:180px" class="thead-style" id="project_">Project/Task</th>
+              <th style="min-width:250px" class="thead-style" id="accountNumber">Account Number</th>
+              <th style="min-width:200px" class="thead-style" id="departmentItem">Department</th>
+              <th style="min-width:200px" class="thead-style" id="poReceipt">PO Receipt</th>
+              <th style="min-width:100px" class="thead-style" id="billableStr">Billable</th>
+              <th style="min-width:100px" class="thead-style" id="taxableStr">Taxable</th>
+              <th style="min-width:100px" class="thead-style detail-table-header-right" id="itemQty">Quantity</th>
+              <th style="min-width:180px" class="thead-style detail-table-header-right" id="itemRate">Cost</th>
+              <th style="min-width:180px" class="thead-style" *ngFor="let additionalField of
+              additionalFieldForItemCostDistributions; let i=index">{{additionalField.fieldName}}</th>
+              <th style="min-width:180px" class="thead-style detail-table-header-right" id="itemAmount">Line Amount</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-i="rowIndex" let-item formArrayName="billItemCostDistributions">
+
+            <tr [formGroupName]="i">
+
+              <td style="text-align: center; width:50px"><label>{{i + 1}}</label></td>
+
+              <td style="width:180px">
+                <div app-read-more-text [fieldValue]="f.billItemCostDistributions.value[i].itemNumber"
+                     [maxCharacters]="20"></div>
+              </td>
+
+              <td style="width:180px">
+                <div app-read-more-text [fieldValue]="f.billItemCostDistributions.value[i].itemName"
+                     [maxCharacters]="20"></div>
+              </td>
+
+              <td style="width:180px">
+                <div app-read-more-text [fieldValue]="f.billItemCostDistributions.value[i].vendorItemNumber"
+                     [maxCharacters]="20"></div>
+              </td>
+
+              <td style="width:250px;text-align: justify">
+                <div app-read-more-text [fieldValue]="f.billItemCostDistributions.value[i].description"
+                     [maxCharacters]="25"></div>
+              </td>
+
+              <td style="width:180px">
+                <div app-read-more-text [fieldValue]="f.billItemCostDistributions.value[i].projectCode"
+                     [maxCharacters]="25"></div>
+              </td>
+
+              <td style="width:250px">
+                <div app-read-more-text [fieldValue]="f.billItemCostDistributions.value[i].accountNumber"
+                     [maxCharacters]="25"></div>
+              </td>
+
+              <td style="width:200px">
+                <div app-read-more-text [fieldValue]="f.billItemCostDistributions.value[i].departmentName"
+                     [maxCharacters]="25"></div>
+              </td>
+
+              <td style="width:200px" class="receipt-view-wrapper">
+                <div class="p-inputgroup">
+                <div app-read-more-text [fieldValue]="f.billItemCostDistributions.value[i].poReceiptNumber"
+                     [maxCharacters]="25" class="receipt-number-wrapper">
+                </div>
+                <button pButton type="button" class="p-button p-button-sm clear-button receipt-view-button pull-right"
+                        [icon]="billUtility.itemPoReceiptLineLevelAttachments[i].isProgressViewReceipt ? 'pi pi-spin pi-spinner':'fa fa-expand'"
+                        *ngIf="f.billItemCostDistributions.value[i].poReceiptIdList?.length > 0"
+                        (click)="viewPoReceiptAttachment(f.billItemCostDistributions.value[i].poReceiptIdList)">
+                </button>
+                </div>
+              </td>
+
+              <td style="width:100px" class="text-center">
+                <div app-read-more-text [fieldValue]="f.billItemCostDistributions.value[i].billableStr"
+                     [maxCharacters]="25">
+                </div>
+              </td>
+
+              <td style="width:100px" class="text-center">
+                <div app-read-more-text [fieldValue]="f.billItemCostDistributions.value[i].taxableStr"
+                     [maxCharacters]="25">
+                </div>
+              </td>
+
+              <td style="width:100px" class="text-right">
+                <div>{{f.billItemCostDistributions.value[i].qty}}</div>
+              </td>
+
+              <td style="width:180px" class="text-right">
+                <div>{{f.billItemCostDistributions.value[i].rate | number : '1.2-2'}}</div>
+              </td>
+
+              <ng-container formArrayName="additionalData" *ngIf="additionalFieldForItemCostDistributions.length > 0">
+                <td style="width:180px" *ngFor="let additionalLineItemField of itemAdditionalField(i).controls; let
+                itemIndex = index"
+                    [formGroupName]="itemIndex">
+
+                  <div app-read-more-text [fieldValue]="additionalLineItemField.get('fieldValue')?.value"
+                       [maxCharacters]="25"></div>
+
+                </td>
+              </ng-container>
+
+              <td style="width:180px" class="text-right">
+                <div>{{f.billItemCostDistributions.value[i].amount | number : '1.2-2'}}</div>
+              </td>
+
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="summary">
+            <div class="grid align-table-footer">
+              <div class="outer-po-comparison-button-wrapper po-comparison-label">
+                <p
+                  *ngIf="billUtility.matchingTableValues.length > appConstant.ZERO && billUtility.isViewMatchingTable"
+                  class="subHeadingColour table-add-btn"
+                  (click)="billUtility.isViewThreeWayMatchingTable = true">Show Three-Way Matching</p>
+              </div>
+            </div>
+          </ng-template>
+
+        </p-table>
+      </ng-template>
+    </p-tabPanel>
+
+    <p-tabPanel *ngIf="billDetails.additionalFieldAttachments.length>0">
+      <ng-template pTemplate="header">
+        <span class="custom-span">Files Attached</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <p-table responsiveLayout="scroll" [value]="billDetails.additionalFieldAttachments" scrollable="true" scrollHeight="150px"
+                 styleClass="p-datatable-gridlines p-datatable-md"  scrollDirection="both">
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="min-width:250px" class="thead-style" id="rName">File Name</th>
+              <th style="min-width:200px" class="thead-style" id="fieldName">Field Name</th>
+              <th style="min-width:50px"  class="thead-style" id="action">Action</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-i="rowIndex" let-item>
+            <tr>
+
+              <td [style]="'height : 30px; width:150px'" class="break-word">
+                <label> {{item.fileName}}</label>
+              </td>
+
+              <td [style]="'height : 30px; width:150px'">
+                <label> {{item.fieldName}}</label>
+              </td>
+
+              <td style="width:50px" class="text-center">
+                <i (click)="downloadAttachments(item)" class="fa fa-download download-icon"></i>
+              </td>
+
+            </tr>
+          </ng-template>
+        </p-table>
+      </ng-template>
+    </p-tabPanel>
+
+    <p-tabPanel *ngIf="adHocWorkflowDetails.length">
+      <ng-template pTemplate="header">
+        <span class="custom-span">Approvers ({{ adHocWorkflowDetails.length }})</span>
+      </ng-template>
+      <div class="grid" style="padding-top: 25px">
+        <div class="col-12 pb-0 mb-0 pt-0 mt-0 approve-alignment" *ngFor="let adHoc of adHocWorkflowDetails; let adHocIndex = index">
+          <div class="col-5 bold-text text pb-0 mb-0 pt-0 mt-0"[ngClass]="{ 'approve-text': adHoc.completed }">
+            <span>{{ adHocIndex + 1 }}. </span>
+            {{ adHoc.approvalUserName || adHoc.pendingUserName || adHoc.approvalGroupName }}
+            <span *ngIf="adHoc.approvalGroupName && adHoc.approvalUserName">
+              ({{adHoc.approvalGroupName}})
+            </span>
+            <span *ngIf="adHoc.previousApprovalUserName && adHoc.previousApprovalUserName != adHoc.approvalUserName">
+              ({{adHoc.previousApprovalUserName}})
+            </span>
+            <span class="approve-icon" style="padding-left: 16px;" [ngClass]="commonUtil.getStatusIcon(adHoc)"></span>
+          </div>
+          <div [ngClass]="{ 'approve-text': adHoc.completed }" class="col-2 text text-right pb-0 mb-0 pt-0 mt-0">
+            {{ adHoc.actionDate | date:'MM/dd/yyyy' }}
+          </div>
+        </div>
+      </div>
+    </p-tabPanel>
+
+
+  </p-tabView>
+
+
+  <div class="grid "
+       *ngIf="(billDetails.billItemCostDistributions.length > 0) || (billDetails.billExpenseCostDistributions.length > 0)">
+    <div class="field col-12 text-right mt-2 p-pr-4">
+      <span class="subHeadingColour font-bold">Cost Distribution Total &nbsp;</span>
+      <span>{{f.distributionCostTotal.value | number : '1.2-2'}}</span>
+    </div>
+  </div>
+
+
+  <div class="grid mt-3">
+    <div class="col-12">
+      <span class="audit-read-more" (click)="downloadAttachment()"><em class="fa fa-download"></em> Download Attachments </span>
+    </div>
+  </div>
+
+</form>
+<app-audit-trial *ngIf="auditTrialPanel" [auditTrial]="auditTrial" [heading]="'Bill# ' + billNo"
+                 (closeDrawer)="auditTrialPanel = false" [panelShow]="auditTrialPanel"></app-audit-trial>
+
+
+<p-overlayPanel (onHide)="note = ''; noteValidation = false" baseZIndex="1011" appendTo="body" #op>
+  <ng-template pTemplate>
+    <div class="add-note-popup">
+      <form>
+        <textarea [ngModelOptions]="{standalone: true}" [(ngModel)]="note" placeholder="Add Note" [rows]="3"
+                  [ngClass]="noteValidation ? 'ng-invalid ng-dirty': ''" maxlength="1000"
+                  (keyup)="note[0] === ' '? note = '' : noteValidation = false" pInputTextarea></textarea>
+        <div class="p-invalid text-align-left" *ngIf="noteValidation">
+          Note is required
+        </div>
+        <div class="grid mt-2">
+          <div class="col-12 text-right">
+            <button type="button" class="conf-cancel-btn p-button-outlined p-button-sm" pButton icon="pi pi-times"
+                    label="Close"
+                    (click)="op.hide(); note = ''; noteValidation = false"></button>
+
+            <button type="submit" class="p-button-sm ml-3" pButton icon="pi pi-check" label="Add"
+                    (click)="addNote()"></button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</p-overlayPanel>
+
+<!--View PO Receipt-->
+<p-sidebar styleClass="p-sidebar-lg pSideBarCustom" appendTo="body" position="right" [modal]="false"
+           [dismissible]="true"
+           *ngIf="isViewReceiptView"
+           [(visible)]="isViewReceiptView">
+  <app-po-receipts-view *ngIf="isViewReceiptView" [receiptIds]="receiptAttachments"></app-po-receipts-view>
+</p-sidebar>
+
+
+<!--3-way matching table details-->
+<app-three-way-matching-table [matchingTableValues]="billUtility.matchingTableValues"
+                              *ngIf="billUtility.isViewThreeWayMatchingTable"
+                              (closeDrawer)="billUtility.isViewThreeWayMatchingTable = false"
+                              [isViewMatchingTable]="billUtility.isViewMatchingTable" [poNumber]="billDetails.poNumber">
+</app-three-way-matching-table>

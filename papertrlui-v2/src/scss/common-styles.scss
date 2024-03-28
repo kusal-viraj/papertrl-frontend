@@ -1,0 +1,2968 @@
+@import "../scss/color.scss";
+/* You can add global styles to this file, and also import other style files */
+//////////////////////////////// Create screen grids //////////////////////
+.table-scroll .p-datatable .p-datatable-tbody > tr > td > p-dropdown {
+  width: inherit;
+  padding-right: 3px;
+}
+
+.three-way-matching-table .p-datatable .p-datatable-thead > tr > th {
+  border: none !important;
+  background-color: white !important;
+}
+
+.three-way-matching-table .p-datatable .p-datatable-tbody > tr > td {
+  border: none !important;
+}
+
+
+.label {
+  color: $secondary-black-grey;
+  font-weight: bold;
+  font-size: 0.857rem;
+}
+
+.table-scroll .p-datatable .p-datatable-tbody > tr > td {
+  padding: 3px !important;
+}
+
+.table-scroll .p-datatable .p-datatable-tbody > tr > td .p-inputtext {
+  border: solid 1px $light-gallery-gray;
+}
+
+.table-scroll .p-datatable .p-datatable-tbody > tr > td .p-inputtext:focus {
+  border: solid 1px $light-gallery-gray;
+}
+
+.table-scroll .p-datatable .p-datatable-tbody > tr > td .p-dropdown {
+  border: solid 1px $light-gallery-gray;
+}
+
+.table-scroll .p-datatable .p-datatable-tbody > tr > td .p-dropdown:focus {
+  border: solid 1px $light-gallery-gray;
+}
+
+.table-scroll .p-datatable .p-datatable-tbody > tr > td .p-dropdown:not(.p-disabled).p-focus {
+  border: solid 1px $light-gallery-gray;
+}
+
+.table-scroll .p-datatable .p-datatable-tbody > tr > td .p-dropdown.p-dropdown-open {
+  border: solid 1px $light-gallery-gray;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+/* Notifications component - custom styles */
+.notifications-menu {
+  top: 2.8rem !important;
+  min-width: 400px !important;
+
+  .notification-item--wrapper {
+    position: relative;
+
+    .inner-wrapper {
+      border-radius: 0 !important;
+      padding: 15px 10px !important;
+
+      .notification-summary {
+        color: $blue-grey !important;
+      }
+
+      .notification-detail {
+        color: $tertiary-grey !important;
+      }
+
+      .icon-wrapper {
+        position: relative;
+        width: 35px;
+        height: 35px;
+        border-radius: 50px;
+        color: $white;
+        text-align: center;
+
+        i {
+          font-size: 1.3em !important;
+        }
+      }
+    }
+
+    &.unread {
+      &.po {
+        .inner-wrapper {
+          border-left: 5px solid $secondary-blue;
+
+          .icon-wrapper {
+            padding: 9px 3px 0 0;
+            background-color: $secondary-blue;
+          }
+        }
+      }
+
+      &.bill {
+        .inner-wrapper {
+          border-left: 5px solid $secondary-green;
+
+          .icon-wrapper {
+            padding: 9px 0 0 0;
+            background-color: $secondary-green;
+          }
+        }
+      }
+
+      &.expense {
+        .inner-wrapper {
+          border-left: 5px solid $secondary-yellow;
+
+          .icon-wrapper {
+            padding: 9px 0 0 0;
+            background-color: $secondary-yellow;
+          }
+        }
+      }
+
+      &.vendor {
+        .inner-wrapper {
+          border-left: 5px solid $secondary-red;
+
+          .icon-wrapper {
+            padding: 9px 0 0 0;
+            background-color: $secondary-red;
+          }
+        }
+      }
+
+      &.automation {
+        .inner-wrapper {
+          border-left: 5px solid $secondary-orange;
+
+          .icon-wrapper {
+            padding: 9px 0 0 0;
+            background-color: $secondary-orange;
+          }
+        }
+      }
+
+      &.credit-card {
+        .inner-wrapper {
+          border-left: 5px solid $tertiary-purple;
+
+          .icon-wrapper {
+            padding: 9px 0 0 0;
+            background-color: $tertiary-purple;
+          }
+        }
+      }
+
+      &.credit-note {
+        .inner-wrapper {
+          border-left: 5px solid $editable-border;
+
+          .icon-wrapper {
+            padding: 9px 0 0 0;
+            background-color: $editable-border;
+          }
+        }
+      }
+
+      &.payment {
+        .inner-wrapper {
+          border-left: 5px solid $secondary-purple;
+
+          .icon-wrapper {
+            padding: 9px 0 0 0;
+            background-color: $secondary-purple;
+          }
+        }
+      }
+
+
+      &.receipt {
+        .inner-wrapper {
+          border-left: 5px solid $secondary-light-dark-green;
+
+          .icon-wrapper {
+            padding: 9px 0 0 0;
+            background-color: $secondary-light-dark-green;
+          }
+        }
+      }
+    }
+
+    &.read {
+      .inner-wrapper {
+        border-left: 5px solid $grey !important;
+
+        .notification-summary {
+          color: $light-grey !important;
+        }
+
+        .notification-detail {
+          color: $light-grey !important;
+        }
+
+        .icon-wrapper {
+          padding: 9px 0 0 0;
+          background-color: $light-grey !important;
+        }
+      }
+    }
+
+    .close-mark {
+      position: absolute !important;
+      right: 15px;
+      top: 5px;
+      padding: 5px;
+
+      &:hover {
+        background-color: $tertiary-red;
+
+        i {
+          color: $white;
+        }
+      }
+
+      i {
+        font-size: .8em;
+        color: $secondary-grey;
+      }
+    }
+  }
+
+  .footer {
+    position: absolute !important;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+
+    .clear-all {
+      position: relative;
+      min-width: 120px;
+      border: 1px solid $secondary-green;
+      border-radius: 30px;
+      padding: 0 5px 0 15px !important;
+      background-color: $white;
+      color: $secondary-green;
+      font-size: .9em;
+
+      &:hover {
+        background-color: $secondary-green;
+        color: $white;
+      }
+
+      i {
+        position: absolute;
+        font-size: 1.2em;
+        top: 9px;
+        left: 25px;
+      }
+    }
+  }
+
+  .notification-wrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: $popup-black;
+    z-index: 100;
+
+    .notification-dialog {
+      position: absolute;
+      top: 120px;
+      left: 50px;
+      background-color: $white;
+      width: 300px;
+      height: auto;
+      padding: 25px 20px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0px 2px 4px $light-grey;
+
+      i {
+        width: 100%;
+        font-size: 2.5em;
+        color: $light-grey;
+      }
+
+      span.label {
+        width: 100%;
+        float: left;
+        padding: 5px 0 10px 0;
+        color: $grey;
+      }
+
+      .p-button {
+        padding: 7px 30px;
+        background-color: $white;
+        border: 1px solid $secondary-green;
+        color: $secondary-green;
+
+        &:hover {
+          background-color: $secondary-green;
+          color: $white;
+        }
+      }
+    }
+  }
+}
+
+/*Notification indicator*/
+.notifications-item {
+  .topbar-badge {
+    background-color: $secondary-red !important;
+    width: 18px !important;
+    height: 18px !important;
+    font-size: .85em !important;
+    letter-spacing: -1px;
+    padding: 2px 1px 0 0 !important;
+  }
+
+  .topbar-badge-large-count {
+    width: 20px !important;
+    height: 20px !important;
+    padding: 3px 3px !important;
+    font-size: 0.80em !important;
+  }
+
+  .p-grid {
+    clear: left;
+  }
+}
+
+/*tiny scrollbar specific styles*/
+ng-scrollbar.virtual-scroll {
+  --scrollbar-size: 8px;
+  --scrollbar-padding: 0px;
+  --scrollbar-thumb-color: #4DB6AC;
+  --scrollbar-hover-size: 12px;
+  --scrollbar-track-color: rgba(0, 0, 0, 0.05);
+  --scrollbar-border-radius: 10px;
+  height: 360px;
+
+  overflow: hidden;
+}
+
+/*Dashboard Cards Colours*/
+.widget-overview-box {
+  border-left: 5px solid;
+
+  .overview-icon {
+    i {
+      font-size: 1.3rem;
+    }
+  }
+
+  &.widget-overview-box-1 { //Vendor
+    border-left-color: $secondary-red;
+
+    .overview-title {
+      color: $secondary-red;
+    }
+
+    .overview-icon {
+      background: $secondary-red;
+      color: $white;
+    }
+  }
+
+  &.widget-overview-box-2 { //Bills
+    border-left-color: $secondary-green;
+
+    .overview-title {
+      color: $secondary-green;
+    }
+
+    .overview-icon {
+      background: $secondary-green;
+      color: $white;
+    }
+  }
+
+  &.widget-overview-box-3 { //PO
+    border-left-color: $secondary-blue;
+
+    .overview-title {
+      color: $secondary-blue;
+    }
+
+    .overview-icon {
+      background: $secondary-blue;
+      color: $white;
+    }
+  }
+
+  &.widget-overview-box-4 { //Expense
+    border-left-color: $secondary-yellow;
+
+    .overview-title {
+      color: $secondary-yellow;
+    }
+
+    .overview-icon {
+      background: $secondary-yellow;
+      color: $white;
+    }
+  }
+}
+
+.card {
+  &.widget-overview-box-1,
+  &.widget-overview-box-2,
+  &.widget-overview-box-3,
+  &.widget-overview-box-4 {
+    border-radius: 0 5px 5px 0;
+  }
+}
+
+/*
+  Vendor List
+ */
+.select-vendor-card {
+  .collapsible-btn-wrapper {
+    text-align: right;
+
+
+    .collapsible-btn {
+      cursor: pointer;
+      padding: 7px 7px 5px;
+      margin-left: -7px;
+      border-radius: 5px;
+      color: $dark-grey;
+
+      &:hover {
+        color: $green;
+        background-color: #e9ecef;
+      }
+    }
+  }
+
+  &.card-collapsed {
+    width: 50px !important;
+
+    .collapsible-group {
+      display: none;
+    }
+
+    .collapsible-btn-wrapper {
+      padding-left: 0;
+      padding-top: 15px;
+    }
+
+  }
+}
+
+.vendor-card-overwrite-width {
+  width: calc(100% - 50px) !important;
+}
+
+//payment screens related styles
+.payment-check-box-style ::ng-deep .p-checkbox .p-checkbox-box {
+  width: 20px;
+}
+
+.payment-check-box-wrapper {
+  .p-checkbox {
+    .p-checkbox-box {
+      width: 20px;
+      padding: 8px 2px;
+    }
+  }
+}
+
+::ng-deep .t-payment-rev .p-datatable-thead > tr > th {
+  background-color: $secondary-grey !important;
+  color: $white !important;
+  font-weight: 400 !important;
+}
+
+::ng-deep .t-txn-tbl .p-datatable-thead > tr > th {
+  background-color: #95adb9 !important;
+  color: #fff !important;
+  font-weight: 400 !important;
+
+}
+
+// overriding styles for expandable table
+::ng-deep .t-payment-rev .p-datatable-thead > tr {
+  th.expand-column {
+    background: none !important;
+  }
+}
+
+::ng-deep .t-txn-tbl th {
+  padding: 5px !important;
+}
+
+.t-payment-rev {
+  .p-inputgroup-addon {
+    color: $white !important;
+  }
+
+  .p-sortable-column-icon {
+    color: $white !important;
+  }
+
+  .p-sortable-column:not(.p-highlight), .p-resizable-column:not(.p-highlight) {
+    background: none;
+  }
+
+  .filter-header {
+    background-color: $tertiary-light-gray !important;
+  }
+
+  .p-datatable.p-datatable-gridlines .p-datatable-tbody > tr > td {
+    border-width: 1px !important;
+    padding: 3px 5px !important;
+  }
+
+  ::ng-deep .p-datatable-thead > tr > th {
+    padding: 10px;
+  }
+}
+
+::ng-deep .t-txn-tbl td {
+  padding: 8px !important;
+}
+
+
+::ng-deep .vendor-payment-table .p-datatable.p-datatable-gridlines .p-datatable-tbody > tr > td {
+  padding: 7px !important;
+}
+
+::ng-deep .review-payment-table td {
+  padding: 2px !important;
+}
+
+::ng-deep .offline-payment-table .p-datatable.p-datatable-gridlines .p-datatable-tbody > tr > td {
+  padding: 9px 5px !important;
+}
+
+::ng-deep .review-payment-child-table td {
+  padding: 2px !important;
+}
+
+::ng-deep .payment-detail-table td {
+  padding: 2px 5px !important;
+}
+
+::ng-deep .t-payment-rev .p-datatable.p-datatable-gridlines .p-datatable-tbody > tr > td .p-datatable-tbody > tr > td {
+  padding: 11px 5px !important;
+}
+
+::ng-deep .t-payment-rev .p-datatable.p-datatable-gridlines .p-datatable-tbody > tr > td .review-payment-child-table .p-datatable-tbody > tr > td {
+  padding: 3px 5px !important;
+}
+
+::ng-deep .t-payment-rev .p-datatable.p-datatable-gridlines .p-datatable-tbody > tr > td .batch-payment-child-table .p-datatable-tbody > tr > td {
+  padding: 9px 5px !important;
+  white-space: pre-line;
+}
+
+
+::ng-deep .t-payment-rev .p-datatable.p-datatable-gridlines .p-datatable-tbody > tr > td .approved-table-child .p-datatable-tbody > tr > td {
+  padding: 9px 5px !important;
+}
+
+
+::ng-deep .t-payment-rev .p-datatable.p-datatable-gridlines .p-datatable-tbody > tr > td .view-summary-child-table .p-datatable-tbody > tr > td {
+  padding: 8px 5px !important;
+}
+
+
+::ng-deep .payment-detail-table th.payment-detail-header {
+  padding: 10px !important;
+}
+
+::ng-deep .view-summary-table td {
+  padding: 3px 5px !important;
+}
+
+::ng-deep .view-summary-child-table td {
+  padding: 8px 5px !important;
+}
+
+
+// DropDown text ellipse
+p-dropdown ::ng-deep .p-dropdown .p-inputtext .ng-star-inserted {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.p-tooltip {
+  max-width: 500px !important;
+}
+
+/*
+ payment screen dropdown style
+ */
+.dropdown-width-adjust {
+  .p-dropdown {
+    min-width: 155px !important;
+  }
+}
+
+/**
+long text test message p-toast style
+ */
+::ng-deep .custom-toast .p-toast-message.p-toast-message-success {
+  min-width: 620px;
+  right: 0;
+  position: absolute;
+  bottom: 20px;
+
+}
+
+/**
+summery box styles
+ */
+
+
+.summary-wrap {
+  padding-left: 17px;
+}
+
+.payment-summary-head {
+  background: $secondary-grey;
+  text-align: center;
+  padding: 3px 10px 3px 10px;
+}
+
+.white-txt {
+  color: $white !important;
+}
+
+.font-summary-head {
+  font-size: 14px;
+}
+
+.tbl-box {
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 230px;
+  padding: 15px;
+}
+
+.summary-table {
+  overflow-y: auto;
+  max-height: 435px;
+}
+
+.bold-text {
+  font-weight: bold;
+  color: #484F55;
+}
+
+.t-tot-font {
+  font-size: 15px;
+}
+
+.tot-amount-box {
+  padding: 0px 30px 15px 30px;
+}
+
+.light-text {
+  font-weight: normal;
+}
+
+.tot-font {
+  font-size: 14px;
+}
+
+.heading-p {
+  padding-top: 21px;
+  padding-bottom: 21px;
+  padding-left: 15px;
+}
+
+.tbl-font {
+  font-size: 14px;
+}
+
+.pay-schedule-button {
+  position: relative;
+  font-size: 14px;
+
+  .p-button-icon {
+    font-size: 11px !important;
+    position: absolute;
+    left: 32%;
+  }
+}
+
+.pay-button {
+  .p-button-icon {
+    left: calc(50% - 20px) !important;
+  }
+
+  .p-button-label {
+    padding-left: 10px;
+  }
+}
+
+.schedule-button {
+  .p-button-icon {
+    left: calc(50% - 40px) !important;
+  }
+
+  .p-button-label {
+    padding-left: 10px;
+  }
+}
+
+@media only screen and (max-width: 1366px) {
+  .schedule-button {
+    .p-button-icon {
+      left: calc(50% - 34px) !important;
+    }
+
+    .p-button-label {
+      padding-left: 10px;
+    }
+  }
+}
+
+
+.custom-submit-button {
+  .p-button-icon {
+    font-size: 0.875rem !important;
+  }
+}
+
+.t-bottom-btns {
+  margin-top: -40px;
+  padding-right: -28px;
+
+  .p-button {
+    .p-button-label {
+      padding: 0 !important;
+    }
+  }
+}
+
+.finalize-btn, .reassign-btn {
+  width: 186px;
+
+  .p-button-label {
+    padding-left: 0 !important;
+  }
+}
+
+.reject-bttn {
+  width: 170px;
+  text-align: right;
+
+  .p-button-label {
+    padding-left: 0 !important;
+  }
+}
+
+.time-label-wrap {
+  width: 140px;
+  padding-right: 0 !important;
+}
+
+.reject-button {
+  .p-button-icon {
+    position: absolute;
+    left: calc(50% - 39px) !important;
+  }
+
+  .p-button-label {
+    padding-left: 9px !important;
+  }
+}
+
+///////////// Multiselect, Dropdown max width/////////
+
+.dropdown-list {
+  text-overflow: ellipsis;
+  max-width: 272px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+
+.responsive-multiselect {
+  .p-multiselect-item {
+    span {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      max-width: 330px;
+    }
+  }
+}
+
+.responsive-dropdown {
+  .dropdown-list {
+    text-overflow: ellipsis;
+    max-width: 330px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .p-dropdown-item {
+    text-overflow: ellipsis;
+    max-width: 330px !important;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+
+
+.p-dropdown .p-dropdown-label {
+  border: none !important;
+}
+
+.p-sidebar-sm {
+  .responsive-multiselect {
+    .p-multiselect-item {
+      span {
+        max-width: 284px;
+      }
+    }
+  }
+
+  .responsive-dropdown {
+    .dropdown-list {
+      max-width: 284px;
+    }
+
+    .p-dropdown-item {
+      max-width: 284px;
+    }
+  }
+}
+
+.p-sidebar-md {
+  .responsive-multiselect {
+    .p-multiselect-item {
+      span {
+        max-width: 470px !important;
+      }
+    }
+  }
+
+  .responsive-dropdown {
+    .dropdown-list {
+      max-width: 470px !important;
+    }
+
+    .p-dropdown-item {
+      max-width: 470px !important;
+    }
+  }
+}
+
+@media only screen and (max-width: 1366px) {
+  .responsive-multiselect {
+    .p-multiselect-item {
+      span {
+        max-width: 200px;
+      }
+    }
+  }
+  .responsive-dropdown {
+    .dropdown-list {
+      max-width: 200px;
+    }
+
+    .p-dropdown-item {
+      max-width: 200px;
+    }
+  }
+}
+
+@media only screen and (max-width: 1440px) {
+  .responsive-multiselect {
+    .p-multiselect-item {
+      span {
+        max-width: 225px;
+      }
+    }
+  }
+  .responsive-dropdown {
+    .dropdown-list {
+      max-width: 225px;
+    }
+
+    .p-dropdown-item {
+      max-width: 225px;
+    }
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .responsive-multiselect {
+    .p-multiselect-item {
+      span {
+        max-width: 196px;
+      }
+    }
+  }
+  .responsive-dropdown {
+    .dropdown-list {
+      max-width: 200px;
+    }
+
+    .p-dropdown-item {
+      max-width: 200px;
+    }
+  }
+  .p-sidebar-right.p-sidebar-lg {
+    width: 50% !important;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .responsive-multiselect {
+    .p-multiselect-item {
+      span {
+        max-width: 520px;
+      }
+    }
+  }
+  .responsive-dropdown {
+    .dropdown-list {
+      max-width: 525px;
+    }
+
+    .p-dropdown-item {
+      max-width: 525px;
+    }
+  }
+}
+
+.payment-review-wrapeer .approver-detail-wrap {
+  min-width: inherit !important;
+  max-width: inherit !important;
+  margin: 0 !important;
+}
+
+////////////////////////////////////////////////////
+.group-dropdown-icon-custom {
+  font-size: 13px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.manage-document-dialog {
+  .p-dialog .p-dialog-content {
+    padding: 0 1.5rem 15px 1.5rem !important;
+    border-radius: 0 0 5px 5px;
+  }
+
+  .p-dialog .p-dialog-header {
+    padding: 10px !important;
+  }
+}
+
+
+/////// Top Bar Profile name////////////////
+.profile-name {
+  max-width: 170px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+@media screen and (max-width: 991px) {
+  .profile-name {
+    display: block !important;
+  }
+
+  .p-card-shadow-remove {
+    box-shadow: none !important;
+  }
+
+  .mobile-fields {
+    input {
+      background: $light-gallery-gray !important;
+      height: 48px !important;
+    }
+
+    .p-dropdown {
+      background: $light-gallery-gray !important;
+      height: 48px !important;
+
+      .p-dropdown-label {
+        align-self: center
+      }
+    }
+
+    .buttons {
+      float: inherit;
+
+      .col-12 {
+        text-align: center;
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+
+        button {
+          width: 100%;
+          height: 48px;
+          margin-bottom: 4px;
+        }
+      }
+    }
+  }
+}
+
+///////////////Confirmation Popup/////////
+.confirmation-popup {
+  .p-dialog-title {
+    color: $green;
+    font-size: 20px !important;
+  }
+
+  .details {
+    .question {
+      font-size: 14px;
+      color: $black-gray;
+      font-weight: bold;
+      margin-bottom: 35px;
+    }
+
+    p {
+      font-size: 14px;
+      color: $black-gray;
+      font-weight: bold;
+
+      span {
+        font-size: 14px;
+        color: $black-gray;
+        font-weight: normal;
+      }
+    }
+  }
+}
+
+///////////////////////////////////////////
+.todayBtn {
+  display: none !important;
+}
+
+.clear-button {
+  background-color: #D0D5D8 !important;
+  opacity: 1 !important;
+
+  &:hover {
+    background-color: #D0D5D8 !important;
+  }
+}
+
+.p-bill-detail-view .p-dialog-content {
+  min-height: 650px;
+  overflow-y: inherit;
+}
+
+.break-word {
+  overflow-wrap: anywhere;
+}
+
+//bill amount exceeded bill amount warning alert
+
+.amountExceeded-warn-content-wrapper .fa.pull-right {
+  margin-left: 10px !important;
+}
+
+.amountExceeded-warn-content-wrapper .alert-close-btn-wrapper {
+  cursor: pointer;
+
+  &:hover {
+    font-weight: bold;
+  }
+}
+
+//full width and height any wrapper
+
+.full-width {
+  width: 100%;
+}
+
+.full-height {
+  height: 100% !important;
+}
+
+/**
+ checkbox label color
+ */
+
+.checkbox-label-wrapper {
+  color: #b2b2b2;
+}
+
+/**
+ Previous Approvers styles
+ */
+
+.previous-approver-chip-wrapper {
+  background: #f4fbfa;
+  padding: 10px 17px 10px 17px;
+  border-radius: 27px;
+  border: 1px solid $green;
+  color: $green;
+  margin-right: 3px;
+  margin-left: 4px;
+}
+
+.chip-icon-wrapper {
+  padding: 7px;
+  background: $green;
+  border-radius: 25px;
+  color: #fff;
+  margin-left: -18px;
+  text-align: center;
+  width: 27px;
+  height: 27px;
+}
+
+.previous-number-wrapper {
+  font-weight: bold;
+}
+
+/**
+additional field checkbox style
+ */
+
+.additional-field-checkbox-wrapper {
+  position: relative;
+  padding: 0;
+}
+
+/**
+Detail tables Qty field alignment
+ */
+.qty-field-alignment {
+  text-align: -webkit-right;
+}
+
+/**
+ DropZOne style
+ */
+
+.custom-dropzone-wrapper {
+  height: 234px;
+  background-color: #f4fbfa !important;
+}
+
+/*
+Detail table related style
+ */
+
+.amount-field-wrapper {
+  width: 100%;
+  background-color: #f8f9fa !important;
+}
+
+.tax-amount-wrapper {
+  width: 100%;
+}
+
+.delete-icon-wrapper {
+  color: #73828A;
+  cursor: pointer;
+}
+
+.change-line-detail-wrapper:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: bold !important;
+}
+
+/**
+Credit note screen style
+ */
+
+@media only screen and (max-width: 768px) {
+  .amount-label-wrapper {
+    margin-left: 50% !important;
+    width: 14% !important;
+
+  }
+  .credit-amount-field-wrapper {
+    width: 36% !important;
+  }
+}
+
+.detail-view-drawer-full-screen {
+  max-height: 100% !important;
+  height: 100% !important;
+
+  .p-dialog-content {
+    height: 100%;
+  }
+}
+
+/**
+ files attached table file name table data style
+ */
+
+.file-name-wrapper {
+  height: 30px;
+  line-break: anywhere;
+}
+
+
+.cursor-loading {
+  cursor: wait;
+}
+
+//Scrollbar colour change for chrome in generate bills tbas in approved tranasctions
+.bill-tabs .p-tabview-nav::-webkit-scrollbar {
+  height: 5px;
+}
+
+.bill-tabs .p-tabview-nav::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.bill-tabs .p-tabview-nav::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: $green;
+}
+
+.detail-view-heading-wrapper {
+  color: $green;
+}
+
+//line level po receipt dropdown wrapper
+
+.po-receipt-dropbox-wrapper {
+  width: 100%;
+}
+
+.line-level-checkbox-wrapper {
+  position: relative;
+  align-items: center;
+  padding-top: 15px;
+
+  .checkbox-outer-wrapper {
+    position: absolute;
+  }
+}
+
+//values color of bill summery table in top of attachment section
+.invalid-line-value {
+  color: $tertiary-red;
+  font-weight: 600;
+}
+
+//line table footer link button in bill screens
+
+.outer-po-comparison-button-wrapper {
+  width: 22% !important;;
+}
+
+.po-comparison-label-wrapper {
+  margin-left: -166px;
+  margin-top: 5px;
+}
+
+.po-comparison-label-wrapper-with-pane {
+  margin-left: -10px;
+  margin-top: 5px;
+}
+
+.add-remove-item-wrapper {
+  width: 55%;
+  margin-top: 5px;
+}
+
+.show-po-line-item-wrapper {
+  width: 23%;
+}
+
+.show-po-line-item-inner-wrapper {
+  margin-left: 5px;
+  margin-top: 5px;
+}
+
+.line-table-comparison-linkButton:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: bold !important;
+}
+
+// tables item style
+
+.selected-item-wrapper {
+  cursor: pointer;
+  text-decoration: underline;
+  color: $green;
+}
+
+
+//billable expense table style
+
+.billable-expense-table-wrapper .p-datatable-thead > tr > th {
+  background-color: #78909C !important;
+  color: #fff !important;
+  font-weight: 400 !important;
+  padding: 10px !important;
+}
+
+.billable-expense-table-wrapper .p-datatable.p-datatable-gridlines .p-datatable-tbody > tr > td {
+  border-width: 1px !important;
+  padding: 12px 5px !important;
+}
+
+//hover style item / account in data table
+
+.item-default-color {
+  color: $secondary-dark-purple !important;
+  font-weight: 400 !important;
+  text-decoration: underline;
+}
+
+.account-default-color {
+  color: $editable-border !important;
+  font-weight: 400 !important;
+  text-decoration: underline;
+}
+
+.item-default-color-non-privilege {
+  @extend .item-default-color;
+  text-decoration: none !important;
+}
+
+.account-default-color-non-privilege {
+  @extend .account-default-color;
+  text-decoration: none !important;
+}
+
+.item-data-wrapper {
+  @extend .item-default-color;
+
+  &:hover {
+    cursor: pointer;
+    font-weight: bold;
+  }
+}
+
+.account-data-wrapper {
+  @extend .account-default-color;
+
+  &:hover {
+    cursor: pointer;
+    font-weight: bold;
+  }
+}
+
+//Draft list related style
+
+.draft-list-view-wrapper .p-dialog-header {
+  color: #73828A !important;
+  padding: 0.5rem 1rem 0 1rem !important;
+}
+
+.draft-list-view-wrapper .p-dialog-header .p-dialog-title {
+  font-size: 14px !important;
+}
+
+.draft-list-view-wrapper .p-dialog-header .p-dialog-header-icon:last-child {
+  margin-right: 0;
+  margin-left: 5px !important;
+}
+
+.draft-list-view-wrapper .p-dialog-content {
+  padding: 0 1.5rem 0 1.5rem !important;
+}
+
+.draft-list-dialog-box-wrapper {
+  width: 60vw;
+  min-width: 600px;
+  margin-top: 88px;
+  margin-right: 20px;
+}
+
+//drafted data override link
+
+.override-from-draft-wrapper {
+  margin-top: 5px;
+  color: $editable-border;
+
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: bold;
+  }
+}
+
+//bill line item tables footer link option divider pipe
+
+.divider-wrapper {
+  color: $dark-grey;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+
+.p-sidebar-content {
+  overflow-y: initial !important;
+}
+
+.p-sidebar {
+  display: block !important;
+}
+
+/////////////////////Inbox//////////////////////////
+.tabview-custom-wrap {
+  margin-top: -50px !important;
+
+  .p-tabview-panels {
+    padding: 15px 0 0 0 !important;
+  }
+
+  .p-tabview-nav-content li {
+    z-index: 2;
+  }
+}
+
+.p-0-tabview {
+  .p-tabview-panels {
+    padding: 1.5rem 0 0 0 !important;
+  }
+}
+
+.vendor-tabview {
+  .p-tabview-panels {
+    padding: 1rem 1rem 0 1rem !important;
+  }
+}
+
+.custom-p-overlaypanel .p-overlaypanel {
+  color: whitesmoke;
+
+  .p-overlaypanel-content {
+    font-weight: bold;
+    background: #3a4045;
+    padding-top: 14px !important;
+  }
+}
+
+.custom-p-editOverlay .p-overlaypanel .p-overlaypanel-content {
+  font-size: 15px;
+  color: #999999;
+
+  .custom-grid {
+    padding-top: 14px !important;
+  }
+
+  .custom-request-button {
+    padding-top: 26px !important;
+  }
+}
+
+.inbox-panels .p-tabview-nav .p-disabled {
+  display: none;
+}
+
+.custom-spinner .p-progress-spinner-circle {
+  animation: custom-progress-spinner-dash 1.5s ease-in-out infinite, custom-progress-spinner-color 6s ease-in-out infinite;
+}
+
+.notification-count-wrapper .p-badge.p-badge-danger {
+  background-color: $secondary-yellow;
+  color: $white;
+  margin-right: 0;
+  padding: 0;
+}
+
+:host .notification-count-zero .p-badge.p-badge-danger {
+  display: none;
+}
+
+.sync-wrapper .p-button {
+  width: auto !important;
+}
+
+.p-sidebar-wrapper-inbox .p-sidebar-active {
+  overflow: hidden !important;
+}
+
+
+.pdf-wrap {
+  .custom-button .toolbarButton {
+    color: #555555 !important;
+    float: right !important;
+  }
+
+  .custom-button .toolbarButton:first-child {
+    position: relative;
+    top: 0;
+  }
+
+  .custom-button .toolbarButton:nth-child(2) {
+    position: relative;
+    top: 15px !important;
+  }
+
+  .custom-button .zoomIn {
+    position: relative;
+    top: 25px !important;
+  }
+
+  .custom-button .zoomOut {
+    position: relative;
+    top: 35px !important;
+  }
+
+  .custom-button .hiddenSmallView {
+    position: relative;
+    top: 45px !important;
+  }
+
+  .next-previous-btn .toolbarButton {
+    color: #555555 !important;
+  }
+
+  .custom-button-forBill .toolbarButton {
+    color: #3BB2AE !important;
+    float: left !important;
+  }
+
+  .custom-delete-button-wrap .p-button {
+    float: right;
+    color: #3BB2AE !important;
+    background: none;
+
+    .pi-trash {
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+
+  #toolbarContainer, ngx-extended-pdf-viewer .findbar, ngx-extended-pdf-viewer .secondaryToolbar {
+    position: relative;
+    height: 70px;
+    padding: 5px 10px 5px 5px;
+    background-color: #FFFFFF !important;
+  }
+
+  #errorWrapper {
+    left: 231px !important;
+    width: 50% !important;
+  }
+
+  #loadingBar {
+    position: relative;
+    width: 100%;
+    height: 4px;
+    background-color: #fff;
+    border-bottom: 1px solid #fff;
+  }
+
+
+  .pdfViewer .page {
+    border-image: unset !important;
+    border: unset !important;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25) !important;
+  }
+
+  .grab-to-pan-grab {
+    top: 134px !important;
+    background-color: #f4f6f9 !important;
+    padding-top: 36px;
+
+  }
+
+  .toolbarField.pageNumber {
+    background: no-repeat;
+    text-align: end;
+    border: none;
+    font-size: 11px;
+    color: #999999;
+    min-width: 13px !important;
+    padding: 0;
+    width: 2px !important;
+    vertical-align: super;
+  }
+
+  .custom-prives-button .toolbarButton {
+    color: #3BB2AE !important;
+  }
+
+  .zoom .loadingInProgress .toolbar {
+    padding: 10px 11px 38px 11px !important;
+    background: #FFFFFF !important;
+    z-index: 1000;
+  }
+
+  .toolbarLabel {
+    font-size: 11px !important;
+    color: #999999 !important;
+    vertical-align: super;
+  }
+
+  #mainContainer {
+    background-color: #f4f6f9 !important;
+  }
+
+  zoom .grab-to-pan-grab {
+    top: 82px !important;
+  }
+
+  .zoom .loadingInProgress .toolbar {
+    padding: 10px 11px 38px 11px !important;
+    background: #FFFFFF;
+    z-index: 1000;
+  }
+
+  .zoom .loadingInProgress .toolbar {
+    padding: 11px 11px 46px 11px !important;
+  }
+}
+
+@media only screen and (max-width: 1500px) {
+  .pdf-wrap .custom-button .toolbarButton {
+    display: unset !important;
+
+  }
+}
+
+@media only screen and (max-width: 1366px) {
+  .pdf-wrap {
+    .zoom .loadingInProgress .toolbar {
+      padding: 11px 11px 64px 11px !important;
+      background: #FFFFFF;
+      z-index: 1000;
+    }
+  }
+}
+
+.p-virtualScroller-wrap .p-virtualscroller .p-virtualscroller-content .p-virtualscroller-list .p-virtualscroller-item {
+  cursor: pointer;
+}
+
+.p-virtualScroller-wrap .p-virtualscroller .p-virtualscroller-content .p-virtualscroller-list {
+  //height: 507px !important;
+  overflow-x: hidden !important;
+}
+
+.p-virtualScroller-hide .p-virtualscroller .p-virtualscroller-content .p-virtualscroller-list {
+  overflow-x: hidden !important;
+}
+
+.expense-tabs ul .p-disabled {
+  display: none !important;
+}
+
+/////////////////////////////////////////////
+.full-screen-side-bar-height {
+  display: block !important;
+}
+
+.layout-content {
+  padding-left: 1px !important;
+  padding-right: 0.5rem !important;
+  padding-top: 0 !important;
+}
+
+.action-btn-top-grid {
+  position: absolute;
+  right: 0
+}
+
+.layout-menu .menu-separator {
+  margin: 2px 0 !important;
+  border-color: transparent !important;
+}
+
+.cdk-drag-preview {
+  .column-item {
+
+    p-checkbox {
+      position: absolute !important;
+    }
+
+    .column-name {
+      margin: 1px 5px 0 30px !important;
+    }
+
+    .drag-icon {
+      position: absolute !important;
+      right: 14px !important;
+      top: 10px !important;
+    }
+  }
+}
+
+//common footer buttons styles
+.footer {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #ffffff;
+  z-index: 10;
+  width: 100%;
+}
+
+//footer buttons styles outer div wrapper
+
+.button-set-wrapper {
+  background-color: $drop-zone-background;
+  width: 100% !important;
+}
+
+.footer-bottom {
+  position: fixed;
+  width: 100.5%;
+}
+
+.footer-side-drawer {
+  bottom: 0;
+  background-color: $background-gray;
+  width: -webkit-fill-available;
+  margin-right: -1rem !important;
+  margin-left: -1rem !important;
+  position: sticky;
+}
+
+.p-sidebar {
+  padding-bottom: 0 !important;
+}
+
+@media screen and (min-width: 992px) {
+  .layout-wrapper.layout-slim .layout-menu .layout-root-menuitem > a .layout-menuitem-text {
+    font-size: 10px !important;
+    padding: 1px !important;
+  }
+  .layout-wrapper.layout-slim .layout-sidebar {
+    width: 84px !important;
+  }
+  .layout-wrapper.layout-slim .layout-menu .layout-root-menuitem > a .layout-menuitem-icon {
+    font-size: 16px !important
+  }
+}
+
+.p-datatable table {
+  font-size: 12px !important;
+}
+
+.pull-right {
+  float: right;
+}
+
+.pull-left {
+  float: left;
+}
+
+////////////////Grid///////////////////
+.table-column-sidebar {
+  z-index: 2;
+
+  .table-column-order {
+    .p-orderlist-controls {
+      display: none;
+    }
+
+    .column-item {
+
+      p-checkbox {
+        position: absolute !important;
+      }
+
+      .column-name {
+        //font-size: 14px;
+        margin: 1px 5px 0 30px
+      }
+
+      .drag-icon {
+        position: absolute !important;
+        right: 14px !important;
+        top: 10px !important;
+        visibility: hidden;
+
+        &:hover {
+          cursor: pointer;
+          color: $green;
+        }
+      }
+
+
+    }
+
+
+    .p-orderlist-list-container ul {
+      border: none;
+
+      li {
+        background: none !important;
+        margin-top: 10px !important;
+        margin-bottom: 10px !important;
+
+        &:hover {
+          .drag-icon {
+            visibility: visible;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+//draft list popup
+.draft-list-table-row {
+  height: 30px;
+  word-break: break-all;
+}
+
+.checkbox-icon {
+  color: $tertiary-blue;
+}
+
+p-table .p-paginator-bottom {
+  background-color: $tertiary-light-gray !important;
+}
+
+
+.p-button {
+  border-radius: 6px !important;
+  font-size: 1rem !important;
+}
+
+.p-button:hover {
+  background-color: $dark-green !important;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.p-button-outlined {
+  border: solid 1px $light-black !important;
+  color: $light-black !important;
+  font-size: 1rem !important;
+  @extend .p-button;
+
+  &:hover {
+    background-color: $white !important;
+    color: $light-black !important;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25) !important;
+  }
+}
+
+.p-column-filter-add-button {
+  @extend .p-button-outlined
+}
+
+.p-column-filter-remove-button {
+  @extend .p-button-outlined
+}
+
+.p-datepicker-buttonbar .p-button {
+  @extend .p-button-outlined;
+}
+
+.p-button-borderless {
+  @extend .p-button;
+  color: $light-black !important;
+  background-color: $white !important;
+
+  &:hover {
+    background-color: $white !important;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.25) !important;
+    border: solid 1px $light-gray-3 !important;
+  }
+}
+
+.browse-button-wrapper {
+  padding: 2px 4px !important;
+  width: 115px !important;
+  height: 26px !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  font-stretch: normal !important;
+  margin-left: 12px !important;
+  margin-bottom: 5px !important;
+  border-radius: 6px !important;
+}
+
+.remove-file-upload-input-boarder {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+
+.file-browse {
+  border-bottom-left-radius: 0 !important;
+  border-top-left-radius: 0 !important;
+  margin-right: 5px !important;
+  padding-right: 20px !important;
+}
+
+.grid-icon-only-btn {
+  border-radius: 50% !important;
+  color: $light-black !important;
+  background-color: transparent !important;
+  padding: 5px !important;
+  font-size: 16px !important;
+
+  &:hover {
+    background-color: $dark-gray !important;
+  }
+
+  .p-button-icon {
+    font-size: inherit !important;
+  }
+}
+
+.grid-icon-only-btn:disabled,
+.grid-icon-only-btn[disabled] {
+
+  &:hover {
+    background-color: transparent !important;
+    box-shadow: none;
+  }
+}
+
+.grid-action-btn {
+  @extend .grid-icon-only-btn;
+  padding: 4px !important;
+  font-size: 12px !important;
+
+  &:hover {
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+}
+
+.p-sidebar-sm,
+.p-sidebar-md,
+.p-sidebar-lg {
+  padding: 0 !important;
+
+  .side-bar-drawer-content {
+    min-height: calc(100vh - 117px);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .grid:nth-child(1) {
+    //padding: 1rem;
+  }
+
+  .p-sidebar-header {
+    padding: 1rem;
+  }
+}
+
+.p-sidebar-header {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+
+.conf-reject-btn {
+  color: white;
+  background-color: $red !important;
+
+  &:hover {
+    color: white;
+    background-color: $dark-red !important;
+  }
+}
+
+.reject-btn {
+  @extend .conf-reject-btn;
+}
+
+.support-ticket-dialog-wrapper .p-dialog-content {
+  overflow-y: scroll !important;
+}
+
+.secondary-topic {
+  color: #555555;
+  font-size: 22px;
+}
+
+.side-drawer-topic {
+  color: #555555;
+  font-size: 18px;
+}
+
+.manage-doc-dialog-wrapper .p-dialog-content {
+  overflow-y: clip !important;
+}
+
+.payment-create-table .p-datatable-tbody > tr > td {
+  .p-calendar {
+    position: inherit;
+    display: flex;
+
+    .p-datepicker-trigger {
+      position: inherit;
+    }
+  }
+}
+
+//dropzone component related common styles
+
+.drop-zone-style {
+  border-color: $light-black !important;
+  background-color: $drop-zone-background !important;
+  border-radius: 20px !important;
+}
+
+.dp-zone-small-text-wrapper {
+  color: $secondary-black-grey !important;
+  font-size: 14px !important;
+  font-weight: normal !important;
+  margin-top: 20px;
+}
+
+.dp-zone-big-text-wrapper {
+  color: $light-black !important;
+  font-weight: bold;
+}
+
+//side drawer close icon style
+
+.side-drawer-close-icon {
+  width: 17.7px;
+  height: 16px;
+  font-size: 22px;
+  color: $light-black;
+  cursor: pointer !important;
+
+  &:hover {
+    font-weight: bold !important;
+  }
+}
+
+.side-drawer-icon {
+  font-size: 16PX;
+  padding: 10px;
+  margin-right: 5px;
+  width: 36px;
+  border-radius: 50%;
+  text-align: center;
+  background: none;
+  border: none;
+
+  &:hover {
+    background-color: $dark-gray !important;
+    cursor: pointer !important;
+  }
+}
+
+
+.side-drawer-close-icons-outer-wrapper {
+  padding: 1rem 24px 1rem 1rem !important;
+}
+
+//all system links
+
+@mixin hyperlink-common-style {
+  color: $tertiary-blue !important;
+  cursor: pointer !important;
+  font-size: 12px !important;
+  text-decoration: underline !important;
+  font-weight: normal !important;
+}
+
+//links style of table footer
+.hyperlink {
+  @include hyperlink-common-style;
+  align-self: self-end;
+}
+
+//links inside tables
+.selectedHover {
+  @include hyperlink-common-style;
+}
+
+//all modules heading label styles
+
+.module-header-label {
+  color: $secondary-black-grey !important;
+  font-size: 22px;
+  font-weight: bold;
+  font-stretch: normal;
+}
+
+//
+
+.no-grid-lines {
+  .p-datatable-thead {
+    z-index: 2 !important;
+  }
+}
+
+.p-sidebar-left.pSideBarCustom, .p-sidebar-right.pSideBarCustom {
+  width: 66rem !important;
+}
+
+@media screen and (max-width: 1366px) {
+  .p-sidebar-left.pSideBarCustom, .p-sidebar-right.pSideBarCustom {
+    width: 50rem !important;
+  }
+}
+
+
+//receipt view button style in line item tables
+
+.receipt-view-button {
+  height: 27px !important;
+  width: 6px !important;
+  margin-top: 2px !important;
+  padding: 11px !important;
+  background-color: #D0D5D8 !important;
+  opacity: 1 !important;
+
+  &:hover {
+    background-color: #D0D5D8 !important;
+  }
+}
+
+//alert style  of po remaining ceiling exceeded bill amount
+
+.worn-message {
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+  font-size: 12px;
+}
+
+.worn {
+  position: relative;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+}
+
+.alert-close-btn-wrapper {
+  padding: 3px;
+
+  &:hover {
+    font-weight: bold;
+    cursor: pointer;
+  }
+}
+
+//system form footer buttons style
+
+.form-footer-button .p-button {
+  padding: 11px 30px !important;
+}
+
+.form-footer-button .p-button.approval {
+  padding: 11px 10px !important;
+}
+
+//popup heading style
+
+.popup-header-label {
+  color: $secondary-black-grey;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+//remove outer card border
+
+.remove-card-boarder {
+  box-shadow: none !important;
+  border: none !important;
+}
+
+//common field label styles
+
+@mixin label-common-style {
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  color: $secondary-black-grey;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 5px !important;
+}
+
+//remove line item button
+
+.item-remove-button {
+  color: #9c9c9c;
+}
+
+.item-remove-button:hover {
+  cursor: pointer;
+  background-color: #D0D5D8;
+  opacity: 1;
+}
+
+
+//full screen side bar remove paddings
+
+.remove-p-sidebar-inner-padding {
+  padding: 0 !important;
+}
+
+.remove-invoice-upload-padding {
+  padding-bottom: 0 !important;
+}
+
+//Master form inner paddings
+
+.form-padding {
+  padding: 25px !important;
+}
+
+//heading field labels styles
+
+.label-wrapper {
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  color: $secondary-black-grey;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+//attachment view section related buttons styles
+
+.table-action-icon {
+  text-align: left !important;
+}
+
+.po-taxField-wrapper span {
+  color: #b2b2b2;
+  font-weight: 100;
+  align-self: center;
+}
+
+.tax-value-alignment input {
+  text-align: right !important;
+}
+
+p-tableheadercheckbox {
+  border-left: 5px solid transparent !important;
+}
+
+.cdk-drag-preview {
+  z-index: 1000000 !important;
+}
+
+.back-ground-white {
+  //background-color: white;
+}
+
+.panel-footer {
+  position: sticky !important;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.pdf-icon-wrapper {
+  padding: 32px 25px 25px 25px;
+  font-size: 30px;
+  color: $offline-gray;
+  cursor: pointer;
+}
+
+
+.reminder-configuration .p-dialog-content {
+  padding: 0 !important;
+}
+
+.remove-sidebar-padding {
+  padding: 0 !important;
+}
+
+.parent-project .p-dropdown-items-wrapper {
+  max-width: 350px;
+  overflow-x: scroll;
+}
+
+.field small {
+  color: #b2b2b2;
+}
+
+.p-inputtextarea {
+  font-family: arial, medium;
+}
+
+.po-approve-file-grid {
+  .p-datatable-scrollable-table > .p-datatable-thead {
+    z-index: 0;
+  }
+}
+
+
+.project-code-table .p-treetable-scrollable-body {
+  overflow: auto;
+  max-height: 71vh;
+}
+
+
+//project task create
+
+.mapping-label {
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  color: $secondary-black-grey;
+  margin-left: 9px;
+}
+
+.form-header {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  width: calc(100vw - 23px);
+  background: white;
+}
+
+//table amount header in detail table
+
+.detail-table-header-right {
+  text-align-last: right !important;
+}
+
+.detail-table-header-left {
+  text-align-last: left !important;
+}
+
+.detail-table-header-center {
+  text-align-last: center !important;
+}
+
+.dialog-box-no-padding .p-dialog-content {
+  padding: 0 !important;
+}
+
+//provider related changes
+.provider-setup .p-sidebar-header {
+  position: relative !important;
+}
+
+.provider-setup.p-sidebar-lg {
+  width: 78rem !important;
+}
+
+//invalid field mark in payment info section user/vendor
+
+.isSelectedCheck {
+  input {
+    background-color: rgba(246, 226, 45, 0.3);
+  }
+
+  span input {
+    border: solid 1px #d2d2d2;
+  }
+
+  .p-dropdown {
+    background-color: rgba(246, 226, 45, 0.3) !important;
+  }
+
+  .p-element .p-dropdown-filter-container {
+    input {
+      background-color: white !important;
+    }
+  }
+}
+
+.validate-check {
+  color: #f44336 !important;
+}
+
+.v-card-audit-trail {
+  .p-timeline-event-opposite {
+    display: none !important;
+  }
+
+  .p-timeline-event-separator {
+    .marker {
+      border-radius: 8px;
+      padding: 10px;
+
+      i {
+        font-size: 18px;
+      }
+    }
+  }
+
+  .p-timeline-event-content {
+    h5 {
+      font-size: 14px;
+      color: $secondary-black-grey;
+    }
+
+    .data {
+      margin-top: 5px;
+
+      .description {
+        background-color: $light-gray-2;
+        padding: 15px;
+        border-radius: 12px;
+      }
+    }
+  }
+}
+
+//invalid field if available in payment info section user/vendor
+.payment-fields-invalid {
+  width: 100%;
+  padding: 5px;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+  background-color: #fff3cd;
+  align-items: center;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  color: $light-black;
+  margin-left: 5px !important;
+  line-height: 20px;
+
+  span {
+    margin-right: 5px;
+    margin-left: 1px;
+  }
+}
+
+.custom-user-edit-bar {
+  width: 72rem !important;
+}
+
+.white-tool-tip {
+  .p-tooltip-text {
+    background-color: $white !important;
+    color: $black !important;
+  }
+
+  .p-tooltip-arrow {
+    border-bottom-color: $white !important;
+  }
+}
+
+.p-datatable .p-datatable-tbody > tr {
+  vertical-align: top !important;
+}
+
+
+.z-index {
+  z-index: 1
+}
+
+.exp-receipt {
+  .p-dataview-content {
+    height: calc(100vh - 335px) !important;
+    overflow-y: auto !important;
+
+    .grid-nogutter {
+      margin-right: 12px;
+    }
+  }
+}
+
+.exp-receipt-detail {
+  .p-dataview-content {
+    height: calc(100vh - 342px) !important;
+  }
+}
+
+.text-align-end {
+  text-align: end;
+}
+
+.upload-one-file {
+  width: 737px !important;
+}
+
+.vendor-item-mapping .p-dialog-content {
+  overflow-y: hidden !important;
+}
+
+.vendor-item-detail .p-sidebar-header > p {
+  color: lightgray !important;
+  font-size: 14px;
+  margin-left: 8px;
+  font-weight: 100 !important;
+}
+
+.vendor-item-detail .p-sidebar-content {
+  padding: 0 !important;
+}
+
+.vendor-item-detail {
+  padding-right: 6px !important;
+}
+
+.collapsible-group-vendor-item .p-scroller {
+  overflow-x: hidden !important;
+}
+
+.vendor-item-detail {
+  padding-left: 0 !important;
+
+  .p-sidebar-header {
+    padding-left: 25px !important;
+  }
+}
+
+.p-datepicker {
+  .p-datepicker-group-container {
+    .p-datepicker-group {
+      .p-datepicker-calendar-container {
+        .p-datepicker-calendar {
+          td {
+            padding: 0.2rem;
+
+            span {
+              height: 2rem;
+              width: 2rem;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .p-datepicker-header {
+    padding: 0 !important;
+  }
+
+  .p-datepicker-buttonbar {
+    padding: 0.5rem 0 0.2rem !important;
+
+  }
+}
+
+.approve-alignment {
+  display: inline-flex;
+  padding-bottom: 10px !important;
+
+  .text {
+    font-size: 12px
+  }
+
+  .approve-text {
+    color: #d2d2d2;
+  }
+
+  .approve-icon {
+    color: #4bc290;
+    font-size: 14px;
+  }
+
+  .reject-icon {
+    color: red;
+    font-size: 14px;
+  }
+}
+
+.iti--allow-dropdown {
+  width: 100%;
+}
+
+#country-search-box {
+  height: 28px;
+  outline: none;
+}
+
+.iti__divider {
+  width: 122%;
+}
+
+.iti__divider {
+  width: 122%;
+}
+
+.iti__flag-container {
+  width: 100%;
+}
+
+.iti__selected-flag {
+  position: absolute !important;
+}
+
+
+.iti__country-list {
+  width: 100% !important;
+}
+
+.country-input {
+  border-color: #f44336 !important;
+}
+
+.country-dropdown {
+  @extend .p-inputtext;
+  width: 100% !important;
+
+  .search-container {
+    .country-search-box {
+      input {
+        @extend .p-inputtext ;
+      }
+    }
+  }
+}
+
+.activity-log {
+  .p-sidebar-header {
+    align-items: baseline !important;
+  }
+}
+
+.invalid-vendor-item-line .p-dropdown {
+  border-color: #f44336 !important;
+  border-width: 2px !important;
+}
+
+
+.invalid-vendor-item-line {
+  border-color: #f44336 !important;
+  border-width: 2px !important;
+}
+
+.item-mapping-table-checkbox {
+  margin-left: 4px !important;
+}
+
+
+@media only screen and (max-width: 1366px) {
+  .vendor-item-table .p-datatable-wrapper {
+    max-height: 520px !important;
+  }
+
+  .payment-fields-invalid {
+    font-size: 13px;
+
+    span {
+      margin-right: 8px;
+      margin-left: 5px;
+    }
+  }
+}
+
+.payment-drawer {
+  z-index: 1001 !important;
+}
+
+//credit note related popups
+
+.apply-credit-wrapper .p-dialog-content {
+  overflow-y: hidden !important;
+  padding: 0 !important;
+  width: 67vw !important;
+}
+
+.credit-amount-field-wrapper {
+  text-align: right !important;
+}
+
+.dialog-padding-zero {
+  .p-dialog-content {
+    padding: 0 !important;
+  }
+}
+
+.borderless-pdf {
+  #viewerContainer {
+    background-color: white !important;
+  }
+
+  .pdfViewer .page {
+    margin-top: 7px !important;
+    border: none !important;
+    box-shadow: 0px 0px 2px 1px #c3c3c3 !important;
+  }
+
+  .toolbar {
+    border-bottom: none !important;
+
+    #toolbarContainer {
+      height: 33px !important;
+      background-color: $white;
+    }
+  }
+}
+
+.dp-footer {
+  padding: 7px 7px 0px 7px;
+
+  .button-wrapper {
+    border-top: 1px #e3e3e3 solid;
+
+    button {
+      width: auto !important;
+    }
+  }
+}
+
+.p-datatable.p-datatable-hoverable-rows .p-datatable-tbody > tr:not(.p-highlight):hover {
+  .link {
+    color: $white !important;
+  }
+}
+
+.paginator-lifted {
+  .p-paginator {
+    justify-content: right !important;
+    border-bottom-width: 0 !important;
+  }
+
+  .p-paginator-top {
+    border-radius: 8px 0 0 0 !important;
+    //box-shadow: 0px 1px 2px 0px !important;
+  }
+}
+
+.page-no-style {
+  .p-paginator .p-paginator-pages .p-paginator-page {
+    min-width: 1.643rem !important;
+    height: 1.643rem !important;
+  }
+
+}
+
+
+.detail-table-configurations {
+  .p-datatable-wrapper {
+    max-height: 294px !important;
+  }
+
+  .label-width {
+    .p-multiselect .p-multiselect-label {
+      max-width: 100px !important;
+    }
+  }
+}
+
+.freeze-50 {
+  right: 50px !important;
+}
+
+.freeze-0 {
+  right: 0px !important;
+}
+
+.custom-table-loader {
+  padding: 150px;
+  text-align: center;
+
+  img {
+    height: 41px;
+  }
+
+  .process-lg-label {
+    font-size: 20px;
+    display: inline-table;
+    color: $secondary-black-grey;
+  }
+
+  .process-sm-label {
+    padding-top: 5px !important;
+    font-size: 14px;
+    color: #bcbcbc;
+  }
+}
+
+
+.receipt-action-menu {
+  .p-menu-overlay {
+    margin-top: 32px !important;
+  }
+}
+
+.detail-form {
+  .field {
+    margin-bottom: 20px;
+
+    label {
+      font-size: 12px;
+      color: $secondary-black-grey;
+      margin-bottom: 14px;
+      font-weight: bold;
+    }
+
+    div {
+      font-size: 14px;
+      color: $secondary-black-grey;
+    }
+  }
+
+  .payment-type {
+    label.col-12 {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+
+    .payment-type-item {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition-duration: 0.4s;
+
+      .payment-type-headline {
+        border-bottom: 4px solid #4bc290 !important;
+        width: 35%;
+
+        &:hover {
+          background-color: #f1f1f1;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+      }
+
+      .additional-info {
+        display: none;
+        flex-direction: column;
+        padding-top: 7px;
+
+        &.active {
+          display: flex;
+        }
+      }
+    }
+
+    .info-label {
+      margin-top: 5px;
+      font-weight: bold;
+    }
+  }
+}
+
+.isConfirmation {
+  .p-dialog .p-dialog-content {
+    border-bottom-right-radius: 6px !important;
+    border-bottom-left-radius: 6px !important;
+  }
+}
+
+.po-receipt-content .p-sidebar-content {
+  overflow-y: auto !important;
+}
+
+.borderless-accordion {
+  .p-accordion-header-link {
+    border: none !important;
+    margin-bottom: 4px;
+  }
+
+  .p-accordion-content {
+    border: none !important;
+  }
+}
+
+.p-progressbar-label {
+  color: white !important;
+}
+
+.p-progressbar-value {
+  background: $green !important;
+}
+
+.payment-upload-panel {
+  .p-tabview-nav-container {
+    padding-left: 12px;
+  }
+}
+
+.p-datatable-scrollable-table > .p-datatable-tbody > .p-rowgroup-header {
+  background-color: $light-gray-2 !important;
+
+  td {
+    border-top: 1px solid $offline-gray;
+  }
+}
+
+.sort-icon-wrapper {
+  .grid-sort-icon {
+    content-visibility: hidden;
+  }
+
+  &:hover {
+    .grid-sort-icon {
+      content-visibility: visible !important;
+    }
+  }
+}
+
+.p-highlight {
+  .grid-sort-icon {
+    content-visibility: visible !important;
+  }
+}
+
+.funding-acc-panel {
+  .p-panel-header {
+    padding: 8px 12px !important;
+  }
+
+  .p-panel-header-icon {
+    display: none;
+  }
+}
+
+.funding-acc-sidebar {
+  .p-sidebar-header {
+    padding-left: 20px;
+  }
+}
+
+.role-accordion-header-text-light {
+  .p-accordion-header {
+    .p-accordion-header-link {
+      font-weight: 400 !important;
+      color: $offline-gray !important;
+    }
+  }
+}
+
+/* This style can be use to remove calender clear button using todayButtonStyleClass property */
+.d-card-calendar-clear-btn {
+  display: none !important;
+}
+
+/* This style related to bill assign component */
+.billAssignSidebar {
+  overflow: hidden !important;
+}
+
+.paginator-top-table-actions{
+  padding-right: 7px;
+  margin-bottom: -65px;
+  z-index: 1;
+  align-self: center;
+}
+
+.text-over-flow{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.iframe-split > div {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+.hack-iframe-hider {
+  //background: rgba(0, 0, 0, .2);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}

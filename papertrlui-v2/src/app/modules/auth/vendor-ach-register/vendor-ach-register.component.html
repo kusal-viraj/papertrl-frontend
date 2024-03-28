@@ -1,0 +1,223 @@
+<div class="layout-topbar top-bar-custom">
+  <div class="topbar-left">
+    <img id="logo-mobile" class="logo-desktop" src="../../../../assets/images/header-white-logo.png" alt="PaperTrl"/>
+  </div>
+</div>
+
+<!--Vendor ACH Register Form-->
+<ng-container *ngIf="showDetailForm">
+  <div class="container">
+    <div class="register">
+      <div class="content">
+        <img src="../../../../assets/images/vendor-ach-register/ACH_reg_image.png" alt="vendor ach register page image">
+        <div class="ach-payment-info">
+          <p><span>Let's Get You Paid</span><br>
+            <span class="ml-4"><i>Faster & Secure</i></span></p>
+        </div>
+      </div>
+
+
+      <div class="registerform p-fluid">
+        <h3>Complete Your ACH Payment Information</h3>
+        <form [formGroup]="vendorACHDetailForm" (ngSubmit)="onSubmit(vendorACHDetailForm.value)">
+
+          <div class="tbox">
+            <label class="label-wrapper">Your Company Name*</label>
+            <span class="p-float-label">
+                <input autocomplete="off" blockSpace formControlName="companyName" id="name" maxlength="22" pInputText
+                       type="text">
+              </span>
+            <div *ngIf="vendorACHDetailForm.get('companyName').dirty && vendorACHDetailForm.get('companyName').errors"
+                 class="p-invalid  text-align-left">
+              <div *ngIf="vendorACHDetailForm.get('companyName').errors.required">Company Name is required</div>
+            </div>
+          </div>
+
+          <div class="tbox">
+            <label class="label-wrapper" for="accountType">Account Type*</label>
+            <p-dropdown [options]="accountTypes" id="accountType" [autoDisplayFirst]="false" [filter]="true"
+                        optionDisabled="inactive" formControlName="accountType" [showClear]="true">
+            </p-dropdown>
+            <div class="p-invalid text-align-left"
+                 *ngIf="vendorACHDetailForm.get('accountType').dirty && vendorACHDetailForm.get('accountType').errors">
+              Account Type is required
+            </div>
+          </div>
+
+          <div class="tbox">
+            <label class="label-wrapper" for="recipientType">Recipient Type*</label>
+            <p-dropdown [options]="recipientTypes" id="recipientType" [autoDisplayFirst]="false" [filter]="true"
+                        optionDisabled="inactive" formControlName="recipientType" [showClear]="true">
+            </p-dropdown>
+            <div class="p-invalid text-align-left"
+                 *ngIf="vendorACHDetailForm.get('recipientType').dirty && vendorACHDetailForm.get('recipientType').errors">
+              Recipient Type is required
+            </div>
+          </div>
+
+          <div class="tbox">
+            <label class="label-wrapper" for="accountNumber">Account Number*</label>
+            <span class="p-float-label">
+            <input autocomplete="off" blockSpace
+                   formControlName="accountNumber" id="accountNumber"
+                   maxlength="17" pInputText pKeyFilter="pint" type="text">
+          </span>
+            <div *ngIf="vendorACHDetailForm.get('accountNumber').dirty && vendorACHDetailForm.get('accountNumber').errors"
+                 class="p-invalid  text-align-left">
+              <div *ngIf="vendorACHDetailForm.get('accountNumber').errors.required">Account Number is required</div>
+            </div>
+          </div>
+
+          <div class="tbox">
+            <label class="label-wrapper" for="confirmAccountNumber">Confirm Account Number*</label>
+            <span class="p-float-label">
+            <input autocomplete="off" blockSpace formControlName="confirmAccountNumber" id="confirmAccountNumber"
+                   maxlength="17" pInputText pKeyFilter="pint" type="text">
+          </span>
+            <div class="p-invalid text-align-left"
+                 *ngIf="vendorACHDetailForm.get('confirmAccountNumber').dirty && vendorACHDetailForm.get('confirmAccountNumber').errors">
+              <div *ngIf="vendorACHDetailForm.get('confirmAccountNumber').hasError('matchingAccountNumber')">
+                Account Numbers do not match
+              </div>
+            </div>
+          </div>
+
+          <div class="tbox">
+            <label class="label-wrapper" for="accountRoutingNumber">Bank Identification Number / Routing Number*</label>
+            <span class="p-float-label">
+            <input autocomplete="off" blockSpace formControlName="accountRoutingNumber"
+                   id="accountRoutingNumber" maxlength="9" pInputText pKeyFilter="pint" type="text">
+          </span>
+            <div
+              *ngIf="vendorACHDetailForm.get('accountRoutingNumber').dirty &&
+            vendorACHDetailForm.get('accountRoutingNumber').errors" class="p-invalid  text-align-left">
+              <div *ngIf="vendorACHDetailForm.get('accountRoutingNumber').errors.required">Bank Identification Number /
+                Routing Number is required
+              </div>
+            </div>
+          </div>
+
+          <div class="tbox">
+            <label class="label-wrapper" for="confirmRoutingNumber">
+              Confirm Bank Identification Number / Routing Number *
+            </label>
+            <span class="p-float-label">
+            <input autocomplete="off" blockSpace formControlName="confirmRoutingNumber"
+                   id="confirmRoutingNumber" maxlength="9" pInputText pKeyFilter="pint" type="text">
+          </span>
+            <div class="p-invalid text-align-left"
+                 *ngIf="vendorACHDetailForm.get('confirmRoutingNumber').dirty &&
+               vendorACHDetailForm.get('confirmRoutingNumber').errors"> Bank Identification Numbers do not match
+            </div>
+          </div>
+
+          <div class="tbox">
+            <label class="label-wrapper" for="remitEmailAddress">Remittance E-mail</label>
+            <div class="p-inputgroup">
+            <span class="p-float-label">
+              <input blockSpace formControlName="remittanceEmail" id="remitEmailAddress" maxlength="150"
+                     pInputText type="text">
+            </span>
+            </div>
+            <div
+              *ngIf="vendorACHDetailForm.get('remittanceEmail').dirty &&
+            vendorACHDetailForm.get('remittanceEmail').errors" class="p-invalid  text-align-left">
+              <div *ngIf="vendorACHDetailForm.controls['remittanceEmail'].hasError('emailValidate')">Remittance
+                Email must be a valid email address
+              </div>
+            </div>
+          </div>
+
+          <div class="pull-left" style="display:flex">
+            <button pButton type="button" (click)="resetForm()" label="Reset"
+                    class="p-button-outlined p-button-sm"></button>&nbsp;
+            <button pButton class="p-button-sm" type="submit" [disabled]="loading" label="Submit"></button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<!--Vendor ACH Register Already Filled UI-->
+<ng-container *ngIf="alreadyCreated">
+  <div class="exception-body mobile-fields" >
+    <div class="exception-content">
+      <div class="exception-detail">
+        <div class="grid">
+          <p-card class="card-custom" styleClass="p-card-shadow-remove card-custom">
+            <div class="card-custom-padding">
+              <img ngSrc="../../../../assets/images/vendor-ach-register/details_received.jpg" alt="" height="176" width="264">
+              <h5 class="card-header-custom">ACH Payment details received!</h5>
+              <p class="card-subheader-custom">We have successfully received your submission. You don't need to submit
+                them again</p>
+            </div>
+          </p-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<!--Vendor ACH Register Old Link Expire UI-->
+<ng-container *ngIf="oldLinkExpired">
+  <div class="exception-body mobile-fields" >
+    <div class="exception-content">
+      <div class="exception-detail">
+        <div class="grid">
+          <p-card class="card-custom" styleClass="p-card-shadow-remove card-custom">
+            <div class="card-custom-padding">
+              <img ngSrc="../../../../assets/images/vendor-ach-register/details_received.jpg" alt="" height="176" width="264">
+              <h5 class="card-header-custom">ACH Payment details received!</h5>
+              <p class="card-subheader-custom">The link you clicked to update your ACH information is no longer valid.
+                Check your inbox (and spam folder) for the latest secure link.</p>
+            </div>
+          </p-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<!--Vendor ACH Register Link Expire UI-->
+<ng-container *ngIf="linkExpired">
+  <div class="exception-body mobile-fields" >
+    <div class="exception-content">
+      <div class="exception-detail">
+        <div class="grid">
+          <p-card class="card-custom" styleClass="p-card-shadow-remove card-custom">
+            <div class="card-custom-padding">
+              <img ngSrc="../../../../assets/images/vendor-ach-register/link_expired.jpg" alt="" height="160" width="240">
+              <h5 class="card-header-custom">The link has expired!</h5>
+              <p class="card-subheader-custom">The link you clicked has expired. You should receive a
+                new link in your inbox.</p>
+            </div>
+          </p-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<!--Vendor ACH Register Success UI-->
+<ng-container *ngIf="registerSuccess">
+  <div class="exception-body mobile-fields" >
+    <div class="exception-content">
+      <div class="exception-detail">
+        <div class="grid">
+          <p-card class="card-custom" styleClass="p-card-shadow-remove card-custom">
+            <div class="card-custom-padding">
+              <img ngSrc="../../../../assets/images/vendor-ach-register/submitted_successfully.jpg" alt="" height="155" width="248">
+              <h5 class="card-header-custom">ACH Information submitted successfully!</h5>
+              <p class="card-subheader-custom">Your ACH payment details have been received. We'll surely
+                process your payment in future.</p>
+            </div>
+          </p-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+

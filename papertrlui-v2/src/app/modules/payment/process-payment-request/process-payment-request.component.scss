@@ -1,0 +1,44 @@
+@import "../../../../scss/color.scss";
+@import '../../../../scss/table-responsive';
+@import '../../../../scss/common-styles';
+
+
+.table-wrapper {
+  height: calc(100vh - 272px);
+}
+
+.header-bar {
+  align-items: end;
+
+  .time {
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .user {
+    font-weight: 400;
+  }
+}
+
+.total {
+  background: $light-gallery-gray;
+  padding: 10px 15px;
+  border-radius: 5px;
+  display: inline-flex;
+  width: max-content;
+  float: right;
+  align-items: center;
+  h2 {
+    margin: 0;
+    font-size: 20px;
+  }
+
+  span {
+    color: $secondary-blue;
+    cursor: pointer;
+  }
+}
+
+.table-view{
+  //margin-bottom: 80px;
+}

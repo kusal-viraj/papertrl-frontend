@@ -1,0 +1,187 @@
+<div class="flex overflow-hidden mt-3 pl-3">
+  <div class="flex-grow-1">
+    <h5 class="subHeadingColour p-0 mb-0">Funding Accounts</h5>
+    <p class="provider-sub-heading p-0 mt-1">Efficiently manage all your bank accounts in one secure and user-friendly
+      hub.</p>
+  </div>
+
+  <div class="flex-none flex p-0">
+    <div class="flex align-items-center pull-right">
+      <div class="p-input-icon-left">
+        <i class="pi pi-search pl-2"></i>
+        <input type="text" class="p-inputtext search-input" #searchInput [(ngModel)]="searchValue"
+               pInputText placeholder="Search by account number or nickname"
+               (keyup)="searchBankAccount(searchInput.value, null, null)"/>
+      </div>
+
+      <div class="pl-3" *ngIf="privilegeService.isAuthorized(appAuthorities.FUNDING_ACCOUNT_CREATE)">
+        <button class="p-button-sm add-funding-acc-btn" pButton type="submit"
+                label="Create Funding Account" icon="fa-solid fa fa-circle-plus"
+                (click)="this.createFundingAccountVisible = true"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card-view mt-3">
+<div class="flex overflow-hidden pl-3 mt-4 account-category-header">
+  <div class="flex-grow-1 flex account-type">Deposit Accounts</div>
+  <div class="account-category"
+       (click)="searchBankAccount(null,null, null); searchInput.value = null;">All</div>
+  <div *ngFor="let dAccountTypes of depositPaymentTypes; let i = index"
+       class="flex-none flex account-category"
+       (click)="searchBankAccountByType(dAccountTypes.optionId, dAccountTypes.id); searchInput.value = null;">{{dAccountTypes.name}}
+  </div>
+</div>
+  <div class="mt-3 grid pl-3">
+    <ng-container *ngFor="let bankAccount of depositBankAccounts; let i = index">
+      <div class="col-4 pr-3 pb-4">
+        <div class="p-card-custom" [ngClass]="{'inactivate-card': bankAccount.status === appConstant.STATUS_INACTIVE}">
+          <div class="flex">
+            <div class="flex align-self-start">
+              <img src="data:image/png;base64,{{bankAccount.logoImageData}}" alt="Image">
+            </div>
+
+            <div class="flex-grow-1 flex align-self-start pl-3 flex-column w-full">
+              <h6 class="account-nickname"
+                  [tooltipDisabled]="bankAccount.accountNicName.length < 30" [pTooltip]="bankAccount.accountNicName"
+                  tooltipPosition="top">
+                {{bankAccount.accountNicName}}
+              </h6>
+
+              <span class="pt-2 payment-type-name account-nickname" tooltipPosition="top"
+                    [tooltipDisabled]="bankAccount.bankPaymentTypes.length < 4" [pTooltip]="showPaymentTypes(bankAccount)">
+                    <span>{{showPaymentTypes(bankAccount)}}</span>
+              </span>
+
+              <span class="pt-2 account-no">{{bankAccount.accountNo}}</span>
+              <span class="pt-4"></span>
+            </div>
+          </div>
+
+          <div class="inactivate-lbl" *ngIf="bankAccount.status === appConstant.STATUS_INACTIVE">
+            <label>Inactive</label>
+          </div>
+
+          <ng-container *ngFor="let payemntTypes of bankAccount.bankPaymentTypes; let i = index">
+            <div class="default-lbl" *ngIf="payemntTypes.isDefault && bankAccount.status !== appConstant.STATUS_INACTIVE"
+                 tooltipPosition="top" [tooltipDisabled]="defaultTypesLength(bankAccount)"
+                 [pTooltip]="showDefaultPaymentTypes(bankAccount, true)">
+              Default - <span>{{showDefaultPaymentTypes(bankAccount, false)}}</span>
+            </div>
+          </ng-container>
+
+          <div class="corner-menu"
+               [class.visible-menu]="bankAccount.openMenu" *ngIf="checkActionMenuPrivilegesAvailability()">
+            <i class="pi pi-ellipsis-v" #menuIcon (click)="actions.toggle($event); actionButtonClick(bankAccount);
+                 bankAccount.openMenu = true"></i>
+          </div>
+          <p-menu #actions [popup]="true" (onHide)="bankAccount.openMenu = false"
+                  appendTo="body" class="funding-acc-action-menu" [model]="actionBtnList"></p-menu>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <div *ngIf="!depositBankAccounts.length" class=" mt-3 no_data_found table-empty-data">
+    <div class="col-12 mt-7">
+      <i class="fa-solid fa-magnifying-glass"></i><br>
+      <p>There are no records found</p>
+    </div>
+  </div>
+
+<div class="flex overflow-hidden pl-3 mt-4 account-category-header">
+  <div class="flex-grow-1 flex account-type">Credit Accounts</div>
+  <div class="flex-none flex account-category"
+       (click)="searchBankAccount(null,null, null); searchInput.value = null;">All</div>
+  <div *ngFor="let cAccountTypes of creditPaymentTypes; let i = index"
+       class="flex-none flex account-category"
+       (click)="searchBankAccountByType(cAccountTypes.optionId, cAccountTypes.id); searchInput.value = null;">{{cAccountTypes.name}}
+  </div>
+</div>
+<div class="mt-3 grid pl-3">
+  <ng-container *ngFor="let bankAccount of creditBankAccounts; let i = index">
+    <div class="col-4 pr-3 pb-4">
+      <div class="p-card-custom" [ngClass]="{'inactivate-card': bankAccount.status === appConstant.STATUS_INACTIVE}">
+        <div class="flex">
+          <div class="flex align-self-start">
+            <img src="data:image/png;base64,{{bankAccount.logoImageData}}" alt="Image">
+          </div>
+
+          <div class="flex-grow-1 flex align-self-start pl-3 flex-column w-full">
+            <h6 class="account-nickname"
+                [tooltipDisabled]="bankAccount.accountNicName.length < 30" [pTooltip]="bankAccount.accountNicName"
+                tooltipPosition="top">
+              {{bankAccount.accountNicName}}
+            </h6>
+
+            <span class="pt-2 payment-type-name account-nickname" tooltipPosition="top"
+                  [tooltipDisabled]="bankAccount.bankPaymentTypes.length < 4" [pTooltip]="showPaymentTypes(bankAccount)">
+                  <span>{{showPaymentTypes(bankAccount)}}</span>
+            </span>
+
+            <span class="pt-2 account-no">{{bankAccount.accountNo}}</span>
+            <span class="pt-4"></span>
+          </div>
+        </div>
+
+        <div class="inactivate-lbl" *ngIf="bankAccount.status === appConstant.STATUS_INACTIVE">
+          <label>Inactive</label>
+        </div>
+
+        <ng-container *ngFor="let payemntTypes of bankAccount.bankPaymentTypes; let i = index">
+          <div class="default-lbl" *ngIf="payemntTypes.isDefault && bankAccount.status !== appConstant.STATUS_INACTIVE"
+               tooltipPosition="top" [tooltipDisabled]="defaultTypesLength(bankAccount)"
+               [pTooltip]="showDefaultPaymentTypes(bankAccount, true)">
+            Default - <span>{{showDefaultPaymentTypes(bankAccount, false)}}</span>
+          </div>
+        </ng-container>
+
+        <div class="corner-menu"
+             [class.visible-menu]="bankAccount.openMenu" *ngIf="checkActionMenuPrivilegesAvailability()">
+          <i class="pi pi-ellipsis-v" #menuIcon (click)="actions.toggle($event); actionButtonClick(bankAccount);
+                 bankAccount.openMenu = true"></i>
+        </div>
+        <p-menu #actions [popup]="true" (onHide)="bankAccount.openMenu = false"
+                appendTo="body" class="funding-acc-action-menu" [model]="actionBtnList"></p-menu>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+  <div *ngIf="!creditBankAccounts.length" class=" mt-3 no_data_found table-empty-data">
+    <div class="col-12 mt-7">
+      <i class="fa-solid fa-magnifying-glass"></i><br>
+      <p>There are no records found</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- Funding Account create drawer-->
+<p-sidebar styleClass="funding-acc-sidebar p-sidebar-md" [modal]="true" [dismissible]="true" position="right"
+           [(visible)]="createFundingAccountVisible" appendTo="body" *ngIf="createFundingAccountVisible">
+  <ng-template pTemplate="header">Add Funding Account</ng-template>
+  <app-funding-account-create *ngIf="createFundingAccountVisible" [isEditView]="false" [bankAccountId]="bankAccountId"
+                              (createFundingAccountVisible)="createFundingAccountVisible = false"
+                              (refreshBankList)="getAllBankAccounts()"></app-funding-account-create>
+</p-sidebar>
+
+<!-- Funding Account Edit drawer-->
+<p-sidebar styleClass="funding-acc-sidebar p-sidebar-md" [modal]="true" [dismissible]="true" position="right"
+           [(visible)]="isEditView" appendTo="body" *ngIf="isEditView">
+  <ng-template pTemplate="header">Edit Funding Account</ng-template>
+  <app-funding-account-create *ngIf="isEditView" (createFundingAccountVisible)="isEditView = false"
+                              [isEditView]="isEditView" [bankAccountId]="bankAccountId"
+                              (refreshBankList)="getAllBankAccounts()"></app-funding-account-create>
+</p-sidebar>
+
+<!-- Delete Bank account confirmation massage-->
+<p-confirmDialog #cd key="dep" header="Are you sure?" icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cd.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, delete"
+            (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

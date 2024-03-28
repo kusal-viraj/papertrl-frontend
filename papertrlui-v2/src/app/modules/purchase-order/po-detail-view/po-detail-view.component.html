@@ -1,0 +1,505 @@
+<form [formGroup]="purchaseOrderApprovalMainForm" class="po-detail-form detail-form">
+  <as-split (dragStart)="showIframeHider = true" (dragEnd)="showIframeHider = false"
+            direction="horizontal" gutterSize="10">
+    <as-split-area size="60">
+
+
+      <div class="p-3 custom-card-form">
+        <div [ngStyle]="{'align-items' : 'baseline'}" class="grid">
+          <div class="col-4  md:col-4 sm:col-12 module-detail-label-wrapper">
+            <h5 class=" subHeadingColour">Purchase Order Details</h5>
+            <br>
+          </div>
+
+          <div [ngStyle]="{'text-align' : 'right'}" class="xl:col-4 md:col-6 lg:col-3 po-number-wrapper">
+            <h5 class="subHeadingColour">PO# {{ poNo }}</h5>
+          </div>
+          <div [ngStyle]="{'text-align' : 'right'}" class="xl:col-4 md:col-6 lg:col-3 top-button-wrapper">
+            <div class="fa fa-check side-drawer-icon" *ngIf="checkPrivilegesForPOApprove()"
+                 pTooltip="Approve or Reject" tooltipPosition="bottom" (click)="approvePo()"></div>
+
+            <div class="fa fa-trash side-drawer-icon"
+                 *ngIf="privilegeService.isAuthorized(appAuthorities.PURCHASE_ORDER_DELETE)"
+                 pTooltip="Delete" tooltipPosition="bottom" (click)="deleteBill(poId)"></div>
+
+            <div class="fa fa-pencil side-drawer-icon"
+                 *ngIf="privilegeService.isAuthorized(appAuthorities.PURCHASE_ORDER_EDIT)"
+                 pTooltip="Edit" tooltipPosition="bottom" (click)="editPO()"></div>
+
+            <button style="background: none; border: none;" *ngIf="!isFromReport && !fromNotification"
+                    [disabled]="isPreviousDisable()" (click)="poPrev()" pTooltip="Previous" tooltipPosition="bottom"
+                    class="fa fa-chevron-left side-drawer-icon"></button>
+
+            <button style="background: none; border: none;" *ngIf="!isFromReport && !fromNotification"
+                    [disabled]=" isNextDisable()"
+                    pTooltip="Next" tooltipPosition="bottom" class="fa fa-chevron-right side-drawer-icon"
+                    (click)="poNext()"></button>
+
+            <div class="fa fa-close side-drawer-icon" [class]="isFromReport ? 'fa fa-close side-drawer-icon' :
+                'fa fa-close side-drawer-icon'" pTooltip="Close" tooltipPosition="bottom"
+                 (click)="close()"></div>
+
+          </div>
+        </div>
+
+        <div class="grid p-fluid">
+
+          <div [ngClass]="extraSmallHorSplitter ? 'col-12 xl:col-3 field' : 'col-12 field'">
+            <label>Department</label>
+            <div>{{ commonUtil.detailViewIsDash(f.departmentName.value, false) }}</div>
+          </div>
+
+          <div [ngClass]="extraSmallHorSplitter ? 'col-12 xl:col-3 field' : 'col-12 field'">
+            <label>Purchase Order Number</label>
+            <div>{{ commonUtil.detailViewIsDash(f.poNumber.value, false) }}</div>
+          </div>
+
+          <div [ngClass]="extraSmallHorSplitter ? 'col-12 xl:col-3 field' : 'col-12 field'">
+            <label>Purchase Order Date</label>
+            <div>{{ commonUtil.detailViewIsDash(f.poDate.value, false) }}</div>
+          </div>
+
+          <div [ngClass]="extraSmallHorSplitter ? 'col-12 xl:col-3 field' : 'col-12 field'">
+            <label>Vendor</label>
+            <div>{{ commonUtil.detailViewIsDash(f.vendorName.value, false) }}</div>
+          </div>
+
+          <div [ngClass]="extraSmallHorSplitter ? 'col-12 xl:col-3 field' : 'col-12 field'">
+            <label>Project/Task</label>
+            <div>{{ commonUtil.detailViewIsDash(f.projectNo.value, false) }}</div>
+          </div>
+
+          <div [ngClass]="extraSmallHorSplitter ? 'col-12 xl:col-3 field' : 'col-12 field'">
+            <label>Contact Person</label>
+            <div>{{ commonUtil.detailViewIsDash(f.pocName.value, false) }}</div>
+          </div>
+
+          <div [ngClass]="extraSmallHorSplitter ? 'col-12 xl:col-3 field' : 'col-12 field'">
+            <label>Contact Number</label>
+            <div>{{ commonUtil.detailViewIsDash(f.pocPhone.value, false) }}</div>
+          </div>
+
+          <div [ngClass]="extraSmallHorSplitter ? 'col-12 xl:col-3 field' : 'col-12 field'">
+            <label>Delivery Date</label>
+            <div>{{ commonUtil.detailViewIsDash(f.deliveryDate.value, false) }}</div>
+          </div>
+
+        </div>
+
+        <div class="grid p-fluid mt-1" *ngIf="poHeadingAdditionalFields.length>0">
+          <ng-container formArrayName="additionalData">
+            <ng-container *ngFor="let additionalField of headingAdditionalFields.controls; let i=index"
+                          [formGroupName]="i">
+                     <span [ngClass]="extraSmallHorSplitter ? 'col-12 xl:col-3 field' : 'col-12 field'"
+                           *ngIf="commonUtil.checkUndefinedValues(
+                           additionalField.get('fieldValue').value, poHeadingAdditionalFields[i].docStatus, true)">
+                          <label>{{ poHeadingAdditionalFields[i].fieldName }}</label>
+                       <div>{{ additionalField.get('fieldValue').value }}</div>
+                     </span>
+            </ng-container>
+          </ng-container>
+        </div>
+
+        <div class="grid p-fluid">
+          <div [ngClass]="extraSmallHorSplitter ? 'col-12 xl:col-3 field' : 'col-12 field'">
+            <label>Shipping Address</label>
+            <div class="new-line">{{ commonUtil.detailViewIsDash(f.shippingAddress.value, false) }}</div>
+          </div>
+
+          <div [ngClass]="extraSmallHorSplitter ? 'col-12 xl:col-3 field' : 'col-12 field'">
+            <label>Billing Address</label>
+            <div class="new-line">{{ commonUtil.detailViewIsDash(f.billingAddress.value, false) }}</div>
+          </div>
+
+          <div [ngClass]="extraSmallHorSplitter ? 'col-12 xl:col-6 field' : 'col-12 field'">
+            <label>Notes</label>
+            <div class="new-line">{{ commonUtil.detailViewIsDash(f.notes.value, false) }}</div>
+          </div>
+        </div>
+
+
+        <p-tabView styleClass="tabview-custom mt-3">
+
+          <p-tabPanel *ngIf="poDetail?.purchaseOrderDetails.length > 0">
+            <ng-template pTemplate="header">
+              <span class="custom-span">Item Information</span>
+            </ng-template>
+            <p-table responsiveLayout="scroll" [value]="lineItemMainTable.controls" scrollable="true"
+                     scrollHeight="367px"
+                     [style]="{width:'auto'}" styleClass="p-datatable-sm p-datatable-striped detail-table"
+                     scrollDirection="both">
+
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="min-width:50px " class="thead-style detail-table-header-left" id="no">#</th>
+                  <th style="min-width:250px" class="thead-style detail-table-header-left" id="itemNumber1">Item
+                    Number
+                  </th>
+                  <th style="min-width:250px" class="thead-style detail-table-header-left" id="itemName1">Item Name</th>
+                  <th style="min-width:250px" class="thead-style detail-table-header-left" id="sku">Vendor Part Number
+                  </th>
+                  <th style="min-width:250px" class="thead-style detail-table-header-left" id="description">
+                    Description
+                  </th>
+                  <th style="min-width:250px" class="thead-style detail-table-header-left" id="accountNum">Account
+                    Number
+                  </th>
+                  <th style="min-width:250px" class="thead-style detail-table-header-left" id="uom1">Unit Of
+                    Measurement
+                  </th>
+                  <th style="min-width:250px" class="thead-style detail-table-header-left" id="departmentItem">
+                    Department
+                  </th>
+                  <th style="min-width:100px" class="thead-style detail-table-header-left" id="billable">Billable</th>
+                  <th style="min-width:100px" class="thead-style detail-table-header-left" id="taxable">Taxable</th>
+                  <th style="min-width:120px" class="thead-style detail-table-header-right" id="qty1">Quantity</th>
+                  <th style="min-width:250px" class="thead-style detail-table-header-right" id="price1">Cost</th>
+                  <th style="min-width:150px" class="thead-style detail-table-header-right" id="discount1">Discount</th>
+                  <th style="min-width:250px" class="thead-style detail-table-header-right" *ngFor="let additionalField of
+                    lineItemAdditionalFieldDetails; let i=index">{{ additionalField.fieldName }}
+                  </th>
+                  <th style="min-width:250px" class="thead-style detail-table-header-right" id="amount1">Line Amount
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-i="rowIndex" let-item formArrayName="purchaseOrderDetails">
+                <tr id="tr_{{i}}" [formGroupName]="i" [pEditableRow]="item">
+
+                  <td style="text-align: center; width:50px"><label>{{ i + 1 }}</label></td>
+
+                  <td>
+                    <div app-read-more-text [fieldValue]="commonUtil.detailViewIsDash(
+                      f.purchaseOrderDetails.value[i].itemNumber,false)"
+                         [maxCharacters]="20"></div>
+                  </td>
+
+                  <td>
+                    <div app-read-more-text [fieldValue]="commonUtil.detailViewIsDash(
+                      f.purchaseOrderDetails.value[i].itemName,false)"
+                         [maxCharacters]="20"></div>
+                  </td>
+
+                  <td>
+                    <div app-read-more-text [fieldValue]="commonUtil.detailViewIsDash(
+                      f.purchaseOrderDetails.value[i].vendorItemNumber,false)"
+                         [maxCharacters]="20"></div>
+                  </td>
+
+                  <td style="text-align: justify">
+                    <div app-read-more-text [fieldValue]="commonUtil.detailViewIsDash(
+                      f.purchaseOrderDetails.value[i].description,false)"
+                         [maxCharacters]="20"></div>
+                  </td>
+
+                  <td>
+
+                    <div app-read-more-text [fieldValue]="commonUtil.detailViewIsDash(
+                      f.purchaseOrderDetails.value[i].accountNumber,false)"
+                         [maxCharacters]="20"></div>
+                  </td>
+
+                  <td>
+                    <div app-read-more-text [fieldValue]="commonUtil.detailViewIsDash(
+                      f.purchaseOrderDetails.value[i].uomName,false)"
+                         [maxCharacters]="20"></div>
+                  </td>
+
+                  <td>
+                    <div app-read-more-text [fieldValue]="commonUtil.detailViewIsDash(
+                      f.purchaseOrderDetails.value[i].departmentName,false)"
+                         [maxCharacters]="20"></div>
+                  </td>
+
+                  <td>
+                    <div app-read-more-text [fieldValue]="commonUtil.detailViewIsDash(
+                      f.purchaseOrderDetails.value[i].billableStr,false)"
+                         [maxCharacters]="20"></div>
+                  </td>
+
+                  <td>
+                    <div app-read-more-text [fieldValue]="commonUtil.detailViewIsDash(
+                      f.purchaseOrderDetails.value[i].taxableStr,false)"
+                         [maxCharacters]="20"></div>
+                  </td>
+
+                  <td
+                    class="text-right">{{ commonUtil.detailViewIsDash(f.purchaseOrderDetails.value[i].qty, true) }}
+                  </td>
+
+                  <td
+                    class="text-right">{{ commonUtil.detailViewIsDash(f.purchaseOrderDetails.value[i].unitPrice, true)| number : '1.2-2' }}
+                  </td>
+
+                  <td
+                    class="text-right">{{ commonUtil.detailViewIsDash(f.purchaseOrderDetails.value[i].discountAmount, true)| number : '1.2-2' }}
+                  </td>
+
+                  <ng-container formArrayName="additionalData"
+                                *ngIf="lineItemAdditionalFieldDetails.length > 0">
+                    <td class="text-right"
+                        *ngFor="let additionalLineItemField of lineItemAdditionalField(i).controls; let itemIndex = index"
+                        [formGroupName]="itemIndex">
+
+                      <div app-read-more-text [fieldValue]="additionalLineItemField.get('fieldValue')?.value"
+                           [maxCharacters]="25"></div>
+
+                    </td>
+                  </ng-container>
+
+                  <td class="text-right">
+                    {{ commonUtil.detailViewIsDash(f.purchaseOrderDetails.value[i].amount, true)|number : '1.2-2' }}
+                  </td>
+
+                </tr>
+              </ng-template>
+            </p-table>
+          </p-tabPanel>
+
+          <p-tabPanel *ngIf="poDetail?.purchaseOrderAccountDetails.length > 0">
+            <ng-template pTemplate="header">
+              <span class="custom-span">Account Information</span>
+            </ng-template>
+            <p-table responsiveLayout="scroll" [value]="accountDetails.controls" scrollable="true" scrollHeight="367px"
+                     [style]="{width:'auto'}" scrollDirection="both"
+                     styleClass="p-datatable-sm p-datatable-striped detail-table">
+
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="min-width:200px" class="thead-style detail-table-header-left" id="account">Account Number
+                  </th>
+                  <th style="min-width:200px" class="thead-style detail-table-header-left" id="accountName">Account
+                    Name
+                  </th>
+                  <th style="min-width:200px" class="thead-style detail-table-header-left" id="departmentAccount">
+                    Department
+                  </th>
+                  <th style="min-width:250px" class="thead-style detail-table-header-left" id="descriptionAccount">
+                    Description
+                  </th>
+                  <th style="min-width:100px" class="thead-style detail-table-header-left" id="billableAccount">
+                    Billable
+                  </th>
+                  <th style="min-width:100px" class="thead-style detail-table-header-left" id="taxableAccount">Taxable
+                  </th>
+                  <th style="min-width:250px" class="thead-style detail-table-header-left" *ngFor="let additionalField
+                    of accountAdditionalFieldDetails; let i=index">{{ additionalField.fieldName }}
+                  </th>
+                  <th style="min-width:250px" class="thead-style detail-table-header-right" id="amount">Line Amount</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-i="rowIndex" let-item
+                           formArrayName="purchaseOrderAccountDetails">
+                <tr [formGroupName]="i">
+
+                  <td>
+                    <div app-read-more-text [fieldValue]="commonUtil.detailViewIsDash(
+                      f.purchaseOrderAccountDetails.value[i].accountNumber,false)"
+                         [maxCharacters]="20"></div>
+                  </td>
+
+                  <td>
+                    <div app-read-more-text [fieldValue]="commonUtil.detailViewIsDash(
+                      f.purchaseOrderAccountDetails.value[i].accountName,false)"
+                         [maxCharacters]="20"></div>
+                  </td>
+
+                  <td>
+                    <div app-read-more-text [fieldValue]="commonUtil.detailViewIsDash(
+                      f.purchaseOrderAccountDetails.value[i].departmentName,false)"
+                         [maxCharacters]="20"></div>
+                  </td>
+
+                  <td style="text-align: justify">
+                    <div app-read-more-text [fieldValue]="commonUtil.detailViewIsDash(
+                      f.purchaseOrderAccountDetails.value[i].description,false)"
+                         [maxCharacters]="20"></div>
+                  </td>
+
+                  <td>
+                    <div app-read-more-text [fieldValue]="commonUtil.detailViewIsDash(
+                      f.purchaseOrderAccountDetails.value[i].billableStr,false)"
+                         [maxCharacters]="20"></div>
+                  </td>
+
+                  <td>
+                    <div app-read-more-text [fieldValue]="commonUtil.detailViewIsDash(
+                      f.purchaseOrderAccountDetails.value[i].taxableStr,false)"
+                         [maxCharacters]="20"></div>
+                  </td>
+
+                  <ng-container formArrayName="additionalData"
+                                *ngIf="accountAdditionalFieldDetails.length > 0">
+                    <td
+                      *ngFor="let additionalLineItemField of accountAdditionalField(i).controls; let itemIndex = index"
+                      [formGroupName]="itemIndex">
+
+                      <div app-read-more-text [fieldValue]="additionalLineItemField.get('fieldValue')?.value"
+                           [maxCharacters]="25"></div>
+
+                    </td>
+                  </ng-container>
+
+                  <td
+                    class="text-right">{{ commonUtil.detailViewIsDash(f.purchaseOrderAccountDetails.value[i].amount, true) | number : '1.2-2' }}
+                  </td>
+
+                </tr>
+              </ng-template>
+            </p-table>
+          </p-tabPanel>
+
+          <p-tabPanel *ngIf="poDetail && poDetail.additionalFieldAttachments.length>0">
+            <ng-template pTemplate="header">
+              <span class="custom-span">Files Attached</span>
+            </ng-template>
+            <p-table responsiveLayout="scroll" [value]="poDetail.additionalFieldAttachments" scrollable="true"
+                     scrollHeight="150px"
+                     styleClass="p-datatable-sm p-datatable-striped detail-table" scrollDirection="both">
+
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="min-width:350px" class="thead-style detail-table-header-left" id="fileName">File Name</th>
+                  <th style="min-width:200px" class="thead-style detail-table-header-left" id="fieldName">Field Name
+                  </th>
+                  <th style="min-width:50px " class="thead-style detail-table-header-left" id="action1">Action</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-i="rowIndex" let-item>
+                <tr>
+
+                  <td [style]="'height : 30px'" class="break-word">
+                    <label> {{ item.fileName }}</label>
+                  </td>
+
+                  <td [style]="'height : 30px'">
+                    <label> {{ item.fieldName }}</label>
+                  </td>
+
+                  <td class="text-center">
+                    <i (click)="downloadAttachments(item)" class="fa fa-download download-icon"></i>
+                  </td>
+
+                </tr>
+              </ng-template>
+            </p-table>
+          </p-tabPanel>
+
+          <p-tabPanel *ngIf="adHocWorkflowDetails.length">
+            <ng-template pTemplate="header">
+              <span class="custom-span">Approvers ({{ adHocWorkflowDetails.length }})</span>
+            </ng-template>
+            <div class="grid" style="padding-top: 25px">
+              <div class="col-12 pb-0 mb-0 pt-0 mt-0 approve-alignment"
+                   *ngFor="let adHoc of adHocWorkflowDetails; let adHocIndex = index">
+                <div class="col-5 bold-text text pb-0 mb-0 pt-0 mt-0" [ngClass]="{ 'approve-text': adHoc.completed }">
+                  <span>{{ adHocIndex + 1 }}. </span>
+                  {{ adHoc.approvalUserName || adHoc.pendingUserName || adHoc.approvalGroupName }}
+                  <span *ngIf="adHoc.approvalGroupName && adHoc.approvalUserName">
+              ({{ adHoc.approvalGroupName }})
+            </span>
+                  <span
+                    *ngIf="adHoc.previousApprovalUserName && adHoc.previousApprovalUserName != adHoc.approvalUserName">
+              ({{ adHoc.previousApprovalUserName }})
+            </span>
+                  <span class="approve-icon" style="padding-left: 16px;"
+                        [ngClass]="commonUtil.getStatusIcon(adHoc)"></span>
+                </div>
+                <div [ngClass]="{ 'approve-text': adHoc.completed }" class="col-2 text text-right pb-0 mb-0 pt-0 mt-0">
+                  {{ adHoc.actionDate | date:'MM/dd/yyyy' }}
+                </div>
+              </div>
+            </div>
+          </p-tabPanel>
+
+        </p-tabView>
+
+        <div class="grid mt-3">
+          <div class="col-12 amounts-wrapper">
+            <div class="grid">
+              <label class="amount-topic col-offset-5 col-4 text-right">Item Gross Amount</label>
+              <div class="col-3 text-right">
+                {{ commonUtil.detailViewIsDash(itemGrossAmount, true) | number:'1.2-2' }}
+              </div>
+            </div>
+
+            <div class="grid">
+              <div class="amount-topic col-offset-5 col-4 text-right">Account Gross Amount</div>
+              <div class="col-3 text-right">
+                {{ commonUtil.detailViewIsDash(accountGrossAmount, true) | number:'1.2-2' }}
+              </div>
+            </div>
+
+            <div class="grid">
+              <div *ngIf="taxPercentage" class="amount-topic col-offset-5 col-4 text-right">Tax Percentage</div>
+              <div *ngIf="!taxPercentage" class="amount-topic col-offset-5 col-4 text-right">Tax Amount</div>
+              <div class="col-3 text-right">
+                {{ commonUtil.detailViewIsDash(taxPercentageStr, false) }}
+              </div>
+            </div>
+
+            <div class="grid">
+              <div class="amount-topic col-offset-5 col-4 text-right">Discount Amount</div>
+              <div class="col-3 text-right">
+                {{ commonUtil.detailViewIsDash(discountAmount, true) | number:'1.2-2' }}
+              </div>
+            </div>
+
+            <div class="grid">
+              <div class="amount-topic col-offset-5 col-4 text-right">Net Amount</div>
+              <div class="col-3 text-right">
+                {{ commonUtil.detailViewIsDash(netAmount, true) | number:'1.2-2' }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--        <div *ngIf="poDetail && poDetail.additionalFieldAttachments.length>0" class="grid">-->
+        <!--            <div class="col-8">-->
+        <!--              <h6 class="subHeadingColour">Files Attached</h6>-->
+        <!--              <div >-->
+        <!--            -->
+        <!--              </div>-->
+        <!--            </div>-->
+        <!--          </div>-->
+      </div>
+
+
+    </as-split-area>
+
+    <as-split-area size="40">
+      <div>
+        <app-po-approval-invoice-view *ngIf="attachmentId && !needToRefresh" [attachmentId]="attachmentId"></app-po-approval-invoice-view>
+        <div [hidden]="showIframeHider === false" class="hack-iframe-hider"></div>
+      </div>
+    </as-split-area>
+
+  </as-split>
+
+</form>
+
+<!--Create / Edit Purchase Order-->
+<p-sidebar [showCloseIcon]="false" [fullScreen]="true" [modal]="false" [(visible)]="isEditPo">
+  <!--  <ng-template  pTemplate="header">Edit Purchase Order</ng-template>-->
+  <app-po-create [editView]="true" (closePo)="isEditPo = false" *ngIf="isEditPo"
+                 (successUpdatePo)="isSuccessFromEditView  = true; getPoDetails(poId)"
+                 [poID]="poId" [poStatusFromList]="poStatusFromList"></app-po-create>
+</p-sidebar>
+
+<!--Delete-->
+<p-confirmDialog #cd key="poDeleteFromDetailView" appendTo="body" header="Are you sure?"
+                 icon="conf-delete-icon pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="conf-cancel-btn p-button-outlined" pButton icon="pi pi-times" label="Cancel"
+            (click)="cd.reject()"></button>
+    <button type="button" class="conf-reject-btn" pButton icon="pi pi-check" label="Yes, Delete it"
+            (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<!--Approve Purchase Order-->
+<p-sidebar [showCloseIcon]="false" [fullScreen]="true" [modal]="false" [(visible)]="approvePoView">
+  <app-po-approve [isDetailView]="false" [isApproveView]="approvePoView"
+                  [tableSearchResults]="tableSupportBase?.searchFilterDto" *ngIf="approvePoView"
+                  [poNumber]="poNumber" [poId]="poId" (closePOApprove)="close()">
+  </app-po-approve>
+</p-sidebar>

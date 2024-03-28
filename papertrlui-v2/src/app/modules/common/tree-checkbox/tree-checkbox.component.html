@@ -1,0 +1,21 @@
+<ul>
+  <ng-template #recursiveList let-tree>
+    <li class="mb-2" *ngFor="let node of tree">
+      <span class="parent-node pr-0" [class.selected]="node.selected" (click)="toggle(node)">
+
+        <span *ngIf="node.children && node.children.length > 0" class="pi"
+              [class.pi-angle-right]="!node.expanded" [class.pi-angle-down]="node.expanded"></span>
+
+          <span class="node" (click)="$event.stopPropagation(); onCheckboxChange(node, node.selected)">
+              <input type="checkbox" [checked]="node.selected" [indeterminate]="node.indeterminate" [disabled]="detailView">
+              <div>{{ node.label }}</div>
+          </span>
+      </span>
+
+      <ul *ngIf="node.expanded && node.children && node.children.length > 0">
+        <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: node.children }"></ng-container>
+      </ul>
+    </li>
+  </ng-template>
+  <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: nodes }"></ng-container>
+</ul>

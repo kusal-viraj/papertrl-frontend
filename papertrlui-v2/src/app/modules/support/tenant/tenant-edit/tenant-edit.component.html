@@ -1,0 +1,35 @@
+<form class="side-drawer-form-margin side-bar-drawer-content" (ngSubmit)="onSubmit(tenantEditForm.value)" autocomplete="off"
+      [formGroup]="tenantEditForm">
+  <div class="grid p-fluid">
+    <div [ngClass]="!panel ? 'field p-fluid lg:col-4 xl:col-3 md:col-4 col-12' : 'col-12'">
+      <label class="label-wrapper" for="packageId">Package*</label>
+      <span class="p-float-label">
+        <p-dropdown appendTo="body"
+                    [options]="packageList.data" id="packageId" class="packageId-dropdown-list"
+                    formControlName="packageId" optionValue="id" optionLabel="packageName" [showClear]="true"
+                    [autoDisplayFirst]="false" [filter]="true">
+        </p-dropdown>
+        <div class="p-invalid text-align-left"
+             *ngIf="tenantEditForm.get('packageId').dirty && tenantEditForm.get('packageId').errors">
+          Package is required
+        </div>
+      </span>
+    </div>
+  </div>
+</form>
+
+<ng-container *ngIf="panel">
+  <div class="grid panel-footer footer">
+    <div class="col-12 button-set-wrapper form-footer-button">
+      <div class="pull-right">
+        <button pButton type="button" (click)="resetForm()" label=" " [disabled]="loading"
+                class="p-button-outlined resetBtn p-button-sm">
+          <div style="width: 100%"><span class="fa-solid fa-rotate-right"></span> &nbsp; Reset</div>
+        </button>&nbsp;
+        <button (click)="onSubmit(tenantEditForm.value)"  pButton type="button" class="p-button-sm" label=" ">
+          <div style="width: 100%"><span class="pi pi-save"></span> &nbsp; Save</div>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-container>

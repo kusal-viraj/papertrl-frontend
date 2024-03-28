@@ -1,0 +1,184 @@
+@import "../../../../../scss/color.scss";
+
+.provider-sub-heading {
+  font-size: 12px;
+  font-weight: bold;
+  color: $offline-gray;
+}
+
+.search-input {
+  height: 36px;
+  width: 22rem;
+  padding-left: 2.4rem;
+}
+
+.add-funding-acc-btn {
+  height: 40px;
+  padding: 0.813rem 1.875rem 0.813rem 1.875rem;
+}
+
+.p-card-custom {
+  position: relative;
+  border-radius: 12px;
+  padding: 15px 20px;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 2px 0 #00000040;
+
+  .corner-menu {
+    position: absolute;
+    right: 12px;
+    top: 18px;
+    visibility: hidden;
+
+    i {
+      cursor: pointer;
+    }
+  }
+
+  .visible-menu {
+    visibility: visible !important;
+  }
+
+  .account-nickname {
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 70%;
+  }
+
+  img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .payment-type-name {
+    color: $tertiary-blue;
+  }
+
+  &:hover {
+    border: 1px solid $dark-green;
+
+    .corner-menu {
+      visibility: visible !important;
+    }
+  }
+}
+
+.inactivate-card {
+  background-color: $light-gray-2;
+  color: $offline-gray;
+
+  img {
+    filter: hue-rotate(0deg) saturate(0) brightness(200%);
+  }
+}
+
+.default-card {
+  background: $background-gray;
+  box-shadow: 0 1px rgb(0 0 0 / 0.2);
+}
+
+.p-card .p-card-body {
+  position: relative;
+  bottom: 28px;
+  left: 6rem;;
+  width: 80%;
+}
+
+.inactivate-lbl {
+  position: absolute;
+  right: 10px;
+  width: 70px;
+  height: 22px;
+  text-align: center;
+  background-color: $dark-gray;
+  color: #fff;
+  border-radius: 2px;
+  bottom: 10px;
+
+  label {
+    position: relative;
+    top: 4px;
+    font-weight: bold;
+    font-size: 12px;
+  }
+}
+
+.card-view {
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: calc(100vh - 190px);
+
+  .account-category-header {
+    gap: 10px;
+  }
+}
+
+.account-type {
+  font-size: 18px;
+}
+
+.account-category {
+  cursor: pointer;
+  padding: 6px 18px;
+  background-color: $light-gray-2;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: #BCBCBC;
+  }
+}
+
+.account-category-title {
+  position: relative;
+  left: 7px;
+}
+
+.default-lbl {
+  position: absolute;
+  right: 10px;
+  height: 22px;
+  padding: 4px 15px;
+  text-align: center;
+  background-color: $tertiary-blue;
+  color: #fff;
+  border-radius: 2px;
+  bottom: 10px;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.active-filter {
+  background-color: $light-gray-2;
+}
+
+.account-no {
+  font-size: 12px;
+}
+
+@media only screen and (max-width: 1366px) and (min-width: 1200px) {
+  .add-funding-acc-btn {
+    font-size: 12px !important;
+  }
+
+  .search-input {
+    width: 18rem;
+  }
+
+  .p-input-icon-left > .p-inputtext {
+    font-size: 0.8rem;
+  }
+}
+
+.no_data_found{
+  text-align: center;
+  i{
+    font-size: 40px;
+    margin-bottom: 18px;
+  }
+  p{
+    color: #BCBCBC;
+  }
+}
+

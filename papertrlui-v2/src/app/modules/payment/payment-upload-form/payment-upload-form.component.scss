@@ -1,0 +1,28 @@
+@import "../../../../scss/color.scss";
+
+.infoUpload {
+  color: #A1ACB1;
+}
+
+.download-link {
+  text-align: center;
+  color: $green;
+  font-weight: bolder;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.height {
+  height: calc(100vh - 173px);
+}
+
+
+.uploaded-file-name {
+  width: 100px;
+  height: 50px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: pre-line;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

@@ -1,0 +1,224 @@
+<form class="mb-1 mt-2 funding-acc-create-form" [formGroup]="fundingAccountForm">
+  <div class="p-fluid">
+    <div class="grid">
+      <div class="field col-12">
+        <label class="label-wrapper">Account Type*</label>
+        <div class="flex">
+          <div class="flex align-items-center">
+            <input class="radioButton ml-0" #credit formControlName="accountType" value="1" id="credit"
+                   name="accountType" type="radio">
+            <label class="pl-2" for="credit">Credit</label>
+          </div>
+          <div class="flex align-items-center">
+            <input class="radioButton" formControlName="accountType" value="0" id="debit" name="accountType"
+                   type="radio">
+            <label class="pl-2" for="debit">Deposit</label>
+          </div>
+        </div>
+        <div class="p-invalid text-align-left"
+             *ngIf="fundingAccountForm.get('accountType').dirty &&
+             fundingAccountForm.get('accountType').errors">
+          Account type is required
+        </div>
+      </div>
+
+      <div class="field col-12">
+        <label class="label-wrapper" for="bankName">Bank Name*</label>
+        <p-dropdown id="bankName" virtualScrollItemSize="25"
+                    inputId="role" [options]="banks.data" formControlName="bankId" (onChange)="setValidators();"
+                    optionLabel="name" optionValue="id"
+                    [autoDisplayFirst]="false" [showClear]="true" appendTo="body" [filter]="true">
+        </p-dropdown>
+        <div class="p-invalid text-align-left"
+             *ngIf="fundingAccountForm.get(appConstant.BANK_ID).dirty &&
+             fundingAccountForm.get(appConstant.BANK_ID).errors">
+          Bank name is required
+        </div>
+      </div>
+
+      <div class="field col-12">
+        <label class="label-wrapper" for="accNickName">Account Nickname*</label>
+        <input id="accNickName" formControlName="accountNicName" type="text" pInputText maxlength="50"
+               (keyup)="removeSpace.clearSpace(fundingAccountForm, appConstant.ACCOUNT_NICK_NAME)">
+        <div class="p-invalid text-align-left"
+             *ngIf="fundingAccountForm.get(appConstant.ACCOUNT_NICK_NAME).dirty &&
+             fundingAccountForm.get(appConstant.ACCOUNT_NICK_NAME).errors">
+          Account nickname is required
+        </div>
+      </div>
+
+      <div class="field col-12">
+        <label class="label-wrapper" for="companyName">Company Name*</label>
+        <input id="companyName" formControlName="companyName" type="text" pInputText
+               (keyup)="removeSpace.clearSpace(fundingAccountForm, appConstant.COMPANY_NAME)">
+        <div class="p-invalid text-align-left"
+             *ngIf="fundingAccountForm.get(appConstant.COMPANY_NAME).dirty &&
+             fundingAccountForm.get(appConstant.COMPANY_NAME).errors">
+          Company name is required
+        </div>
+      </div>
+
+      <div class="field col-12">
+        <label class="label-wrapper" for="accNumber">Account Number*</label>
+        <input id="accNumber" formControlName="accountNo" type="text" maxlength="17" #accountNumber
+        (click)="selectAccountNumber()" pInputText
+        (keyup)="removeSpace.clearSpace(fundingAccountForm, appConstant.ACCOUNT_NUMBER)">
+        <div class="p-invalid text-align-left"
+             *ngIf="fundingAccountForm.get(appConstant.ACCOUNT_NUMBER).dirty &&
+             fundingAccountForm.get(appConstant.ACCOUNT_NUMBER).hasError('required')">
+          Account number is required
+        </div>
+      </div>
+
+      <div class="field col-12">
+        <label class="label-wrapper" for="bankRoutingNo">Bank Routing Number*</label>
+        <input id="bankRoutingNo" formControlName="bankRoutingNo" type="text" maxlength="9" pInputText
+               (keyup)="removeSpace.clearSpace(fundingAccountForm, appConstant.BANK_ROUTING_NUMBER)">
+        <div class="p-invalid text-align-left"
+             *ngIf="fundingAccountForm.get(appConstant.BANK_ROUTING_NUMBER).dirty &&
+             fundingAccountForm.get(appConstant.BANK_ROUTING_NUMBER).hasError('required')">
+          Bank routing number is required
+        </div>
+        <div class="p-invalid text-align-left" *ngIf="fundingAccountForm.get(appConstant.BANK_ROUTING_NUMBER).hasError('pattern')">
+          This field only accepts numeric values
+        </div>
+      </div>
+
+      <div class="field col-12 mb-0" *ngIf="supportedPaymentTypes.length > 0">
+        <label class="label-wrapper mb-0">Supported Payment Types</label>
+      </div>
+
+      <div class="col-12 pb-0 mb-0" *ngFor="let type of supportedPaymentTypes; let i = index">
+        <p-panel [toggleable]="!type.checked" [collapsed]="!type.checked" class="funding-acc-panel">
+          <ng-template pTemplate="header">
+            <div class="flex align-items-center w-full">
+              <span class="font-bold">{{type.name}}</span>
+              <p-inputSwitch [disabled]="!this.fundingAccountForm.get('bankId').value"
+              [(ngModel)]="type.checked" [ngModelOptions]="{standalone: true}"
+              (onChange)="supportedPaymentTypesChange($event.checked , type.id)"
+              class="ml-auto"></p-inputSwitch>
+            </div>
+          </ng-template>
+
+          <!-- These fields only appeared after select ACH payment type -->
+
+          <div class="field" *ngIf="type.id === appConstant.ACH_PAYMENT_TYPE && type.checked">
+            <div>
+              <label class="label-wrapper" for="companyId">Company ID*</label>
+              <input id="companyId" formControlName="companyId" type="text" maxlength="20" numbersOnly pInputText
+                     (keyup)="removeSpace.clearSpace(fundingAccountForm, 'companyId')">
+            </div>
+            <div class="p-invalid text-align-left"
+                 *ngIf="fundingAccountForm.get(appConstant.COMPANY_ID).dirty &&
+                 fundingAccountForm.get(appConstant.COMPANY_ID).hasError('required')">
+              Company id is required
+            </div>
+            <div class="p-invalid text-align-left" *ngIf="fundingAccountForm.get(appConstant.COMPANY_ID).hasError('pattern')">
+              This field only accepts numeric values
+            </div>
+          </div>
+
+          <div class="field" *ngIf="type.id === appConstant.ACH_PAYMENT_TYPE && type.checked">
+            <label class="label-wrapper" for="transitNo">Transit ID</label>
+            <input id="transitNo" formControlName="transitNo" numbersOnly type="text" maxlength="10" pInputText
+                   (keyup)="removeSpace.clearSpace(fundingAccountForm, appConstant.TRANSIT_NUMBER)">
+            <div class="p-invalid text-align-left" *ngIf="fundingAccountForm.get(appConstant.TRANSIT_NUMBER).hasError('pattern')">
+              This field only accepts numeric values
+            </div>
+          </div>
+
+          <div class="field" *ngIf="type.id === appConstant.ACH_PAYMENT_TYPE && type.checked">
+            <label class="label-wrapper" for="fileUrl">ACH Upload Location URL</label>
+            <input id="fileUrl" formControlName="fileUrl" type="text" maxlength="255" pInputText
+                   (keyup)="removeSpace.clearSpace(fundingAccountForm, appConstant.FILE_URL)">
+          </div>
+
+          <!-- These fields only appeared after select Check payment type -->
+
+          <div class="field" *ngIf="type.id === appConstant.CHECK_PAYMENT_TYPE && type.checked">
+            <label class="label-wrapper" for="seqNo">Check Sequence Number*</label>
+            <input id="seqNo" formControlName="checkSequenceNumber" maxlength="5" numbersOnly pInputText
+                   (keyup)="removeSpace.clearSpace(fundingAccountForm, appConstant.SEQUENCE_NUMBER)">
+            <div class="p-invalid text-align-left"
+                 *ngIf="fundingAccountForm.get(appConstant.SEQUENCE_NUMBER).dirty &&
+                 fundingAccountForm.get(appConstant.SEQUENCE_NUMBER).hasError('required')">
+              Check Sequence Number is required
+            </div>
+            <div class="p-invalid text-align-left" *ngIf="fundingAccountForm.get(appConstant.SEQUENCE_NUMBER).hasError('pattern')">
+              This field only accepts numeric values
+            </div>
+          </div>
+
+          <!-- These fields only appeared after select Virtual card payment type -->
+
+          <div class="field" *ngIf="type.id === appConstant.VIRTUAL_CARD_PAYMENT_TYPE && type.checked">
+            <label class="label-wrapper" for="virtualCard">Virtual Card Account ID*</label>
+            <input id="virtualCard" formControlName="virtualCardAccountId" type="text" maxlength="12" numbersOnly pInputText
+                   (keyup)="removeSpace.clearSpace(fundingAccountForm, appConstant.VIRTUAL_CARD_ID)">
+            <div class="p-invalid text-align-left"
+                 *ngIf="fundingAccountForm.get(appConstant.VIRTUAL_CARD_ID).dirty &&
+                 fundingAccountForm.get(appConstant.VIRTUAL_CARD_ID).hasError('required')">
+              Virtual card account ID is required
+            </div>
+            <div class="p-invalid text-align-left" *ngIf="fundingAccountForm.get(appConstant.VIRTUAL_CARD_ID).hasError('pattern')">
+              This field only accepts numeric values
+            </div>
+          </div>
+
+          <!-- These fields only appeared after select Digital card payment type -->
+
+          <div class="field" *ngIf="type.id === appConstant.DIGITAL_CARD_PAYMENT_TYPE && type.checked">
+            <label class="label-wrapper" for="virtualCard">Digital Card Account ID*</label>
+            <input id="digitalCard" formControlName="digitalCardAccountId" type="text" maxlength="12" numbersOnly pInputText
+                   (keyup)="removeSpace.clearSpace(fundingAccountForm, appConstant.DIGITAL_CARD_ID)">
+            <div class="p-invalid text-align-left"
+                 *ngIf="fundingAccountForm.get(appConstant.DIGITAL_CARD_ID).dirty &&
+                 fundingAccountForm.get(appConstant.DIGITAL_CARD_ID).hasError('required')">
+              Digital card account is required
+            </div>
+            <div class="p-invalid text-align-left" *ngIf="fundingAccountForm.get(appConstant.DIGITAL_CARD_ID).hasError('pattern')">
+              This field only accepts numeric values
+            </div>
+          </div>
+
+          <div class="field">
+          <label class="label-wrapper" for="bankName">Payment Channel*</label>
+          <p-dropdown id="paymentChannel" [(ngModel)]="type.paymentChannelId" [ngModelOptions]="{standalone: true}"
+                      #paymentChannelRef virtualScrollItemSize="25" inputId="role"
+                      [options]="paymentChannelDp.get(type.id)"
+                      optionLabel="name" optionValue="id" [autoDisplayFirst]="false" [showClear]="true" appendTo="body"
+                      [filter]="true" (onChange)="onPaymentChannelChange(type.id, $event)">
+          </p-dropdown>
+          </div>
+
+          <div class="flex gap-2">
+            <p-inputSwitch [(ngModel)]="type.isDefault" [ngModelOptions]="{standalone: true}"
+            (onChange)="setDefaultPaymentType(type.id, $event.checked)"></p-inputSwitch>
+            <span class="align-self-center">Make this account default for {{type.name}} payments.</span>
+          </div>
+        </p-panel>
+      </div>
+    </div>
+  </div>
+</form>
+
+<ng-container>
+  <div class="grid panel-footer footer">
+    <div class="col-12 button-set-wrapper form-footer-button mt-2">
+      <div class="pull-right pr-3">
+        <button pButton type="button" label="Reset" (click)="formReset()"
+                class="p-button-outlined p-button-sm margin-right" icon="fa-solid fa-rotate-right"></button>&nbsp;
+        <button *ngIf="!isEditView" pButton type="button" class="p-button-sm" iconPos="left"
+                label="Add Funding Account" [disabled]="btnDisable"
+                [icon]="btnDisable ? 'pi pi-spin pi-spinner' :'fa-solid fa fa-circle-plus'"
+                (click)="createFundingAccount(fundingAccountForm.value)">
+        </button>
+        <button *ngIf="isEditView" pButton type="button" [disabled]="btnDisable"
+                class="p-button-sm funding-acc-btn" iconPos="left"
+                [icon]="btnDisable ? 'pi pi-spin pi-spinner' :'fa-solid fa-check'"
+                label="Update Funding Account" (click)="updateFundingAccount()">
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-container>

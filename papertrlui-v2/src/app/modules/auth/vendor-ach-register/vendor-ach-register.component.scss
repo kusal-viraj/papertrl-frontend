@@ -1,0 +1,197 @@
+@import "../../../../scss/color.scss";
+
+.top-bar-custom {
+  position: fixed;
+  width: 100%;
+  height: 64px;
+  border: none;
+  background: #343A40 no-repeat padding-box;
+  z-index: 1;
+}
+
+.container {
+  background: #f2f2f2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+
+.register {
+  width: 800px;
+  min-height: 600px;
+  overflow: hidden;
+  border-radius: 12px;
+  display: flex;
+  margin-top: 60px;
+  box-shadow: 0px 2px 70px 0px #0000001F;
+}
+
+.content {
+  flex-basis: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background: #fff;
+}
+
+.content img {
+  width: 100%;
+  height: 100%;
+}
+
+.registerform {
+  flex-basis: 60%;
+  background: #fff;
+  padding: 25px;
+}
+
+.registerform h3 {
+  //text-align: center;
+  //margin-top: 25px;
+  //font-size: 2.5rem;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.tbox {
+  //border-radius: 3px;
+  //background: transparent;
+  //outline: none;
+  //border: 1px solid #55efc4;
+  //width: 100%;
+  //height: 35px;
+  margin: 10px 0;
+}
+
+.tbox input p-dropdown {
+  background: transparent;
+  width: 90%;
+  outline: none;
+  border: 0;
+  padding-left: 5px;
+}
+.card-custom {
+  width: 550px;
+  height: 100%;
+}
+
+::ng-deep .card-custom.p-card {
+  border-radius: 12px;
+}
+
+.card-subheader-custom {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.card-header-custom {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.card-custom-padding {
+  padding: 0 1rem 1rem 1rem;
+}
+
+.top-bar-custom {
+  position: fixed;
+  width: 100%;
+  height: 64px;
+  border: none;
+  background: #343A40 no-repeat padding-box;
+  z-index: 1;
+}
+
+.logo-desktop {
+  height: 30px;
+  margin-left: 60%;
+}
+
+.content {
+  position: relative;
+}
+
+.ach-payment-info {
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  font-size: 28px;
+  background-color: #353A40;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 0 12px 12px 0;
+}
+
+@media only screen and (max-width: 991px) {
+  .card-custom {
+    margin-top: 10%;
+    height: 100%;
+  }
+  .grid {
+    margin: 0;
+  }
+  .layout-topbar {
+    display: none;
+  }
+  .top-bar-custom {
+    display: none;
+  }
+  .exception-content {
+    margin-top: 0 !important;
+  }
+  .exception-body {
+    background: white;
+    display: inline-block;
+    min-height: 100%;
+
+    .exception-content {
+      height: auto;
+
+      .exception-detail {
+        margin: 0 !important;
+      }
+    }
+  }
+  .card-custom-padding {
+    padding: 10px !important;
+  }
+  .mobile-fields {
+    .card-header-custom {
+      color: $light-black;
+      font-size: 30px;
+      margin-bottom: 30%;
+    }
+
+    .card-subheader-custom {
+      color: $light-black;
+      font-size: 18px;
+      margin-top: 20%;
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .content img {
+    display: none;
+  }
+  .exception-content {
+    width: 100%;
+    height: 100%;
+  }
+  .card-custom {
+    width: 100% !important;
+    height: 100% !important;
+    margin-left: 0 !important;
+    margin-top: 0;
+  }
+}
+
+@media(max-width: 768px) {
+  .register {
+    flex-direction: column;
+    margin: 0 15px;
+  }
+}

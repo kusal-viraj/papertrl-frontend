@@ -1,0 +1,292 @@
+<p-tabView (onChange)="tabChanged(tabIndex)" [(activeIndex)]="tabIndex"
+           styleClass="tabview-custom expense-tabs p-0-tabview">
+
+  <p-tabPanel [disabled]="!isExpenseModule()">
+    <ng-template pTemplate="header">
+      <span class="custom-span">Expenses</span>
+    </ng-template>
+    <ng-template pTemplate="content">
+      <div class="grid">
+        <h5 class="subHeadingGreen pl-3 col-6" *ngIf="isCreateExpense && isExpenseCreate()">
+          Create Expense</h5>
+
+        <div class="col-6" [hidden]="!isListExpense" *ngIf="isExpenseTable()">
+          <app-table-header-action-buttons
+            [componentInstance]="expenseList" *ngIf="expenseList"
+            [tableSupportBase]="expenseList?.tableSupportBase"
+            (refresh)="expenseList?.loadData(expenseList.tableSupportBase.searchFilterDto)"
+            (showFilters)="expenseList.showFilter = !expenseList?.showFilter;
+                 expenseList.showFilterColumns = false"
+            (showColumns)="expenseList.showFilterColumns = !expenseList?.showFilterColumns; expenseList.showFilter = false"
+            (delete)="expenseList.deleteExpenseList()"
+            (reject)="expenseList.bulkReject()"
+            (quickApprove)="expenseList.bulkApprove()"
+            (download)="expenseList.bulkDownloadAll()"
+            (export)="expenseList.bulkExportAll()"
+            [visibleActions]="expenseList?.availableHeaderActions"
+            [moduleName]="AppAnalyticsConstants.MODULE_NAME_EXPENSES"
+          >
+
+          </app-table-header-action-buttons>
+        </div>
+
+        <div class="col-6 text-right">
+          <button pButton class="p-button-sm" *ngIf="!isCreateExpense && isExpenseCreate()"
+                  label="Create Expense"
+                  (click)="toggleCreateExpense('ec')"></button>
+
+          <button pButton class="p-button-outlined" *ngIf="!isListExpense && isExpenseTable()"
+                  label="View Expense List" (click)="toggleCreateExpense('el')"></button>
+        </div>
+
+        <div class="col-12">
+          <app-expense-create #createExpenseComponent (emitAfterSuccess)="toggleCreateExpense('el')"
+                              *ngIf="isCreateExpense && isExpenseCreate()">
+          </app-expense-create>
+          <app-expense-list [hidden]="!isListExpense" #expenseList *ngIf="isExpenseTable()"></app-expense-list>
+        </div>
+      </div>
+    </ng-template>
+  </p-tabPanel>
+
+
+  <!--Credit Card-->
+  <p-tabPanel class="card-panels" [disabled]="!isCreditCardModule()">
+    <ng-template pTemplate="header">
+      <span class="custom-span">Credit Card Statements</span>
+    </ng-template>
+
+    <ng-template pTemplate="content">
+      <p-tabView styleClass="tabview-custom" [(activeIndex)]="creditCardTabIndex">
+
+        <p-tabPanel [disabled]="!isCreditCardCreate()">
+          <ng-template pTemplate="header">
+            <span class="custom-span">Credit Cards</span>
+          </ng-template>
+          <ng-template pTemplate="content">
+            <app-credit-card-list></app-credit-card-list>
+          </ng-template>
+        </p-tabPanel>
+
+        <p-tabPanel [disabled]="!isCreditCardUpload()">
+          <ng-template pTemplate="header">
+            <span class="custom-span">Transactions</span>
+          </ng-template>
+          <ng-template pTemplate="content">
+
+            <div class="grid">
+              <div class="col-6">
+                <app-table-header-action-buttons
+                  [hidden]="isProcessUpload"
+                  [componentInstance]="creditCardUploadedListComponent"
+                  [tableSupportBase]="creditCardUploadedListComponent?.tableSupportBase"
+                  (showColumns)="creditCardUploadedListComponent.showFilterColumns = !creditCardUploadedListComponent?.showFilterColumns; creditCardUploadedListComponent.showFilter = false"
+                  (refresh)="creditCardUploadedListComponent?.loadData(creditCardUploadedListComponent.tableSupportBase.searchFilterDto)"
+                  (showFilters)="creditCardUploadedListComponent.showFilter = !creditCardUploadedListComponent?.showFilter;
+                     creditCardUploadedListComponent.showFilterColumns = false"
+                  [visibleActions]="creditCardUploadedListComponent?.availableHeaderActions"
+                  [moduleName]="AppAnalyticsConstants.MODULE_NAME_TRANSACTIONS"
+                >
+
+                </app-table-header-action-buttons>
+              </div>
+
+              <div class="col-6 text-right ">
+                <button pButton class="p-button-sm"
+                        *ngIf="privilegeService.isAuthorized(appAuthorities.CREDIT_CARD_UPLOAD_TRANSACTION) && !isProcessUpload"
+                        label="Upload Transactions"
+                        (click)="toggleUploadTransactions(true)"></button>
+
+                <button pButton class="p-button-outlined" *ngIf="isProcessUpload" label="View Transactions"
+                        (click)="toggleUploadTransactions(false)"></button>
+              </div>
+            </div>
+            <div class="col-12">
+              <app-credit-card-upload #cardUploadComponent
+                                      *ngIf="isProcessUpload && privilegeService.isAuthorized(appAuthorities.CREDIT_CARD_UPLOAD_TRANSACTION)"
+                                      (uploadSuccess)="isProcessUpload = false; refreshTransactionTableData()"></app-credit-card-upload>
+
+              <app-credit-card-uploaded-list #creditCardUploadedListComponent [hidden]="isProcessUpload">
+              </app-credit-card-uploaded-list>
+            </div>
+          </ng-template>
+        </p-tabPanel>
+
+        <p-tabPanel [disabled]="!isCreditCardProcess()">
+          <ng-template pTemplate="header">
+            <span class="custom-span">Process Transactions</span>
+          </ng-template>
+          <ng-template pTemplate="content">
+
+            <div class="grid">
+
+              <div class="col-6">
+                <app-table-header-action-buttons
+                  [hidden]="isCreateTransaction"
+                  [componentInstance]="creditCardProcessListComponent"
+                  [tableSupportBase]="creditCardProcessListComponent?.tableSupportBase"
+                  (showColumns)="creditCardProcessListComponent.showFilterColumns = !creditCardProcessListComponent?.showFilterColumns; creditCardProcessListComponent.showFilter = false"
+                  (processTransactionsExpense)="creditCardProcessListComponent.bulkProcess()"
+                  (delete)="creditCardProcessListComponent.deleteTransactionList()"
+                  (refresh)="creditCardProcessListComponent?.loadData(creditCardProcessListComponent.tableSupportBase.searchFilterDto)"
+                  (showFilters)="creditCardProcessListComponent.showFilter = !creditCardProcessListComponent?.showFilter;
+                      creditCardProcessListComponent.showFilterColumns = false"
+                  [visibleActions]="creditCardProcessListComponent?.availableHeaderActions"
+                  [moduleName]="AppAnalyticsConstants.MODULE_NAME_PROCESS_TRANSACTIONS"
+                >
+
+                </app-table-header-action-buttons>
+              </div>
+              <div class="col-6 text-right">
+                <div class="screen-change-btn col-12 text-right">
+                  <button pButton class="p-button-outlined" *ngIf="isCreateTransaction"
+                          label="Process Transactions List"
+                          (click)="toggleTransactionAdd(false)"></button>
+
+                  <button pButton class="p-button-sm"
+                          *ngIf="!isCreateTransaction && privilegeService.isAuthorized(appAuthorities.CREDIT_CARD_PROCESS_TRANSACTION_CREATE)"
+                          label="Add Transaction"
+                          (click)="toggleTransactionAdd(true)"></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12" [class.back-ground-white]="isCreateTransaction">
+              <app-credit-card-process-list #creditCardProcessListComponent
+                                            [hidden]="isCreateTransaction"></app-credit-card-process-list>
+              <app-credit-card-create-transaction #cardCreateTransactionComponent
+                                                  *ngIf="isCreateTransaction && privilegeService.isAuthorized(appAuthorities.CREDIT_CARD_PROCESS_TRANSACTION_CREATE)">
+              </app-credit-card-create-transaction>
+            </div>
+          </ng-template>
+        </p-tabPanel>
+
+        <p-tabPanel [disabled]="!isCreditCardSubmit()">
+          <ng-template pTemplate="header">
+            <span class="custom-span">Submitted Transactions</span>
+          </ng-template>
+          <ng-template pTemplate="content">
+            <app-credit-card-submit-list></app-credit-card-submit-list>
+          </ng-template>
+        </p-tabPanel>
+
+        <p-tabPanel [disabled]="!isCreditCardApprovedTransaction()">
+          <ng-template pTemplate="header">
+            <span class="custom-span">Approved Transactions</span>
+          </ng-template>
+          <ng-template pTemplate="content">
+            <app-credit-card-approved-list></app-credit-card-approved-list>
+          </ng-template>
+        </p-tabPanel>
+
+      </p-tabView>
+    </ng-template>
+
+  </p-tabPanel>
+
+  <!--      Receipts-->
+  <p-tabPanel class="card-panels" [disabled]="!isCreditCardReceipts()">
+    <ng-template pTemplate="header">
+      <span class="custom-span">Receipts</span>
+    </ng-template>
+
+    <ng-template pTemplate="content">
+      <div class="grid">
+        <div class="col-6">
+          <app-table-header-action-buttons [hidden]="isReceiptsUpload"
+                                           [componentInstance]="receiptListComponent"
+                                           [tableSupportBase]="receiptListComponent?.tableSupportBase"
+                                           (delete)="receiptListComponent.deleteBulkCards()"
+                                           (showColumns)="receiptListComponent.showFilterColumns = !receiptListComponent?.showFilterColumns; receiptListComponent.showFilter = false"
+                                           (refresh)="receiptListComponent?.loadData(receiptListComponent.tableSupportBase.searchFilterDto)"
+                                           (showFilters)="receiptListComponent.showFilter = !receiptListComponent?.showFilter;
+                receiptListComponent.showFilterColumns = false"
+                                           [visibleActions]="receiptListComponent?.availableHeaderActions"
+                                           [moduleName]="AppAnalyticsConstants.MODULE_NAME_RECEIPTS"
+          >
+          </app-table-header-action-buttons>
+        </div>
+        <div class="col-6 text-right">
+          <div class="screen-change-btn col-12 text-right">
+            <button pButton class="p-button-sm"
+                    *ngIf="!isReceiptsUpload && privilegeService.isAuthorized(appAuthorities.CREDIT_CARD_RECEIPT_UPLOAD)"
+                    label="Upload Receipts" (click)="toggleReceiptUpload(true)"></button>
+
+            <button pButton class="p-button-outlined" *ngIf="isReceiptsUpload" iconPos="left"
+                    label="Receipts List"
+                    (click)="toggleReceiptUpload(false)"></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 p-p-0">
+        <app-receipt-list #receiptListComponent [hidden]="isReceiptsUpload"></app-receipt-list>
+        <app-receipt-upload #receiptUploadComponent
+                            *ngIf="isReceiptsUpload && privilegeService.isAuthorized(appAuthorities.CREDIT_CARD_RECEIPT_UPLOAD)"
+                            (isCloseSubmissionView)="isReceiptsUpload = false; refreshReceiptTableData()"></app-receipt-upload>
+      </div>
+    </ng-template>
+
+  </p-tabPanel>
+
+  <!--      Virtual Cards-->
+  <p-tabPanel class="card-panels" [disabled]="!isVcardModule()" *ngIf="isVirtualDigitalCard()">
+    <ng-template pTemplate="header">
+      <span class="custom-span">Virtual/ Digital Cards</span>
+    </ng-template>
+
+    <ng-template pTemplate="content">
+      <div class="grid">
+        <div class="col-6">
+          <app-table-header-action-buttons
+            [componentInstance]="vcardListComponent"
+            [tableSupportBase]="vcardListComponent?.tableSupportBase"
+            (refresh)="vcardListComponent?.loadData(vcardListComponent.tableSupportBase.searchFilterDto)"
+            (showFilters)="vcardListComponent.showFilter = !vcardListComponent?.showFilter;
+            vcardListComponent.showFilterColumns = false"
+            (showColumns)="vcardListComponent.showFilterColumns = !vcardListComponent?.showFilterColumns; vcardListComponent.showFilter = false"
+            [visibleActions]="vcardListComponent?.availableHeaderActions"
+            [moduleName]="AppAnalyticsConstants.MODULE_NAME_VIRTUAL_DIGITAL_CARD"
+          >
+          </app-table-header-action-buttons>
+        </div>
+
+        <div class="col-6 text-right">
+          <button pButton class="p-button-sm" *ngIf="!isCreateDigitalCard && privilegeService.isAuthorized(appAuthorities.V_CARD_CREATE)"
+                  label="Create Digital Card"
+                  (click)="toggleDigitalCards(true)"></button>
+
+          <button pButton class="p-button-outlined" *ngIf="isCreateDigitalCard"
+                  label="View Card List"
+                  (click)="toggleTransactionAdd(false)"></button>
+        </div>
+      </div>
+
+      <div class="col-12 p-p-0">
+        <app-v-card-list #vcardListComponent></app-v-card-list>
+      </div>
+      <p-sidebar styleClass="p-sidebar-md" [dismissible]="true" [modal]="true" position="right"
+                 class="overflow-side-bar" appendTo="body"
+                 *ngIf="isCreateDigitalCard" [(visible)]="isCreateDigitalCard">
+        <ng-template pTemplate="header">Create Digital Card</ng-template>
+        <app-d-card-create (updateGrid)="vcardListComponent.loadData(vcardListComponent.tableSupportBase.searchFilterDto);
+         isCreateDigitalCard = false"></app-d-card-create>
+      </p-sidebar>
+    </ng-template>
+
+  </p-tabPanel>
+</p-tabView>
+
+
+<!--Approve Expense-->
+<p-sidebar [showCloseIcon]="false" [fullScreen]="true" [modal]="false" [(visible)]="expenseApproveView" class="bill-drawer-remove-inner-padding">
+  <app-expense-approve (refreshTable)="detailViewClosed()" (closeExpenseApprove)="detailViewClosed()"
+                       [isDetailView]="false" [fromNotification]="true" *ngIf="expenseApproveView"
+                       [expenseId]="expenseId"></app-expense-approve>
+</p-sidebar>
+
+<!--Detail view Expense-->
+<p-sidebar [showCloseIcon]="false" [fullScreen]="true" [modal]="false" [(visible)]="expenseDetailView">
+  <app-expense-detail-view [fromNotification]="true" (closeExpenseApprove)="expenseDetailView = false"
+                           *ngIf="expenseDetailView" [expenseId]="expenseId"></app-expense-detail-view>
+</p-sidebar>

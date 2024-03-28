@@ -1,0 +1,46 @@
+<div class="p-6 pt-2 height">
+  <div class="boarder-hide text-left">
+    <p class="margin-top infoUpload"><b>Step 1: </b>
+      <span class="download-link" (click)="downloadUserListTemplate()">Download</span> the template.</p>
+    <p class="margin-top infoUpload"><b>Step 2: </b> Fill in all fields and save.</p>
+    <p class="margin-top infoUpload"><b>Step 3: </b> Upload the completed template.</p>
+  </div>
+
+  <div class="grid mt-4">
+    <div class="col-12 xl:col-12 top-marging">
+      <ngx-dropzone accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" [multiple]="false"
+                    (change)="changeFileList($event)" class="drop-zone-style" style="height: 180px; background-color: #f4fbfa">
+        <ngx-dropzone-label class="dp-zone-big-text-wrapper p-text-normal">Drop File Here To Upload
+          <br><br>
+          <span class="dp-zone-small-text-wrapper p-text-normal">(We only accept Xls, all the other formats will be ignored)</span>
+        </ngx-dropzone-label>
+        <ngx-dropzone-preview class="preview-file" *ngFor="let f of attachments" [removable]="true" (removed)="onRemove(f)">
+          <ngx-dropzone-label class="uploaded-file-name">{{ f.name }}</ngx-dropzone-label>
+        </ngx-dropzone-preview>
+      </ngx-dropzone>
+    </div>
+  </div>
+
+
+  <p-progressBar [style]="{ height: '16px' }" *ngIf="responsePercentage !== 0"
+                 [value]="responsePercentage" class="mt-2"></p-progressBar>
+</div>
+
+
+<div class="grid footer form-footer-button">
+  <div class="col-12 button-set-wrapper">
+    <div class="pull-right">
+
+      <button pButton class="p-button-sm p-button-outlined mr-2" type="button" icon="fa-solid fa-rotate-right"
+              label="Reset"
+              [disabled]="isDisabled || (responsePercentage !== 0 && responsePercentage !== 100)"
+              (click)="reset()"></button>
+
+      <button class="p-button-sm mr-2" pButton type="submit" icon="fa fa-cloud-upload" label="Upload"
+              [loadingIcon]="'pi pi-spin pi-spinner'"
+              [loading]="isDisabled || (responsePercentage !== 0 && responsePercentage !== 100)"
+              (click)="uploadPayments()"></button>
+
+    </div>
+  </div>
+</div>

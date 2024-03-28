@@ -1,0 +1,37 @@
+<p-dialog [header]="selectedERPConfig.label" [(visible)]="erpConfigRequestPanel" [modal]="true"
+          (onHide)="closePanel()"
+          [style]="{ width: '449px', height: '308px'}" [draggable]="false" [resizable]="false">
+
+  <form [formGroup]="qobForm">
+    <div class="p-fluid mt-3">
+      <div class="mt-3">
+        <label class="label-wrapper" for="month">Number of previous months to be synced *</label>
+        <p-dropdown [options]="monthOptions" id="month" optionDisabled="inactive" showClear="true"
+                    formControlName="selectedMonth" optionValue="id" optionLabel="name" [autoDisplayFirst]="false" [filter]="true">
+        </p-dropdown>
+
+        <div *ngIf="qobForm.get('selectedMonth').dirty && qobForm.get('selectedMonth').errors"
+             class="p-invalid text-align-left">Month is required
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <label class="label-wrapper" for="name">Company Name *</label>
+        <input formControlName="companyName" blockSpace id="name" type="text" pInputText>
+
+        <div *ngIf="qobForm.get('companyName').dirty && qobForm.get('companyName').errors"
+             class="p-invalid text-align-left">Name is required
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 ml-4 pt-6">
+      <div class="pull-right">
+        <button pButton type="button" label="Reset" style="height: 20%" (click)="resetData()"
+                class="p-button-outlined p-button- mr-3" icon="fa-solid fa-rotate-right"></button>
+        <button pButton type="button" label="Send Request" style="height: 20%" (click)="sendRequest()"
+                class="p-button-sm mr-3" icon="fa fa-paper-plane"></button>
+      </div>
+    </div>
+  </form>
+</p-dialog>

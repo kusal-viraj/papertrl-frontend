@@ -1,0 +1,48 @@
+@import "../../../../scss/color.scss";
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    margin-left: 15px;
+
+    .parent-node {
+      border-radius: 6px;
+      padding: 10px;
+      display: flex;
+      margin-bottom: 8px;
+
+      &:hover {
+        background: $tertiary-light-gray;
+      }
+
+      &.selected {
+        background: $tertiary-light-gray;
+      }
+
+      .node {
+        display: inline-flex;
+
+        input {
+          margin: 0;
+          margin-left: 10px;
+          accent-color: $checkbox-color;
+
+          &:checked {
+            accent-color: $checkbox-color;
+          }
+        }
+
+        div {
+          margin-left: 10px
+        }
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

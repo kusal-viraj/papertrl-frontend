@@ -1,0 +1,106 @@
+@import "../../../../scss/color.scss";
+
+.more-info {
+  color: $green;
+  font-weight: normal;
+  text-align: left;
+}
+
+.more-info:hover {
+  cursor: pointer;
+}
+
+.costume-checkbox {
+  left: 0.5rem;
+  color: #b2b2b2;
+  transition-duration: 0.2s;
+  vertical-align: super !important;
+}
+
+.custom-checkbox {
+  //margin-left: 1%;
+}
+
+.margin-right {
+  margin-right: 5px;
+}
+
+.text-align-center {
+  text-align: center !important;
+}
+
+.card-vendor-home-custom {
+  max-height: 500px;
+  /* overflow: scroll; */
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+@media only screen and (max-width: 1555px) and (min-width: 1200px) {
+  .facta-style {
+    font-size: 11px;
+  }
+}
+
+@media only screen and (max-width: 504px) {
+  .button-responsive {
+    width: max-content;
+  }
+
+  .more-info {
+    min-width: max-content;
+  }
+  .more-info-responsive {
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .more-info-duplicate {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 504px) {
+  .button-responsive {
+    //inline-size: min-content;
+  }
+  .more-info-responsive {
+    display: none;
+  }
+
+  .more-info-duplicate {
+    display: block;
+  }
+}
+
+
+@media only screen and (max-width: 1199px) {
+  .empty-div {
+    display: none;
+  }
+}
+
+.width-max {
+  width: 100%;
+}
+
+.button-responsive {
+  position: fixed !important;
+  bottom: 8px;
+  left: 100px;
+  width: 92%;
+  background-color: #ffffff;
+
+}
+.margin-left{
+  margin-left: 4px;
+}
+
+.card{
+  height: calc(100vh - 71px) !important;
+  overflow-y: auto !important;
+}
+
+.button-set-wrapper {
+  background-color: unset !important;
+}

@@ -1,0 +1,36 @@
+@import "../../../../../scss/color.scss";
+
+.p-button.p-button-sm .p-button-icon {
+  font-size: 1.1rem !important;
+}
+
+.form-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  background-color: $white;
+}
+
+.funding-acc-header {
+  position: relative;
+  top: 10px;
+
+  .module-header-label {
+    font-size: 18px !important;
+  }
+
+  .side-drawer-icon {
+    position: relative;
+    bottom: 3px;
+  }
+}
+
+.funding-acc-create-form {
+  overflow: auto;
+  height: calc(100vh - 9rem);
+
+  .p-fluid {
+    padding: 0 20px;
+  }
+}

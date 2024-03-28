@@ -1,0 +1,260 @@
+<div class="field pt-2 pl-1 form-header  grid">
+  <div class="col-6 text-left">
+    <h5 class="module-header-label">Process Payment Requests</h5>
+  </div>
+  <div class="col-6 text-right">
+    <div class="fa fa-close side-drawer-icon"
+         (click)="close()"></div>
+  </div>
+</div>
+
+
+
+<div class="grid align-items-end mt-6 mb-5">
+
+
+  <div class="col-12 text-right" *ngIf="isFileUploadType">
+    <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" accept=".csv"/>
+
+    <button pButton type="button" (click)="downloadTemplate()" label="Download Payment Request Schema"
+            icon="fa fa-download"
+            class="p-button-outlined p-button-lg mr-3" [disabled]="downloadLoading"></button>
+
+    <button pButton type="button" (click)="triggerFileInput()"
+            [label]="responsePercentage !== 0 ? 'Upload Payment File ('+responsePercentage+'%)' : 'Upload Payment Request File'"
+            icon="fa fa-upload"
+            [loadingIcon]="'pi pi-spin pi-spinner'"
+            [loading]="isDisabled || (responsePercentage != 0 && responsePercentage != 100)"
+            class="p-button-outlined p-button-lg mr-2" [disabled]="uploadLoading"></button>
+  </div>
+
+  <div class="col-9 text-right" *ngIf="!isFileUploadType">
+    <button pButton type="button" (click)="syncNow()" label="Sync Now" icon="fa-solid fa-arrows-rotate"
+            class="p-button-outlined p-button-lg mr-3" [disabled]="downloadLoading"></button>
+  </div>
+</div>
+
+<div class="grid table-view">
+  <div class="col-6 paginator-top-table-actions">
+    <app-table-header-action-buttons [componentInstance]="this"
+                                     [tableSupportBase]="tableSupportBase"
+                                     (refresh)="loadData(tableSupportBase.searchFilterDto)"
+                                     (showFilters)="showFilter = !showFilter; showFilterColumns = false;"
+                                     (showColumns)="showFilterColumns = !showFilterColumns; showFilter = false"
+                                     [visibleActions]="availableHeaderActions"
+                                     [moduleName]="appAnalyticsConstants.MODULE_NAME_PAYMENT"
+    ></app-table-header-action-buttons>
+  </div>
+  <div class="col-12">
+    <div class="table-wrapper">
+      <p-table responsiveLayout="scroll" id="columnSelect" #dt [rowSelectable]="isRowSelectable"
+               [columns]="selectedColumns" (onColResize)="onTableChanged()"
+               styleClass="p-datatable-sm no-grid-lines paginator-lifted page-no-style" scrollDirection="both"
+               [hidden]="tableSupportBase.isVisibleTable" (onFilter)="tableSupportBase.onFilter(dt)"
+               (onSort)="tableSupportBase.onSort(dt)" columnResizeMode="expand" [paginator]="true"
+               (onRowSelect)="tableSupportBase.rowSelected(dt,null)"
+               (onRowUnselect)="tableSupportBase.rowSelected(dt,null)"
+               (onColReorder)="onTableChanged()" [(selection)]="tableSupportBase.rows"
+               [value]="tableSupportBase.dataSource"
+               dataKey="id" [reorderableColumns]="true" [rowHover]="true" [lazy]="true" (onLazyLoad)="loadData($event)"
+               [responsive]="false" selectionMode="multiple" scrollHeight="flex" [scrollable]="true"
+               stateStorage="session" stateKey="{{tableKeyEnum.PROCESS_PAYMENT_TABLE_KEY}}" [rows]="25"
+               [showCurrentPageReport]="true" [rowsPerPageOptions]="[25, 50, 75]"
+               [loading]="tableSupportBase.loading" [resizableColumns]="true" rowGroupMode="subheader"
+               groupRowsBy="batchId" paginatorPosition="top"
+               [totalRecords]="tableSupportBase.totalRecords" *ngIf="tableSupportBase.minWidth"
+               currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Records"
+               [filterDelay]="0">
+
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns" pResizableColumn [pResizableColumnDisabled]="!col.isReSizable"
+                [ngStyle]="{'text-align': col.align}"
+                [pReorderableColumnDisabled]="!col.isReOrderable" pReorderableColumn
+                [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection" pFrozenColumn
+                [pSortableColumnDisabled]="!col.isSortable" pSortableColumn="{{col.sortableField}}"
+                class="sort-icon-wrapper">
+              <div class="grid">
+                <div class="col-12">
+                  <!--                  <div *ngIf="col.searchType == enums.CHECKBOX">-->
+                  <!--                    <p-tableHeaderCheckbox (click)="tableSupportBase.rowSelected(dt,null)"></p-tableHeaderCheckbox>-->
+                  <!--                  </div>-->
+                  <span *ngIf="col.searchType !== enums.CHECKBOX">{{ col.header }}</span>
+                  <p-sortIcon class="grid-sort-icon" *ngIf="col.isSortable" field="{{col.sortableField}}"></p-sortIcon>
+                </div>
+                <div class="col-12">
+              <span app-table-inline-column-filters [tableSupportBase]="tableSupportBase" [dt]="dt"
+                    [columns]="columns" [col]="col"></span>
+                </div>
+              </div>
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="groupheader" let-payment>
+          <tr class="disable-hover" pRowGroupHeader>
+            <td colspan="8">
+              <div class="grid header-bar">
+                <div class="col-6">
+                  <span
+                    class="time m-0 ml-2">{{ isFileUploadType ? 'Uploaded' : 'Synced' }} {{ payment.uploadedOn }}</span>
+                  by <span class="user">{{ payment.createdBy }}</span>
+                </div>
+                <div class="col-6 time text-right">
+                  <p class="m-0 mr-2">BatchId: <span class="user">{{ payment.batchId }}</span></p>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-payment let-columns="columns">
+          <tr (mouseleave)="payment.hover = false" (mouseenter)="payment.hover = true"
+              [class.row-disabled]="payment.rowDisabled">
+            <td *ngFor="let col of columns; let i=index" [ngStyle]="{'text-align': col.align}"
+                [class.freeze-right]="col.frozenDirection == 'right'" [class.td-border]="i === 0"
+                [class.td-border-selected]="payment.selected && i === 0" [style]="'width:' + col.columnWidth  + 'px'"
+                pFrozenColumn [frozen]="col.isFrozen" [alignFrozen]="col.frozenDirection">
+              <span class="p-column-title">{{ col.header }}</span>
+
+              <span *ngIf="col.field == enums.CHECKBOX">
+                 <p-tableCheckbox [disabled]="payment.rowDisabled" [value]="payment"></p-tableCheckbox>
+
+            <span *ngIf="(payment['txn.documentType'] == appDocumentType.BILL) && !payment.hover && !payment.selected"
+                  class="fa-regular fa-file-lines checkbox-icon"></span>
+            <span
+              *ngIf="(payment['txn.documentType'] == appDocumentType.EXPENSE) && !payment.hover  && !payment.selected"
+              class="pi pi-wallet checkbox-icon"></span>
+        </span>
+
+              <span *ngIf="col.field == 'txn.status'" class="capitalize">
+            <li [class]="'mr-2 status-style status-'  + tableSupportBase.getStatus(payment[col.field])"></li>
+                {{ tableSupportBase.getStatus(payment[col.field]) | titlecase }}
+          </span>
+
+              <span *ngIf="col.field == 'txn.paymentStatus'" class="capitalize">
+              <li [class]="'mr-2 status-style status-'  + tableSupportBase.getStatus(payment[col.field])"></li>
+              <span>{{ tableSupportBase.getStatus(payment[col.field]) | titlecase }}</span>
+          </span>
+
+              <span *ngIf="col.field == 'txn.txnType'">
+              <div class="col-12 p-0">{{ payment[col.field] }}</div>
+          </span>
+
+
+              <span class="white-space-normal break-word"
+                    *ngIf="col.field !== 'txn.status' &&
+                col.field !== 'txn.paymentStatus'  &&
+                col.field !== 'txn.documentType'  &&
+                col.field !== 'txn.txnType'  &&
+                col.field !== 'txn.reason'  &&
+                col.field !== 'txn.isOnline'">{{ payment[col.field] }}</span>
+
+
+              <span *ngIf="col.field == 'txn.txnType'">
+              <div class="col-12 p-0" [class.online]="payment['txn.isOnline']"
+                   [class.offline]="!payment['txn.isOnline']" style="font-size: 11px">
+                {{ payment['txn.isOnline'] ? 'Online' : 'Offline' }}
+              </div>
+          </span>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <div class="text-center grid table-empty-data">
+            <div class="col-12">
+              <i class="fa-solid fa-magnifying-glass"></i><br>
+              <p>There are no records found</p>
+            </div>
+          </div>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+<div class="total">
+  <span *ngIf="getTotal() > 0" (click)="viewSummary()" class="mr-3"><i class="fa fa-magnifying-glass-plus"></i> View Summary</span>
+  <h2 class="subHeadingColour">Total: &nbsp;&nbsp;{{ getTotal() | number : '1.2-2' }}</h2>
+</div>
+
+<div class="grid footer fixed">
+  <div class="col-12 button-set-wrapper form-footer-button">
+    <div class="pull-right">
+      <button pButton type="button" (click)="reset()" label="Reset" icon="fa-solid fa-rotate-right"
+              class="p-button-borderless p-button-sm mr-2" [disabled]="loading"></button>
+
+      <button class="p-button-sm" pButton type="submit" [loading]="loading"
+              label="Pay" icon="fa-solid fa-coins" (click)="submitPayment()"></button>
+
+    </div>
+  </div>
+</div>
+
+
+<p-sidebar styleClass="p-sidebar-sm" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           (onHide)="showFilter= false"
+           [fullScreen]="false" [(visible)]="showFilter" transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)">
+  <ng-template pTemplate="header">Advance Filter</ng-template>
+  <app-table-column-filters [dt]="table" [columns]="tableSupportBase.filterEnabledColumns"
+                            (closeDrawer)="showFilter = false" #tableColumnFiltersComponent
+                            [tableSupportBase]="tableSupportBase"></app-table-column-filters>
+</p-sidebar>
+
+<p-sidebar styleClass="p-sidebar-sm table-column-sidebar" appendTo="body" [modal]="true" [dismissible]="true"
+           position="right"
+           (onHide)="showFilterColumns= false" transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)"
+           [fullScreen]="false" [(visible)]="showFilterColumns">
+  <ng-template pTemplate="header">Columns</ng-template>
+  <app-table-column-toggle [cols]="selectedColumns" (selectionsUpdated)="selectedColumns = $event"
+                           [tableInstance]="table" (restoreTable)="loadTableData()"
+                           [tableKey]="tableKeyEnum.PROCESS_PAYMENT_TABLE_KEY"
+                           [gridName]="appConstant.GRID_PROCESS_PAYMENT_REQUEST_LIST"
+                           [hiddenOptions]="tableSupportBase.hiddenInOptions"
+                           (updateColOrder)="onTableChanged($event)"></app-table-column-toggle>
+</p-sidebar>
+
+
+<p-sidebar styleClass="p-sidebar-lg" appendTo="body" [modal]="true" [dismissible]="true" position="right"
+           (onHide)="viewSummaryBool= false" *ngIf="viewSummaryBool"
+           [fullScreen]="false" [(visible)]="viewSummaryBool"
+           transitionOptions="200ms cubic-bezier(0.1, 0.3, 0.4, 0.5)">
+  <ng-template pTemplate="header">View Summary</ng-template>
+
+  <div class="summary">
+    <div class="grid m-4">
+      <div class="col-1 font-bold"></div>
+      <div class="col-3 font-bold">Reference No.</div>
+      <div class="col-3 font-bold">Payee</div>
+      <div class="col-2 font-bold">Payment Type</div>
+      <div class="col-3 pr-6 text-right font-bold">Amount</div>
+      <div class="grid mt-3 p-0 col-12 document-list">
+        <ng-container *ngFor="let row of tableSupportBase.rows; let i=index">
+          <div class="col-1 ">{{ i + 1 }}</div>
+          <div class="col-3">{{ row['pPaymentReq.referenceNumber'] }}</div>
+          <div class="col-3">{{ row['pPaymentReq.payeeId'] }}</div>
+          <div class="col-2">{{ row['pPaymentReq.paymentType'] }}</div>
+          <div class="col-3 text-right">{{ row['pPaymentReq.txnAmount'] | number : '1.2-2' }}</div>
+        </ng-container>
+      </div>
+
+      <div class="grid mt-3 w-full">
+        <div class="col-12 text-right">
+          <h2 class="subHeadingColour">Total: &nbsp;&nbsp;{{ getTotal() | number : '1.2-2' }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+</p-sidebar>
+
+<p-dialog position="center" [(visible)]="showSummary" (onHide)="showSummary = false" styleClass="dialog-box-no-padding"
+          [resizable]="false" [closable]="false" appendTo="body" [draggable]="false" *ngIf="showSummary"
+          [style]="{width: '50vw', minWidth: '400px'}" closeOnEscape="false" [modal]="true">
+
+  <app-payment-summary *ngIf="showSummary" [fromCreate]="false" [paymentDetails]="paymentObj"
+                       [isWorkFlow]="false" [isSchedule]="false"
+                       [paymentTypes]="paymentTypes.data" [approvalGroups]="[]"
+                       [approvalUsers]="[]" (onClose)="showSummary = false"
+                       (onSubmit)="create()" [buttonDetails]="getButtonDetailsForSummary()"></app-payment-summary>
+</p-dialog>
